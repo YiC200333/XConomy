@@ -1,0 +1,54 @@
+#设置
+Settings:
+  #Chinese ChineseTW English French Spanish Russian Turkish 
+  language: Chinese
+  #是否检查新版本
+  check-update: true
+  #是否使用Mysql
+  mysql: false
+  #自动保存以及TOP10刷新时间间隔,单位秒
+  autosave-time: 300
+  #初始余额
+  initial-bal: 0
+  #非玩家账户是否启用,可以解决某些插件无法创建非玩家账户问题,比如Factions,Towny
+  #非玩家账户的数据不会进行BC同步
+  non-player-account: false
+
+
+#货币的显示
+Currency:
+  singular-name: dollar
+  plural-name: dollars
+  #余额是否为整数
+  integer-bal: false
+  thousands-separator: ','
+  display-format: '%balance% %currencyname%' 
+
+
+#数据库设置
+MySQL:
+  host: localhost:3306
+  user: root
+  pass: root
+  database: date
+  #自动添加 "_", 可以使用 %sign% 来表示服务器ID (见BungeeCord设置) 
+  table_suffix: ''
+  #是否使用连接池
+  usepool: true
+  
+
+#连接池设置
+Pool-Settings:
+  maximum-pool-size: 10
+  minimum-idle: 10
+  maximum-lifetime: 180000
+  idle-timeout: 60000
+  
+
+#BungeeCord设置
+BungeeCord:
+  #是否启用BC同步,只支持MySQL
+  #BC同步开启后,控制台和其他插件将无法在服务器无人的情况下修改金额
+  enable: false
+  #服务器标识,请保持需要同步的子服务器的标识和数据库的设置一致
+  sign: aa
