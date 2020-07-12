@@ -13,12 +13,13 @@ import me.Yi.XConomy.Data.Cache;
 import me.Yi.XConomy.Data.DataCon;
 import me.Yi.XConomy.Data.DataFormat;
 import me.Yi.XConomy.Data.MySQL;
-import me.Yi.XConomy.Data.Save;
 import me.Yi.XConomy.Event.Join;
 import me.Yi.XConomy.Event.Quit;
 import me.Yi.XConomy.Event.SPsync;
 import me.Yi.XConomy.Message.MessManage;
 import me.Yi.XConomy.Message.Messages;
+import me.Yi.XConomy.Task.Save;
+import me.Yi.XConomy.Task.Updater;
 import net.milkbowl.vault.economy.Economy;
 
 public class XConomy extends JavaPlugin {
@@ -70,6 +71,9 @@ public class XConomy extends JavaPlugin {
 		}
 		DataFormat.load();
 		Integer time = config.getInt("Settings.autosave-time");
+		if (time < 10) {
+			time = 10;
+		}
 		new Save().runTaskTimerAsynchronously(this, time * 20, time * 20);
 		logger("===== YiC =====");
 
@@ -194,6 +198,11 @@ public class XConomy extends JavaPlugin {
 		if (!ck.contains("Pool-Settings.idle-timeout")) {
 			getConfig().createSection("Pool-Settings.idle-timeout");
 			getConfig().set("Pool-Settings.idle-timeout", 60000);
+			x = true;
+		}
+		if (!ck.contains("Settings.autosave-message")) {
+			getConfig().createSection("Settings.autosave-message");
+			getConfig().set("Settings.autosave-message", true);
 			x = true;
 		}
 		if (x) {

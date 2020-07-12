@@ -6,9 +6,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.Yi.XConomy.Updater;
 import me.Yi.XConomy.XConomy;
 import me.Yi.XConomy.Data.DataCon;
+import me.Yi.XConomy.Task.Updater;
 
 public class Join implements Listener {
 

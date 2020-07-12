@@ -92,6 +92,7 @@ public class MySQL {
 						}
 					}
 				}
+					e1.printStackTrace();
 			}
 		}
 		return null;

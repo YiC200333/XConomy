@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.Yi.XConomy.XConomy;
+import me.Yi.XConomy.Task.SendMessTask;
 
 public class Cache {
 	public static ConcurrentHashMap<UUID, BigDecimal> bal = new ConcurrentHashMap<UUID, BigDecimal>();
@@ -99,7 +100,8 @@ public class Cache {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Bukkit.getServer().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
+        new SendMessTask(stream).runTaskAsynchronously(XConomy.getInstance());
+		//Bukkit.getServer().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
 	}
 
 }

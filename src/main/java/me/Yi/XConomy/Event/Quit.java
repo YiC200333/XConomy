@@ -5,7 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import me.Yi.XConomy.XConomy;
-import me.Yi.XConomy.Data.Save;
+import me.Yi.XConomy.Task.Save;
 
 public class Quit implements Listener {
 

@@ -1,4 +1,4 @@
-package me.Yi.XConomy;
+package me.Yi.XConomy.Task;
 
 import java.net.URL;
 import java.io.BufferedReader;
@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.URLConnection;
 
 import org.bukkit.scheduler.BukkitRunnable;
+
+import me.Yi.XConomy.XConomy;
 
 public class Updater extends BukkitRunnable {
 

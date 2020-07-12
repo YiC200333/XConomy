@@ -19,6 +19,7 @@ import me.Yi.XConomy.Data.Cache;
 import me.Yi.XConomy.Data.DataFormat;
 import me.Yi.XConomy.Message.MessManage;
 import me.Yi.XConomy.Message.Messages;
+import me.Yi.XConomy.Task.SendMessTask;
 
 public class cmd implements CommandExecutor {
 
@@ -293,7 +294,7 @@ public class cmd implements CommandExecutor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Bukkit.getServer().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
+        new SendMessTask(stream).runTaskAsynchronously(XConomy.getInstance());
 	}
 
 }

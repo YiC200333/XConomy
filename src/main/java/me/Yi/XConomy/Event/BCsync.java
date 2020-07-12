@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.google.common.io.ByteArrayDataInput;
@@ -20,9 +21,13 @@ import net.md_5.bungee.event.EventHandler;
 
 public class BCsync implements Listener {
 	// private mains plugin = mains.getInstance();
+	public static HashMap<Server, Integer> ind = new HashMap<Server, Integer>();
 
 	@EventHandler
 	public void on(PluginMessageEvent ev) {
+	    if (!(ev.getSender() instanceof Server)) {
+	        return;
+	      }
 		if (!ev.getTag().equalsIgnoreCase("xconomy:acb")) {
 			return;
 		}

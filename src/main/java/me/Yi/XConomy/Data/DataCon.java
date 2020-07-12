@@ -110,7 +110,7 @@ public class DataCon {
 		while (aa.hasNext()) {
 			UUID uid = aa.next();
 			BigDecimal bd1 = Cache.bal.get(uid);
-			if (bd1 != null) {
+			if (bd1!=null && !bd1.equals(null)) {
 				Double bal = bd1.setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
 				if (!XConomy.config.getBoolean("Settings.mysql")) {
 					ymltop.put(YML.pd.getString(uid.toString() + ".username"), bal);
@@ -136,7 +136,7 @@ public class DataCon {
 		while (aa.hasNext()) {
 			String account = aa.next();
 			BigDecimal bd2 = Cache_NonPlayer.bal.get(account);
-			if (bd2 != null) {
+			if (bd2!=null && !bd2.equals(null)) {
 				Double bal = bd2.setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
 				if (!XConomy.config.getBoolean("Settings.mysql")) {
 					YML.pdnon.set(account + ".balance", bal);

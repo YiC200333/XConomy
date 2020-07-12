@@ -124,10 +124,10 @@ public class Vault extends AbstractEconomy {
 		} else {
 			UUID u = Cache.translateuid(name);
 			if (u != null) {
-				if (Cache.getbal(u) == null) {
-					return 0.0;
-				} else {
+				if (Cache.getbal(u) != null && !Cache.getbal(u).equals(null)) {
 					return Cache.getbal(u).doubleValue();
+				} else {
+					return 0.0;
 				}
 			}
 

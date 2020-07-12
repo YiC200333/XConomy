@@ -1,4 +1,4 @@
-package me.Yi.XConomy.Data;
+package me.Yi.XConomy.Task;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -12,6 +12,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Yi.XConomy.XConomy;
+import me.Yi.XConomy.Data.Cache;
+import me.Yi.XConomy.Data.Cache_NonPlayer;
+import me.Yi.XConomy.Data.DataCon;
+import me.Yi.XConomy.Data.YML;
 import me.Yi.XConomy.Message.Messages;
 
 public class Save extends BukkitRunnable {
@@ -57,9 +61,10 @@ public class Save extends BukkitRunnable {
 				}
 				Cache.baltop();
 			}
-
-			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-					"&7[XConomy] " + Messages.sysmess("&a&l数据缓存已保存 &7>>> ") + x + Messages.sysmess("&a&l 条")));
+			if (XConomy.config.getBoolean("Settings.autosave-message")) {
+				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+						"&7[XConomy] " + Messages.sysmess("&a&l数据缓存已保存 &7>>> ") + x + Messages.sysmess("&a&l 条")));
+			}
 			return;
 		}
 
