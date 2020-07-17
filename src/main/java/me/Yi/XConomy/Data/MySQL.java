@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import com.zaxxer.hikari.HikariDataSource;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -252,7 +253,10 @@ public class MySQL {
 			selectplayer.setString(1, u.toString());
 			ResultSet rs = selectplayer.executeQuery();
 			if (rs.next()) {
-				Cache.addbal(u, DataFormat.formatd(rs.getDouble(3)));
+				BigDecimal ls = DataFormat.formatd(rs.getDouble(3));
+				if (ls!=null && !ls.equals(null)) {
+				Cache.addbal(u, ls);
+				}
 			}
 			rs.close();
 			selectplayer.close();

@@ -40,7 +40,12 @@ public class Cache {
 				bal.remove(u);
 				return am;
 			}
+			if (bal.containsKey(u)) {
 			return bal.get(u);
+			}else {
+				BigDecimal ls = new BigDecimal("0.0");
+				return ls;
+			}
 		}
 
 	}
