@@ -2,6 +2,7 @@ package me.Yi.XConomy.Data;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,7 +40,10 @@ public class YML {
 
 	public static void getbal(UUID u) {
 		Double am = pd.getDouble(u.toString() + ".balance");
-		Cache.addbal(u, DataFormat.formatd(am));
+		BigDecimal ls = DataFormat.formatd(am);
+		if (ls!=null && !ls.equals(null)) {
+		Cache.addbal(u, ls);
+		}
 	}
 
 	public static void getbal_nonp(String u) {

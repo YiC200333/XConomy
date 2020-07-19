@@ -1,5 +1,5 @@
 name: XConomy
-version: 2.52
+version: 2.53
 main: me.Yi.XConomy.XConomy
 author: YiC
 load: STARTUP
