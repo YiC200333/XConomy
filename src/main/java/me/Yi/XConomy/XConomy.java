@@ -43,6 +43,12 @@ public class XConomy extends JavaPlugin {
 		econ = new Vault();
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			logger("发现 PlaceholderAPI");
+			if (PE.cvaultpe()) {
+				logger("XConomy 不支持 Vault 变量的 baltop 功能");
+				logger("请在 PlaceholderAPI 的 config.yml 中设置 expansions.vault.baltop.enabled 为 false");
+				onDisable();
+				return;
+			}
 			PE.registerExpansion();
 		}
 		getServer().getServicesManager().register(Economy.class, econ, this, ServicePriority.Normal);
@@ -55,6 +61,7 @@ public class XConomy extends JavaPlugin {
 		Bukkit.getPluginCommand("xconomy").setExecutor(new cmd());
 		if (!DataCon.create(config)) {
 			onDisable();
+			return;
 		}
 		Cache.baltop();
 		if (config.getBoolean("BungeeCord.enable")) {
@@ -83,7 +90,9 @@ public class XConomy extends JavaPlugin {
 		getServer().getServicesManager().unregister(econ);
 		new Save().run();
 		if (config.getBoolean("Settings.mysql")) {
-			mysqldb.close();
+			if (mysqldb != null) {
+				mysqldb.close();
+			}
 		}
 		logger("XConomy已成功卸载");
 	}

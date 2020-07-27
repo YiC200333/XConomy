@@ -21,7 +21,7 @@ import me.Yi.XConomy.Message.Messages;
 public class Save extends BukkitRunnable {
 	@Override
 	public void run() {
-		if (!Cache.bal.isEmpty()) {
+		if (!Cache.bal.isEmpty()|!Cache_NonPlayer.bal.isEmpty()) {
 			List<UUID> ol = new ArrayList<UUID>();
 			for (Player pp : Bukkit.getOnlinePlayers()) {
 				ol.add(pp.getUniqueId());
@@ -34,10 +34,13 @@ public class Save extends BukkitRunnable {
 			if (XConomy.config.getBoolean("Settings.mysql")) {
 				co = XConomy.mysqldb.getcon();
 			}
+			
+			if (!Cache.bal.isEmpty()) {
 			List<UUID> uids = Arrays.asList(Cache.bal.keySet().toArray(new UUID[Cache.bal.keySet().size()]));
 			x = DataCon.save(co, uids, ol);
-
-			if (XConomy.config.getBoolean("Settings.non-player-account")) {
+			}
+			
+			if (XConomy.config.getBoolean("Settings.non-player-account")&&!Cache_NonPlayer.bal.isEmpty()) {
 				List<String> accounts = Arrays
 						.asList(Cache_NonPlayer.bal.keySet().toArray(new String[Cache_NonPlayer.bal.keySet().size()]));
 				x = x + DataCon.save_non(co, accounts);
@@ -50,6 +53,7 @@ public class Save extends BukkitRunnable {
 			// =================================================================================
 			if (ol.isEmpty()) {
 				Cache.bal.clear();
+				Cache_NonPlayer.bal.clear();
 			}
 
 			if (XConomy.config.getBoolean("Settings.mysql")) {

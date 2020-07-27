@@ -1,6 +1,12 @@
 package me.Yi.XConomy;
 
+import java.io.File;
+
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import me.Yi.XConomy.Data.Cache;
 import me.Yi.XConomy.Data.DataFormat;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -75,5 +81,16 @@ public class PE extends PlaceholderExpansion {
 
 	public static void registerExpansion() {
 		PlaceholderAPI.registerExpansion(new PE());
+	}
+	
+	public static boolean cvaultpe() {
+		File PEFolder = new File(Bukkit.getPluginManager().getPlugin("PlaceholderAPI").getDataFolder(), "config.yml");
+		if (PEFolder.exists()) {
+			FileConfiguration PEck = YamlConfiguration.loadConfiguration(PEFolder);
+			if (PEck.contains("expansions.vault.baltop.enabled")) {
+				return PEck.getBoolean("expansions.vault.baltop.enabled");
+			}
+		}
+		return false;
 	}
 }

@@ -430,6 +430,44 @@ public class Messages {
 			if (lang.equalsIgnoreCase("Turkish")) {
 				ss = "§amessage.yml reloaded successfully";
 			}
+		} else if (xx.equals("XConomy 不支持 Vault 变量的 baltop 功能")) {
+			if (lang.equalsIgnoreCase("English")) {
+				ss = "XConomy does not support the baltop function of vault papi";
+			}
+			if (lang.equalsIgnoreCase("French")) {
+				ss = "XConomy does not support the baltop function of vault papi";
+			}
+			if (lang.equalsIgnoreCase("Spanish")) {
+				ss = "XConomy does not support the baltop function of vault papi";
+			}
+			if (lang.equalsIgnoreCase("Russian")) {
+				ss = "XConomy does not support the baltop function of vault papi";
+			}
+			if (lang.equalsIgnoreCase("ChineseTW")) {
+				ss = "XConomy 不支援 Vault 變數的 baltop 功能";
+			}
+			if (lang.equalsIgnoreCase("Turkish")) {
+				ss = "XConomy does not support the baltop function of vault papi";
+			}
+		} else if (xx.equals("请在 PlaceholderAPI 的 config.yml 中设置 expansions.vault.baltop.enabled 为 false")) {
+			if (lang.equalsIgnoreCase("English")) {
+				ss = "Please set 'expansions.vault.baltop.enabled' to false in the config.yml of PlaceholderAPI";
+			}
+			if (lang.equalsIgnoreCase("French")) {
+				ss = "Please set 'expansions.vault.baltop.enabled' to false in the config.yml of PlaceholderAPI";
+			}
+			if (lang.equalsIgnoreCase("Spanish")) {
+				ss = "Please set 'expansions.vault.baltop.enabled' to false in the config.yml of PlaceholderAPI";
+			}
+			if (lang.equalsIgnoreCase("Russian")) {
+				ss = "Please set 'expansions.vault.baltop.enabled' to false in the config.yml of PlaceholderAPI";
+			}
+			if (lang.equalsIgnoreCase("ChineseTW")) {
+				ss = "請在 PlaceholderAPI 的 config.yml 中設定 expansions.vault.baltop.enabled 為 false ";
+			}
+			if (lang.equalsIgnoreCase("Turkish")) {
+				ss = "Please set 'expansions.vault.baltop.enabled' to false in the config.yml of PlaceholderAPI";
+			}
 			// -----------------------------------------------------------------------------------------
 		} else if (xx.equals(" 名称已更改!")) {
 			if (lang.equalsIgnoreCase("English")) {
