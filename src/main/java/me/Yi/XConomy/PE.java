@@ -1,18 +1,17 @@
 package me.Yi.XConomy;
 
-import java.io.File;
-
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import me.Yi.XConomy.Data.Cache;
 import me.Yi.XConomy.Data.DataFormat;
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public class PE extends PlaceholderExpansion {
+
+	private XConomy plugin;
+
+	public PE(XConomy plugin) {
+		this.plugin = plugin;
+	}
 
 	@Override
 	public String getAuthor() {
@@ -59,7 +58,12 @@ public class PE extends PlaceholderExpansion {
 
 	@Override
 	public String getVersion() {
-		return XConomy.getInstance().getDescription().getVersion();
+		return plugin.getDescription().getVersion();
+	}
+
+	@Override
+	public boolean persist() {
+		return true;
 	}
 
 	@Override
@@ -74,21 +78,6 @@ public class PE extends PlaceholderExpansion {
 		if (str.matches("[0-9]")) {
 			if (Integer.valueOf(str) <= Cache.baltop_papi.size()) {
 				return true;
-			}
-		}
-		return false;
-	}
-
-	public static void registerExpansion() {
-		PlaceholderAPI.registerExpansion(new PE());
-	}
-	
-	public static boolean cvaultpe() {
-		File PEFolder = new File(Bukkit.getPluginManager().getPlugin("PlaceholderAPI").getDataFolder(), "config.yml");
-		if (PEFolder.exists()) {
-			FileConfiguration PEck = YamlConfiguration.loadConfiguration(PEFolder);
-			if (PEck.contains("expansions.vault.baltop.enabled")) {
-				return PEck.getBoolean("expansions.vault.baltop.enabled");
 			}
 		}
 		return false;

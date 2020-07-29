@@ -3,10 +3,7 @@ package me.Yi.XConomy;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -43,15 +40,23 @@ public class cmd implements CommandExecutor {
 					sender.sendMessage(sendmess("prefix") + sendmess("top_nodata"));
 				} else {
 					sender.sendMessage(sendmess("top_title"));
-					List<Map.Entry<String, Double>> list = new ArrayList<>(Cache.baltop.entrySet());
-					Collections.sort(list, (Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) -> o2.getValue()
-							.compareTo(o1.getValue()));
 					int x = 0;
-					for (Map.Entry<String, Double> e : list) {
+					// List<Map.Entry<String, Double>> list = new
+					// ArrayList<>(Cache.baltop.entrySet());
+					// Collections.sort(list, (Map.Entry<String, Double> o1, Map.Entry<String,
+					// Double> o2) -> o2.getValue()
+					// .compareTo(o1.getValue()));
+					// for (Map.Entry<String, Double> e : list) {
+					// x = x + 1;
+					// sender.sendMessage(sendmess("top_text").replace("%index%", String.valueOf(x))
+					// .replace("%player%", e.getKey())
+					// .replace("%balance%", DataFormat.shown((e.getValue()))));
+					// }
+					List<String> topname = Cache.baltop_papi;
+					for (String e : topname) {
 						x = x + 1;
 						sender.sendMessage(sendmess("top_text").replace("%index%", String.valueOf(x))
-								.replace("%player%", e.getKey())
-								.replace("%balance%", DataFormat.shown((e.getValue()))));
+								.replace("%player%", e).replace("%balance%", DataFormat.shown((Cache.baltop.get(e)))));
 					}
 
 				}
@@ -294,7 +299,7 @@ public class cmd implements CommandExecutor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        new SendMessTask(stream).runTaskAsynchronously(XConomy.getInstance());
+		new SendMessTask(stream).runTaskAsynchronously(XConomy.getInstance());
 	}
 
 }

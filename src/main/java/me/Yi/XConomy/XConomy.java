@@ -43,13 +43,13 @@ public class XConomy extends JavaPlugin {
 		econ = new Vault();
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			logger("发现 PlaceholderAPI");
-			if (PE.cvaultpe()) {
+			if (cvaultpe()) {
 				logger("XConomy 不支持 Vault 变量的 baltop 功能");
 				logger("请在 PlaceholderAPI 的 config.yml 中设置 expansions.vault.baltop.enabled 为 false");
 				onDisable();
 				return;
 			}
-			PE.registerExpansion();
+			setupPlaceHolderAPI();
 		}
 		getServer().getServicesManager().register(Economy.class, econ, this, ServicePriority.Normal);
 		getServer().getPluginManager().registerEvents(new Join(), this);
@@ -113,6 +113,15 @@ public class XConomy extends JavaPlugin {
 		return config.getString("BungeeCord.sign");
 	}
 
+	@SuppressWarnings("deprecation")
+	private void setupPlaceHolderAPI() {
+		if ((new PE(this)).register()) {
+			getLogger().info("PlaceholderAPI successfully hooked");
+		} else {
+			getLogger().info("PlaceholderAPI unsuccessfully hooked");
+		}
+	}
+
 	public String lang() {
 		if (config.getString("Settings.language").equalsIgnoreCase("zh_CN")) {
 			return "Chinese";
@@ -149,6 +158,17 @@ public class XConomy extends JavaPlugin {
 		update_config();
 		reloadConfig();
 		config = getConfig();
+	}
+
+	private static boolean cvaultpe() {
+		File PEFolder = new File(Bukkit.getPluginManager().getPlugin("PlaceholderAPI").getDataFolder(), "config.yml");
+		if (PEFolder.exists()) {
+			FileConfiguration PEck = YamlConfiguration.loadConfiguration(PEFolder);
+			if (PEck.contains("expansions.vault.baltop.enabled")) {
+				return PEck.getBoolean("expansions.vault.baltop.enabled");
+			}
+		}
+		return false;
 	}
 
 	private void update_config() {
