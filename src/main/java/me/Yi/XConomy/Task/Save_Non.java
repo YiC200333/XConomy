@@ -1,26 +1,24 @@
 package me.Yi.XConomy.Task;
 
 import java.math.BigDecimal;
-import java.util.UUID;
-
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Yi.XConomy.Data.DataCon;
 
-public class Save extends BukkitRunnable {
+public class Save_Non extends BukkitRunnable {
 
-	private final UUID UID;
+	private final String account;
 	private final BigDecimal amount;
 	private final int type;
 	
-	public Save(UUID UID,BigDecimal amount,Integer type) {
-		this.UID = UID;
+	public Save_Non(String account,BigDecimal amount,Integer type) {
+		this.account = account;
 		this.amount = amount;
 		this.type = type;
 	}
 	
 	@Override
 	public void run() {
-		DataCon.save(UID, amount, type);
+		DataCon.save_non(account, amount, type);
 	}
 }

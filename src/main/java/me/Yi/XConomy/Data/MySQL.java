@@ -93,7 +93,7 @@ public class MySQL {
 						}
 					}
 				}
-					e1.printStackTrace();
+				e1.printStackTrace();
 			}
 		}
 		return null;
@@ -196,17 +196,17 @@ public class MySQL {
 	}
 
 	public void cr_non(String account, Double bal, Connection co) {
-				try {
-					PreparedStatement inserplayernon = co.prepareStatement("INSERT INTO " + datananon
-							+ "(account,balance) values(?,?) " + "ON DUPLICATE KEY UPDATE account = ?");
-					inserplayernon.setString(1, account);
-					inserplayernon.setDouble(2, bal);
-					inserplayernon.setString(3, account);
-					inserplayernon.executeUpdate();
-					inserplayernon.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+		try {
+			PreparedStatement inserplayernon = co.prepareStatement("INSERT INTO " + datananon
+					+ "(account,balance) values(?,?) " + "ON DUPLICATE KEY UPDATE account = ?");
+			inserplayernon.setString(1, account);
+			inserplayernon.setDouble(2, bal);
+			inserplayernon.setString(3, account);
+			inserplayernon.executeUpdate();
+			inserplayernon.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void upuser(String UID, String user, Connection co_a) {
@@ -221,26 +221,43 @@ public class MySQL {
 		}
 	}
 
-	public void save(Connection co, String UID, Double amount) {
+	public void save(String UID, Double amount, Integer type) {
 		try {
-			PreparedStatement saveda = co.prepareStatement("update " + datana + " set balance = ? where UID = ?");
-			saveda.setDouble(1, amount);
-			saveda.setString(2, UID);
+			Connection co = getcon();
+			String sqla = "";
+			if (type == 1) {
+				sqla = " set balance = balance + " + amount.toString() + " where UID = ?";
+			} else if (type == 2) {
+				sqla = " set balance = balance - " + amount.toString() + " where UID = ?";
+			} else if (type == 3) {
+				sqla = " set balance = " + amount.toString() + " where UID = ?";
+			}
+			PreparedStatement saveda = co.prepareStatement("update " + datana + sqla);
+			saveda.setString(1, UID);
 			saveda.executeUpdate();
 			saveda.close();
+			closep(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void save_non(Connection co, String account, Double amount) {
+	public void save_non(String account, Double amount, Integer type) {
 		try {
-			PreparedStatement savedanon = co
-					.prepareStatement("update " + datananon + " set balance = ? where account = ?");
-			savedanon.setDouble(1, amount);
-			savedanon.setString(2, account);
-			savedanon.executeUpdate();
-			savedanon.close();
+			Connection co = getcon();
+			String sqla = "";
+			if (type == 1) {
+				sqla = " set balance = balance + " + amount + " where UID = ?";
+			} else if (type == 2) {
+				sqla = " set balance = balance - " + amount + " where UID = ?";
+			} else if (type == 3) {
+				sqla = " set balance = " + amount + " where UID = ?";
+			}
+			PreparedStatement saveda = co.prepareStatement("update " + datana + sqla);
+			saveda.setString(1, account);
+			saveda.executeUpdate();
+			saveda.close();
+			closep(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -254,8 +271,8 @@ public class MySQL {
 			ResultSet rs = selectplayer.executeQuery();
 			if (rs.next()) {
 				BigDecimal ls = DataFormat.formatd(rs.getDouble(3));
-				if (ls!=null && !ls.equals(null)) {
-				Cache.addbal(u, ls);
+				if (ls != null && !ls.equals(null)) {
+					Cache.addbal(u, ls);
 				}
 			}
 			rs.close();

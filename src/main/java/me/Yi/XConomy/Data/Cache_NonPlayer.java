@@ -3,7 +3,8 @@ package me.Yi.XConomy.Data;
 import java.math.BigDecimal;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bukkit.Bukkit;
+import me.Yi.XConomy.XConomy;
+import me.Yi.XConomy.Task.Save_Non;
 
 public class Cache_NonPlayer {
 	public static ConcurrentHashMap<String, BigDecimal> bal = new ConcurrentHashMap<String, BigDecimal>();
@@ -17,11 +18,6 @@ public class Cache_NonPlayer {
 			return bal.get(u);
 		} else {
 			DataCon.getbalnon(u);
-			if (Bukkit.getOnlinePlayers().isEmpty()) {
-				BigDecimal am = bal.get(u);
-				bal.remove(u);
-				return am;
-			}
 			return bal.get(u);
 		}
 
@@ -37,6 +33,7 @@ public class Cache_NonPlayer {
 			ls = amount;
 		}
 		addbal(u, ls);
+		new Save_Non(u, amount, type).runTaskAsynchronously(XConomy.getInstance());
 	}
 
 }

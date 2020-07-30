@@ -3,11 +3,6 @@ package me.Yi.XConomy.Data;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -32,7 +27,7 @@ public class DataCon {
 			uiddata = new File(dataFolder, "uid.yml");
 			topdata = new File(dataFolder, "baltop.yml");
 			nonpdata = new File(dataFolder, "datanon.yml");
-			cheak_oldpath();
+			// cheak_oldpath();
 			YML.pd = YamlConfiguration.loadConfiguration(userdata);
 			YML.pdu = YamlConfiguration.loadConfiguration(uiddata);
 			YML.pdnon = YamlConfiguration.loadConfiguration(nonpdata);
@@ -103,63 +98,49 @@ public class DataCon {
 		}
 	}
 
-	public static Integer save(Connection co, List<UUID> ls, List<UUID> ol) {
-		int x = 0;
-		Iterator<UUID> aa = ls.listIterator();
-		Map<String, Double> ymltop = new HashMap<String, Double>();
-		while (aa.hasNext()) {
-			UUID uid = aa.next();
-			BigDecimal bd1 = Cache.bal.get(uid);
-			if (bd1!=null && !bd1.equals(null)) {
-				Double bal = bd1.setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
-				if (!XConomy.config.getBoolean("Settings.mysql")) {
-					ymltop.put(YML.pd.getString(uid.toString() + ".username"), bal);
-					YML.pd.set(uid.toString() + ".balance", bal);
-				} else {
-					XConomy.mysqldb.save(co, uid.toString(), bal);
-				}
-				x = x + 1;
-			}
-			if (!ol.contains(uid)) {
-				Cache.bal.remove(uid);
-			}
-		}
+	public static void save(UUID UID, BigDecimal amount, Integer type) {
 		if (!XConomy.config.getBoolean("Settings.mysql")) {
-			YML.savetop(ymltop);
+			Double am = YML.pd.getDouble(UID.toString() + ".balance");
+			BigDecimal ls = DataFormat.formatd(am);
+			if (type == 1) {
+				YML.pd.set(UID + ".balance", (ls.add(amount)).doubleValue());
+			} else if (type == 2) {
+				YML.pd.set(UID + ".balance", (ls.subtract(amount)).doubleValue());
+			} else if (type == 3) {
+				YML.pd.set(UID + ".balance", ls.doubleValue());
+			}
+		} else {
+			XConomy.mysqldb.save(UID.toString(), amount.doubleValue(), type);
 		}
-		return x;
 	}
 
-	public static Integer save_non(Connection co, List<String> ls) {
-		int x = 0;
-		Iterator<String> aa = ls.listIterator();
-		while (aa.hasNext()) {
-			String account = aa.next();
-			BigDecimal bd2 = Cache_NonPlayer.bal.get(account);
-			if (bd2!=null && !bd2.equals(null)) {
-				Double bal = bd2.setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
-				if (!XConomy.config.getBoolean("Settings.mysql")) {
-					YML.pdnon.set(account + ".balance", bal);
-				} else {
-					XConomy.mysqldb.save_non(co, account, bal);
-				}
-				x = x + 1;
+	public static void save_non(String account, BigDecimal amount, Integer type) {
+		if (!XConomy.config.getBoolean("Settings.mysql")) {
+			Double am = YML.pd.getDouble(account + ".balance");
+			BigDecimal ls = DataFormat.formatd(am);
+			if (type == 1) {
+				YML.pd.set(account + ".balance", (ls.add(amount)).doubleValue());
+			} else if (type == 2) {
+				YML.pd.set(account + ".balance", (ls.subtract(amount)).doubleValue());
+			} else if (type == 3) {
+				YML.pd.set(account + ".balance", ls.doubleValue());
 			}
+		} else {
+			XConomy.mysqldb.save_non(account, amount.doubleValue(), type);
 		}
-		return x;
 	}
 
 	// ===============================================================================================
-	private static void cheak_oldpath() {
-		File userdatao = new File(XConomy.getInstance().getDataFolder(), "data.yml");
-		File uiddatao = new File(XConomy.getInstance().getDataFolder(), "uid.yml");
-		if (userdatao.exists() & !userdata.exists()) {
-			userdatao.renameTo(userdata);
-		}
-		if (uiddatao.exists() & !uiddata.exists()) {
-			uiddatao.renameTo(uiddata);
-		}
-	}
+	// private static void cheak_oldpath() {
+	// File userdatao = new File(XConomy.getInstance().getDataFolder(), "data.yml");
+	// File uiddatao = new File(XConomy.getInstance().getDataFolder(), "uid.yml");
+	// if (userdatao.exists() & !userdata.exists()) {
+	// userdatao.renameTo(userdata);
+	// }
+	// if (uiddatao.exists() & !uiddata.exists()) {
+	// uiddatao.renameTo(uiddata);
+	// }
+	// }
 
 	private static void logger(String mess) {
 		XConomy.getInstance().getLogger().info(Messages.sysmess(mess));

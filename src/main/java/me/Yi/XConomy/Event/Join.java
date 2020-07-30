@@ -28,7 +28,7 @@ public class Join implements Listener {
 	}
 
 	private void updaterm(Player a) {
-		if (XConomy.checkup() & Updater.isold == 1) {
+		if (XConomy.checkup() & Updater.isold) {
 			if (XConomy.getInstance().lang().equalsIgnoreCase("Chinese")
 					| XConomy.getInstance().lang().equalsIgnoreCase("ChineseTW")) {
 				a.sendMessage("§f[XConomy]§b发现新版本 " + Updater.vs);

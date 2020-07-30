@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.Yi.XConomy.XConomy;
+import me.Yi.XConomy.Task.Save;
 import me.Yi.XConomy.Task.SendMessTask;
 
 public class Cache {
@@ -35,14 +36,9 @@ public class Cache {
 			return bal.get(u);
 		} else {
 			DataCon.getbal(u);
-			if (Bukkit.getOnlinePlayers().isEmpty()) {
-				BigDecimal am = bal.get(u);
-				bal.remove(u);
-				return am;
-			}
 			if (bal.containsKey(u)) {
-			return bal.get(u);
-			}else {
+				return bal.get(u);
+			} else {
 				BigDecimal ls = new BigDecimal("0.0");
 				return ls;
 			}
@@ -60,6 +56,7 @@ public class Cache {
 			ls = amount;
 		}
 		addbal(u, ls);
+		new Save(u, amount, type).runTaskAsynchronously(XConomy.getInstance());
 		if (XConomy.isbc()) {
 			sendmess(u, ls.doubleValue());
 		}
@@ -105,8 +102,9 @@ public class Cache {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        new SendMessTask(stream).runTaskAsynchronously(XConomy.getInstance());
-		//Bukkit.getServer().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
+		new SendMessTask(stream).runTaskAsynchronously(XConomy.getInstance());
+		// Bukkit.getServer().sendPluginMessage(XConomy.getInstance(), "xconomy:acb",
+		// stream.toByteArray());
 	}
 
 }

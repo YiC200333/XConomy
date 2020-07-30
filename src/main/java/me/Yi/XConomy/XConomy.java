@@ -14,11 +14,10 @@ import me.Yi.XConomy.Data.DataCon;
 import me.Yi.XConomy.Data.DataFormat;
 import me.Yi.XConomy.Data.MySQL;
 import me.Yi.XConomy.Event.Join;
-import me.Yi.XConomy.Event.Quit;
 import me.Yi.XConomy.Event.SPsync;
 import me.Yi.XConomy.Message.MessManage;
 import me.Yi.XConomy.Message.Messages;
-import me.Yi.XConomy.Task.Save;
+import me.Yi.XConomy.Task.BalTop;
 import me.Yi.XConomy.Task.Updater;
 import net.milkbowl.vault.economy.Economy;
 
@@ -66,7 +65,6 @@ public class XConomy extends JavaPlugin {
 		Cache.baltop();
 		if (config.getBoolean("BungeeCord.enable")) {
 			if (config.getBoolean("Settings.mysql")) {
-				getServer().getPluginManager().registerEvents(new Quit(), this);
 				getServer().getMessenger().registerIncomingPluginChannel(this, "xconomy:aca", new SPsync());
 				getServer().getMessenger().registerOutgoingPluginChannel(this, "xconomy:acb");
 				getServer().getMessenger().registerOutgoingPluginChannel(this, "xconomy:messb");
@@ -77,18 +75,17 @@ public class XConomy extends JavaPlugin {
 			}
 		}
 		DataFormat.load();
-		Integer time = config.getInt("Settings.autosave-time");
-		if (time < 10) {
-			time = 10;
-		}
-		new Save().runTaskTimerAsynchronously(this, time * 20, time * 20);
+		// Integer time = config.getInt("Settings.autosave-time");
+		// if (time < 10) {
+		// time = 10;
+		// }
+		new BalTop().runTaskTimerAsynchronously(this, 6000, 6000);
 		logger("===== YiC =====");
 
 	}
 
 	public void onDisable() {
 		getServer().getServicesManager().unregister(econ);
-		new Save().run();
 		if (config.getBoolean("Settings.mysql")) {
 			if (mysqldb != null) {
 				mysqldb.close();
@@ -229,11 +226,11 @@ public class XConomy extends JavaPlugin {
 			getConfig().set("Pool-Settings.idle-timeout", 60000);
 			x = true;
 		}
-		if (!ck.contains("Settings.autosave-message")) {
-			getConfig().createSection("Settings.autosave-message");
-			getConfig().set("Settings.autosave-message", true);
-			x = true;
-		}
+		//if (!ck.contains("Settings.autosave-message")) {
+		//	getConfig().createSection("Settings.autosave-message");
+		//	getConfig().set("Settings.autosave-message", true);
+		//	x = true;
+		//}
 		if (x) {
 			saveConfig();
 		}

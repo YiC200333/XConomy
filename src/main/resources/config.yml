@@ -5,10 +5,6 @@ Settings:
   check-update: true
   #Use MySQL or not
   mysql: false
-  #Auto save and TOP10 refresh interval (Second)
-  autosave-time: 300
-  #Whether to display the autosave message
-  autosave-message: true
   #Initial balance
   initial-bal: 0
   #Whether to enable non-player accounts.

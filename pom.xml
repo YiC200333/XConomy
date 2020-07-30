@@ -5,7 +5,7 @@
 
 	<groupId>me.Yi</groupId>
 	<artifactId>XConomy</artifactId>
-	<version>2.55</version>
+	<version>2.5.6</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -58,8 +58,9 @@
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
+
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
