@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -18,6 +19,7 @@ public class YML {
 	public static FileConfiguration pdnon;
 	public static FileConfiguration pdu;
 	public static FileConfiguration top;
+	public static HashMap<String, Double> baltopls = new HashMap<String, Double>();
 
 	public static void create(Player a, Double ii) {
 		if (pd.contains(a.getUniqueId().toString())) {
@@ -41,8 +43,8 @@ public class YML {
 	public static void getbal(UUID u) {
 		Double am = pd.getDouble(u.toString() + ".balance");
 		BigDecimal ls = DataFormat.formatd(am);
-		if (ls!=null && !ls.equals(null)) {
-		Cache.addbal(u, ls);
+		if (ls != null && !ls.equals(null)) {
+			Cache.addbal(u, ls);
 		}
 	}
 
@@ -88,10 +90,14 @@ public class YML {
 		}
 	}
 
-	public static void savetop(Map<String, Double> bal) {
-		Map<String, Double> ls = Cache.baltop;
-		ls.putAll(bal);
-		List<Map.Entry<String, Double>> list = new ArrayList<>(ls.entrySet());
+	public static void savetop() {
+		for (String e : Cache.baltop.keySet()) {
+			if (!baltopls.containsKey(e)) {
+				baltopls.put(e, Cache.baltop.get(e));
+			}
+		}
+		Cache.baltop.clear();
+		List<Map.Entry<String, Double>> list = new ArrayList<>(baltopls.entrySet());
 		Collections.sort(list,
 				(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) -> o2.getValue().compareTo(o1.getValue()));
 		List<String> name = new ArrayList<String>();
@@ -101,14 +107,15 @@ public class YML {
 			if (x > 10) {
 				break;
 			}
-			if (e.getKey().length() < 20) {
-				name.add(e.getKey());
-				baltop.add(Double.toString(e.getValue()));
-				x = x + 1;
-			}
+			name.add(e.getKey());
+			baltop.add(Double.toString(e.getValue()));
+			Cache.baltop_papi.add(e.getKey());
+			Cache.baltop.put(e.getKey(), e.getValue());
+			x = x + 1;
 		}
 		top.set("topname", String.join("###", name));
 		top.set("topbal", String.join("###", baltop));
+		baltopls.clear();
 		save(top, DataCon.topdata);
 	}
 

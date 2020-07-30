@@ -79,13 +79,14 @@ public class XConomy extends JavaPlugin {
 		// if (time < 10) {
 		// time = 10;
 		// }
-		new BalTop().runTaskTimerAsynchronously(this, 6000, 6000);
+		new BalTop().runTaskTimerAsynchronously(this, 3600, 3600);
 		logger("===== YiC =====");
 
 	}
 
 	public void onDisable() {
 		getServer().getServicesManager().unregister(econ);
+		new BalTop().run();
 		if (config.getBoolean("Settings.mysql")) {
 			if (mysqldb != null) {
 				mysqldb.close();

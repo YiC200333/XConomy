@@ -104,11 +104,15 @@ public class DataCon {
 			BigDecimal ls = DataFormat.formatd(am);
 			if (type == 1) {
 				YML.pd.set(UID + ".balance", (ls.add(amount)).doubleValue());
+				YML.baltopls.put(YML.pd.getString(UID.toString() + ".username"),ls.add(amount).doubleValue());
 			} else if (type == 2) {
 				YML.pd.set(UID + ".balance", (ls.subtract(amount)).doubleValue());
+				YML.baltopls.put(YML.pd.getString(UID.toString() + ".username"),ls.subtract(amount).doubleValue());
 			} else if (type == 3) {
-				YML.pd.set(UID + ".balance", ls.doubleValue());
+				YML.pd.set(UID + ".balance", amount.doubleValue());
+				YML.baltopls.put(YML.pd.getString(UID.toString() + ".username"),amount.doubleValue());
 			}
+			YML.save(YML.pd, userdata);
 		} else {
 			XConomy.mysqldb.save(UID.toString(), amount.doubleValue(), type);
 		}
@@ -123,8 +127,9 @@ public class DataCon {
 			} else if (type == 2) {
 				YML.pd.set(account + ".balance", (ls.subtract(amount)).doubleValue());
 			} else if (type == 3) {
-				YML.pd.set(account + ".balance", ls.doubleValue());
+				YML.pd.set(account + ".balance", amount.doubleValue());
 			}
+			YML.save(YML.pdnon, nonpdata);
 		} else {
 			XConomy.mysqldb.save_non(account, amount.doubleValue(), type);
 		}

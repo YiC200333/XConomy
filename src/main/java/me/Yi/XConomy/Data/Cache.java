@@ -24,7 +24,9 @@ public class Cache {
 	public static ConcurrentHashMap<String, UUID> uid = new ConcurrentHashMap<String, UUID>();
 
 	public static void addbal(final UUID u, BigDecimal v) {
+		if (v!=null && !v.equals(null)) {
 		bal.put(u, v);
+		}
 	}
 
 	public static void adduid(final String u, UUID v) {

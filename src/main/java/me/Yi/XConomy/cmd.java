@@ -288,6 +288,7 @@ public class cmd implements CommandExecutor {
 	}
 
 	public static void bcsendmess(String u, String b) {
+		if (XConomy.isbc()) {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		DataOutputStream output = new DataOutputStream(stream);
 		try {
@@ -300,6 +301,7 @@ public class cmd implements CommandExecutor {
 			e.printStackTrace();
 		}
 		new SendMessTask(stream).runTaskAsynchronously(XConomy.getInstance());
+		}
 	}
 
 }
