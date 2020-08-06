@@ -247,13 +247,13 @@ public class MySQL {
 			Connection co = getcon();
 			String sqla = "";
 			if (type == 1) {
-				sqla = " set balance = balance + " + amount + " where UID = ?";
+				sqla = " set balance = balance + " + amount + " where account = ?";
 			} else if (type == 2) {
-				sqla = " set balance = balance - " + amount + " where UID = ?";
+				sqla = " set balance = balance - " + amount + " where account = ?";
 			} else if (type == 3) {
-				sqla = " set balance = " + amount + " where UID = ?";
+				sqla = " set balance = " + amount + " where account = ?";
 			}
-			PreparedStatement saveda = co.prepareStatement("update " + datana + sqla);
+			PreparedStatement saveda = co.prepareStatement("update " + datananon + sqla);
 			saveda.setString(1, account);
 			saveda.executeUpdate();
 			saveda.close();

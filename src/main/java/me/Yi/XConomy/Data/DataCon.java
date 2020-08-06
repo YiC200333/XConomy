@@ -120,14 +120,14 @@ public class DataCon {
 
 	public static void save_non(String account, BigDecimal amount, Integer type) {
 		if (!XConomy.config.getBoolean("Settings.mysql")) {
-			Double am = YML.pd.getDouble(account + ".balance");
+			Double am = YML.pdnon.getDouble(account + ".balance");
 			BigDecimal ls = DataFormat.formatd(am);
 			if (type == 1) {
-				YML.pd.set(account + ".balance", (ls.add(amount)).doubleValue());
+				YML.pdnon.set(account + ".balance", (ls.add(amount)).doubleValue());
 			} else if (type == 2) {
-				YML.pd.set(account + ".balance", (ls.subtract(amount)).doubleValue());
+				YML.pdnon.set(account + ".balance", (ls.subtract(amount)).doubleValue());
 			} else if (type == 3) {
-				YML.pd.set(account + ".balance", amount.doubleValue());
+				YML.pdnon.set(account + ".balance", amount.doubleValue());
 			}
 			YML.save(YML.pdnon, nonpdata);
 		} else {
