@@ -16,5 +16,7 @@ public class BalTop extends BukkitRunnable {
 		} else {
 			YML.savetop();
 		}
+
+		Cache.cclean();
 	}
 }

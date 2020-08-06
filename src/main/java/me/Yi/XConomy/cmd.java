@@ -267,7 +267,7 @@ public class cmd implements CommandExecutor {
 
 	public void showver(CommandSender sender) {
 		sender.sendMessage(sendmess("prefix") + "§6 XConomy §f(Version: "
-				+ XConomy.getInstance().getDescription().getVersion() + ")");
+				+ XConomy.getInstance().getDescription().getVersion() + ") §6|§7 Author: §f" + Messages.getau());
 	}
 
 	private void helpm(CommandSender sender) {
@@ -289,18 +289,18 @@ public class cmd implements CommandExecutor {
 
 	public static void bcsendmess(String u, String b) {
 		if (XConomy.isbc()) {
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		DataOutputStream output = new DataOutputStream(stream);
-		try {
-			output.writeUTF("message");
-			output.writeUTF(XConomy.getsign());
-			output.writeUTF(u);
-			output.writeUTF(b);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		new SendMessTask(stream).runTaskAsynchronously(XConomy.getInstance());
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			DataOutputStream output = new DataOutputStream(stream);
+			try {
+				output.writeUTF("message");
+				output.writeUTF(XConomy.getsign());
+				output.writeUTF(u);
+				output.writeUTF(b);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			new SendMessTask(stream).runTaskAsynchronously(XConomy.getInstance());
 		}
 	}
 

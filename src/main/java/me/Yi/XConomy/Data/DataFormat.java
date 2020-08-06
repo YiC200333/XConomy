@@ -20,6 +20,15 @@ public class DataFormat {
 		}
 	}
 
+	public static BigDecimal formatds(String am) {
+		BigDecimal bd = new BigDecimal(am);
+		if (isi) {
+			return bd.setScale(0, BigDecimal.ROUND_DOWN);
+		} else {
+			return bd.setScale(2, BigDecimal.ROUND_DOWN);
+		}
+	}
+
 	public static Double formats(String am) {
 		BigDecimal bd = new BigDecimal(am);
 		if (isi) {

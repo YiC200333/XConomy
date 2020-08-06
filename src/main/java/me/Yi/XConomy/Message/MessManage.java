@@ -26,7 +26,6 @@ public class MessManage {
 			} catch (IOException e) {
 				e.printStackTrace();
 				plugin.logger("语言文件创建异常");
-				XConomy.getInstance().getResource("language/" + plugin.lang() + ".yml");
 			}
 		}
 		mess = YamlConfiguration.loadConfiguration(f);

@@ -271,9 +271,7 @@ public class MySQL {
 			ResultSet rs = selectplayer.executeQuery();
 			if (rs.next()) {
 				BigDecimal ls = DataFormat.formatd(rs.getDouble(3));
-				if (ls != null && !ls.equals(null)) {
-					Cache.addbal(u, ls);
-				}
+				Cache.addbal(u, ls);
 			}
 			rs.close();
 			selectplayer.close();
@@ -287,7 +285,7 @@ public class MySQL {
 		try {
 			Connection co = getcon();
 			PreparedStatement selectplayernon = co
-					.prepareStatement("select * from " + datananon + " where account = ?");
+					.prepareStatement("select * from " + datananon + " where binary account = ?");
 			selectplayernon.setString(1, u);
 			ResultSet rs = selectplayernon.executeQuery();
 			if (rs.next()) {

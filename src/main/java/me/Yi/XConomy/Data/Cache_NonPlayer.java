@@ -10,7 +10,9 @@ public class Cache_NonPlayer {
 	public static ConcurrentHashMap<String, BigDecimal> bal = new ConcurrentHashMap<String, BigDecimal>();
 
 	public static void addbal(final String u, BigDecimal v) {
+		if (v!=null && !v.equals(null)) {
 		bal.put(u, v);
+		}
 	}
 
 	public static BigDecimal getbal(String u) {

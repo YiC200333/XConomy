@@ -28,8 +28,8 @@ public class SPsync implements PluginMessageListener {
 		}
 		if (type.equalsIgnoreCase("balance")) {
 			UUID u = UUID.fromString(input.readUTF());
-			Double bal = Double.valueOf(input.readUTF());
-			Cache.bal.put(u, DataFormat.formatd(bal));
+			String bal = input.readUTF();
+			Cache.bal.put(u, DataFormat.formatds(bal));
 		} else if (type.equalsIgnoreCase("message")) {
 			Player p = Bukkit.getPlayer(input.readUTF());
 			String mess = input.readUTF();

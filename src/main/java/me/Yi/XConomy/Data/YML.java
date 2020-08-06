@@ -60,13 +60,6 @@ public class YML {
 		}
 	}
 
-	public static void check(Player a) {
-		if (!pd.getString(a.getUniqueId().toString() + ".username").equals(a.getName())) {
-
-		}
-
-	}
-
 	public static void getuid(String name) {
 		if (pdu.contains(name)) {
 			Cache.adduid(name, UUID.fromString(pdu.getString(name + ".UUID")));
@@ -76,6 +69,7 @@ public class YML {
 
 	public static void gettop() {
 		if (top.contains("topname") & top.contains("topbal")) {
+			if (!top.getString("topname").equals("") && !top.getString("topbal").equals("")) {
 			List<String> name = Arrays.asList(top.getString("topname").split("###"));
 			List<String> baltop = Arrays.asList(top.getString("topbal").split("###"));
 			Integer i = 0;
@@ -83,6 +77,7 @@ public class YML {
 				Cache.baltop_papi.add(xxx);
 				Cache.baltop.put(xxx, Double.valueOf(baltop.get(i)));
 				i = i + 1;
+			}
 			}
 		} else {
 			top.createSection("topname");

@@ -33,6 +33,18 @@ public class Cache {
 		uid.put(u, v);
 	}
 
+	public static void cclean() {
+		List<UUID> ol = new ArrayList<UUID>();
+		for (Player pp : Bukkit.getOnlinePlayers()) {
+			ol.add(pp.getUniqueId());
+		}
+		if (ol.isEmpty()) {
+			bal.clear();
+			uid.clear();
+		}
+	}
+
+
 	public static BigDecimal getbal(UUID u) {
 		if (bal.containsKey(u)) {
 			return bal.get(u);
@@ -60,7 +72,7 @@ public class Cache {
 		addbal(u, ls);
 		new Save(u, amount, type).runTaskAsynchronously(XConomy.getInstance());
 		if (XConomy.isbc()) {
-			sendmess(u, ls.doubleValue());
+			sendmess(u, ls);
 		}
 	}
 
@@ -92,14 +104,14 @@ public class Cache {
 		return null;
 	}
 
-	public static void sendmess(UUID u, Double bb) {
+	public static void sendmess(UUID u, BigDecimal bb) {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		DataOutputStream output = new DataOutputStream(stream);
 		try {
 			output.writeUTF("balance");
 			output.writeUTF(XConomy.getsign());
 			output.writeUTF(u.toString());
-			output.writeUTF(Double.toString(bb));
+			output.writeUTF(bb.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

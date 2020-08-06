@@ -580,6 +580,15 @@ public class Messages {
 			tranp("#============================== Translator - erkutay007 ==============================", xx);
 		}
 	}
+	
+	public static String getau() {
+		if (XConomy.getInstance().lang().equalsIgnoreCase("Chinese")
+				| XConomy.getInstance().lang().equalsIgnoreCase("ChineseTW")) {
+			return "伊C";
+		} else{
+			return "YiC";
+		}
+	}
 
 	public static void tranp(String mm, File xx) {
 		try {
