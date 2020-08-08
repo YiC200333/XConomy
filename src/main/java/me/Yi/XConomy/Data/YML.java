@@ -86,6 +86,7 @@ public class YML {
 	}
 
 	public static void savetop() {
+		if (!baltopls.isEmpty()) {
 		for (String e : Cache.baltop.keySet()) {
 			if (!baltopls.containsKey(e)) {
 				baltopls.put(e, Cache.baltop.get(e));
@@ -112,6 +113,7 @@ public class YML {
 		top.set("topbal", String.join("###", baltop));
 		baltopls.clear();
 		save(top, DataCon.topdata);
+		}
 	}
 
 	public static void save(FileConfiguration fc, File x) {

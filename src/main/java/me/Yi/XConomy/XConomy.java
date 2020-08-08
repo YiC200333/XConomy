@@ -44,7 +44,8 @@ public class XConomy extends JavaPlugin {
 			if (cvaultpe()) {
 				logger("XConomy 不支持 Vault 变量的 baltop 功能");
 				logger("请在 PlaceholderAPI 的 config.yml 中设置 expansions.vault.baltop.enabled 为 false");
-				onDisable();
+				Bukkit.getPluginCommand("money").setExecutor(new cmd_fail());
+				Bukkit.getPluginCommand("balance").setExecutor(new cmd_fail());
 				return;
 			}
 			setupPlaceHolderAPI();

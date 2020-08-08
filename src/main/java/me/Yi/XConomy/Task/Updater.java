@@ -44,22 +44,26 @@ public class Updater extends BukkitRunnable {
 	}
 
 	private static boolean compare(List<String> web, List<String> pl) {
+		Integer v1 = 0;
+		Integer v2 = 0;
 		for (int i = 0; i < 5; i++) {
-			Integer v1 = 0;
-			Integer v2 = 0;
-			if (web.size() >=i+1) {
+			if (web.size() >= i + 1) {
 				v1 = Integer.parseInt(web.get(i));
 			}
-			if (pl.size() >=i+1) {
+			if (pl.size() >= i + 1) {
 				v2 = Integer.parseInt(pl.get(i));
 			}
-			Integer result = Integer.compare(v1 - v2, 0);
-			if (result > 0) {
-				isold = true;
-				return true;
+			if (v1 != v2) {
+				break;
 			}
 		}
-		return false;
+		Integer result = Integer.compare(v1 - v2, 0);
+		if (result > 0) {
+			isold = true;
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
