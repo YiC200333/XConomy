@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,10 +19,10 @@ import me.Yi.XConomy.Task.Save;
 import me.Yi.XConomy.Task.SendMessTask;
 
 public class Cache {
-	public static ConcurrentHashMap<UUID, BigDecimal> bal = new ConcurrentHashMap<UUID, BigDecimal>();
-	public static HashMap<String, Double> baltop = new HashMap<String, Double>();
+	public static Map<UUID, BigDecimal> bal = new ConcurrentHashMap<UUID, BigDecimal>();
+	public static Map<String, Double> baltop = new HashMap<String, Double>();
 	public static List<String> baltop_papi = new ArrayList<String>();
-	public static ConcurrentHashMap<String, UUID> uid = new ConcurrentHashMap<String, UUID>();
+	public static Map<String, UUID> uid = new ConcurrentHashMap<String, UUID>();
 
 	public static void addbal(final UUID u, BigDecimal v) {
 		if (v!=null && !v.equals(null)) {
@@ -34,11 +35,7 @@ public class Cache {
 	}
 
 	public static void cclean() {
-		List<UUID> ol = new ArrayList<UUID>();
-		for (Player pp : Bukkit.getOnlinePlayers()) {
-			ol.add(pp.getUniqueId());
-		}
-		if (ol.isEmpty()) {
+		if (Bukkit.getOnlinePlayers().size() == 0) {
 			bal.clear();
 			uid.clear();
 		}
@@ -53,15 +50,14 @@ public class Cache {
 			if (bal.containsKey(u)) {
 				return bal.get(u);
 			} else {
-				BigDecimal ls = new BigDecimal("0.0");
-				return ls;
+				return BigDecimal.ZERO;
 			}
 		}
 
 	}
 
 	public static void change(UUID u, BigDecimal amount, Integer type) {
-		BigDecimal ls = new BigDecimal("0.0");
+		BigDecimal ls = BigDecimal.ZERO;
 		if (type == 1) {
 			ls = getbal(u).add(amount);
 		} else if (type == 2) {
@@ -80,7 +76,7 @@ public class Cache {
 		baltop.clear();
 		baltop_papi.clear();
 		if (XConomy.config.getBoolean("Settings.mysql")) {
-			XConomy.mysqldb.top();
+			MySQL.top();
 		} else {
 			YML.gettop();
 		}
@@ -117,8 +113,6 @@ public class Cache {
 			e.printStackTrace();
 		}
 		new SendMessTask(stream).runTaskAsynchronously(XConomy.getInstance());
-		// Bukkit.getServer().sendPluginMessage(XConomy.getInstance(), "xconomy:acb",
-		// stream.toByteArray());
 	}
 
 }

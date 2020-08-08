@@ -27,7 +27,6 @@ public class XConomy extends JavaPlugin {
 	public static FileConfiguration config;
 	private MessManage messm;
 	public Economy econ = null;
-	public static MySQL mysqldb = null;
 
 	public void onEnable() {
 
@@ -58,7 +57,7 @@ public class XConomy extends JavaPlugin {
 		Bukkit.getPluginCommand("balancetop").setExecutor(new cmd());
 		Bukkit.getPluginCommand("pay").setExecutor(new cmd());
 		Bukkit.getPluginCommand("xconomy").setExecutor(new cmd());
-		if (!DataCon.create(config)) {
+		if (!DataCon.create()) {
 			onDisable();
 			return;
 		}
@@ -88,9 +87,7 @@ public class XConomy extends JavaPlugin {
 		getServer().getServicesManager().unregister(econ);
 		new BalTop().run();
 		if (config.getBoolean("Settings.mysql")) {
-			if (mysqldb != null) {
-				mysqldb.close();
-			}
+				MySQL.close();
 		}
 		logger("XConomy已成功卸载");
 	}
@@ -227,11 +224,6 @@ public class XConomy extends JavaPlugin {
 			getConfig().set("Pool-Settings.idle-timeout", 60000);
 			x = true;
 		}
-		//if (!ck.contains("Settings.autosave-message")) {
-		//	getConfig().createSection("Settings.autosave-message");
-		//	getConfig().set("Settings.autosave-message", true);
-		//	x = true;
-		//}
 		if (x) {
 			saveConfig();
 		}

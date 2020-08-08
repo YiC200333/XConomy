@@ -26,7 +26,7 @@ public class Cache_NonPlayer {
 	}
 
 	public static void change(String u, BigDecimal amount, Integer type) {
-		BigDecimal ls = new BigDecimal("0.0");
+		BigDecimal ls = BigDecimal.ZERO;
 		if (type == 1) {
 			ls = getbal(u).add(amount);
 		} else if (type == 2) {

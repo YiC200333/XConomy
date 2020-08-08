@@ -21,7 +21,7 @@ public class Updater extends BukkitRunnable {
 		try {
 			URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=75669");
 			URLConnection conn = url.openConnection();
-			String vs = new BufferedReader(new InputStreamReader(conn.getInputStream())).readLine();
+			vs = new BufferedReader(new InputStreamReader(conn.getInputStream())).readLine();
 			List<String> vsls = Arrays.asList(vs.split("\\."));
 			List<String> nvs = Arrays.asList(XConomy.getInstance().getDescription().getVersion().split("\\."));
 			if (compare(vsls, nvs)) {

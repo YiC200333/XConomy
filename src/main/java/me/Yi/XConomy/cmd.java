@@ -41,17 +41,6 @@ public class cmd implements CommandExecutor {
 				} else {
 					sender.sendMessage(sendmess("top_title"));
 					int x = 0;
-					// List<Map.Entry<String, Double>> list = new
-					// ArrayList<>(Cache.baltop.entrySet());
-					// Collections.sort(list, (Map.Entry<String, Double> o1, Map.Entry<String,
-					// Double> o2) -> o2.getValue()
-					// .compareTo(o1.getValue()));
-					// for (Map.Entry<String, Double> e : list) {
-					// x = x + 1;
-					// sender.sendMessage(sendmess("top_text").replace("%index%", String.valueOf(x))
-					// .replace("%player%", e.getKey())
-					// .replace("%balance%", DataFormat.shown((e.getValue()))));
-					// }
 					List<String> topname = Cache.baltop_papi;
 					for (String e : topname) {
 						x = x + 1;

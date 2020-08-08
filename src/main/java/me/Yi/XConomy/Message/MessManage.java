@@ -14,7 +14,7 @@ public class MessManage {
 	public MessManage(XConomy instance) {
 		this.plugin = instance;
 	}
-
+	
 	public void load() {
 		File f = new File(XConomy.getInstance().getDataFolder(), "message.yml");
 		boolean ft = false;

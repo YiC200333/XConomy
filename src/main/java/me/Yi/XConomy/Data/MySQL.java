@@ -6,152 +6,29 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
 
-import com.zaxxer.hikari.HikariDataSource;
-
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.DriverManager;
-
 import me.Yi.XConomy.XConomy;
 import me.Yi.XConomy.Message.Messages;
 
+
 public class MySQL {
-	private static String Driver = "com.mysql.jdbc.Driver";
-	private static String Url = "jdbc:mysql://" + XConomy.config.getString("MySQL.host") + "/"
-			+ XConomy.config.getString("MySQL.database") + "?characterEncoding=utf-8&useSSL=false";
-	private static String User = XConomy.config.getString("MySQL.user");
-	private static String Pass = XConomy.config.getString("MySQL.pass");
+
 	public static String datana = "xconomy";
 	public static String datananon = "xconomynon";
+	private final static MySQLCon mcon = new MySQLCon();
 
-	private Connection conn = null;
-	private HikariDataSource hikari = null;
-	private static boolean secon = false;
-
-	private void fnew() throws SQLException {
-		hikari = new HikariDataSource();
-		hikari.setPoolName("XConomy");
-		hikari.setJdbcUrl(Url);
-		hikari.setUsername(User);
-		hikari.setPassword(Pass);
-		hikari.addDataSourceProperty("cachePrepStmts", "true");
-		hikari.addDataSourceProperty("prepStmtCacheSize", "250");
-		hikari.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-		hikari.setMaximumPoolSize(XConomy.config.getInt("Pool-Settings.maximum-pool-size"));
-		hikari.setMinimumIdle(XConomy.config.getInt("Pool-Settings.minimum-idle"));
-		hikari.setMaxLifetime(XConomy.config.getInt("Pool-Settings.maximum-lifetime"));
-		if (hikari.getMinimumIdle() < hikari.getMaximumPoolSize()) {
-			hikari.setIdleTimeout(XConomy.config.getLong("Pool-Settings.idle-timeout"));
-		} else if (hikari.getMinimumIdle() == hikari.getMaximumPoolSize()) {
-			hikari.setIdleTimeout(0);
-		}
+	public static boolean con() {
+		return mcon.con();		
 	}
-
-	public boolean con() {
+    
+	public static void close() {
+		mcon.close();	
+	}
+    
+	public static void createt() {
 		try {
-			if (XConomy.config.getBoolean("MySQL.usepool")) {
-				fnew();
-				Connection co = getcon();
-				closep(co);
-			} else {
-				Class.forName(Driver);
-				conn = DriverManager.getConnection(Url, User, Pass);
-			}
-			if (secon) {
-				XConomy.getInstance().logger("MySQL重新连接成功");
-			} else {
-				secon = true;
-			}
-			return true;
-		} catch (SQLException e) {
-			XConomy.getInstance().logger("无法连接到数据库-----");
-			XConomy.getInstance().logger(e.getMessage());
-			return false;
-		} catch (ClassNotFoundException e) {
-			XConomy.getInstance().logger("JDBC驱动加载失败");
-		}
-		return false;
-	}
-
-	public Connection getcon() {
-		if (checkcon()) {
-			try {
-				if (XConomy.config.getBoolean("MySQL.usepool")) {
-					return hikari.getConnection();
-				} else {
-					return conn;
-				}
-			} catch (SQLException e1) {
-				if (XConomy.config.getBoolean("MySQL.usepool")) {
-					hikari.close();
-					if (checkcon()) {
-						try {
-							return hikari.getConnection();
-						} catch (SQLException e2) {
-							// TODO Auto-generated catch block
-							e2.printStackTrace();
-						}
-					}
-				}
-				e1.printStackTrace();
-			}
-		}
-		return null;
-	}
-
-	public boolean checkcon() {
-		try {
-			if (XConomy.config.getBoolean("MySQL.usepool")) {
-				if (hikari == null) {
-					return con();
-				}
-				if (hikari.isClosed() == true) {
-					return con();
-				}
-			} else {
-				if (conn == null) {
-					return con();
-				}
-				if (conn.isClosed() == true) {
-					return con();
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
-
-	public void closep(Connection co) {
-		if (XConomy.config.getBoolean("MySQL.usepool")) {
-			try {
-				hikari.evictConnection(co);
-				co.close();
-			} catch (SQLException e) {
-				// // TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			;
-		}
-	}
-
-	public void close() {
-		try {
-			if (conn != null) {
-				conn.close();
-			}
-			if (hikari != null) {
-				hikari.close();
-			}
-		} catch (SQLException e) {
-			XConomy.getInstance().logger("MySQL连接断开失败");
-		}
-	}
-
-	public void createt() {
-		try {
-			Connection co = getcon();
+			Connection co = mcon.getcon();
 			Statement pst = co.createStatement();
 			if (pst != null) {
 				String sql1 = "CREATE TABLE IF NOT EXISTS " + datana
@@ -165,21 +42,21 @@ public class MySQL {
 					pst.executeUpdate(sql2);
 				}
 				pst.close();
-				closep(co);
+				mcon.closep(co);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void newplayer(String UID, String user, Double bal) {
-		Connection co = getcon();
+	public static void newplayer(String UID, String user, Double bal) {
+		Connection co = mcon.getcon();
 		cr_a(UID, user, bal, co);
 		select_user(UID, user, co);
-		closep(co);
+		mcon.closep(co);
 	}
 
-	private void cr_a(String UID, String user, Double bal, Connection co_a) {
+	private static void cr_a(String UID, String user, Double bal, Connection co_a) {
 		try {
 			PreparedStatement inserplayer = co_a.prepareStatement("INSERT INTO " + datana
 					+ "(UID,player,balance) values(?,?,?) " + "ON DUPLICATE KEY UPDATE UID = ?");
@@ -195,7 +72,7 @@ public class MySQL {
 
 	}
 
-	public void cr_non(String account, Double bal, Connection co) {
+	public static void cr_non(String account, Double bal, Connection co) {
 		try {
 			PreparedStatement inserplayernon = co.prepareStatement("INSERT INTO " + datananon
 					+ "(account,balance) values(?,?) " + "ON DUPLICATE KEY UPDATE account = ?");
@@ -209,7 +86,7 @@ public class MySQL {
 		}
 	}
 
-	private void upuser(String UID, String user, Connection co_a) {
+	private static void upuser(String UID, String user, Connection co_a) {
 		try {
 			PreparedStatement changeuser = co_a.prepareStatement("update " + datana + " set player = ? where UID = ?");
 			changeuser.setString(1, user);
@@ -221,9 +98,9 @@ public class MySQL {
 		}
 	}
 
-	public void save(String UID, Double amount, Integer type) {
+	public static void save(String UID, Double amount, Integer type) {
 		try {
-			Connection co = getcon();
+			Connection co = mcon.getcon();
 			String sqla = "";
 			if (type == 1) {
 				sqla = " set balance = balance + " + amount.toString() + " where UID = ?";
@@ -236,15 +113,15 @@ public class MySQL {
 			saveda.setString(1, UID);
 			saveda.executeUpdate();
 			saveda.close();
-			closep(co);
+			mcon.closep(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void save_non(String account, Double amount, Integer type) {
+	public static void save_non(String account, Double amount, Integer type) {
 		try {
-			Connection co = getcon();
+			Connection co = mcon.getcon();
 			String sqla = "";
 			if (type == 1) {
 				sqla = " set balance = balance + " + amount + " where account = ?";
@@ -257,15 +134,15 @@ public class MySQL {
 			saveda.setString(1, account);
 			saveda.executeUpdate();
 			saveda.close();
-			closep(co);
+			mcon.closep(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void select(UUID u) {
+	public static void select(UUID u) {
 		try {
-			Connection co = getcon();
+			Connection co = mcon.getcon();
 			PreparedStatement selectplayer = co.prepareStatement("select * from " + datana + " where UID = ?");
 			selectplayer.setString(1, u.toString());
 			ResultSet rs = selectplayer.executeQuery();
@@ -275,15 +152,15 @@ public class MySQL {
 			}
 			rs.close();
 			selectplayer.close();
-			closep(co);
+			mcon.closep(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void select_non(String u) {
+	public static void select_non(String u) {
 		try {
-			Connection co = getcon();
+			Connection co = mcon.getcon();
 			PreparedStatement selectplayernon = co
 					.prepareStatement("select * from " + datananon + " where binary account = ?");
 			selectplayernon.setString(1, u);
@@ -296,13 +173,13 @@ public class MySQL {
 			}
 			rs.close();
 			selectplayernon.close();
-			closep(co);
+			mcon.closep(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void select_user(String UID, String name, Connection co_a) {
+	private static void select_user(String UID, String name, Connection co_a) {
 		String user = "";
 		try {
 			PreparedStatement selectuser = co_a.prepareStatement("select * from " + datana + " where UID = ?");
@@ -322,9 +199,9 @@ public class MySQL {
 		}
 	}
 
-	public void select_UID(String name) {
+	public static void select_UID(String name) {
 		try {
-			Connection co = getcon();
+			Connection co = mcon.getcon();
 			PreparedStatement selectuid = co.prepareStatement("select * from " + datana + " where binary player = ?");
 			selectuid.setString(1, name);
 			ResultSet rs = selectuid.executeQuery();
@@ -335,16 +212,15 @@ public class MySQL {
 			}
 			rs.close();
 			selectuid.close();
-			closep(co);
+			mcon.closep(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void top() {
-		if (checkcon()) {
+	public static void top() {
 			try {
-				Connection co = getcon();
+				Connection co = mcon.getcon();
 				PreparedStatement savedatop = co.prepareStatement(
 						"select * from " + datana + " where length(player) < 20" + " order by balance desc limit 10");
 				ResultSet rs = savedatop.executeQuery();
@@ -354,11 +230,10 @@ public class MySQL {
 				}
 				rs.close();
 				savedatop.close();
-				closep(co);
+				mcon.closep(co);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}
 	}
 
 }
