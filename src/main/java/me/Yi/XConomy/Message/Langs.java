@@ -54,6 +54,7 @@ public class Langs {
 		ll.add("top_title");
 		ll.add("top_text");
 		ll.add("top_nodata");
+		ll.add("sum_text");
 		ll.add("pay");
 		ll.add("pay_receive");
 		ll.add("pay_fail");
@@ -88,6 +89,7 @@ public class Langs {
 		mess.put("top_title", "&e========= TOP10 =========");
 		mess.put("top_text", "&e%index%: %player% - %balance%");
 		mess.put("top_nodata", "&cNo TOP10 data");
+		mess.put("sum_text", "&fServer Total - %balance%");
 		mess.put("pay", "&cYou pay %player% %amount%");
 		mess.put("pay_receive", "&aYou receive %amount% from %player%");
 		mess.put("pay_fail", "&cYour balance is less than %amount%");
@@ -121,6 +123,7 @@ public class Langs {
 		mess.put("top_title", "&e========= TOP10 =========");
 		mess.put("top_text", "&e%index%: %player% - %balance%");
 		mess.put("top_nodata", "&cНет данных о ТОП10");
+		mess.put("sum_text", "&fServer Total - %balance%");
 		mess.put("pay", "&cВы заплатили игроку %player% %amount%");
 		mess.put("pay_receive", "&aВы получили %amount% от игрока %player%");
 		mess.put("pay_fail", "&cВаш баланс меньше, чем %amount%");
@@ -153,6 +156,7 @@ public class Langs {
 		mess.put("top_title", "&e========= TOP10 =========");
 		mess.put("top_text", "&e%index%: %player% - %balance%");
 		mess.put("top_nodata", "&cNo se encontro datos sobre TOP10");
+		mess.put("sum_text", "&fServer Total - %balance%");
 		mess.put("pay", "&cle pagaste a %player% por %amount%");
 		mess.put("pay_receive", "&aRecibiste %amount% de: %player%");
 		mess.put("pay_fail", "&cTienes menos de %amount%");
@@ -185,6 +189,7 @@ public class Langs {
 		mess.put("top_title", "&e========= TOP10 =========");
 		mess.put("top_text", "&e%index%: %player% - %balance%");
 		mess.put("top_nodata", "&c无玩家经济数据");
+		mess.put("sum_text", "&f服务器总金额 - %balance%");
 		mess.put("pay", "&c你转账给%player% 余额  %amount%");
 		mess.put("pay_receive", "&a你从 %player% 收到转账  %amount%");
 		mess.put("pay_fail", "&c你的余额不足  %amount%");
@@ -217,6 +222,7 @@ public class Langs {
 		mess.put("top_title", "&e========= TOP10 =========");
 		mess.put("top_text", "&e%index%： %player% - %balance%");
 		mess.put("top_nodata", "&c無玩家經濟資料");
+		mess.put("sum_text", "&f伺服器總金額 - %balance%");
 		mess.put("pay", "&c你轉帳給 %player% 餘額 %amount%");
 		mess.put("pay_receive", "&a你從 %player% 收到轉帳 %amount%");
 		mess.put("pay_fail", "&c你的餘額不足 %amount%");
@@ -248,6 +254,7 @@ public class Langs {
 		mess.put("top_title", "&e========= TOP10 =========");
 		mess.put("top_text", "&e%index%: %player% - %balance%");
 		mess.put("top_nodata", "&cTOP10 indisponible");
+		mess.put("sum_text", "&fServer Total - %balance%");
 		mess.put("pay", "&aVous avez versé &a%amount% à %player% ");
 		mess.put("pay_receive", "&aVous avez reçu %amount% de %player%");
 		mess.put("pay_fail", "&cVous n'avez que %amount%");
@@ -280,6 +287,7 @@ public class Langs {
 		mess.put("top_title", "&e========= EN IYI 10 =========");
 		mess.put("top_text", "&e%index%: %player% - %balance%");
 		mess.put("top_nodata", "&cEn iyi ilk 10 listesine ait veri bulunamadı");
+		mess.put("sum_text", "&fServer Total - %balance%");
 		mess.put("pay", "&c%player% adlı oyuncuya %amount% gönderildi");
 		mess.put("pay_receive", "&a%player% adlı oyuncudan %amount% aldın");
 		mess.put("pay_fail", "&cBakiyen %amount%''dan az");

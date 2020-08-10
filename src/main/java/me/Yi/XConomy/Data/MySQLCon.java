@@ -44,7 +44,7 @@ public class MySQLCon {
 
 	public boolean con() {
 		try {
-			if (XConomy.config.getBoolean("MySQL.usepool")) {
+			if (XConomy.getusepool()) {
 				fnew();
 				Connection co = getcon();
 				closep(co);
@@ -71,13 +71,13 @@ public class MySQLCon {
 	public Connection getcon() {
 		if (checkcon()) {
 			try {
-				if (XConomy.config.getBoolean("MySQL.usepool")) {
+				if (XConomy.getusepool()) {
 					return hikari.getConnection();
 				} else {
 					return conn;
 				}
 			} catch (SQLException e1) {
-				if (XConomy.config.getBoolean("MySQL.usepool")) {
+				if (XConomy.getusepool()) {
 					hikari.close();
 					if (checkcon()) {
 						try {
@@ -96,7 +96,7 @@ public class MySQLCon {
 
 	public boolean checkcon() {
 		try {
-			if (XConomy.config.getBoolean("MySQL.usepool")) {
+			if (XConomy.getusepool()) {
 				if (hikari == null) {
 					return con();
 				}
@@ -119,7 +119,7 @@ public class MySQLCon {
 	}
 
 	public void closep(Connection co) {
-		if (XConomy.config.getBoolean("MySQL.usepool")) {
+		if (XConomy.getusepool()) {
 			try {
 				hikari.evictConnection(co);
 				co.close();

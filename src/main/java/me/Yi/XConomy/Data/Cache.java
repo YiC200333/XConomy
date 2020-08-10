@@ -23,6 +23,7 @@ public class Cache {
 	public static Map<String, Double> baltop = new HashMap<String, Double>();
 	public static List<String> baltop_papi = new ArrayList<String>();
 	public static Map<String, UUID> uid = new ConcurrentHashMap<String, UUID>();
+	public static BigDecimal sumbalance = BigDecimal.ZERO;
 
 	public static void addbal(final UUID u, BigDecimal v) {
 		if (v!=null && !v.equals(null)) {
@@ -35,9 +36,11 @@ public class Cache {
 	}
 
 	public static void cclean() {
+		if (!XConomy.cvap) {
 		if (Bukkit.getOnlinePlayers().size() == 0) {
 			bal.clear();
 			uid.clear();
+		}
 		}
 	}
 
@@ -75,11 +78,12 @@ public class Cache {
 	public static void baltop() {
 		baltop.clear();
 		baltop_papi.clear();
-		if (XConomy.config.getBoolean("Settings.mysql")) {
-			MySQL.top();
-		} else {
-			YML.gettop();
-		}
+		sumbal();
+		DataCon.gettopbal();
+	}
+	
+	public static void sumbal() {
+		sumbalance = DataFormat.formatd(DataCon.getsumbal());
 	}
 
 	public static UUID translateuid(String name) {

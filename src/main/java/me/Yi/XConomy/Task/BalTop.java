@@ -10,14 +10,14 @@ import me.Yi.XConomy.Data.YML;
 public class BalTop extends BukkitRunnable {
 	@Override
 	public void run() {
-		Cache.baltop_papi.clear();
 		if (XConomy.config.getBoolean("Settings.mysql")) {
+			Cache.baltop_papi.clear();
 			Cache.baltop.clear();
 			MySQL.top();
 		} else {
 			YML.savetop();
 		}
-
+        Cache.sumbal();
 		Cache.cclean();
 	}
 }

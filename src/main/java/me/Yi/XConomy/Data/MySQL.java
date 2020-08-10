@@ -236,4 +236,22 @@ public class MySQL {
 			}
 	}
 
+	public static Double sumbal() {
+		    Double a = 0.0;
+			try {
+				Connection co = mcon.getcon();
+				PreparedStatement ssumbal = co.prepareStatement("select SUM(balance) from " + datana);
+				ResultSet rs = ssumbal.executeQuery();
+				while (rs.next()) {
+					a = rs.getDouble(1);
+				}
+				rs.close();
+				ssumbal.close();
+				mcon.closep(co);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return a;
+	}
+	
 }

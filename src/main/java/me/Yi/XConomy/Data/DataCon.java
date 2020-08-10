@@ -94,6 +94,22 @@ public class DataCon extends XConomy {
 			MySQL.select_non(u);
 		}
 	}
+	
+	public static void gettopbal() {
+		if (!config.getBoolean("Settings.mysql")) {
+			YML.gettop();
+		} else {
+			MySQL.top();
+		}
+	}	
+
+	public static Double getsumbal() {
+		if (!config.getBoolean("Settings.mysql")) {
+			return YML.getsumbal();
+		} else {
+			return MySQL.sumbal();
+		}
+	}
 
 	public static void save(UUID UID, BigDecimal amount, Integer type) {
 		if (!config.getBoolean("Settings.mysql")) {

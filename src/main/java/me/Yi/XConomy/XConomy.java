@@ -26,6 +26,8 @@ public class XConomy extends JavaPlugin {
 	private static XConomy instance;
 	public static FileConfiguration config;
 	private MessManage messm;
+	public static boolean cvap = false;
+	private static boolean cpe = false;
 	public Economy econ = null;
 
 	public void onEnable() {
@@ -42,11 +44,12 @@ public class XConomy extends JavaPlugin {
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			logger("发现 PlaceholderAPI");
 			if (cvaultpe()) {
-				logger("XConomy 不支持 Vault 变量的 baltop 功能");
+				logger("======================================================================");
+				logger("XConomy 的连接池 不支持 Vault 变量的 baltop 功能");
 				logger("请在 PlaceholderAPI 的 config.yml 中设置 expansions.vault.baltop.enabled 为 false");
-				Bukkit.getPluginCommand("money").setExecutor(new cmd_fail());
-				Bukkit.getPluginCommand("balance").setExecutor(new cmd_fail());
-				return;
+				logger("或者在 XConomy 的 config.yml 中设置 MySQL.usepool 为 false");
+				logger("======================================================================");
+				cpe = true;
 			}
 			setupPlaceHolderAPI();
 		}
@@ -75,11 +78,11 @@ public class XConomy extends JavaPlugin {
 			}
 		}
 		DataFormat.load();
-		// Integer time = config.getInt("Settings.autosave-time");
-		// if (time < 10) {
-		// time = 10;
-		// }
-		new BalTop().runTaskTimerAsynchronously(this, 3600, 3600);
+		Integer time = config.getInt("Settings.refresh-time");
+		if (time < 30) {
+			time = 30;
+		}
+		new BalTop().runTaskTimerAsynchronously(this, time * 20, time * 20);
 		logger("===== YiC =====");
 
 	}
@@ -88,7 +91,7 @@ public class XConomy extends JavaPlugin {
 		getServer().getServicesManager().unregister(econ);
 		new BalTop().run();
 		if (config.getBoolean("Settings.mysql")) {
-				MySQL.close();
+			MySQL.close();
 		}
 		logger("XConomy已成功卸载");
 	}
@@ -103,6 +106,13 @@ public class XConomy extends JavaPlugin {
 
 	public Economy getEconomy() {
 		return econ;
+	}
+
+	public static boolean getusepool() {
+		if (cpe) {
+			return false;
+		}
+		return XConomy.config.getBoolean("MySQL.usepool");
 	}
 
 	public static String getsign() {
@@ -161,8 +171,11 @@ public class XConomy extends JavaPlugin {
 		if (PEFolder.exists()) {
 			FileConfiguration PEck = YamlConfiguration.loadConfiguration(PEFolder);
 			if (PEck.contains("expansions.vault.baltop.enabled")) {
-				return PEck.getBoolean("expansions.vault.baltop.enabled");
+				cvap = PEck.getBoolean("expansions.vault.baltop.enabled");
 			}
+		}
+		if (config.getBoolean("Settings.mysql") && config.getBoolean("MySQL.usepool")) {
+			return cvap;
 		}
 		return false;
 	}
@@ -223,6 +236,11 @@ public class XConomy extends JavaPlugin {
 		if (!ck.contains("Pool-Settings.idle-timeout")) {
 			getConfig().createSection("Pool-Settings.idle-timeout");
 			getConfig().set("Pool-Settings.idle-timeout", 60000);
+			x = true;
+		}
+		if (!ck.contains("Settings.refresh-time")) {
+			getConfig().createSection("Settings.refresh-time");
+			getConfig().set("Settings.refresh-time", 300);
 			x = true;
 		}
 		if (x) {

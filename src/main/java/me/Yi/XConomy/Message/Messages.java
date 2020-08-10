@@ -430,24 +430,24 @@ public class Messages {
 			if (lang.equalsIgnoreCase("Turkish")) {
 				ss = "§amessage.yml reloaded successfully";
 			}
-		} else if (xx.equals("XConomy 不支持 Vault 变量的 baltop 功能")) {
+		} else if (xx.equals("XConomy 的连接池 不支持 Vault 变量的 baltop 功能")) {
 			if (lang.equalsIgnoreCase("English")) {
-				ss = "XConomy does not support the baltop function of vault papi";
+				ss = "XConomy does not support the baltop function of vault papi with connnection pool";
 			}
 			if (lang.equalsIgnoreCase("French")) {
-				ss = "XConomy does not support the baltop function of vault papi";
+				ss = "XConomy does not support the baltop function of vault papi with connnection pool";
 			}
 			if (lang.equalsIgnoreCase("Spanish")) {
-				ss = "XConomy does not support the baltop function of vault papi";
+				ss = "XConomy does not support the baltop function of vault papi with connnection pool";
 			}
 			if (lang.equalsIgnoreCase("Russian")) {
-				ss = "XConomy does not support the baltop function of vault papi";
+				ss = "XConomy does not support the baltop function of vault papi with connnection pool";
 			}
 			if (lang.equalsIgnoreCase("ChineseTW")) {
-				ss = "XConomy 不支援 Vault 變數的 baltop 功能";
+				ss = "XConomy 的連接池不支援 Vault 變數的 baltop 功能";
 			}
 			if (lang.equalsIgnoreCase("Turkish")) {
-				ss = "XConomy does not support the baltop function of vault papi";
+				ss = "XConomy does not support the baltop function of vault papi with connnection pool";
 			}
 		} else if (xx.equals("请在 PlaceholderAPI 的 config.yml 中设置 expansions.vault.baltop.enabled 为 false")) {
 			if (lang.equalsIgnoreCase("English")) {
@@ -467,6 +467,25 @@ public class Messages {
 			}
 			if (lang.equalsIgnoreCase("Turkish")) {
 				ss = "Please set 'expansions.vault.baltop.enabled' to false in the config.yml of PlaceholderAPI";
+			}
+		} else if (xx.equals("或者在 XConomy 的 config.yml 中设置 MySQL.usepool 为 false")) {
+			if (lang.equalsIgnoreCase("English")) {
+				ss = "Or set 'MySQL.usepool' to false in the config.yml of XConomy";
+			}
+			if (lang.equalsIgnoreCase("French")) {
+				ss = "Or set 'MySQL.usepool' to false in the config.yml of XConomy";
+			}
+			if (lang.equalsIgnoreCase("Spanish")) {
+				ss = "Or set 'MySQL.usepool' to false in the config.yml of XConomy";
+			}
+			if (lang.equalsIgnoreCase("Russian")) {
+				ss = "Or set 'MySQL.usepool' to false in the config.yml of XConomy";
+			}
+			if (lang.equalsIgnoreCase("ChineseTW")) {
+				ss = "或者在 XConomy 的 config.yml 中設置 MySQL.usepool 為 false";
+			}
+			if (lang.equalsIgnoreCase("Turkish")) {
+				ss = "Or set 'MySQL.usepool' to false in the config.yml of XConomy";
 			}
 			// -----------------------------------------------------------------------------------------
 		} else if (xx.equals(" 名称已更改!")) {

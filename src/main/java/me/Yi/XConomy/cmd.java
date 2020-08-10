@@ -40,6 +40,10 @@ public class cmd implements CommandExecutor {
 					sender.sendMessage(sendmess("prefix") + sendmess("top_nodata"));
 				} else {
 					sender.sendMessage(sendmess("top_title"));
+					if (XConomy.config.getBoolean("Settings.mysql")) {
+						sender.sendMessage(sendmess("sum_text").replace("%balance%",
+								DataFormat.shown((Cache.sumbalance.doubleValue()))));
+					}
 					int x = 0;
 					List<String> topname = Cache.baltop_papi;
 					for (String e : topname) {

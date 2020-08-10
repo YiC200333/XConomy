@@ -5,6 +5,9 @@ Settings:
   check-update: true
   #Use MySQL or not
   mysql: false
+  #TOP10 and the Server Total refresh time interval (Seconds)
+  #The Server Total only supports MySQL mode
+  refresh-time: 300
   #Initial balance
   initial-bal: 0
   #Whether to enable non-player accounts.

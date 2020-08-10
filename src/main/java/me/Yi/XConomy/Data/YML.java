@@ -70,14 +70,14 @@ public class YML {
 	public static void gettop() {
 		if (top.contains("topname") & top.contains("topbal")) {
 			if (!top.getString("topname").equals("") && !top.getString("topbal").equals("")) {
-			List<String> name = Arrays.asList(top.getString("topname").split("###"));
-			List<String> baltop = Arrays.asList(top.getString("topbal").split("###"));
-			Integer i = 0;
-			for (String xxx : name) {
-				Cache.baltop_papi.add(xxx);
-				Cache.baltop.put(xxx, Double.valueOf(baltop.get(i)));
-				i = i + 1;
-			}
+				List<String> name = Arrays.asList(top.getString("topname").split("###"));
+				List<String> baltop = Arrays.asList(top.getString("topbal").split("###"));
+				Integer i = 0;
+				for (String xxx : name) {
+					Cache.baltop_papi.add(xxx);
+					Cache.baltop.put(xxx, Double.valueOf(baltop.get(i)));
+					i = i + 1;
+				}
 			}
 		} else {
 			top.createSection("topname");
@@ -85,34 +85,39 @@ public class YML {
 		}
 	}
 
+	public static Double getsumbal() {
+		return 0.0;
+	}
+
 	public static void savetop() {
 		if (!baltopls.isEmpty()) {
-		for (String e : Cache.baltop.keySet()) {
-			if (!baltopls.containsKey(e)) {
-				baltopls.put(e, Cache.baltop.get(e));
+			Cache.baltop_papi.clear();
+			for (String e : Cache.baltop.keySet()) {
+				if (!baltopls.containsKey(e)) {
+					baltopls.put(e, Cache.baltop.get(e));
+				}
 			}
-		}
-		Cache.baltop.clear();
-		List<Map.Entry<String, Double>> list = new ArrayList<>(baltopls.entrySet());
-		Collections.sort(list,
-				(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) -> o2.getValue().compareTo(o1.getValue()));
-		List<String> name = new ArrayList<String>();
-		List<String> baltop = new ArrayList<String>();
-		int x = 1;
-		for (Map.Entry<String, Double> e : list) {
-			if (x > 10) {
-				break;
+			Cache.baltop.clear();
+			List<Map.Entry<String, Double>> list = new ArrayList<>(baltopls.entrySet());
+			Collections.sort(list, (Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) -> o2.getValue()
+					.compareTo(o1.getValue()));
+			List<String> name = new ArrayList<String>();
+			List<String> baltop = new ArrayList<String>();
+			int x = 1;
+			for (Map.Entry<String, Double> e : list) {
+				if (x > 10) {
+					break;
+				}
+				name.add(e.getKey());
+				baltop.add(Double.toString(e.getValue()));
+				Cache.baltop_papi.add(e.getKey());
+				Cache.baltop.put(e.getKey(), e.getValue());
+				x = x + 1;
 			}
-			name.add(e.getKey());
-			baltop.add(Double.toString(e.getValue()));
-			Cache.baltop_papi.add(e.getKey());
-			Cache.baltop.put(e.getKey(), e.getValue());
-			x = x + 1;
-		}
-		top.set("topname", String.join("###", name));
-		top.set("topbal", String.join("###", baltop));
-		baltopls.clear();
-		save(top, DataCon.topdata);
+			top.set("topname", String.join("###", name));
+			top.set("topbal", String.join("###", baltop));
+			baltopls.clear();
+			save(top, DataCon.topdata);
 		}
 	}
 
