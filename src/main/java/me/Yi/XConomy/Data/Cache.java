@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 
 import me.Yi.XConomy.XConomy;
 import me.Yi.XConomy.Task.Save;
-import me.Yi.XConomy.Task.SendMessTask;
+import me.Yi.XConomy.Task.SendMessTaskS;
 
 public class Cache {
 	public static Map<UUID, BigDecimal> bal = new ConcurrentHashMap<UUID, BigDecimal>();
@@ -26,8 +26,10 @@ public class Cache {
 	public static BigDecimal sumbalance = BigDecimal.ZERO;
 
 	public static void addbal(final UUID u, BigDecimal v) {
-		if (v!=null && !v.equals(null)) {
-		bal.put(u, v);
+		if (v != null && !v.equals(null)) {
+			if (Bukkit.getOnlinePlayers().size() > 0) {
+				bal.put(u, v);
+			}
 		}
 	}
 
@@ -36,14 +38,9 @@ public class Cache {
 	}
 
 	public static void cclean() {
-		if (!XConomy.cvap) {
-		if (Bukkit.getOnlinePlayers().size() == 0) {
-			bal.clear();
-			uid.clear();
-		}
-		}
+		bal.clear();
+		uid.clear();
 	}
-
 
 	public static BigDecimal getbal(UUID u) {
 		if (bal.containsKey(u)) {
@@ -81,7 +78,7 @@ public class Cache {
 		sumbal();
 		DataCon.gettopbal();
 	}
-	
+
 	public static void sumbal() {
 		sumbalance = DataFormat.formatd(DataCon.getsumbal());
 	}
@@ -116,7 +113,7 @@ public class Cache {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		new SendMessTask(stream).runTaskAsynchronously(XConomy.getInstance());
+		new SendMessTaskS(stream).runTaskAsynchronously(XConomy.getInstance());
 	}
 
 }

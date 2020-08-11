@@ -7,10 +7,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Yi.XConomy.XConomy;
 
-public class SendMessTask extends BukkitRunnable {
+public class SendMessTaskS extends BukkitRunnable {
 	private final ByteArrayOutputStream stream;
 
-	public SendMessTask(ByteArrayOutputStream stream) {
+	public SendMessTaskS(ByteArrayOutputStream stream) {
 		this.stream = stream;
 	}
 

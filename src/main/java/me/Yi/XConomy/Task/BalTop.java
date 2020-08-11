@@ -1,5 +1,6 @@
 package me.Yi.XConomy.Task;
 
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.Yi.XConomy.XConomy;
@@ -18,6 +19,8 @@ public class BalTop extends BukkitRunnable {
 			YML.savetop();
 		}
         Cache.sumbal();
+		if (Bukkit.getOnlinePlayers().size() == 0) {
 		Cache.cclean();
+		}
 	}
 }

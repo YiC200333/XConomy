@@ -4,9 +4,12 @@ import me.Yi.XConomy.Event.BCsync;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public class XConomy_b extends Plugin {
+	private static XConomy_b instance;
 
 	@Override
 	public void onEnable() {
+
+		instance = this;
 
 		getProxy().registerChannel("xconomy:aca");
 		getProxy().registerChannel("xconomy:acb");
@@ -22,4 +25,7 @@ public class XConomy_b extends Plugin {
 		getLogger().info("XConomy successfully disabled!");
 	}
 
+	public static XConomy_b getInstance() {
+		return instance;
+	}
 }

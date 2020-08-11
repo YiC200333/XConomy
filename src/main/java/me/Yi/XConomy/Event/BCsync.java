@@ -3,13 +3,11 @@ package me.Yi.XConomy.Event;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 
+import me.Yi.XConomy.XConomy_b;
+import me.Yi.XConomy.Task.SendMessTaskB;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -30,10 +28,11 @@ public class BCsync implements Listener {
 			return;
 		}
 		ByteArrayDataInput input = ByteStreams.newDataInput(ev.getData());
-		Map<String, ServerInfo> ss = ProxyServer.getInstance().getServers();
-		Collection<ServerInfo> valueCollection = ss.values();
-		List<ServerInfo> ssl = new ArrayList<ServerInfo>(valueCollection);
-		ssl.remove(((Server) ev.getSender()).getInfo());
+		Server ta = (Server) ev.getSender();
+		//Map<String, ServerInfo> ss = ProxyServer.getInstance().getServers();
+		//Collection<ServerInfo> valueCollection = ss.values();
+		//List<ServerInfo> ssl = new ArrayList<ServerInfo>(valueCollection);
+		//ssl.remove(((Server) ev.getSender()).getInfo());
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		DataOutputStream output = new DataOutputStream(stream);
 		String type = input.readUTF();
@@ -58,9 +57,14 @@ public class BCsync implements Listener {
 		} catch (IOException e) {
 			ProxyServer.getInstance().getLogger().severe("An I/O error occurred!");
 		}
-		for (ServerInfo n : ssl) {
-			n.sendData("xconomy:aca", stream.toByteArray());
-		}
+		//for (ServerInfo n : ssl) {
+		//	n.sendData("xconomy:aca", stream.toByteArray());
+		//}
+        for ( ServerInfo s : ProxyServer.getInstance().getServers().values() ) {
+            if ( !s.getName().equals( ta.getInfo().getName() ) && s.getPlayers().size() > 0 ) {
+            	ProxyServer.getInstance().getScheduler().runAsync(XConomy_b.getInstance(), new SendMessTaskB(s, stream));
+            }
+        }
 
 	}
 

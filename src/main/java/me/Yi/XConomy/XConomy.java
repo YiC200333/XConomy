@@ -14,6 +14,7 @@ import me.Yi.XConomy.Data.DataCon;
 import me.Yi.XConomy.Data.DataFormat;
 import me.Yi.XConomy.Data.MySQL;
 import me.Yi.XConomy.Event.Join;
+import me.Yi.XConomy.Event.Quit;
 import me.Yi.XConomy.Event.SPsync;
 import me.Yi.XConomy.Message.MessManage;
 import me.Yi.XConomy.Message.Messages;
@@ -26,7 +27,6 @@ public class XConomy extends JavaPlugin {
 	private static XConomy instance;
 	public static FileConfiguration config;
 	private MessManage messm;
-	public static boolean cvap = false;
 	private static boolean cpe = false;
 	public Economy econ = null;
 
@@ -55,6 +55,7 @@ public class XConomy extends JavaPlugin {
 		}
 		getServer().getServicesManager().register(Economy.class, econ, this, ServicePriority.Normal);
 		getServer().getPluginManager().registerEvents(new Join(), this);
+		getServer().getPluginManager().registerEvents(new Quit(), this);
 		new Metrics(this, 6588);
 		Bukkit.getPluginCommand("money").setExecutor(new cmd());
 		Bukkit.getPluginCommand("balance").setExecutor(new cmd());
@@ -168,6 +169,7 @@ public class XConomy extends JavaPlugin {
 
 	private static boolean cvaultpe() {
 		File PEFolder = new File(Bukkit.getPluginManager().getPlugin("PlaceholderAPI").getDataFolder(), "config.yml");
+		boolean cvap = false;
 		if (PEFolder.exists()) {
 			FileConfiguration PEck = YamlConfiguration.loadConfiguration(PEFolder);
 			if (PEck.contains("expansions.vault.baltop.enabled")) {
