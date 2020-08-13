@@ -147,7 +147,7 @@ public class MySQL {
 			selectplayer.setString(1, u.toString());
 			ResultSet rs = selectplayer.executeQuery();
 			if (rs.next()) {
-				BigDecimal ls = DataFormat.formatd(rs.getDouble(3));
+				BigDecimal ls = DataFormat.formatsb(rs.getString(3));
 				Cache.addbal(u, ls);
 			}
 			rs.close();
@@ -166,10 +166,10 @@ public class MySQL {
 			selectplayernon.setString(1, u);
 			ResultSet rs = selectplayernon.executeQuery();
 			if (rs.next()) {
-				Cache_NonPlayer.addbal(u, DataFormat.formatd(rs.getDouble(2)));
+				Cache_NonPlayer.addbal(u, DataFormat.formatsb(rs.getString(2)));
 			} else {
 				cr_non(u, 0.0, co);
-				Cache_NonPlayer.addbal(u, DataFormat.formatd(0.0));
+				Cache_NonPlayer.addbal(u, DataFormat.formatsb("0.0"));
 			}
 			rs.close();
 			selectplayernon.close();
@@ -208,7 +208,7 @@ public class MySQL {
 			if (rs.next()) {
 				UUID id = UUID.fromString(rs.getString(1));
 				Cache.adduid(name, id);
-				Cache.addbal(id, DataFormat.formatd(rs.getDouble(3)));
+				Cache.addbal(id, DataFormat.formatsb(rs.getString(3)));
 			}
 			rs.close();
 			selectuid.close();
@@ -225,7 +225,7 @@ public class MySQL {
 						"select * from " + datana + " where length(player) < 20" + " order by balance desc limit 10");
 				ResultSet rs = savedatop.executeQuery();
 				while (rs.next()) {
-					Cache.baltop.put(rs.getString(2), rs.getDouble(3));
+					Cache.baltop.put(rs.getString(2), DataFormat.formatsb(rs.getString(3)));
 					Cache.baltop_papi.add(rs.getString(2));
 				}
 				rs.close();
@@ -236,14 +236,14 @@ public class MySQL {
 			}
 	}
 
-	public static Double sumbal() {
-		    Double a = 0.0;
+	public static String sumbal() {
+		    String a = "0.0";
 			try {
 				Connection co = mcon.getcon();
 				PreparedStatement ssumbal = co.prepareStatement("select SUM(balance) from " + datana);
 				ResultSet rs = ssumbal.executeQuery();
 				while (rs.next()) {
-					a = rs.getDouble(1);
+					a = rs.getString(1);
 				}
 				rs.close();
 				ssumbal.close();

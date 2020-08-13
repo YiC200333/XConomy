@@ -19,7 +19,7 @@ public class YML {
 	public static FileConfiguration pdnon;
 	public static FileConfiguration pdu;
 	public static FileConfiguration top;
-	public static HashMap<String, Double> baltopls = new HashMap<String, Double>();
+	public static HashMap<String, BigDecimal> baltopls = new HashMap<String, BigDecimal>();
 
 	public static void create(Player a, Double ii) {
 		if (pd.contains(a.getUniqueId().toString())) {
@@ -41,8 +41,8 @@ public class YML {
 	}
 
 	public static void getbal(UUID u) {
-		Double am = pd.getDouble(u.toString() + ".balance");
-		BigDecimal ls = DataFormat.formatd(am);
+		String am = pd.getString(u.toString() + ".balance");
+		BigDecimal ls = DataFormat.formatsb(am);
 		if (ls != null && !ls.equals(null)) {
 			Cache.addbal(u, ls);
 		}
@@ -50,10 +50,10 @@ public class YML {
 
 	public static void getbal_nonp(String u) {
 		if (pdnon.contains(u)) {
-			Double am = pdnon.getDouble(u + ".balance");
-			Cache_NonPlayer.addbal(u, DataFormat.formatd(am));
+			String am = pdnon.getString(u + ".balance");
+			Cache_NonPlayer.addbal(u, DataFormat.formatsb(am));
 		} else {
-			Cache_NonPlayer.addbal(u, DataFormat.formatd(0.0));
+			Cache_NonPlayer.addbal(u, DataFormat.formatsb("0.0"));
 			pdnon.createSection(u + ".balance");
 			pdnon.set(u + ".balance", 0.0);
 			save(pdnon, DataCon.nonpdata);
@@ -75,7 +75,7 @@ public class YML {
 				Integer i = 0;
 				for (String xxx : name) {
 					Cache.baltop_papi.add(xxx);
-					Cache.baltop.put(xxx, Double.valueOf(baltop.get(i)));
+					Cache.baltop.put(xxx, DataFormat.formatsb(baltop.get(i)));
 					i = i + 1;
 				}
 			}
@@ -85,8 +85,8 @@ public class YML {
 		}
 	}
 
-	public static Double getsumbal() {
-		return 0.0;
+	public static String getsumbal() {
+		return "0.0";
 	}
 
 	public static void savetop() {
@@ -98,18 +98,18 @@ public class YML {
 				}
 			}
 			Cache.baltop.clear();
-			List<Map.Entry<String, Double>> list = new ArrayList<>(baltopls.entrySet());
-			Collections.sort(list, (Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) -> o2.getValue()
+			List<Map.Entry<String, BigDecimal>> list = new ArrayList<>(baltopls.entrySet());
+			Collections.sort(list, (Map.Entry<String, BigDecimal> o1, Map.Entry<String, BigDecimal> o2) -> o2.getValue()
 					.compareTo(o1.getValue()));
 			List<String> name = new ArrayList<String>();
 			List<String> baltop = new ArrayList<String>();
 			int x = 1;
-			for (Map.Entry<String, Double> e : list) {
+			for (Map.Entry<String, BigDecimal> e : list) {
 				if (x > 10) {
 					break;
 				}
 				name.add(e.getKey());
-				baltop.add(Double.toString(e.getValue()));
+				baltop.add(e.getValue().toString());
 				Cache.baltop_papi.add(e.getKey());
 				Cache.baltop.put(e.getKey(), e.getValue());
 				x = x + 1;

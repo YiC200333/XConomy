@@ -3,10 +3,12 @@ package me.Yi.XConomy;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -42,7 +44,7 @@ public class cmd implements CommandExecutor {
 					sender.sendMessage(sendmess("top_title"));
 					if (XConomy.config.getBoolean("Settings.mysql")) {
 						sender.sendMessage(sendmess("sum_text").replace("%balance%",
-								DataFormat.shown((Cache.sumbalance.doubleValue()))));
+								DataFormat.shown((Cache.sumbalance))));
 					}
 					int x = 0;
 					List<String> topname = Cache.baltop_papi;
@@ -63,19 +65,17 @@ public class cmd implements CommandExecutor {
 			if (args.length == 0 & sender instanceof Player) {
 				if (sender.isOp() | sender.hasPermission("xconomy.user.balance")) {
 					Player p = (Player) sender;
-					Double a = XConomy.getInstance().getEconomy().getBalance(p);
+					BigDecimal a = Cache.getbal(p.getUniqueId());
 					sender.sendMessage(
 							sendmess("prefix") + sendmess("balance").replace("%balance%", DataFormat.shown((a))));
 				} else {
 					sender.sendMessage(sendmess("prefix") + sendmess("no_permission"));
 				}
-
 			} else if (args.length == 1) {
 				if (sender.isOp() | sender.hasPermission("xconomy.user.balance.other")) {
-					if (Cache.translateuid(args[0]) != null) {
-						@SuppressWarnings("deprecation")
-						OfflinePlayer po = Bukkit.getOfflinePlayer(args[0]);
-						Double a = XConomy.getInstance().getEconomy().getBalance(po);
+					UUID uls = Cache.translateuid(args[0]);
+					if (uls != null) {
+						BigDecimal a = Cache.getbal(uls);
 						sender.sendMessage(sendmess("prefix") + sendmess("balance_other").replace("%player%", args[0])
 								.replace("%balance%", DataFormat.shown((a))));
 
@@ -92,15 +92,14 @@ public class cmd implements CommandExecutor {
 							| args[0].equalsIgnoreCase("set")) {
 						if (check()) {
 							if (isright(args[2])) {
-								Double amount = DataFormat.formats(args[2]);
+								BigDecimal amount = DataFormat.formatsb(args[2]);
 								String messam = DataFormat.shown(amount);
 								Player p = Bukkit.getPlayer(args[1]);
-								if (Cache.translateuid(args[1]) != null) {
-									@SuppressWarnings("deprecation")
-									OfflinePlayer po = Bukkit.getOfflinePlayer(args[1]);
+								UUID uls = Cache.translateuid(args[1]);
+								if (uls != null) {
 									if (args[0].equalsIgnoreCase("give")) {
 										if (sender.isOp() | sender.hasPermission("xconomy.admin.give")) {
-											XConomy.getInstance().getEconomy().depositPlayer(po, amount);
+											Cache.change(uls, amount, 1);
 											sender.sendMessage(sendmess("prefix") + sendmess("money_give")
 													.replace("%player%", args[1]).replace("%amount%", messam));
 											String mess = sendmess("prefix") + sendmess("money_give_receive")
@@ -115,9 +114,9 @@ public class cmd implements CommandExecutor {
 										}
 									} else if (args[0].equalsIgnoreCase("take")) {
 										if (sender.isOp() | sender.hasPermission("xconomy.admin.take")) {
-											Double bal = XConomy.getInstance().getEconomy().getBalance(po);
-											if (bal >= amount) {
-												XConomy.getInstance().getEconomy().withdrawPlayer(po, amount);
+											BigDecimal bal = Cache.getbal(uls);
+											if (bal.compareTo(amount)>=0) {
+												Cache.change(uls, amount, 2);
 												sender.sendMessage(sendmess("prefix") + sendmess("money_take")
 														.replace("%player%", args[1]).replace("%amount%", messam));
 												String mess = sendmess("prefix") + sendmess("money_take_receive")
@@ -136,7 +135,7 @@ public class cmd implements CommandExecutor {
 										}
 									} else if (args[0].equalsIgnoreCase("set")) {
 										if (sender.isOp() | sender.hasPermission("xconomy.admin.set")) {
-											Cache.change(Cache.translateuid(args[1]), DataFormat.formatd(amount), 3);
+											Cache.change(uls, amount, 3);
 											sender.sendMessage(sendmess("prefix") + sendmess("money_set")
 													.replace("%player%", args[1]).replace("%amount%", messam));
 											String mess = sendmess("prefix") + sendmess("money_set_receive")
@@ -177,19 +176,18 @@ public class cmd implements CommandExecutor {
 				if (sender instanceof Player) {
 					if (sender.isOp() | sender.hasPermission("xconomy.user.pay")) {
 						if (isright(args[1])) {
-							Double amount = DataFormat.formats(args[1]);
+							BigDecimal amount = DataFormat.formatsb(args[1]);
 							String messam = DataFormat.shown(amount);
-							Double bal = XConomy.getInstance().getEconomy().getBalance((Player) sender);
+							BigDecimal bal = DataFormat.formatdb(XConomy.getInstance().getEconomy().getBalance((Player) sender));
 							if (!sender.getName().equalsIgnoreCase(args[0])) {
-								if (bal >= amount) {
+								if (bal.compareTo(amount) >= 0) {
 									Player p = Bukkit.getPlayer(args[0]);
-									@SuppressWarnings("deprecation")
-									OfflinePlayer po = Bukkit.getOfflinePlayer(args[0]);
-									if (Cache.translateuid(args[0]) != null) {
-										XConomy.getInstance().getEconomy().withdrawPlayer((Player) sender, amount);
+									UUID uls = Cache.translateuid(args[0]);
+									if (uls != null) {
+										Cache.change(((Player) sender).getUniqueId(), amount, 2);
 										sender.sendMessage(sendmess("prefix") + sendmess("pay")
 												.replace("%player%", args[0]).replace("%amount%", messam));
-										XConomy.getInstance().getEconomy().depositPlayer(po, amount);
+										Cache.change(uls, amount, 1);
 										String mess = sendmess("prefix") + sendmess("pay_receive")
 												.replace("%player%", sender.getName()).replace("%amount%", messam);
 										if (p != null) {

@@ -79,7 +79,7 @@ public class Vault extends AbstractEconomy {
 		}
 		Double bal = getBalance(name);
 		Player a = Bukkit.getPlayer(name);
-		BigDecimal amountd = DataFormat.formatd(amount);
+		BigDecimal amountd = DataFormat.formatdb(amount);
 		if (isnon(name)) {
 			Cache_NonPlayer.change(name, amountd, 1);
 			return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
@@ -209,7 +209,7 @@ public class Vault extends AbstractEconomy {
 		}
 		Double bal = getBalance(name);
 		Player a = Bukkit.getPlayer(name);
-		BigDecimal amountd = DataFormat.formatd(amount);
+		BigDecimal amountd = DataFormat.formatdb(amount);
 		if (bal < amount) {
 			return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Insufficient balance!");
 		}

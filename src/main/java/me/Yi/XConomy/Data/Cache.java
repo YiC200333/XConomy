@@ -20,16 +20,14 @@ import me.Yi.XConomy.Task.SendMessTaskS;
 
 public class Cache {
 	public static Map<UUID, BigDecimal> bal = new ConcurrentHashMap<UUID, BigDecimal>();
-	public static Map<String, Double> baltop = new HashMap<String, Double>();
+	public static Map<String, BigDecimal> baltop = new HashMap<String, BigDecimal>();
 	public static List<String> baltop_papi = new ArrayList<String>();
 	public static Map<String, UUID> uid = new ConcurrentHashMap<String, UUID>();
 	public static BigDecimal sumbalance = BigDecimal.ZERO;
 
 	public static void addbal(final UUID u, BigDecimal v) {
 		if (v != null && !v.equals(null)) {
-			if (Bukkit.getOnlinePlayers().size() > 0) {
-				bal.put(u, v);
-			}
+			bal.put(u, v);
 		}
 	}
 
@@ -47,13 +45,15 @@ public class Cache {
 			return bal.get(u);
 		} else {
 			DataCon.getbal(u);
+			BigDecimal ls = BigDecimal.ZERO;
 			if (bal.containsKey(u)) {
-				return bal.get(u);
-			} else {
-				return BigDecimal.ZERO;
+				ls = bal.get(u);
 			}
+			if (Bukkit.getOnlinePlayers().size() == 0) {
+				cclean();
+			}
+			return ls;
 		}
-
 	}
 
 	public static void change(UUID u, BigDecimal amount, Integer type) {
@@ -80,7 +80,7 @@ public class Cache {
 	}
 
 	public static void sumbal() {
-		sumbalance = DataFormat.formatd(DataCon.getsumbal());
+		sumbalance = DataFormat.formatsb(DataCon.getsumbal());
 	}
 
 	public static UUID translateuid(String name) {

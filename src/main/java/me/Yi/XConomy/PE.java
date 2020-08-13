@@ -1,5 +1,6 @@
 package me.Yi.XConomy;
 
+import java.math.BigDecimal;
 import org.bukkit.OfflinePlayer;
 import me.Yi.XConomy.Data.Cache;
 import me.Yi.XConomy.Data.DataFormat;
@@ -25,11 +26,11 @@ public class PE extends PlaceholderExpansion {
 
 	@Override
 	public String onRequest(OfflinePlayer player, String identifier) {
-		if (player == null) {
-			return "0.0";
-		}
 		if (identifier.equals("balance")) {
-			Double a = XConomy.getInstance().getEconomy().getBalance(player);
+			if (player == null) {
+			return "0.0";
+			}
+			BigDecimal a = Cache.getbal(player.getUniqueId());
 			String str = DataFormat.shown((a));
 			return str;
 		} else if (identifier.contains("top_player_")) {
@@ -46,7 +47,7 @@ public class PE extends PlaceholderExpansion {
 			if (isnum(nm)) {
 				Integer ii = Integer.valueOf(nm) - 1;
 				String name = Cache.baltop_papi.get(ii);
-				Double a = Cache.baltop.get(name);
+				BigDecimal a = Cache.baltop.get(name);
 				String str = DataFormat.shown((a));
 				return str;
 			} else {

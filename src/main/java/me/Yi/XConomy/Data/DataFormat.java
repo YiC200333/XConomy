@@ -11,16 +11,7 @@ public class DataFormat {
 	public static boolean isi = false;
 	public static DecimalFormat dfs;
 
-	public static BigDecimal formatd(Double am) {
-		BigDecimal bd = new BigDecimal(Double.toString(am));
-		if (isi) {
-			return bd.setScale(0, BigDecimal.ROUND_DOWN);
-		} else {
-			return bd.setScale(2, BigDecimal.ROUND_DOWN);
-		}
-	}
-
-	public static BigDecimal formatds(String am) {
+	public static BigDecimal formatsb(String am) {
 		BigDecimal bd = new BigDecimal(am);
 		if (isi) {
 			return bd.setScale(0, BigDecimal.ROUND_DOWN);
@@ -29,17 +20,17 @@ public class DataFormat {
 		}
 	}
 
-	public static Double formats(String am) {
+	public static BigDecimal formatdb(Double am) {
 		BigDecimal bd = new BigDecimal(am);
 		if (isi) {
-			return bd.setScale(0, BigDecimal.ROUND_DOWN).doubleValue();
+			return bd.setScale(0, BigDecimal.ROUND_DOWN);
 		} else {
-			return bd.setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
+			return bd.setScale(2, BigDecimal.ROUND_DOWN);
 		}
 	}
 
-	public static String shown(Double am) {
-		if (am > 1) {
+	public static String shown(BigDecimal am) {
+		if (am.compareTo(BigDecimal.ONE)==1) {
 			return XConomy.config.getString("Currency.display-format").replace("%balance%", dfs.format(am))
 					.replace("%currencyname%", XConomy.getInstance().getEconomy().currencyNamePlural());
 		}
