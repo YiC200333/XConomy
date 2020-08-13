@@ -121,7 +121,7 @@ public class YML {
 		}
 	}
 
-	public static void save(FileConfiguration fc, File x) {
+	public synchronized static void save(FileConfiguration fc, File x) {
 		try {
 			fc.save(x);
 		} catch (IOException exception) {

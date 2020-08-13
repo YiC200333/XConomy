@@ -178,7 +178,7 @@ public class cmd implements CommandExecutor {
 						if (isright(args[1])) {
 							BigDecimal amount = DataFormat.formatsb(args[1]);
 							String messam = DataFormat.shown(amount);
-							BigDecimal bal = DataFormat.formatdb(XConomy.getInstance().getEconomy().getBalance((Player) sender));
+							BigDecimal bal = Cache.getbal(((Player) sender).getUniqueId());
 							if (!sender.getName().equalsIgnoreCase(args[0])) {
 								if (bal.compareTo(amount) >= 0) {
 									Player p = Bukkit.getPlayer(args[0]);
@@ -228,7 +228,7 @@ public class cmd implements CommandExecutor {
 			Double.parseDouble(str);
 			if (DataFormat.isi) {
 				if (Double.parseDouble(str) >= 1) {
-					return true;
+					return DataFormat.right(DataFormat.formatsb(str));
 				} else {
 					return false;
 				}

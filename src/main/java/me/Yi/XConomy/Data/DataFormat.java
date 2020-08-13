@@ -10,6 +10,7 @@ public class DataFormat {
 
 	public static boolean isi = false;
 	public static DecimalFormat dfs;
+	public static BigDecimal maxam;
 
 	public static BigDecimal formatsb(String am) {
 		BigDecimal bd = new BigDecimal(am);
@@ -37,8 +38,16 @@ public class DataFormat {
 		return XConomy.config.getString("Currency.display-format").replace("%balance%", dfs.format(am))
 				.replace("%currencyname%", XConomy.getInstance().getEconomy().currencyNameSingular());
 	}
-
+	
+	public static boolean right(BigDecimal am) {
+		if (am.compareTo(maxam)>=0) {
+			return false;			
+		}
+		    return true;		
+	}
+	
 	public static void load() {
+		maxam = new BigDecimal("10000000000000000");
 		isi = XConomy.config.getBoolean("Currency.integer-bal");
 		String forms = "###" + XConomy.config.getString("Currency.thousands-separator") + "##0";
 		if (isi) {
