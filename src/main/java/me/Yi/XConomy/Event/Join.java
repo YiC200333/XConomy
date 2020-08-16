@@ -14,12 +14,11 @@ public class Join implements Listener {
 
 	@EventHandler
 	public void joine(PlayerJoinEvent event) {
-		Double ii = XConomy.config.getDouble("Settings.initial-bal");
 		Player a = event.getPlayer();
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				DataCon.newplayer(a, ii);
+				DataCon.newplayer(a);
 			}
 		}.runTaskAsynchronously(XConomy.getInstance());
 		if (a.isOp()) {

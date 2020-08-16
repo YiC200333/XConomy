@@ -34,12 +34,12 @@ MySQL:
   database: date
   #auto add "_", can use %sign% to dicate Server ID (BungeeCord settings)
   table_suffix: ''
-  #use connection pool or not
-  usepool: true
   
 
 #Connection pool settings
 Pool-Settings:
+  #use connection pool or not
+  usepool: true
   maximum-pool-size: 10
   minimum-idle: 10
   maximum-lifetime: 180000

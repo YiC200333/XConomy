@@ -22,7 +22,7 @@ public class DataFormat {
 	}
 
 	public static BigDecimal formatdb(Double am) {
-		BigDecimal bd = new BigDecimal(am);
+		BigDecimal bd = new BigDecimal(String.valueOf(am));
 		if (isi) {
 			return bd.setScale(0, BigDecimal.ROUND_DOWN);
 		} else {

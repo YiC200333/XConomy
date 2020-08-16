@@ -12,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.Yi.XConomy.Data.Cache;
 import me.Yi.XConomy.Data.DataCon;
 import me.Yi.XConomy.Data.DataFormat;
-import me.Yi.XConomy.Data.MySQL;
+import me.Yi.XConomy.Data.SQL;
 import me.Yi.XConomy.Event.Join;
 import me.Yi.XConomy.Event.Quit;
 import me.Yi.XConomy.Event.SPsync;
@@ -47,7 +47,7 @@ public class XConomy extends JavaPlugin {
 				logger("======================================================================");
 				logger("XConomy 的连接池 不支持 Vault 变量的 baltop 功能");
 				logger("请在 PlaceholderAPI 的 config.yml 中设置 expansions.vault.baltop.enabled 为 false");
-				logger("或者在 XConomy 的 config.yml 中设置 MySQL.usepool 为 false");
+				logger("或者在 XConomy 的 config.yml 中设置 Pool-Settings.usepool 为 false");
 				logger("======================================================================");
 				cpe = true;
 			}
@@ -92,7 +92,7 @@ public class XConomy extends JavaPlugin {
 		getServer().getServicesManager().unregister(econ);
 		new BalTop().run();
 		if (config.getBoolean("Settings.mysql")) {
-			MySQL.close();
+			SQL.close();
 		}
 		logger("XConomy已成功卸载");
 	}
@@ -113,7 +113,11 @@ public class XConomy extends JavaPlugin {
 		if (cpe) {
 			return false;
 		}
-		return XConomy.config.getBoolean("MySQL.usepool");
+		String vr = Bukkit.getBukkitVersion();
+		if (vr.contains("1.8")|vr.contains("1.9")|vr.contains("1.10")|vr.contains("1.11")) {
+			return false;
+		}
+		return XConomy.config.getBoolean("Pool-Settings.usepool");
 	}
 
 	public static String getsign() {
@@ -176,7 +180,7 @@ public class XConomy extends JavaPlugin {
 				cvap = PEck.getBoolean("expansions.vault.baltop.enabled");
 			}
 		}
-		if (config.getBoolean("Settings.mysql") && config.getBoolean("MySQL.usepool")) {
+		if (config.getBoolean("Pool-Settings.usepool")) {
 			return cvap;
 		}
 		return false;
@@ -199,11 +203,6 @@ public class XConomy extends JavaPlugin {
 		if (!ck.contains("Settings.non-player-account")) {
 			getConfig().createSection("Settings.non-player-account");
 			getConfig().set("Settings.non-player-account", false);
-			x = true;
-		}
-		if (!ck.contains("MySQL.usepool")) {
-			getConfig().createSection("MySQL.usepool");
-			getConfig().set("MySQL.usepool", true);
 			x = true;
 		}
 		if (!ck.contains("Currency")) {
@@ -243,6 +242,15 @@ public class XConomy extends JavaPlugin {
 		if (!ck.contains("Settings.refresh-time")) {
 			getConfig().createSection("Settings.refresh-time");
 			getConfig().set("Settings.refresh-time", 300);
+			x = true;
+		}
+		if (!ck.contains("Pool-Settings.usepool")) {
+			getConfig().createSection("Pool-Settings.usepool");
+			if (ck.contains("MySQL.usepool")) {
+				getConfig().set("Pool-Settings.usepool", getConfig().getBoolean("MySQL.usepool"));
+			} else {
+				getConfig().set("Pool-Settings.usepool", true);
+			}
 			x = true;
 		}
 		if (x) {

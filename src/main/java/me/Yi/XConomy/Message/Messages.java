@@ -12,24 +12,62 @@ public class Messages {
 	public static String sysmess(String xx) {
 		String ss = xx;
 		String lang = XConomy.getInstance().lang();
-		if (xx.equals("数据保存方式 - YML")) {
+		if (xx.equals("数据保存方式 - SQLite")) {
 			if (lang.equalsIgnoreCase("English")) {
-				ss = "Saving method - YML";
+				ss = "Saving method - SQLite";
 			}
 			if (lang.equalsIgnoreCase("French")) {
-				ss = "Méthode de sauvegarde - YML";
+				ss = "Méthode de sauvegarde - SQLite";
 			}
 			if (lang.equalsIgnoreCase("Spanish")) {
-				ss = "Metodo de Guardado - YML";
+				ss = "Metodo de Guardado - SQLite";
 			}
 			if (lang.equalsIgnoreCase("Russian")) {
-				ss = "Метод сохранения - YML";
+				ss = "Метод сохранения - SQLite";
 			}
 			if (lang.equalsIgnoreCase("ChineseTW")) {
-				ss = "數據保存方式- YML";
+				ss = "數據保存方式- SQLite";
 			}
 			if (lang.equalsIgnoreCase("Turkish")) {
-				ss = "Method Kaydediliyor - YML";
+				ss = "Method Kaydediliyor - SQLite";
+			}
+		} else if (xx.equals("SQLite连接正常")) {
+			if (lang.equalsIgnoreCase("English")) {
+				ss = "SQLite successfully connected";
+			}
+			if (lang.equalsIgnoreCase("French")) {
+				ss = "SQLite connecté avec succès";
+			}
+			if (lang.equalsIgnoreCase("Spanish")) {
+				ss = "Conectado con SQLite";
+			}
+			if (lang.equalsIgnoreCase("Russian")) {
+				ss = "Успешное подключение к SQLite";
+			}
+			if (lang.equalsIgnoreCase("ChineseTW")) {
+				ss = "SQLite連接正常";
+			}
+			if (lang.equalsIgnoreCase("Turkish")) {
+				ss = "SQLite bağlantısı başarılı";
+			}
+		} else if (xx.equals("SQLite连接异常")) {
+			if (lang.equalsIgnoreCase("English")) {
+				ss = "SQLite unsuccessfully connected";
+			}
+			if (lang.equalsIgnoreCase("French")) {
+				ss = "Connexion infructueuse à SQLite";
+			}
+			if (lang.equalsIgnoreCase("Spanish")) {
+				ss = "Fallo al conectar con SQLite";
+			}
+			if (lang.equalsIgnoreCase("Russian")) {
+				ss = "Не успешное подключение к SQLite";
+			}
+			if (lang.equalsIgnoreCase("ChineseTW")) {
+				ss = "SQLite連接異常";
+			}
+			if (lang.equalsIgnoreCase("Turkish")) {
+				ss = "SQLite tekrar bağlantı başarılı";
 			}
 		} else if (xx.equals("数据文件创建完成")) {
 			if (lang.equalsIgnoreCase("English")) {
@@ -468,24 +506,24 @@ public class Messages {
 			if (lang.equalsIgnoreCase("Turkish")) {
 				ss = "Please set 'expansions.vault.baltop.enabled' to false in the config.yml of PlaceholderAPI";
 			}
-		} else if (xx.equals("或者在 XConomy 的 config.yml 中设置 MySQL.usepool 为 false")) {
+		} else if (xx.equals("或者在 XConomy 的 config.yml 中设置 Pool-Settings.usepool 为 false")) {
 			if (lang.equalsIgnoreCase("English")) {
-				ss = "Or set 'MySQL.usepool' to false in the config.yml of XConomy";
+				ss = "Or set 'Pool-Settings.usepool' to false in the config.yml of XConomy";
 			}
 			if (lang.equalsIgnoreCase("French")) {
-				ss = "Or set 'MySQL.usepool' to false in the config.yml of XConomy";
+				ss = "Or set 'Pool-Settings.usepool' to false in the config.yml of XConomy";
 			}
 			if (lang.equalsIgnoreCase("Spanish")) {
-				ss = "Or set 'MySQL.usepool' to false in the config.yml of XConomy";
+				ss = "Or set 'Pool-Settings.usepool' to false in the config.yml of XConomy";
 			}
 			if (lang.equalsIgnoreCase("Russian")) {
-				ss = "Or set 'MySQL.usepool' to false in the config.yml of XConomy";
+				ss = "Or set 'Pool-Settings.usepool' to false in the config.yml of XConomy";
 			}
 			if (lang.equalsIgnoreCase("ChineseTW")) {
-				ss = "或者在 XConomy 的 config.yml 中設置 MySQL.usepool 為 false";
+				ss = "或者在 XConomy 的 config.yml 中設置 Pool-Settings.usepool 為 false";
 			}
 			if (lang.equalsIgnoreCase("Turkish")) {
-				ss = "Or set 'MySQL.usepool' to false in the config.yml of XConomy";
+				ss = "Or set 'Pool-Settings.usepool' to false in the config.yml of XConomy";
 			}
 			// -----------------------------------------------------------------------------------------
 		} else if (xx.equals(" 名称已更改!")) {

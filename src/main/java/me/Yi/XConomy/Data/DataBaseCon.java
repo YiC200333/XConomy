@@ -3,13 +3,14 @@ package me.Yi.XConomy.Data;
 import java.sql.SQLException;
 import com.zaxxer.hikari.HikariDataSource;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 import me.Yi.XConomy.XConomy;
 
-public class MySQLCon {
-	private static String Driver = "com.mysql.jdbc.Driver";
+public class DataBaseCon {
+	private static final String Drivera = "com.mysql.jdbc.Driver";
 	private static String Url = "jdbc:mysql://" + XConomy.config.getString("MySQL.host") + "/"
 			+ XConomy.config.getString("MySQL.database") + "?characterEncoding=utf-8&useSSL=false";
 	private static String User = XConomy.config.getString("MySQL.user");
@@ -19,6 +20,10 @@ public class MySQLCon {
 	private static Integer maxlife = XConomy.config.getInt("Pool-Settings.maximum-lifetime");
 	private static Long idletime = XConomy.config.getLong("Pool-Settings.idle-timeout");
 //============================================================================================
+	private static final String Driverb = "org.sqlite.JDBC";
+	private static final File dataFolder = new File(XConomy.getInstance().getDataFolder(), "playerdata");
+	private static final File userdata = new File(dataFolder, "data.db");
+//============================================================================================
 	private Connection conn = null;
 	private HikariDataSource hikari = null;
 	private static boolean secon = false;
@@ -26,9 +31,13 @@ public class MySQLCon {
 	private void fnew() throws SQLException {
 		hikari = new HikariDataSource();
 		hikari.setPoolName("XConomy");
-		hikari.setJdbcUrl(Url);
-		hikari.setUsername(User);
-		hikari.setPassword(Pass);
+		if (XConomy.config.getBoolean("Settings.mysql")) {
+			hikari.setJdbcUrl(Url);
+			hikari.setUsername(User);
+			hikari.setPassword(Pass);
+		} else {
+			hikari.setJdbcUrl("jdbc:sqlite:" + userdata.toString());
+		}
 		hikari.addDataSourceProperty("cachePrepStmts", "true");
 		hikari.addDataSourceProperty("prepStmtCacheSize", "250");
 		hikari.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
@@ -49,13 +58,20 @@ public class MySQLCon {
 				Connection co = getcon();
 				closep(co);
 			} else {
-				Class.forName(Driver);
-				conn = DriverManager.getConnection(Url, User, Pass);
+				if (XConomy.config.getBoolean("Settings.mysql")) {
+					Class.forName(Drivera);
+					conn = DriverManager.getConnection(Url, User, Pass);
+				} else {
+					Class.forName(Driverb);
+					conn = DriverManager.getConnection("jdbc:sqlite:" + userdata.toString());
+				}
 			}
-			if (secon) {
-				XConomy.getInstance().logger("MySQL重新连接成功");
-			} else {
-				secon = true;
+			if (XConomy.config.getBoolean("Settings.mysql")) {
+				if (secon) {
+					XConomy.getInstance().logger("MySQL重新连接成功");
+				} else {
+					secon = true;
+				}
 			}
 			return true;
 		} catch (SQLException e) {
@@ -77,14 +93,16 @@ public class MySQLCon {
 					return conn;
 				}
 			} catch (SQLException e1) {
-				if (XConomy.getusepool()) {
-					hikari.close();
-					if (checkcon()) {
-						try {
-							return hikari.getConnection();
-						} catch (SQLException e2) {
-							// TODO Auto-generated catch block
-							e2.printStackTrace();
+				if (XConomy.config.getBoolean("Settings.mysql")) {
+					if (XConomy.getusepool()) {
+						hikari.close();
+						if (checkcon()) {
+							try {
+								return hikari.getConnection();
+							} catch (SQLException e2) {
+								// TODO Auto-generated catch block
+								e2.printStackTrace();
+							}
 						}
 					}
 				}
@@ -140,7 +158,10 @@ public class MySQLCon {
 				hikari.close();
 			}
 		} catch (SQLException e) {
-			XConomy.getInstance().logger("MySQL连接断开失败");
+			if (XConomy.config.getBoolean("Settings.mysql")) {
+				XConomy.getInstance().logger("MySQL连接断开失败");
+			}
+			e.printStackTrace();
 		}
 	}
 }
