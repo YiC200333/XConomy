@@ -31,19 +31,15 @@ public class DataBaseCon {
 	private void fnew() throws SQLException {
 		hikari = new HikariDataSource();
 		hikari.setPoolName("XConomy");
-		if (XConomy.config.getBoolean("Settings.mysql")) {
-			hikari.setJdbcUrl(Url);
-			hikari.setUsername(User);
-			hikari.setPassword(Pass);
-		} else {
-			hikari.setJdbcUrl("jdbc:sqlite:" + userdata.toString());
-		}
-		hikari.addDataSourceProperty("cachePrepStmts", "true");
-		hikari.addDataSourceProperty("prepStmtCacheSize", "250");
-		hikari.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+		hikari.setJdbcUrl(Url);
+		hikari.setUsername(User);
+		hikari.setPassword(Pass);
 		hikari.setMaximumPoolSize(maxpsize);
 		hikari.setMinimumIdle(minidle);
 		hikari.setMaxLifetime(maxlife);
+		hikari.addDataSourceProperty("cachePrepStmts", "true");
+		hikari.addDataSourceProperty("prepStmtCacheSize", "250");
+		hikari.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 		if (hikari.getMinimumIdle() < hikari.getMaximumPoolSize()) {
 			hikari.setIdleTimeout(idletime);
 		} else if (hikari.getMinimumIdle() == hikari.getMaximumPoolSize()) {

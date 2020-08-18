@@ -113,8 +113,7 @@ public class XConomy extends JavaPlugin {
 		if (cpe) {
 			return false;
 		}
-		String vr = Bukkit.getBukkitVersion();
-		if (vr.contains("1.8")|vr.contains("1.9")|vr.contains("1.10")|vr.contains("1.11")) {
+		if (!config.getBoolean("Settings.mysql")){
 			return false;
 		}
 		return XConomy.config.getBoolean("Pool-Settings.usepool");
@@ -180,7 +179,7 @@ public class XConomy extends JavaPlugin {
 				cvap = PEck.getBoolean("expansions.vault.baltop.enabled");
 			}
 		}
-		if (config.getBoolean("Pool-Settings.usepool")) {
+		if (config.getBoolean("Settings.mysql") && config.getBoolean("Pool-Settings.usepool")) {
 			return cvap;
 		}
 		return false;

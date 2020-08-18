@@ -191,7 +191,7 @@ public class SQL {
 			if (XConomy.config.getBoolean("Settings.mysql")) {
 				sql = "select * from " + datananon + " where binary account = ?";
 			} else {
-				sql = "select * from " + datananon + " where cast(account as varbinary)=cast(? as varbinary)";
+				sql = "select * from " + datananon + " where account = ?";
 			}
 			PreparedStatement selectplayernon = co.prepareStatement(sql);
 			selectplayernon.setString(1, u);
@@ -240,7 +240,7 @@ public class SQL {
 			if (XConomy.config.getBoolean("Settings.mysql")) {
 				sql = "select * from " + datana + " where binary player = ?";
 			} else {
-				sql = "select * from " + datana + " where cast(player as varbinary)=cast(? as varbinary)";
+				sql = "select * from " + datana + " where player = ?";
 			}
 			PreparedStatement selectuid = co.prepareStatement(sql);
 			selectuid.setString(1, name);

@@ -31,7 +31,7 @@ MySQL:
   host: localhost:3306
   user: root
   pass: root
-  database: date
+  database: data
   #auto add "_", can use %sign% to dicate Server ID (BungeeCord settings)
   table_suffix: ''
   
