@@ -19,7 +19,7 @@ public class SQL {
 	private static Double iam = XConomy.config.getDouble("Settings.initial-bal");
 
 	public static boolean con() {
-		return mcon.con();
+		return mcon.setGlobalConnectionOrReturnFalse();
 	}
 
 	public static void close() {
@@ -28,7 +28,7 @@ public class SQL {
 
 	public static void createt() {
 		try {
-			Connection co = mcon.getcon();
+			Connection co = mcon.getConnection();
 			Statement pst = co.createStatement();
 			if (pst != null) {
 				String sql1 = "SQL";
@@ -53,7 +53,7 @@ public class SQL {
 					pst.executeUpdate(sql2);
 				}
 				pst.close();
-				mcon.closep(co);
+				mcon.closeHikariConnection(co);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -61,9 +61,9 @@ public class SQL {
 	}
 
 	public static void newplayer(String UID, String user) {
-		Connection co = mcon.getcon();
+		Connection co = mcon.getConnection();
 		select_user(UID, user, co);
-		mcon.closep(co);
+		mcon.closeHikariConnection(co);
 	}
 
 	private static void cr_a(String UID, String user, Double amount, Connection co_a) {
@@ -124,22 +124,21 @@ public class SQL {
 		}
 	}
 
-	public static void save(String UID, Double amount, Integer type) {
+	public static void save(String UID, Double amount, Boolean isAdd) {
 		try {
-			Connection co = mcon.getcon();
-			String sqla = "";
-			if (type == 1) {
-				sqla = " set balance = balance + " + amount.toString() + " where UID = ?";
-			} else if (type == 2) {
-				sqla = " set balance = balance - " + amount.toString() + " where UID = ?";
-			} else if (type == 3) {
-				sqla = " set balance = " + amount.toString() + " where UID = ?";
-			}
-			PreparedStatement saveda = co.prepareStatement("update " + datana + sqla);
-			saveda.setString(1, UID);
-			saveda.executeUpdate();
-			saveda.close();
-			mcon.closep(co);
+			Connection co = mcon.getConnection();
+			String sqlToAppend;
+			if (isAdd == null) {
+                sqlToAppend = " set balance = " + amount + " where UID = ?";
+            } else if (isAdd) {
+                sqlToAppend = " set balance = balance + " + amount + " where UID = ?";
+            } else {
+                sqlToAppend = " set balance = balance - " + amount + " where UID = ?";
+            }
+            PreparedStatement updateStatement = co.prepareStatement("update " + datana + sqlToAppend);
+			updateStatement.setString(1, UID);
+			updateStatement.executeUpdate();
+			updateStatement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -147,7 +146,7 @@ public class SQL {
 
 	public static void save_non(String account, Double amount, Integer type) {
 		try {
-			Connection co = mcon.getcon();
+			Connection co = mcon.getConnection();
 			String sqla = "";
 			if (type == 1) {
 				sqla = " set balance = balance + " + amount + " where account = ?";
@@ -160,33 +159,33 @@ public class SQL {
 			saveda.setString(1, account);
 			saveda.executeUpdate();
 			saveda.close();
-			mcon.closep(co);
+			mcon.closeHikariConnection(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void select(UUID u) {
+	public static void select(UUID uuid) {
 		try {
-			Connection co = mcon.getcon();
+			Connection co = mcon.getConnection();
 			PreparedStatement selectplayer = co.prepareStatement("select * from " + datana + " where UID = ?");
-			selectplayer.setString(1, u.toString());
+			selectplayer.setString(1, uuid.toString());
 			ResultSet rs = selectplayer.executeQuery();
 			if (rs.next()) {
-				BigDecimal ls = DataFormat.formatsb(rs.getString(3));
-				Cache.addbal(u, ls);
+				BigDecimal cacheThisAmt = DataFormat.formatsb(rs.getString(3));
+				Cache.insertIntoCache(uuid, cacheThisAmt);
 			}
 			rs.close();
 			selectplayer.close();
-			mcon.closep(co);
+			mcon.closeHikariConnection(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void select_non(String u) {
+	public static void select_non(String playerName) {
 		try {
-			Connection co = mcon.getcon();
+			Connection co = mcon.getConnection();
 			String sql = "SQL";
 			if (XConomy.config.getBoolean("Settings.mysql")) {
 				sql = "select * from " + datananon + " where binary account = ?";
@@ -194,17 +193,17 @@ public class SQL {
 				sql = "select * from " + datananon + " where account = ?";
 			}
 			PreparedStatement selectplayernon = co.prepareStatement(sql);
-			selectplayernon.setString(1, u);
+			selectplayernon.setString(1, playerName);
 			ResultSet rs = selectplayernon.executeQuery();
 			if (rs.next()) {
-				Cache_NonPlayer.addbal(u, DataFormat.formatsb(rs.getString(2)));
+				Cache_NonPlayer.addbal(playerName, DataFormat.formatsb(rs.getString(2)));
 			} else {
-				cr_non(u, 0.0, co);
-				Cache_NonPlayer.addbal(u, DataFormat.formatsb("0.0"));
+				cr_non(playerName, 0.0, co);
+				Cache_NonPlayer.addbal(playerName, DataFormat.formatsb("0.0"));
 			}
 			rs.close();
 			selectplayernon.close();
-			mcon.closep(co);
+			mcon.closeHikariConnection(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -235,7 +234,7 @@ public class SQL {
 
 	public static void select_UID(String name) {
 		try {
-			Connection co = mcon.getcon();
+			Connection co = mcon.getConnection();
 			String sql = "SQL";
 			if (XConomy.config.getBoolean("Settings.mysql")) {
 				sql = "select * from " + datana + " where binary player = ?";
@@ -247,12 +246,12 @@ public class SQL {
 			ResultSet rs = selectuid.executeQuery();
 			if (rs.next()) {
 				UUID id = UUID.fromString(rs.getString(1));
-				Cache.adduid(name, id);
-				Cache.addbal(id, DataFormat.formatsb(rs.getString(3)));
+				Cache.cacheUUID(name, id);
+				Cache.insertIntoCache(id, DataFormat.formatsb(rs.getString(3)));
 			}
 			rs.close();
 			selectuid.close();
-			mcon.closep(co);
+			mcon.closeHikariConnection(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -260,7 +259,7 @@ public class SQL {
 
 	public static void top() {
 		try {
-			Connection co = mcon.getcon();
+			Connection co = mcon.getConnection();
 			PreparedStatement savedatop = co.prepareStatement(
 					"select * from " + datana + " where length(player) < 20" + " order by balance desc limit 10");
 			ResultSet rs = savedatop.executeQuery();
@@ -270,7 +269,7 @@ public class SQL {
 			}
 			rs.close();
 			savedatop.close();
-			mcon.closep(co);
+			mcon.closeHikariConnection(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -279,7 +278,7 @@ public class SQL {
 	public static String sumbal() {
 		String a = "0.0";
 		try {
-			Connection co = mcon.getcon();
+			Connection co = mcon.getConnection();
 			PreparedStatement ssumbal = co.prepareStatement("select SUM(balance) from " + datana);
 			ResultSet rs = ssumbal.executeQuery();
 			if (rs.next()) {
@@ -287,7 +286,7 @@ public class SQL {
 			}
 			rs.close();
 			ssumbal.close();
-			mcon.closep(co);
+			mcon.closeHikariConnection(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -295,13 +294,13 @@ public class SQL {
 	}
 
 	public static void converty(String UID, String name, Double amount) {
-		Connection co = mcon.getcon();
+		Connection co = mcon.getConnection();
 		cr_a(UID, name, amount, co);
 	}
 	
 
 	public static void convertnon(String acc, Double amount) {
-		Connection co = mcon.getcon();
+		Connection co = mcon.getConnection();
 		cr_non(acc, amount, co);
 	}
 }

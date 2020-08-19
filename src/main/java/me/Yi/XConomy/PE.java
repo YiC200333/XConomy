@@ -30,7 +30,7 @@ public class PE extends PlaceholderExpansion {
 			if (player == null) {
 			return "0.0";
 			}
-			BigDecimal a = Cache.getbal(player.getUniqueId());
+			BigDecimal a = Cache.getBalanceFromCacheOrDB(player.getUniqueId());
 			String str = DataFormat.shown((a));
 			return str;
 		} else if (identifier.contains("top_player_")) {

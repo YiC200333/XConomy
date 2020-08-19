@@ -11,7 +11,7 @@ public class Quit implements Listener {
 	@EventHandler
 	public void qu(PlayerQuitEvent event) {
 		if (Bukkit.getOnlinePlayers().size() == 1) {
-			Cache.cclean();;
+			Cache.clearCache();;
 		}
 	}
 

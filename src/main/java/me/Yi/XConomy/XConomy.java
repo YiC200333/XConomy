@@ -2,7 +2,6 @@ package me.Yi.XConomy;
 
 import java.io.File;
 
-import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -56,7 +55,6 @@ public class XConomy extends JavaPlugin {
 		getServer().getServicesManager().register(Economy.class, econ, this, ServicePriority.Normal);
 		getServer().getPluginManager().registerEvents(new Join(), this);
 		getServer().getPluginManager().registerEvents(new Quit(), this);
-		new Metrics(this, 6588);
 		Bukkit.getPluginCommand("money").setExecutor(new cmd());
 		Bukkit.getPluginCommand("balance").setExecutor(new cmd());
 		Bukkit.getPluginCommand("balancetop").setExecutor(new cmd());
@@ -109,7 +107,7 @@ public class XConomy extends JavaPlugin {
 		return econ;
 	}
 
-	public static boolean getusepool() {
+	public static boolean allowHikariConnectionPooling() {
 		if (cpe) {
 			return false;
 		}
