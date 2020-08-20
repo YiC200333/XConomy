@@ -80,8 +80,11 @@ public class DataCon extends XConomy {
 			BigDecimal bd1 = Cache.bal_change.get(uid);
 			if (bd1 != null && !bd1.equals(null)) {
 				Double bal = bd1.setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
+				Cache.bal_change.remove(uid);
 				SQL.save(co, uid.toString(), bal);
 				x = x + 1;
+			}else {
+			Cache.bal_change.remove(uid);
 			}
 		}
 		return x;
@@ -92,11 +95,14 @@ public class DataCon extends XConomy {
 		Iterator<String> aa = ls.listIterator();
 		while (aa.hasNext()) {
 			String account = aa.next();
-			BigDecimal bd2 = Cache_NonPlayer.bal.get(account);
+			BigDecimal bd2 = Cache_NonPlayer.bal_change.get(account);
 			if (bd2 != null && !bd2.equals(null)) {
 				Double bal = bd2.setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
+				Cache_NonPlayer.bal_change.remove(account);
 				SQL.save_non(co, account, bal);
 				x = x + 1;
+			}else {
+				Cache_NonPlayer.bal_change.remove(account);
 			}
 		}
 		return x;

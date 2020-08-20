@@ -30,14 +30,12 @@ public class Save extends BukkitRunnable {
 				List<UUID> uids = Arrays
 						.asList(Cache.bal_change.keySet().toArray(new UUID[Cache.bal_change.keySet().size()]));
 				x = x + DataCon.save(co, uids);
-				Cache.bal_change.clear();
 			}
 
 			if (XConomy.config.getBoolean("Settings.non-player-account") && !Cache_NonPlayer.bal_change.isEmpty()) {
 				List<String> accounts = Arrays.asList(Cache_NonPlayer.bal_change.keySet()
 						.toArray(new String[Cache_NonPlayer.bal_change.keySet().size()]));
 				x = x + DataCon.save_non(co, accounts);
-				Cache_NonPlayer.bal_change.clear();
 			}
 			
 			SQL.mcon.closeHikariConnection(co);
