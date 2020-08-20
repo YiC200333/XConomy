@@ -2,6 +2,9 @@ package me.Yi.XConomy.Data;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
@@ -27,7 +30,7 @@ public class DataCon extends XConomy {
 			}
 		} else {
 			getInstance().logger("数据保存方式 - SQLite");
-		    File dataFolder = new File(getInstance().getDataFolder(), "playerdata");
+			File dataFolder = new File(getInstance().getDataFolder(), "playerdata");
 			dataFolder.mkdirs();
 			if (SQL.con()) {
 				SQL.createt();
@@ -69,12 +72,34 @@ public class DataCon extends XConomy {
 		return SQL.sumbal();
 	}
 
-	public static void save(UUID UID, BigDecimal amount, Boolean isAdd) {
-		SQL.save(UID.toString(), amount.doubleValue(), isAdd);
+	public static Integer save(Connection co, List<UUID> ls) {
+		int x = 0;
+		Iterator<UUID> aa = ls.listIterator();
+		while (aa.hasNext()) {
+			UUID uid = aa.next();
+			BigDecimal bd1 = Cache.bal_change.get(uid);
+			if (bd1 != null && !bd1.equals(null)) {
+				Double bal = bd1.setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
+				SQL.save(co, uid.toString(), bal);
+				x = x + 1;
+			}
+		}
+		return x;
 	}
 
-	public static void save_non(String account, BigDecimal amount, Integer type) {
-		SQL.save_non(account, amount.doubleValue(), type);
+	public static Integer save_non(Connection co, List<String> ls) {
+		int x = 0;
+		Iterator<String> aa = ls.listIterator();
+		while (aa.hasNext()) {
+			String account = aa.next();
+			BigDecimal bd2 = Cache_NonPlayer.bal.get(account);
+			if (bd2 != null && !bd2.equals(null)) {
+				Double bal = bd2.setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
+				SQL.save_non(co, account, bal);
+				x = x + 1;
+			}
+		}
+		return x;
 	}
 
 	private static void mysql_table() {

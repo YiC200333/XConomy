@@ -15,9 +15,7 @@ import me.Yi.XConomy.XConomy;
 public class DataBaseCon {
     private static final String Drivera = "com.mysql.jdbc.Driver";
     //============================================================================================
-    private static final String Driverb = "org.sqlite.JDBC";
     private static final File dataFolder = new File(XConomy.getInstance().getDataFolder(), "playerdata");
-    private static final File userdata = new File(dataFolder, "data.db");
     private static final String Url = "jdbc:mysql://" + XConomy.config.getString("MySQL.host") + "/"
             + XConomy.config.getString("MySQL.database") + "?characterEncoding=utf-8&useSSL=false";
     private static final String User = XConomy.config.getString("MySQL.user");
@@ -27,6 +25,9 @@ public class DataBaseCon {
     private static final Integer maxlife = XConomy.config.getInt("Pool-Settings.maximum-lifetime");
     private static final Long idletime = XConomy.config.getLong("Pool-Settings.idle-timeout");
     private static boolean secon = false;
+    //============================================================================================
+    private static final String Driverb = "org.sqlite.JDBC";
+    private static final File userdata = new File(dataFolder, "data.db");
     //============================================================================================
     private Connection conn = null;
     private HikariDataSource hikari = null;
@@ -50,12 +51,10 @@ public class DataBaseCon {
         }
     }
 
-    public boolean setGlobalConnectionOrReturnFalse() {
+    public boolean setGlobalConnection() {
         try {
             if (XConomy.allowHikariConnectionPooling()) {
-
                 createNewHikariConfiguration();
-
                 Connection co = getConnection();
                 closeHikariConnection(co);
             } else {
@@ -95,7 +94,7 @@ public class DataBaseCon {
                     return conn;
                 }
             } catch (SQLException e1) {
-                if (XConomy.config.getBoolean("Settings.mysql")) {
+                if (d) {
                     hikari.close();
                     if (isAbleToConnect()) {
                         try {
@@ -116,17 +115,17 @@ public class DataBaseCon {
         try {
             if (XConomy.allowHikariConnectionPooling()) {
                 if (hikari == null) {
-                    return setGlobalConnectionOrReturnFalse();
+                    return setGlobalConnection();
                 }
                 if (hikari.isClosed() == true) {
-                    return setGlobalConnectionOrReturnFalse();
+                    return setGlobalConnection();
                 }
             } else {
                 if (conn == null) {
-                    return setGlobalConnectionOrReturnFalse();
+                    return setGlobalConnection();
                 }
                 if (conn.isClosed() == true) {
-                    return setGlobalConnectionOrReturnFalse();
+                    return setGlobalConnection();
                 }
             }
         } catch (SQLException e) {

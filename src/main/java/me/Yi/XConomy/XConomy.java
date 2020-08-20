@@ -17,8 +17,9 @@ import me.Yi.XConomy.Event.Quit;
 import me.Yi.XConomy.Event.SPsync;
 import me.Yi.XConomy.Message.MessManage;
 import me.Yi.XConomy.Message.Messages;
-import me.Yi.XConomy.Task.BalTop;
+import me.Yi.XConomy.Task.Save;
 import me.Yi.XConomy.Task.Updater;
+import me.Yi.XConomy.Utils.UpdateConfig;
 import net.milkbowl.vault.economy.Economy;
 
 public class XConomy extends JavaPlugin {
@@ -77,18 +78,18 @@ public class XConomy extends JavaPlugin {
 			}
 		}
 		DataFormat.load();
-		Integer time = config.getInt("Settings.refresh-time");
+		Integer time = config.getInt("Settings.autosave-time");
 		if (time < 30) {
 			time = 30;
 		}
-		new BalTop().runTaskTimerAsynchronously(this, time * 20, time * 20);
+		new Save().runTaskTimerAsynchronously(this, time * 20, time * 20);
 		logger("===== YiC =====");
 
 	}
 
 	public void onDisable() {
 		getServer().getServicesManager().unregister(econ);
-		new BalTop().run();
+		new Save().run();
 		if (config.getBoolean("Settings.mysql")) {
 			SQL.close();
 		}
@@ -184,72 +185,8 @@ public class XConomy extends JavaPlugin {
 	}
 
 	private void update_config() {
-		boolean x = false;
 		File cc = new File(this.getDataFolder(), "config.yml");
-		FileConfiguration ck = YamlConfiguration.loadConfiguration(cc);
-		if (!ck.contains("Settings.check-update")) {
-			getConfig().createSection("Settings.check-update");
-			getConfig().set("Settings.check-update", true);
-			x = true;
-		}
-		if (!ck.contains("MySQL.table_suffix")) {
-			getConfig().createSection("MySQL.table_suffix");
-			getConfig().set("MySQL.table_suffix", "");
-			x = true;
-		}
-		if (!ck.contains("Settings.non-player-account")) {
-			getConfig().createSection("Settings.non-player-account");
-			getConfig().set("Settings.non-player-account", false);
-			x = true;
-		}
-		if (!ck.contains("Currency")) {
-			getConfig().createSection("Currency.singular-name");
-			getConfig().set("Currency.singular-name", "dollar");
-			getConfig().createSection("Currency.plural-name");
-			getConfig().set("Currency.plural-name", "dollars");
-			getConfig().createSection("Currency.integer-bal");
-			if (ck.contains("Settings.integer")) {
-				getConfig().set("Currency.integer-bal", getConfig().getBoolean("Settings.integer"));
-			} else {
-				getConfig().set("Currency.integer-bal", false);
-			}
-			getConfig().createSection("Currency.display-format");
-			getConfig().set("Currency.display-format", "%balance% %currencyname%");
-			x = true;
-		}
-		if (!ck.contains("Currency.thousands-separator")) {
-			getConfig().createSection("Currency.thousands-separator");
-			getConfig().set("Currency.thousands-separator", ",");
-			x = true;
-		}
-		if (!ck.contains("Pool-Settings.maximum-lifetime")) {
-			getConfig().createSection("Pool-Settings.maximum-pool-size");
-			getConfig().set("Pool-Settings.maximum-pool-size", 10);
-			getConfig().createSection("Pool-Settings.minimum-idle");
-			getConfig().set("Pool-Settings.minimum-idle", 10);
-			getConfig().createSection("Pool-Settings.maximum-lifetime");
-			getConfig().set("Pool-Settings.maximum-lifetime", 180000);
-			x = true;
-		}
-		if (!ck.contains("Pool-Settings.idle-timeout")) {
-			getConfig().createSection("Pool-Settings.idle-timeout");
-			getConfig().set("Pool-Settings.idle-timeout", 60000);
-			x = true;
-		}
-		if (!ck.contains("Settings.refresh-time")) {
-			getConfig().createSection("Settings.refresh-time");
-			getConfig().set("Settings.refresh-time", 300);
-			x = true;
-		}
-		if (!ck.contains("Pool-Settings.usepool")) {
-			getConfig().createSection("Pool-Settings.usepool");
-			if (ck.contains("MySQL.usepool")) {
-				getConfig().set("Pool-Settings.usepool", getConfig().getBoolean("MySQL.usepool"));
-			} else {
-				getConfig().set("Pool-Settings.usepool", true);
-			}
-			x = true;
-		}
+		boolean x = UpdateConfig.update(getConfig(), cc);
 		if (x) {
 			saveConfig();
 		}

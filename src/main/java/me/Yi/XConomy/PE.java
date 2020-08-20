@@ -28,11 +28,13 @@ public class PE extends PlaceholderExpansion {
 	public String onRequest(OfflinePlayer player, String identifier) {
 		if (identifier.equals("balance")) {
 			if (player == null) {
-			return "0.0";
+				return "0.0";
 			}
 			BigDecimal a = Cache.getBalanceFromCacheOrDB(player.getUniqueId());
-			String str = DataFormat.shown((a));
-			return str;
+			if (identifier.contains("balance_value")) {
+			return a.toString();
+			}
+			return DataFormat.shown(a);
 		} else if (identifier.contains("top_player_")) {
 			String nm = identifier.substring(identifier.indexOf("top_player_") + 11);
 			if (isnum(nm)) {
@@ -44,15 +46,29 @@ public class PE extends PlaceholderExpansion {
 			}
 		} else if (identifier.contains("top_balance_")) {
 			String nm = identifier.substring(identifier.indexOf("top_balance_") + 12);
+			if (identifier.contains("top_balance_value")) {
+				nm = identifier.substring(identifier.indexOf("top_balance_value_") + 18);
+			}
 			if (isnum(nm)) {
 				Integer ii = Integer.valueOf(nm) - 1;
 				String name = Cache.baltop_papi.get(ii);
 				BigDecimal a = Cache.baltop.get(name);
-				String str = DataFormat.shown((a));
-				return str;
+				if (identifier.contains("top_balance_value")) {
+					return a.toString();
+				}
+					return DataFormat.shown(a);
 			} else {
 				return "[XConomy]Invalid index";
 			}
+		} else if (identifier.contains("sum_balance")) {
+			if (Cache.sumbalance == null) {
+				return "0.0";
+			}
+			BigDecimal s = Cache.sumbalance;
+			if (identifier.contains("sum_balance_value")) {
+				return s.toString();
+			}
+				return DataFormat.shown(s);
 		}
 		return null;
 	}

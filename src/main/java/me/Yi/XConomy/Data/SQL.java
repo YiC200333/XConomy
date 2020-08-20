@@ -15,11 +15,11 @@ public class SQL {
 
 	public static String datana = "xconomy";
 	public static String datananon = "xconomynon";
-	private final static DataBaseCon mcon = new DataBaseCon();
+	public final static DataBaseCon mcon = new DataBaseCon();
 	private static Double iam = XConomy.config.getDouble("Settings.initial-bal");
 
 	public static boolean con() {
-		return mcon.setGlobalConnectionOrReturnFalse();
+		return mcon.setGlobalConnection();
 	}
 
 	public static void close() {
@@ -124,18 +124,10 @@ public class SQL {
 		}
 	}
 
-	public static void save(String UID, Double amount, Boolean isAdd) {
+	public static void save(Connection co, String UID, Double amount) {
 		try {
-			Connection co = mcon.getConnection();
-			String sqlToAppend;
-			if (isAdd == null) {
-                sqlToAppend = " set balance = " + amount + " where UID = ?";
-            } else if (isAdd) {
-                sqlToAppend = " set balance = balance + " + amount + " where UID = ?";
-            } else {
-                sqlToAppend = " set balance = balance - " + amount + " where UID = ?";
-            }
-            PreparedStatement updateStatement = co.prepareStatement("update " + datana + sqlToAppend);
+			String sql = " set balance = " + amount + " where UID = ?";
+            PreparedStatement updateStatement = co.prepareStatement("update " + datana + sql);
 			updateStatement.setString(1, UID);
 			updateStatement.executeUpdate();
 			updateStatement.close();
@@ -144,22 +136,13 @@ public class SQL {
 		}
 	}
 
-	public static void save_non(String account, Double amount, Integer type) {
+	public static void save_non(Connection co, String account, Double amount) {
 		try {
-			Connection co = mcon.getConnection();
-			String sqla = "";
-			if (type == 1) {
-				sqla = " set balance = balance + " + amount + " where account = ?";
-			} else if (type == 2) {
-				sqla = " set balance = balance - " + amount + " where account = ?";
-			} else if (type == 3) {
-				sqla = " set balance = " + amount + " where account = ?";
-			}
+			String sqla = " set balance = " + amount + " where account = ?";
 			PreparedStatement saveda = co.prepareStatement("update " + datananon + sqla);
 			saveda.setString(1, account);
 			saveda.executeUpdate();
 			saveda.close();
-			mcon.closeHikariConnection(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -196,10 +179,10 @@ public class SQL {
 			selectplayernon.setString(1, playerName);
 			ResultSet rs = selectplayernon.executeQuery();
 			if (rs.next()) {
-				Cache_NonPlayer.addbal(playerName, DataFormat.formatsb(rs.getString(2)));
+				Cache_NonPlayer.insertIntoCache(playerName, DataFormat.formatsb(rs.getString(2)));
 			} else {
 				cr_non(playerName, 0.0, co);
-				Cache_NonPlayer.addbal(playerName, DataFormat.formatsb("0.0"));
+				Cache_NonPlayer.insertIntoCache(playerName, DataFormat.formatsb("0.0"));
 			}
 			rs.close();
 			selectplayernon.close();

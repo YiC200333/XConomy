@@ -1,27 +1,27 @@
 package me.Yi.XConomy.Data;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import me.Yi.XConomy.Task.Save_Non;
-import me.Yi.XConomy.XConomy;
-
 public class Cache_NonPlayer {
-    public static ConcurrentHashMap<String, BigDecimal> bal = new ConcurrentHashMap<String, BigDecimal>();
+    public static Map<String, BigDecimal> bal = new ConcurrentHashMap<String, BigDecimal>();
+    public static Map<String, BigDecimal> bal_change = new HashMap<String, BigDecimal>();
 
-    public static void addbal(final String playerName, BigDecimal v) {
-        if (v != null && !v.equals(null)) {
-            bal.put(playerName, v);
+    public static void insertIntoCache(final String playerName, BigDecimal value) {
+        if (value != null) {
+            bal.put(playerName, value);
         }
     }
-
-    /**
-     * If balance in cache, get from cache. Else fetch from db
-     *
-     * @param u
-     * @return
-     */
-    public static BigDecimal getBalanceFromCacheOrDatabase(String u) {
+    
+    public static void insertIntoCacheChange(final String playerName, BigDecimal value) {
+        if (value != null) {
+        	bal_change.put(playerName, value);
+        }
+    }
+    
+    public static BigDecimal getBalanceFromCacheOrDB(String u) {
         if (bal.containsKey(u)) {
             return bal.get(u);
         } else {
@@ -31,17 +31,18 @@ public class Cache_NonPlayer {
 
     }
 
-    public static void change(String u, BigDecimal amount, Integer type) {
-        BigDecimal newValue = BigDecimal.ZERO;
-        if (type == 1) {
-            newValue = getBalanceFromCacheOrDatabase(u).add(amount);
-        } else if (type == 2) {
-            newValue = getBalanceFromCacheOrDatabase(u).subtract(amount);
-        } else if (type == 3) {
-            newValue = amount;
-        }
-        addbal(u, newValue);
-        new Save_Non(u, amount, type).runTaskAsynchronously(XConomy.getInstance());
+    public static void change(String u, BigDecimal amount, Boolean isAdd) {
+        BigDecimal newvalue = amount;
+		if (isAdd != null) {
+			BigDecimal bal = getBalanceFromCacheOrDB(u);
+			if (isAdd) {
+				newvalue = bal.add(amount);
+			} else {
+				newvalue = bal.subtract(amount);
+			}
+		}
+        insertIntoCache(u, newvalue);
+        insertIntoCacheChange(u, newvalue);        
     }
 
 }

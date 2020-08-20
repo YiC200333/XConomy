@@ -71,12 +71,13 @@ public class Vault extends AbstractEconomy {
 		return null;
 	}
 
-    /**
-     * Deposit an amount to a player's balance
-     * @param playerName the player name to deposit oo
-     * @param amount the amount to deposit
-     * @return
-     */
+	/**
+	 * Deposit an amount to a player's balance
+	 * 
+	 * @param playerName the player name to deposit oo
+	 * @param amount     the amount to deposit
+	 * @return
+	 */
 	@Override
 	public EconomyResponse depositPlayer(String playerName, double amount) {
 		if (XConomy.isbc() & Bukkit.getOnlinePlayers().isEmpty()) {
@@ -88,13 +89,11 @@ public class Vault extends AbstractEconomy {
 		Player fetchedPlayer = Bukkit.getPlayer(playerName);
 		BigDecimal amountd = DataFormat.formatdb(amount);
 		if (isnon(playerName)) {
-			Cache_NonPlayer.change(playerName, amountd, 1);
+			Cache_NonPlayer.change(playerName, amountd, true);
 			return new EconomyResponse(amount, currentBalance, EconomyResponse.ResponseType.SUCCESS, "");
 		}
 		if (fetchedPlayer != null) {
-            Cache.change(fetchedPlayer.getUniqueId(),
-                         amountd,
-                         true);
+			Cache.change(fetchedPlayer.getUniqueId(), amountd, true);
 		} else {
 			UUID u = Cache.translateuid(playerName);
 			if (u == null) {
@@ -125,7 +124,7 @@ public class Vault extends AbstractEconomy {
 	@Override
 	public double getBalance(String name) {
 		if (isnon(name)) {
-			return Cache_NonPlayer.getBalanceFromCacheOrDatabase(name).doubleValue();
+			return Cache_NonPlayer.getBalanceFromCacheOrDB(name).doubleValue();
 		}
 		if (Bukkit.getPlayer(name) != null) {
 			return Cache.getBalanceFromCacheOrDB(Bukkit.getPlayer(name).getUniqueId()).doubleValue();
@@ -222,13 +221,13 @@ public class Vault extends AbstractEconomy {
 			return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Insufficient balance!");
 		}
 		if (isnon(name)) {
-			Cache_NonPlayer.change(name, amountd, 2);
+			Cache_NonPlayer.change(name, amountd, false);
 			return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
 		}
 		if (a != null) {
 			UUID u = a.getUniqueId();
-            Cache.change(u, amountd, false);
-        } else {
+			Cache.change(u, amountd, false);
+		} else {
 			UUID u = Cache.translateuid(name);
 			if (u == null) {
 				return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "No Account!");
