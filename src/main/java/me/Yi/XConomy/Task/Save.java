@@ -25,7 +25,6 @@ public class Save extends BukkitRunnable {
 
 			// =================================================================================
 			Connection co = SQL.mcon.getConnection();
-			XConomy.getInstance().getLogger().info(String.valueOf(Cache.bal_change.size()));
 
 			if (!Cache.bal_change.isEmpty()) {
 				List<UUID> uids = Arrays
