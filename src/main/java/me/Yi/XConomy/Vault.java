@@ -71,32 +71,40 @@ public class Vault extends AbstractEconomy {
 		return null;
 	}
 
+    /**
+     * Deposit an amount to a player's balance
+     * @param playerName the player name to deposit oo
+     * @param amount the amount to deposit
+     * @return
+     */
 	@Override
-	public EconomyResponse depositPlayer(String name, double amount) {
+	public EconomyResponse depositPlayer(String playerName, double amount) {
 		if (XConomy.isbc() & Bukkit.getOnlinePlayers().isEmpty()) {
 			return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
 					"[BungeeCord] No player in server");
 		}
-		Double bal = getBalance(name);
-		Player a = Bukkit.getPlayer(name);
+		double currentBalance = getBalance(playerName);
+
+		Player fetchedPlayer = Bukkit.getPlayer(playerName);
 		BigDecimal amountd = DataFormat.formatdb(amount);
-		if (isnon(name)) {
-			Cache_NonPlayer.change(name, amountd, 1);
-			return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
+		if (isnon(playerName)) {
+			Cache_NonPlayer.change(playerName, amountd, 1);
+			return new EconomyResponse(amount, currentBalance, EconomyResponse.ResponseType.SUCCESS, "");
 		}
-		if (a != null) {
-			UUID u = a.getUniqueId();
-			Cache.change(u, amountd, 1);
+		if (fetchedPlayer != null) {
+            Cache.change(fetchedPlayer.getUniqueId(),
+                         amountd,
+                         true);
 		} else {
-			UUID u = Cache.translateuid(name);
+			UUID u = Cache.translateuid(playerName);
 			if (u == null) {
-				return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "No Account!");
+				return new EconomyResponse(0.0D, currentBalance, EconomyResponse.ResponseType.FAILURE, "No Account!");
 			}
-			Cache.change(u, amountd, 1);
+			Cache.change(u, amountd, true);
 			;
 		}
 
-		return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
+		return new EconomyResponse(amount, currentBalance, EconomyResponse.ResponseType.SUCCESS, "");
 	}
 
 	@Override
@@ -117,15 +125,15 @@ public class Vault extends AbstractEconomy {
 	@Override
 	public double getBalance(String name) {
 		if (isnon(name)) {
-			return Cache_NonPlayer.getbal(name).doubleValue();
+			return Cache_NonPlayer.getBalanceFromCacheOrDatabase(name).doubleValue();
 		}
 		if (Bukkit.getPlayer(name) != null) {
-			return Cache.getbal(Bukkit.getPlayer(name).getUniqueId()).doubleValue();
+			return Cache.getBalanceFromCacheOrDB(Bukkit.getPlayer(name).getUniqueId()).doubleValue();
 		} else {
 			UUID u = Cache.translateuid(name);
 			if (u != null) {
-				if (Cache.getbal(u) != null && !Cache.getbal(u).equals(null)) {
-					return Cache.getbal(u).doubleValue();
+				if (Cache.getBalanceFromCacheOrDB(u) != null && !Cache.getBalanceFromCacheOrDB(u).equals(null)) {
+					return Cache.getBalanceFromCacheOrDB(u).doubleValue();
 				} else {
 					return 0.0;
 				}
@@ -219,15 +227,13 @@ public class Vault extends AbstractEconomy {
 		}
 		if (a != null) {
 			UUID u = a.getUniqueId();
-			Cache.change(u, amountd, 2);
-			;
-		} else {
+            Cache.change(u, amountd, false);
+        } else {
 			UUID u = Cache.translateuid(name);
 			if (u == null) {
 				return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "No Account!");
 			}
-			Cache.change(u, amountd, 2);
-			;
+			Cache.change(u, amountd, false);
 		}
 		return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
 	}

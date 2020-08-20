@@ -15,7 +15,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.Yi.XConomy.XConomy;
-import me.Yi.XConomy.Task.Save;
 import me.Yi.XConomy.Task.SendMessTaskS;
 
 public class Cache {
@@ -25,22 +24,22 @@ public class Cache {
 	public static Map<String, UUID> uid = new ConcurrentHashMap<String, UUID>();
 	public static BigDecimal sumbalance = BigDecimal.ZERO;
 
-	public static void addbal(final UUID u, BigDecimal v) {
-		if (v != null && !v.equals(null)) {
-			bal.put(u, v);
+	public static void insertIntoCache(final UUID uuid, BigDecimal value) {
+		if (value != null) {
+			bal.put(uuid, value);
 		}
 	}
 
-	public static void adduid(final String u, UUID v) {
+	public static void cacheUUID(final String u, UUID v) {
 		uid.put(u, v);
 	}
 
-	public static void cclean() {
+	public static void clearCache() {
 		bal.clear();
 		uid.clear();
 	}
 
-	public static BigDecimal getbal(UUID u) {
+	public static BigDecimal getBalanceFromCacheOrDB(UUID u) {
 		if (bal.containsKey(u)) {
 			return bal.get(u);
 		} else {
@@ -50,25 +49,28 @@ public class Cache {
 				ls = bal.get(u);
 			}
 			if (Bukkit.getOnlinePlayers().size() == 0) {
-				cclean();
+				clearCache();
 			}
 			return ls;
 		}
 	}
 
-	public static void change(UUID u, BigDecimal amount, Integer type) {
-		BigDecimal ls = BigDecimal.ZERO;
-		if (type == 1) {
-			ls = getbal(u).add(amount);
-		} else if (type == 2) {
-			ls = getbal(u).subtract(amount);
-		} else if (type == 3) {
-			ls = amount;
-		}
-		addbal(u, ls);
-		new Save(u, amount, type).runTaskAsynchronously(XConomy.getInstance());
+	public static void change(UUID u, BigDecimal amount, Boolean isAdd) {
+		BigDecimal changeToThis = amount;
+		if (isAdd != null) {
+            BigDecimal bal = getBalanceFromCacheOrDB(u);
+            if (isAdd) {
+                changeToThis = bal.add(amount);
+            } else {
+                changeToThis = bal.subtract(amount);
+            }
+        }
+
+		insertIntoCache(u, changeToThis);
+        DataCon.save(u, amount, isAdd);
+
 		if (XConomy.isbc()) {
-			sendmess(u, ls);
+			sendmess(u, changeToThis);
 		}
 	}
 

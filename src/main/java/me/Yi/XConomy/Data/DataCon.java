@@ -69,8 +69,8 @@ public class DataCon extends XConomy {
 		return SQL.sumbal();
 	}
 
-	public static void save(UUID UID, BigDecimal amount, Integer type) {
-		SQL.save(UID.toString(), amount.doubleValue(), type);
+	public static void save(UUID UID, BigDecimal amount, Boolean isAdd) {
+		SQL.save(UID.toString(), amount.doubleValue(), isAdd);
 	}
 
 	public static void save_non(String account, BigDecimal amount, Integer type) {

@@ -14,7 +14,7 @@ public class BalTop extends BukkitRunnable {
 		SQL.top();
         Cache.sumbal();
 		if (Bukkit.getOnlinePlayers().size() == 0) {
-		Cache.cclean();
+		Cache.clearCache();
 		}
 	}
 }

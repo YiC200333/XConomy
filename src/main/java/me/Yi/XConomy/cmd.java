@@ -63,7 +63,7 @@ public class cmd implements CommandExecutor {
 			if (args.length == 0 & sender instanceof Player) {
 				if (sender.isOp() | sender.hasPermission("xconomy.user.balance")) {
 					Player p = (Player) sender;
-					BigDecimal a = Cache.getbal(p.getUniqueId());
+					BigDecimal a = Cache.getBalanceFromCacheOrDB(p.getUniqueId());
 					sender.sendMessage(
 							sendmess("prefix") + sendmess("balance").replace("%balance%", DataFormat.shown((a))));
 				} else {
@@ -73,7 +73,7 @@ public class cmd implements CommandExecutor {
 				if (sender.isOp() | sender.hasPermission("xconomy.user.balance.other")) {
 					UUID uls = Cache.translateuid(args[0]);
 					if (uls != null) {
-						BigDecimal a = Cache.getbal(uls);
+						BigDecimal a = Cache.getBalanceFromCacheOrDB(uls);
 						sender.sendMessage(sendmess("prefix") + sendmess("balance_other").replace("%player%", args[0])
 								.replace("%balance%", DataFormat.shown((a))));
 
@@ -97,7 +97,7 @@ public class cmd implements CommandExecutor {
 								if (uls != null) {
 									if (args[0].equalsIgnoreCase("give")) {
 										if (sender.isOp() | sender.hasPermission("xconomy.admin.give")) {
-											Cache.change(uls, amount, 1);
+											Cache.change(uls, amount, true);
 											sender.sendMessage(sendmess("prefix") + sendmess("money_give")
 													.replace("%player%", args[1]).replace("%amount%", messam));
 											String mess = sendmess("prefix") + sendmess("money_give_receive")
@@ -112,9 +112,9 @@ public class cmd implements CommandExecutor {
 										}
 									} else if (args[0].equalsIgnoreCase("take")) {
 										if (sender.isOp() | sender.hasPermission("xconomy.admin.take")) {
-											BigDecimal bal = Cache.getbal(uls);
+											BigDecimal bal = Cache.getBalanceFromCacheOrDB(uls);
 											if (bal.compareTo(amount)>=0) {
-												Cache.change(uls, amount, 2);
+												Cache.change(uls, amount, false);
 												sender.sendMessage(sendmess("prefix") + sendmess("money_take")
 														.replace("%player%", args[1]).replace("%amount%", messam));
 												String mess = sendmess("prefix") + sendmess("money_take_receive")
@@ -133,7 +133,7 @@ public class cmd implements CommandExecutor {
 										}
 									} else if (args[0].equalsIgnoreCase("set")) {
 										if (sender.isOp() | sender.hasPermission("xconomy.admin.set")) {
-											Cache.change(uls, amount, 3);
+											Cache.change(uls, amount, null);
 											sender.sendMessage(sendmess("prefix") + sendmess("money_set")
 													.replace("%player%", args[1]).replace("%amount%", messam));
 											String mess = sendmess("prefix") + sendmess("money_set_receive")
@@ -176,16 +176,16 @@ public class cmd implements CommandExecutor {
 						if (isright(args[1])) {
 							BigDecimal amount = DataFormat.formatsb(args[1]);
 							String messam = DataFormat.shown(amount);
-							BigDecimal bal = Cache.getbal(((Player) sender).getUniqueId());
+							BigDecimal bal = Cache.getBalanceFromCacheOrDB(((Player) sender).getUniqueId());
 							if (!sender.getName().equalsIgnoreCase(args[0])) {
 								if (bal.compareTo(amount) >= 0) {
 									Player p = Bukkit.getPlayer(args[0]);
 									UUID uls = Cache.translateuid(args[0]);
 									if (uls != null) {
-										Cache.change(((Player) sender).getUniqueId(), amount, 2);
+										Cache.change(((Player) sender).getUniqueId(), amount, false);
 										sender.sendMessage(sendmess("prefix") + sendmess("pay")
 												.replace("%player%", args[0]).replace("%amount%", messam));
-										Cache.change(uls, amount, 1);
+										Cache.change(uls, amount, true);
 										String mess = sendmess("prefix") + sendmess("pay_receive")
 												.replace("%player%", sender.getName()).replace("%amount%", messam);
 										if (p != null) {
