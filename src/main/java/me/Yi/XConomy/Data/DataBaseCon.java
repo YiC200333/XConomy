@@ -27,7 +27,7 @@ public class DataBaseCon {
     private static boolean secon = false;
     //============================================================================================
     private static final String Driverb = "org.sqlite.JDBC";
-    private static final File userdata = new File(dataFolder, "data.db");
+    public static File userdata = new File(dataFolder, "data.db");
     //============================================================================================
     private Connection conn = null;
     private HikariDataSource hikari = null;

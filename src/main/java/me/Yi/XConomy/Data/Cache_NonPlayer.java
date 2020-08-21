@@ -34,7 +34,7 @@ public class Cache_NonPlayer {
 			}
 		}
         insertIntoCache(u, newvalue);
-        DataCon.save_non(u, newvalue);        
+        DataCon.save_non(u, amount, isAdd);        
     }
 
 }

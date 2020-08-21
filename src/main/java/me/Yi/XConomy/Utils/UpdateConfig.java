@@ -72,6 +72,11 @@ public class UpdateConfig {
 			}
 			x = true;
 		}
+		if (!ck.contains("SQLite.address")) {
+			config.createSection("SQLite.address");
+			config.set("SQLite.address", "Default");
+			x = true;
+		}
 		return x;
 	}
 }

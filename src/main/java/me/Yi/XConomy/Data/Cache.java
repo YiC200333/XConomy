@@ -67,9 +67,9 @@ public class Cache {
 		}
 		insertIntoCache(u, newvalue);
 		if (XConomy.isbc()) {
-			sendmess(u, newvalue);
-		}else {
-			DataCon.save(u,newvalue);
+			sendmess(u, amount, isAdd);
+		} else {
+			DataCon.save(u, amount, isAdd);
 		}
 	}
 
@@ -102,7 +102,7 @@ public class Cache {
 		return null;
 	}
 
-	public static void sendmess(UUID u, BigDecimal bb) {
+	public static void sendmess(UUID u, BigDecimal bb, Boolean isAdd) {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		DataOutputStream output = new DataOutputStream(stream);
 		try {
@@ -114,7 +114,7 @@ public class Cache {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		new SendMessTaskS(stream,u,bb).runTaskAsynchronously(XConomy.getInstance());
+		new SendMessTaskS(stream, u, bb, isAdd).runTaskAsynchronously(XConomy.getInstance());
 	}
 
 }

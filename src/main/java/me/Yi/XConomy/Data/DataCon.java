@@ -27,6 +27,7 @@ public class DataCon extends XConomy {
 			}
 		} else {
 			getInstance().logger("数据保存方式 - SQLite");
+			sqlite_address();
 			File dataFolder = new File(getInstance().getDataFolder(), "playerdata");
 			dataFolder.mkdirs();
 			if (SQL.con()) {
@@ -69,18 +70,29 @@ public class DataCon extends XConomy {
 		return SQL.sumbal();
 	}
 
-	public static void save(UUID u, BigDecimal bal) {
-		SQL.save(u.toString(), bal.doubleValue());
+	public static void save(UUID UID, BigDecimal amount, Boolean isAdd) {
+		SQL.save(UID.toString(), amount.doubleValue(), isAdd);
 	}
 
-	public static void save_non(String account, BigDecimal bal) {
-	    SQL.save_non(account, bal.doubleValue());
+	public static void save_non(String account, BigDecimal amount, Boolean type) {
+		SQL.save_non(account, amount.doubleValue(), type);
 	}
 
 	private static void mysql_table() {
 		if (config.getString("MySQL.table_suffix") != null & !config.getString("MySQL.table_suffix").equals("")) {
 			SQL.datana = "xconomy_" + config.getString("MySQL.table_suffix").replace("%sign%", getsign());
 			SQL.datananon = "xconomynon_" + config.getString("MySQL.table_suffix").replace("%sign%", getsign());
+		}
+	}
+
+	private static void sqlite_address() {
+		if (!config.getString("SQLite.address").equalsIgnoreCase("Default")) {
+			File folder = new File(config.getString("SQLite.address"));
+			if (folder.exists()) {
+			DataBaseCon.userdata = new File(folder, "data.db");
+			}else {
+			getInstance().logger("Folder does not exist");
+			}
 		}
 	}
 }

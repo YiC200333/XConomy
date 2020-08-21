@@ -5,10 +5,8 @@ Settings:
   check-update: true
   #Use MySQL or not
   mysql: false
-  #Auto save and TOP10 refresh interval (Second)
-  autosave-time: 300
-  #Whether to display the autosave message
-  autosave-message: true
+  #TOP10 and the Server Total refresh time interval (Seconds)
+  refresh-time: 300
   #Initial balance
   initial-bal: 0
   #Whether to enable non-player accounts.
@@ -27,7 +25,13 @@ Currency:
   display-format: '%balance% %currencyname%' 
   
 
-#Database settings
+#SQLite settings
+SQLite:
+  #Address is the folder path
+  address: Default
+  
+  
+#MySQL settings
 MySQL:
   host: localhost:3306
   user: root

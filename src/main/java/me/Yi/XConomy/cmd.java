@@ -289,7 +289,7 @@ public class cmd implements CommandExecutor {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			new SendMessTaskS(stream,null,null).runTaskAsynchronously(XConomy.getInstance());
+			new SendMessTaskS(stream,null,null,null).runTaskAsynchronously(XConomy.getInstance());
 		}
 	}
 
