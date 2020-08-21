@@ -2,9 +2,6 @@ package me.Yi.XConomy.Data;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
@@ -72,40 +69,12 @@ public class DataCon extends XConomy {
 		return SQL.sumbal();
 	}
 
-	public static Integer save(Connection co, List<UUID> ls) {
-		int x = 0;
-		Iterator<UUID> aa = ls.listIterator();
-		while (aa.hasNext()) {
-			UUID uid = aa.next();
-			BigDecimal bd1 = Cache.bal_change.get(uid);
-			if (bd1 != null && !bd1.equals(null)) {
-				Double bal = bd1.setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
-				Cache.bal_change.remove(uid);
-				SQL.save(co, uid.toString(), bal);
-				x = x + 1;
-			}else {
-			Cache.bal_change.remove(uid);
-			}
-		}
-		return x;
+	public static void save(UUID u, BigDecimal bal) {
+		SQL.save(u.toString(), bal.doubleValue());
 	}
 
-	public static Integer save_non(Connection co, List<String> ls) {
-		int x = 0;
-		Iterator<String> aa = ls.listIterator();
-		while (aa.hasNext()) {
-			String account = aa.next();
-			BigDecimal bd2 = Cache_NonPlayer.bal_change.get(account);
-			if (bd2 != null && !bd2.equals(null)) {
-				Double bal = bd2.setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
-				Cache_NonPlayer.bal_change.remove(account);
-				SQL.save_non(co, account, bal);
-				x = x + 1;
-			}else {
-				Cache_NonPlayer.bal_change.remove(account);
-			}
-		}
-		return x;
+	public static void save_non(String account, BigDecimal bal) {
+	    SQL.save_non(account, bal.doubleValue());
 	}
 
 	private static void mysql_table() {

@@ -1,23 +1,15 @@
 package me.Yi.XConomy.Data;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Cache_NonPlayer {
     public static Map<String, BigDecimal> bal = new ConcurrentHashMap<String, BigDecimal>();
-    public static Map<String, BigDecimal> bal_change = new HashMap<String, BigDecimal>();
 
     public static void insertIntoCache(final String playerName, BigDecimal value) {
         if (value != null) {
             bal.put(playerName, value);
-        }
-    }
-    
-    public static void insertIntoCacheChange(final String playerName, BigDecimal value) {
-        if (value != null) {
-        	bal_change.put(playerName, value);
         }
     }
     
@@ -42,7 +34,7 @@ public class Cache_NonPlayer {
 			}
 		}
         insertIntoCache(u, newvalue);
-        insertIntoCacheChange(u, newvalue);        
+        DataCon.save_non(u, newvalue);        
     }
 
 }

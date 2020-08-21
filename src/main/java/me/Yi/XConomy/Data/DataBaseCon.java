@@ -138,7 +138,6 @@ public class DataBaseCon {
     public void closeHikariConnection(Connection co) {
         if (XConomy.allowHikariConnectionPooling()) {
             try {
-                hikari.evictConnection(co);
                 co.close();
             } catch (SQLException e) {
                 // // TODO Auto-generated catch block

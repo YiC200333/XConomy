@@ -19,7 +19,6 @@ import me.Yi.XConomy.Task.SendMessTaskS;
 
 public class Cache {
 	public static Map<UUID, BigDecimal> bal = new ConcurrentHashMap<UUID, BigDecimal>();
-	public static Map<UUID, BigDecimal> bal_change = new HashMap<UUID, BigDecimal>();
 	public static Map<String, BigDecimal> baltop = new HashMap<String, BigDecimal>();
 	public static List<String> baltop_papi = new ArrayList<String>();
 	public static Map<String, UUID> uid = new ConcurrentHashMap<String, UUID>();
@@ -28,12 +27,6 @@ public class Cache {
 	public static void insertIntoCache(final UUID uuid, BigDecimal value) {
 		if (value != null) {
 			bal.put(uuid, value);
-		}
-	}
-	
-	public static void insertIntoCacheChange(final UUID uuid, BigDecimal value) {
-		if (value != null) {
-			bal_change.put(uuid, value);
 		}
 	}
 
@@ -73,9 +66,10 @@ public class Cache {
 			}
 		}
 		insertIntoCache(u, newvalue);
-		insertIntoCacheChange(u, newvalue);
 		if (XConomy.isbc()) {
 			sendmess(u, newvalue);
+		}else {
+			DataCon.save(u,newvalue);
 		}
 	}
 
@@ -120,7 +114,7 @@ public class Cache {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		new SendMessTaskS(stream).runTaskAsynchronously(XConomy.getInstance());
+		new SendMessTaskS(stream,u,bb).runTaskAsynchronously(XConomy.getInstance());
 	}
 
 }

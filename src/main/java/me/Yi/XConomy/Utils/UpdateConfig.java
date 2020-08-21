@@ -14,16 +14,6 @@ public class UpdateConfig {
 			config.set("Settings.check-update", true);
 			x = true;
 		}
-		if (!ck.contains("Settings.autosave-time")) {
-			config.createSection("Settings.autosave-time");
-			config.set("Settings.autosave-time", 300);
-			x = true;
-		}
-		if (!ck.contains("Settings.autosave-message")) {
-			config.createSection("Settings.autosave-message");
-			config.set("Settings.autosave-message", true);
-			x = true;
-		}
 		if (!ck.contains("MySQL.table_suffix")) {
 			config.createSection("MySQL.table_suffix");
 			config.set("MySQL.table_suffix", "");
@@ -66,6 +56,11 @@ public class UpdateConfig {
 		if (!ck.contains("Pool-Settings.idle-timeout")) {
 			config.createSection("Pool-Settings.idle-timeout");
 			config.set("Pool-Settings.idle-timeout", 60000);
+			x = true;
+		}
+		if (!ck.contains("Settings.refresh-time")) {
+			config.createSection("Settings.refresh-time");
+			config.set("Settings.refresh-time", 300);
 			x = true;
 		}
 		if (!ck.contains("Pool-Settings.usepool")) {

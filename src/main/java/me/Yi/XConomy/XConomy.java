@@ -17,7 +17,7 @@ import me.Yi.XConomy.Event.Quit;
 import me.Yi.XConomy.Event.SPsync;
 import me.Yi.XConomy.Message.MessManage;
 import me.Yi.XConomy.Message.Messages;
-import me.Yi.XConomy.Task.Save;
+import me.Yi.XConomy.Task.Baltop;
 import me.Yi.XConomy.Task.Updater;
 import me.Yi.XConomy.Utils.UpdateConfig;
 import net.milkbowl.vault.economy.Economy;
@@ -78,18 +78,18 @@ public class XConomy extends JavaPlugin {
 			}
 		}
 		DataFormat.load();
-		Integer time = config.getInt("Settings.autosave-time");
+		Integer time = config.getInt("Settings.refresh-time");
 		if (time < 30) {
 			time = 30;
 		}
-		new Save().runTaskTimerAsynchronously(this, time * 20, time * 20);
+		new Baltop().runTaskTimerAsynchronously(this, time * 20, time * 20);
 		logger("===== YiC =====");
 
 	}
 
 	public void onDisable() {
 		getServer().getServicesManager().unregister(econ);
-		new Save().run();
+		new Baltop().run();
 		if (config.getBoolean("Settings.mysql")) {
 			SQL.close();
 		}

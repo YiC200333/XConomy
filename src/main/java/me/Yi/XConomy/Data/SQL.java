@@ -124,25 +124,29 @@ public class SQL {
 		}
 	}
 
-	public static void save(Connection co, String UID, Double amount) {
+	public static void save(String UID, Double amount) {
 		try {
+			Connection co = mcon.getConnection();
 			String sql = " set balance = " + amount + " where UID = ?";
             PreparedStatement updateStatement = co.prepareStatement("update " + datana + sql);
 			updateStatement.setString(1, UID);
 			updateStatement.executeUpdate();
 			updateStatement.close();
+			mcon.closeHikariConnection(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void save_non(Connection co, String account, Double amount) {
+	public static void save_non(String account, Double amount) {
 		try {
+			Connection co = mcon.getConnection();
 			String sqla = " set balance = " + amount + " where account = ?";
 			PreparedStatement saveda = co.prepareStatement("update " + datananon + sqla);
 			saveda.setString(1, account);
 			saveda.executeUpdate();
 			saveda.close();
+			mcon.closeHikariConnection(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
