@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import me.Yi.XConomy.Data.Cache;
 import me.Yi.XConomy.Data.DataCon;
@@ -30,6 +31,7 @@ public class XConomy extends JavaPlugin {
 	private MessManage messm;
 	private static boolean cpe = false;
 	public Economy econ = null;
+	private BukkitTask refreshtask = null;
 
 	public void onEnable() {
 
@@ -84,17 +86,16 @@ public class XConomy extends JavaPlugin {
 		if (time < 30) {
 			time = 30;
 		}
-		new Baltop().runTaskTimerAsynchronously(this, time * 20, time * 20);
+		refreshtask = new Baltop().runTaskTimerAsynchronously(this, time * 20, time * 20);
 		logger("===== YiC =====");
 
 	}
 
 	public void onDisable() {
 		getServer().getServicesManager().unregister(econ);
-		new Baltop().run();
-		if (config.getBoolean("Settings.mysql")) {
-			SQL.close();
-		}
+		(new PE(this)).unregister();
+		refreshtask.cancel();
+		SQL.close();
 		logger("XConomy已成功卸载");
 	}
 

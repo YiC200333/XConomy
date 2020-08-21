@@ -67,7 +67,7 @@ public class Cache {
 		}
 		insertIntoCache(u, newvalue);
 		if (XConomy.isbc()) {
-			sendmess(u, amount, isAdd);
+			sendmess(u, newvalue, amount, isAdd);
 		} else {
 			DataCon.save(u, amount, isAdd);
 		}
@@ -102,19 +102,19 @@ public class Cache {
 		return null;
 	}
 
-	public static void sendmess(UUID u, BigDecimal bb, Boolean isAdd) {
+	public static void sendmess(UUID u, BigDecimal amount, BigDecimal amountc, Boolean isAdd) {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		DataOutputStream output = new DataOutputStream(stream);
 		try {
 			output.writeUTF("balance");
 			output.writeUTF(XConomy.getsign());
 			output.writeUTF(u.toString());
-			output.writeUTF(bb.toString());
+			output.writeUTF(amount.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		new SendMessTaskS(stream, u, bb, isAdd).runTaskAsynchronously(XConomy.getInstance());
+		new SendMessTaskS(stream, u, amountc, isAdd).runTaskAsynchronously(XConomy.getInstance());
 	}
 
 }

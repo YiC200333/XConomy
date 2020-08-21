@@ -27,7 +27,6 @@ public class SendMessTaskS extends BukkitRunnable {
 	@Override
 	public void run() {
         ((Player)Bukkit.getOnlinePlayers().iterator().next()).sendPluginMessage(XConomy.getInstance(), "xconomy:acb", this.stream.toByteArray());
-        XConomy.getInstance().getLogger().info("xxxxxxxxxxx");
         if (u!=null) {
 			DataCon.save(u, amount, type);
         }

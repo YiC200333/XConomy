@@ -74,8 +74,8 @@ public class DataCon extends XConomy {
 		SQL.save(UID.toString(), amount.doubleValue(), isAdd);
 	}
 
-	public static void save_non(String account, BigDecimal amount, Boolean type) {
-		SQL.save_non(account, amount.doubleValue(), type);
+	public static void save_non(String account, BigDecimal amount, Boolean isAdd) {
+		SQL.save_non(account, amount.doubleValue(), isAdd);
 	}
 
 	private static void mysql_table() {

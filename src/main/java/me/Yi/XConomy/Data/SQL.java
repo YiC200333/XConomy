@@ -139,6 +139,7 @@ public class SQL {
 			updateStatement.setString(1, UID);
 			updateStatement.executeUpdate();
 			updateStatement.close();
+			mcon.closeHikariConnection(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
