@@ -1,49 +1,49 @@
-#设置
 Settings:
   #Chinese ChineseTW English French Spanish Russian Turkish 
-  language: Chinese
-  #是否检查新版本
+  language: English
+  #Whether to check for new version
   check-update: true
-  #是否使用Mysql
+  #Use MySQL or not
   mysql: false
-  #TOP10和服务器总金额刷新时间间隔 (单位秒)
+  #TOP10 and the Server Total refresh time interval (Seconds)
   refresh-time: 300
-  #初始余额
+  #Initial balance
   initial-bal: 0
-  #非玩家账户是否启用,可以解决某些插件无法创建非玩家账户问题,比如Factions,Towny
-  #非玩家账户的数据不会进行BC同步
+  #Whether to enable non-player accounts.
+  #It can solve the problem that some plugins need to create non-player accounts, such as Factions,Towny
+  #Non-player account data is not synced with BC
   non-player-account: false
 
 
-#货币的显示
+#The display of the currency
 Currency:
   singular-name: dollar
   plural-name: dollars
-  #余额是否为整数
+  #Is the balance an integer
   integer-bal: false
   thousands-separator: ','
   display-format: '%balance% %currencyname%' 
+  
 
-
-#SQLite设置
+#SQLite settings
 SQLite:
-  #地址为文件夹路径
+  #Address is the folder path
   address: Default
-
-
-#MySQL设置
+  
+  
+#MySQL settings
 MySQL:
   host: localhost:3306
   user: root
   pass: root
   database: data
-  #自动添加 "_", 可以使用 %sign% 来表示服务器ID (见BungeeCord设置) 
+  #auto add "_", can use %sign% to dicate Server ID (BungeeCord settings)
   table_suffix: ''
   
 
-#连接池设置
+#Connection pool settings
 Pool-Settings:
-  #是否使用连接池
+  #use connection pool or not
   usepool: true
   maximum-pool-size: 10
   minimum-idle: 10
@@ -51,11 +51,11 @@ Pool-Settings:
   idle-timeout: 60000
   
 
-#BungeeCord设置
+#BungeeCord settings
 BungeeCord:
-  #是否启用BC同步,只支持MySQL
-  #BC同步开启后,控制台和其他插件将无法在服务器无人的情况下修改金额
-  #需要在spigot.yml中设置bungeecord为true
+  #Whether to enable BungeeCord synchronization, only supports MySQL
+  #After BungeeCord sync is turned on, the console and other plugins will not be able to modify the balance in the server without player
+  #Please Set bungeecord to true in the spigot.yml
   enable: false
-  #服务器标识,请保持需要同步的子服务器的标识和数据库的设置一致
+  #Server ID, keep the ID and the MySQL settings is the same between the servers requiring synchronization
   sign: aa
