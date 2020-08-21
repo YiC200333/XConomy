@@ -29,10 +29,6 @@ public class BCsync implements Listener {
 		}
 		ByteArrayDataInput input = ByteStreams.newDataInput(ev.getData());
 		Server ta = (Server) ev.getSender();
-		//Map<String, ServerInfo> ss = ProxyServer.getInstance().getServers();
-		//Collection<ServerInfo> valueCollection = ss.values();
-		//List<ServerInfo> ssl = new ArrayList<ServerInfo>(valueCollection);
-		//ssl.remove(((Server) ev.getSender()).getInfo());
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		DataOutputStream output = new DataOutputStream(stream);
 		String type = input.readUTF();
@@ -57,9 +53,6 @@ public class BCsync implements Listener {
 		} catch (IOException e) {
 			ProxyServer.getInstance().getLogger().severe("An I/O error occurred!");
 		}
-		//for (ServerInfo n : ssl) {
-		//	n.sendData("xconomy:aca", stream.toByteArray());
-		//}
         for ( ServerInfo s : ProxyServer.getInstance().getServers().values() ) {
             if ( !s.getName().equals( ta.getInfo().getName() ) && s.getPlayers().size() > 0 ) {
             	ProxyServer.getInstance().getScheduler().runAsync(XConomy_b.getInstance(), new SendMessTaskB(s, stream));

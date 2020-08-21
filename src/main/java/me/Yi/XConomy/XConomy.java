@@ -1,7 +1,6 @@
 package me.Yi.XConomy;
 
 import java.io.File;
-
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -32,6 +31,8 @@ public class XConomy extends JavaPlugin {
 	private static boolean cpe = false;
 	public Economy econ = null;
 	private BukkitTask refreshtask = null;
+	Metrics metrics = null;
+	private PE papixc = null;
 
 	public void onEnable() {
 
@@ -59,7 +60,7 @@ public class XConomy extends JavaPlugin {
 		getServer().getServicesManager().register(Economy.class, econ, this, ServicePriority.Normal);
 		getServer().getPluginManager().registerEvents(new Join(), this);
 		getServer().getPluginManager().registerEvents(new Quit(), this);
-		new Metrics(this, 6588);
+		metrics = new Metrics(this, 6588);
 		Bukkit.getPluginCommand("money").setExecutor(new cmd());
 		Bukkit.getPluginCommand("balance").setExecutor(new cmd());
 		Bukkit.getPluginCommand("balancetop").setExecutor(new cmd());
@@ -93,7 +94,17 @@ public class XConomy extends JavaPlugin {
 
 	public void onDisable() {
 		getServer().getServicesManager().unregister(econ);
-		(new PE(this)).unregister();
+		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+			try {
+				papixc.unregister();
+			}catch (NoSuchMethodError e) {
+			}
+		}
+		if (config.getBoolean("BungeeCord.enable")) {
+			getServer().getMessenger().unregisterIncomingPluginChannel(this, "xconomy:aca", new SPsync());
+			getServer().getMessenger().unregisterOutgoingPluginChannel(this, "xconomy:acb");
+			getServer().getMessenger().unregisterOutgoingPluginChannel(this, "xconomy:messb");
+		}
 		refreshtask.cancel();
 		SQL.close();
 		logger("XConomy已成功卸载");
@@ -127,7 +138,8 @@ public class XConomy extends JavaPlugin {
 
 	@SuppressWarnings("deprecation")
 	private void setupPlaceHolderAPI() {
-		if ((new PE(this)).register()) {
+		papixc = new PE(this);
+		if (papixc.register()) {
 			getLogger().info("PlaceholderAPI successfully hooked");
 		} else {
 			getLogger().info("PlaceholderAPI unsuccessfully hooked");
