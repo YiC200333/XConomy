@@ -76,7 +76,8 @@ public class DataBaseCon {
             return true;
         } catch (SQLException e) {
             XConomy.getInstance().logger("无法连接到数据库-----");
-            XConomy.getInstance().logger(e.getMessage());
+            e.printStackTrace();
+            close();
             return false;
         } catch (ClassNotFoundException e) {
             XConomy.getInstance().logger("JDBC驱动加载失败");
@@ -85,26 +86,16 @@ public class DataBaseCon {
     }
 
     public Connection getConnection() {
-        if (isAbleToConnect()) {
-            boolean d = XConomy.allowHikariConnectionPooling();
+        if (isAbleToConnect()) {;
             try {
-                if (d) {
+                if (XConomy.allowHikariConnectionPooling()) {
                     return hikari.getConnection();
                 } else {
                     return conn;
                 }
             } catch (SQLException e1) {
-                if (d) {
-                    hikari.close();
-                    if (isAbleToConnect()) {
-                        try {
-                            return hikari.getConnection();
-                        } catch (SQLException e2) {
-                            // TODO Auto-generated catch block
-                            e2.printStackTrace();
-                        }
-                    }
-                }
+                XConomy.getInstance().logger("无法连接到数据库-----");
+                close();
                 e1.printStackTrace();
             }
         }

@@ -63,6 +63,7 @@ public class XConomy extends JavaPlugin {
 		metrics = new Metrics(this, 6588);
 		Bukkit.getPluginCommand("money").setExecutor(new cmd());
 		Bukkit.getPluginCommand("balance").setExecutor(new cmd());
+		Bukkit.getPluginCommand("economy").setExecutor(new cmd());
 		Bukkit.getPluginCommand("balancetop").setExecutor(new cmd());
 		Bukkit.getPluginCommand("pay").setExecutor(new cmd());
 		Bukkit.getPluginCommand("xconomy").setExecutor(new cmd());
