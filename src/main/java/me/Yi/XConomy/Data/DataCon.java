@@ -86,12 +86,12 @@ public class DataCon extends XConomy {
 	}
 
 	private static void sqlite_address() {
-		if (!config.getString("SQLite.address").equalsIgnoreCase("Default")) {
-			File folder = new File(config.getString("SQLite.address"));
+		if (!config.getString("SQLite.path").equalsIgnoreCase("Default")) {
+			File folder = new File(config.getString("SQLite.path"));
 			if (folder.exists()) {
 			DataBaseCon.userdata = new File(folder, "data.db");
 			}else {
-			getInstance().logger("Folder does not exist");
+			getInstance().logger("自定义文件夹路径不存在");
 			}
 		}
 	}

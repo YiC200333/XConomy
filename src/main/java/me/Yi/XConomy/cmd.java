@@ -59,7 +59,7 @@ public class cmd implements CommandExecutor {
 
 			return true;
 		}
-		if (command.getName().equalsIgnoreCase("money") | command.getName().equalsIgnoreCase("balance") | command.getName().equalsIgnoreCase("economy")) {
+		if (command.getName().equalsIgnoreCase("money") | command.getName().equalsIgnoreCase("balance")) {
 			if (args.length == 0 & sender instanceof Player) {
 				if (sender.isOp() | sender.hasPermission("xconomy.user.balance")) {
 					Player p = (Player) sender;

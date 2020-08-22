@@ -1,5 +1,5 @@
 Settings:
-  #Chinese ChineseTW English French Spanish Russian Turkish 
+  #Chinese ChineseTW English French Spanish Russian Turkish
   language: English
   #Whether to check for new version
   check-update: true
@@ -22,15 +22,15 @@ Currency:
   #Is the balance an integer
   integer-bal: false
   thousands-separator: ','
-  display-format: '%balance% %currencyname%' 
-  
+  display-format: '%balance% %currencyname%'
+
 
 #SQLite settings
 SQLite:
   #Address is the folder path
-  address: Default
-  
-  
+  path: Default
+
+
 #MySQL settings
 MySQL:
   host: localhost:3306
@@ -39,7 +39,7 @@ MySQL:
   database: data
   #auto add "_", can use %sign% to dicate Server ID (BungeeCord settings)
   table_suffix: ''
-  
+
 
 #Connection pool settings
 Pool-Settings:
@@ -49,11 +49,11 @@ Pool-Settings:
   minimum-idle: 10
   maximum-lifetime: 180000
   idle-timeout: 60000
-  
+
 
 #BungeeCord settings
 BungeeCord:
-  #Whether to enable BungeeCord synchronization, only supports MySQL
+  #Whether to enable BungeeCord synchronization
   #After BungeeCord sync is turned on, the console and other plugins will not be able to modify the balance in the server without player
   #Please Set bungeecord to true in the spigot.yml
   enable: false

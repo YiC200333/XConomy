@@ -69,63 +69,63 @@ public class Messages {
 			if (lang.equalsIgnoreCase("Turkish")) {
 				ss = "SQLite tekrar bağlantı başarılı";
 			}
-		} else if (xx.equals("数据文件创建完成")) {
+		} else if (xx.equals("自定义文件夹路径不存在")) {
 			if (lang.equalsIgnoreCase("English")) {
-				ss = "Data file created";
+				ss = "The custom folder path does not exist";
 			}
 			if (lang.equalsIgnoreCase("French")) {
-				ss = "Fichier de données créé";
+				ss = "The custom folder path does not exist";
 			}
 			if (lang.equalsIgnoreCase("Spanish")) {
-				ss = "Archivo de datos creado";
+				ss = "The custom folder path does not exist";
 			}
 			if (lang.equalsIgnoreCase("Russian")) {
-				ss = "Файл данных создан";
+				ss = "The custom folder path does not exist";
 			}
 			if (lang.equalsIgnoreCase("ChineseTW")) {
-				ss = "數據文件創建完成";
+				ss = "自定義文件夾路徑不存在";
 			}
 			if (lang.equalsIgnoreCase("Turkish")) {
-				ss = "Veri dosyası oluşturuldu";
+				ss = "The custom folder path does not exist";
 			}
-		} else if (xx.equals("数据文件创建异常")) {
-			if (lang.equalsIgnoreCase("English")) {
-				ss = "Exception in creating data file";
-			}
-			if (lang.equalsIgnoreCase("French")) {
-				ss = "Exception à la création d'un fichier de données";
-			}
-			if (lang.equalsIgnoreCase("Spanish")) {
-				ss = "Excepción al crear archivo de datos";
-			}
-			if (lang.equalsIgnoreCase("Russian")) {
-				ss = "Исключение при создании файла данных";
-			}
-			if (lang.equalsIgnoreCase("ChineseTW")) {
-				ss = "數據文件創建異常";
-			}
-			if (lang.equalsIgnoreCase("Turkish")) {
-				ss = "Veri dosyası oluşturulurken hata oluştu";
-			}
-		} else if (xx.equals("找到数据文件")) {
-			if (lang.equalsIgnoreCase("English")) {
-				ss = "Data file found";
-			}
-			if (lang.equalsIgnoreCase("French")) {
-				ss = "Fichier de données trouvé";
-			}
-			if (lang.equalsIgnoreCase("Spanish")) {
-				ss = "Archivo de Datos Encontrado";
-			}
-			if (lang.equalsIgnoreCase("Russian")) {
-				ss = "Файл данных найден";
-			}
-			if (lang.equalsIgnoreCase("ChineseTW")) {
-				ss = "找到數據文件";
-			}
-			if (lang.equalsIgnoreCase("Turkish")) {
-				ss = "Veri dosyası bulundu";
-			}
+//		} else if (xx.equals("数据文件创建异常")) {
+//			if (lang.equalsIgnoreCase("English")) {
+//				ss = "Exception in creating data file";
+//			}
+//			if (lang.equalsIgnoreCase("French")) {
+//				ss = "Exception à la création d'un fichier de données";
+//			}
+//			if (lang.equalsIgnoreCase("Spanish")) {
+//				ss = "Excepción al crear archivo de datos";
+//			}
+//			if (lang.equalsIgnoreCase("Russian")) {
+//				ss = "Исключение при создании файла данных";
+//			}
+//			if (lang.equalsIgnoreCase("ChineseTW")) {
+//				ss = "數據文件創建異常";
+//			}
+//			if (lang.equalsIgnoreCase("Turkish")) {
+//				ss = "Veri dosyası oluşturulurken hata oluştu";
+//			}
+//		} else if (xx.equals("找到数据文件")) {
+//			if (lang.equalsIgnoreCase("English")) {
+//				ss = "Data file found";
+//			}
+//			if (lang.equalsIgnoreCase("French")) {
+//				ss = "Fichier de données trouvé";
+//			}
+//			if (lang.equalsIgnoreCase("Spanish")) {
+//				ss = "Archivo de Datos Encontrado";
+//			}
+//			if (lang.equalsIgnoreCase("Russian")) {
+//				ss = "Файл данных найден";
+//			}
+//			if (lang.equalsIgnoreCase("ChineseTW")) {
+//				ss = "找到數據文件";
+//			}
+//			if (lang.equalsIgnoreCase("Turkish")) {
+//				ss = "Veri dosyası bulundu";
+//			}
 		} else if (xx.equals("数据保存方式 - MySQL")) {
 			if (lang.equalsIgnoreCase("English")) {
 				ss = "Saving method - MySQL";
@@ -259,24 +259,24 @@ public class Messages {
 			if (lang.equalsIgnoreCase("Turkish")) {
 				ss = "BungeeCord modu aktif edildi";
 			}
-		} else if (xx.equals("BC同步只支持MySQL")) {
+		} else if (xx.equals("SQLite文件路径设置错误")) {
 			if (lang.equalsIgnoreCase("English")) {
-				ss = "BungeeCord mode only supports MySQL";
+				ss = "SQLite file path setting error";
 			}
 			if (lang.equalsIgnoreCase("French")) {
-				ss = "Le mode BungeeCord ne supporte que MySQL";
+				ss = "SQLite file path setting error";
 			}
 			if (lang.equalsIgnoreCase("Spanish")) {
-				ss = "Modo BungeeCord solo soporta MySQL";
+				ss = "SQLite file path setting error";
 			}
 			if (lang.equalsIgnoreCase("Russian")) {
-				ss = "Режим BungeeCord поддерживает только MySQL";
+				ss = "SQLite file path setting error";
 			}
 			if (lang.equalsIgnoreCase("ChineseTW")) {
-				ss = "BC同步只支持MySQL";
+				ss = "SQLite文件路徑設置錯誤";
 			}
 			if (lang.equalsIgnoreCase("Turkish")) {
-				ss = "BungeeCord modu sadece MySQL destekler";
+				ss = "SQLite file path setting error";
 			}
 		} else if (xx.equals("BC同步未开启")) {
 			if (lang.equalsIgnoreCase("English")) {
