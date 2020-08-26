@@ -9,11 +9,6 @@ import me.Yi.XConomy.XConomy;
 
 public class DataCon extends XConomy {
 
-	public static File userdata;
-	public static File uiddata;
-	public static File topdata;
-	public static File nonpdata;
-
 	public static boolean create() {
 		if (config.getBoolean("Settings.mysql")) {
 			getInstance().logger("数据保存方式 - MySQL");
@@ -44,7 +39,7 @@ public class DataCon extends XConomy {
 	}
 
 	public static void newplayer(Player a) {
-		SQL.newplayer(a.getUniqueId().toString(), a.getName());
+		SQL.newplayer(a);
 	}
 
 	public static void getbal(UUID u) {

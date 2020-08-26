@@ -1,6 +1,5 @@
 package me.Yi.XConomy.Event;
 
-import me.Yi.XConomy.XConomy;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

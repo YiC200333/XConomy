@@ -86,7 +86,7 @@ public class XConomy extends JavaPlugin {
             }
         }
         DataFormat.load();
-        Integer time = config.getInt("Settings.refresh-time");
+        int time = config.getInt("Settings.refresh-time");
         if (time < 30) {
             time = 30;
         }
@@ -100,7 +100,7 @@ public class XConomy extends JavaPlugin {
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             try {
                 papixc.unregister();
-            } catch (NoSuchMethodError e) {
+            } catch (NoSuchMethodError ignored) {
             }
         }
         if (isbc()) {
@@ -179,10 +179,7 @@ public class XConomy extends JavaPlugin {
     }
 
     public static boolean checkup() {
-        if (config.getBoolean("Settings.check-update")) {
-            return true;
-        }
-        return false;
+        return config.getBoolean("Settings.check-update");
     }
 
     public void load() {

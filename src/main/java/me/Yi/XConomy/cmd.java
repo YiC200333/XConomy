@@ -51,7 +51,9 @@ public class cmd implements CommandExecutor {
 						sender.sendMessage(sendmess("top_text").replace("%index%", String.valueOf(x))
 								.replace("%player%", e).replace("%balance%", DataFormat.shown((Cache.baltop.get(e)))));
 					}
-
+					if (checkmess("top_subtitle")) {
+						sender.sendMessage(sendmess("top_subtitle"));
+					}
 				}
 			} else {
 				sender.sendMessage(sendmess("prefix") + sendmess("no_permission"));
@@ -100,12 +102,14 @@ public class cmd implements CommandExecutor {
 											Cache.change(uls, amount, true);
 											sender.sendMessage(sendmess("prefix") + sendmess("money_give")
 													.replace("%player%", args[1]).replace("%amount%", messam));
-											String mess = sendmess("prefix") + sendmess("money_give_receive")
-													.replace("%player%", args[1]).replace("%amount%", messam);
-											if (p != null) {
-												p.sendMessage(mess);
-											} else {
-												bcsendmess(args[1], mess);
+											if (checkmess("money_give_receive")){
+												String mess = sendmess("prefix") + sendmess("money_give_receive")
+														.replace("%player%", args[1]).replace("%amount%", messam);
+												if (p != null) {
+													p.sendMessage(mess);
+												} else {
+													bcsendmess(args[1], mess);
+												}
 											}
 										} else {
 											helpm(sender);
@@ -117,12 +121,14 @@ public class cmd implements CommandExecutor {
 												Cache.change(uls, amount, false);
 												sender.sendMessage(sendmess("prefix") + sendmess("money_take")
 														.replace("%player%", args[1]).replace("%amount%", messam));
-												String mess = sendmess("prefix") + sendmess("money_take_receive")
-														.replace("%player%", args[1]).replace("%amount%", messam);
-												if (p != null) {
-													p.sendMessage(mess);
-												} else {
-													bcsendmess(args[1], mess);
+												if (checkmess("money_take_receive")) {
+													String mess = sendmess("prefix") + sendmess("money_take_receive")
+															.replace("%player%", args[1]).replace("%amount%", messam);
+													if (p != null) {
+														p.sendMessage(mess);
+													} else {
+														bcsendmess(args[1], mess);
+													}
 												}
 											} else {
 												sender.sendMessage(sendmess("prefix") + sendmess("money_take_fail")
@@ -136,12 +142,14 @@ public class cmd implements CommandExecutor {
 											Cache.change(uls, amount, null);
 											sender.sendMessage(sendmess("prefix") + sendmess("money_set")
 													.replace("%player%", args[1]).replace("%amount%", messam));
-											String mess = sendmess("prefix") + sendmess("money_set_receive")
-													.replace("%player%", args[1]).replace("%amount%", messam);
-											if (p != null) {
-												p.sendMessage(mess);
-											} else {
-												bcsendmess(args[1], mess);
+											if (checkmess("money_set_receive")) {
+												String mess = sendmess("prefix") + sendmess("money_set_receive")
+														.replace("%player%", args[1]).replace("%amount%", messam);
+												if (p != null) {
+													p.sendMessage(mess);
+												} else {
+													bcsendmess(args[1], mess);
+												}
 											}
 										} else {
 											helpm(sender);
@@ -231,27 +239,23 @@ public class cmd implements CommandExecutor {
 					return false;
 				}
 			} else {
-				if (Double.parseDouble(str) >= 0.01) {
-					return true;
-				} else {
-					return false;
-				}
+				return Double.parseDouble(str) >= 0.01;
 			}
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException ignored) {
 		}
 		return false;
 	}
 
 	public boolean check() {
-		if (Bukkit.getOnlinePlayers().isEmpty() & XConomy.isbc()) {
-			return false;
-		}
-		return true;
+		return !(Bukkit.getOnlinePlayers().isEmpty() & XConomy.isbc());
+	}
+
+	public boolean checkmess(String mess) {
+		return !MessManage.mess.getString(mess).equals("");
 	}
 
 	public String sendmess(String mess) {
-		String xxx = ChatColor.translateAlternateColorCodes('&', MessManage.mess.getString(mess));
-		return xxx;
+		return ChatColor.translateAlternateColorCodes('&', MessManage.mess.getString(mess));
 	}
 
 	public void showver(CommandSender sender) {

@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Cache_NonPlayer {
-    public static Map<String, BigDecimal> bal = new ConcurrentHashMap<String, BigDecimal>();
+    public static Map<String, BigDecimal> bal = new ConcurrentHashMap<>();
 
     public static void insertIntoCache(final String playerName, BigDecimal value) {
         if (value != null) {
@@ -14,12 +14,10 @@ public class Cache_NonPlayer {
     }
     
     public static BigDecimal getBalanceFromCacheOrDB(String u) {
-        if (bal.containsKey(u)) {
-            return bal.get(u);
-        } else {
+        if (!bal.containsKey(u)) {
             DataCon.getbalnon(u);
-            return bal.get(u);
         }
+        return bal.get(u);
 
     }
 

@@ -1,5 +1,5 @@
 Settings:
-  #Chinese ChineseTW English French Spanish Russian Turkish
+  #Chinese ChineseTW English French Spanish Russian Turkish Japanese
   language: English
   #Whether to check for new version
   check-update: true
