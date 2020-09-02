@@ -5,7 +5,7 @@
 
 	<groupId>me.Yi</groupId>
 	<artifactId>XConomy</artifactId>
-	<version>2.7.11</version>
+	<version>2.7.12</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -36,16 +36,21 @@
 	</repositories>
 
 	<build>
-		<defaultGoal>clean install</defaultGoal>
+		<defaultGoal>clean package</defaultGoal>
+		<sourceDirectory>src/main/java</sourceDirectory>
 
 		<resources>
 			<resource>
-				<targetPath>.</targetPath>
-				<filtering>true</filtering>
-				<directory>src/main/resources</directory>
+				<directory>${project.basedir}</directory>
 				<includes>
-					<include>*.yml</include>
+					<include>LICENSE.txt</include>
 				</includes>
+				<targetPath>META-INF</targetPath>
+			</resource>
+
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
 
@@ -53,19 +58,29 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.6.1</version>
+				<version>3.8.1</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+
+					<fork>true</fork>
+					<encoding>UTF-8</encoding>
+					<skip>true</skip>
+
+					<meminitial>512m</meminitial>
+					<maxmem>512m</maxmem>
 				</configuration>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
 				<configuration>
 					<archive>
-						<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+						<manifest>
+							<mainClass>${project.groupId}.${project.artifactId}</mainClass>
+						</manifest>
 					</archive>
 				</configuration>
 			</plugin>
@@ -73,36 +88,16 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.0.0</version>
-				<configuration>
-					<artifactSet>
-						<includes>
-							<include>org.bstats:*</include>
-							<include>com.zaxxer:*</include>
-							<include>org.slf4j:*</include>
-						</includes>
-					</artifactSet>
-					<relocations>
-						<relocation>
-							<pattern>org.bstats</pattern>
-							<shadedPattern>me.Yi.libs.bstats</shadedPattern>
-						</relocation>
-						<relocation>
-							<pattern>com.zaxxer</pattern>
-							<shadedPattern>me.Yi.libs.zaxxer</shadedPattern>
-						</relocation>
-						<relocation>
-							<pattern>org.slf4j</pattern>
-							<shadedPattern>me.Yi.libs.slf4j</shadedPattern>
-						</relocation>
-					</relocations>
-				</configuration>
+				<version>3.2.4</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
 						</goals>
+						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -110,6 +105,7 @@
 	</build>
 
 	<dependencies>
+		<!--Bungeecord 1.15-->
 		<dependency>
 			<groupId>net.md-5</groupId>
 			<artifactId>bungeecord-api</artifactId>
@@ -117,30 +113,7 @@
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-api</artifactId>
-			<version>1.15.2-R0.1-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.github.MilkBowl</groupId>
-			<artifactId>VaultAPI</artifactId>
-			<version>1.7</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.bstats</groupId>
-			<artifactId>bstats-bukkit</artifactId>
-			<version>1.7</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>me.clip</groupId>
-			<artifactId>placeholderapi</artifactId>
-			<version>2.10.6</version>
-			<scope>provided</scope>
-		</dependency>
+		<!--Bungeecord 1.15 Javadocs-->
 		<dependency>
 			<groupId>net.md-5</groupId>
 			<artifactId>bungeecord-api</artifactId>
@@ -148,12 +121,42 @@
 			<type>javadoc</type>
 			<scope>provided</scope>
 		</dependency>
+		<!--Spigot 1.15-->
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-api</artifactId>
+			<version>1.15.2-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<!--Vault-->
+		<dependency>
+			<groupId>com.github.MilkBowl</groupId>
+			<artifactId>VaultAPI</artifactId>
+			<version>1.7</version>
+			<scope>provided</scope>
+		</dependency>
+		<!--Placeholder API-->
+		<dependency>
+			<groupId>me.clip</groupId>
+			<artifactId>placeholderapi</artifactId>
+			<version>2.10.9</version>
+			<scope>provided</scope>
+		</dependency>
+		<!--BStats-->
+		<dependency>
+			<groupId>org.bstats</groupId>
+			<artifactId>bstats-bukkit</artifactId>
+			<version>1.7</version>
+			<scope>compile</scope>
+		</dependency>
+		<!--slf4j-->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.7.25</version>
 			<scope>compile</scope>
 		</dependency>
+		<!--HikariCP-->
 		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
