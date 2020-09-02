@@ -1,26 +1,27 @@
 name: XConomy
-version: 2.7.11
-main: me.Yi.XConomy.XConomy
+version: ${project.version}
+main: me.yi.xconomy.XConomy
 author: YiC
 load: STARTUP
-depend: [Vault]
-softdepend: [PlaceholderAPI]
+depend: [ Vault ]
+softdepend: [ PlaceholderAPI ]
+
 commands:
   xconomy:
     usage: /<command>
     description: XConomy.
-    aliases: [xc]
+    aliases: [ xc ]
   money:
     usage: /<command>
     description: XConomy.
   balance:
     usage: /<command>
     description: XConomy.
-    aliases: [bal]
+    aliases: [ bal ]
   balancetop:
     usage: /<command>
     description: XConomy.
-    aliases: [baltop]
+    aliases: [ baltop ]
   pay:
     usage: /<command>
     description: XConomy.
