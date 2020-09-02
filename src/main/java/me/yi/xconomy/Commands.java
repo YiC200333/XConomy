@@ -31,7 +31,7 @@ public class Commands implements CommandExecutor {
 					if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
 						XConomy.getInstance().reloadMessages();
 						sender.sendMessage(sendMessage("prefix") + Messages.systemMessage("§amessage.yml重载成功"));
-						return false;
+						return true;
 					}
 				}
 				showVersion(sender);
@@ -41,12 +41,12 @@ public class Commands implements CommandExecutor {
 			case "balancetop": {
 				if (!(sender.isOp() || sender.hasPermission("xconomy.user.balancetop"))) {
 					sender.sendMessage(sendMessage("prefix") + sendMessage("no_permission"));
-					return false;
+					return true;
 				}
 
 				if (Cache.baltop.isEmpty()) {
 					sender.sendMessage(sendMessage("prefix") + sendMessage("top_nodata"));
-					return false;
+					return true;
 				}
 
 				sender.sendMessage(sendMessage("top_title"));
@@ -72,27 +72,27 @@ public class Commands implements CommandExecutor {
 			case "pay": {
 				if (!(sender instanceof Player)) {
 					sender.sendMessage(sendMessage("prefix") + Messages.systemMessage("§6控制台无法使用该指令"));
-					return false;
+					return true;
 				}
 
 				if (sender.isOp() | sender.hasPermission("xconomy.user.pay")) {
 					sender.sendMessage(sendMessage("prefix") + sendMessage("no_permission"));
-					return false;
+					return true;
 				}
 
 				if (args.length != 2) {
 					sendHelpMessage(sender);
-					return false;
+					return true;
 				}
 
 				if (sender.getName().equalsIgnoreCase(args[0])) {
 					sender.sendMessage(sendMessage("prefix") + sendMessage("pay_self"));
-					return false;
+					return true;
 				}
 
 				if (!isDouble(args[1])) {
 					sender.sendMessage(sendMessage("prefix") + sendMessage("invalid"));
-					return false;
+					return true;
 				}
 
 				BigDecimal amount = DataFormat.formatString(args[1]);
@@ -102,14 +102,14 @@ public class Commands implements CommandExecutor {
 				if (bal.compareTo(amount) < 0) {
 					sender.sendMessage(sendMessage("prefix") + sendMessage("pay_fail")
 							.replace("%amount%", amountFormatted));
-					return false;
+					return true;
 				}
 
 				Player target = Bukkit.getPlayer(args[0]);
 				UUID targetUUID = Cache.translateUUID(args[0]);
 				if (targetUUID == null) {
 					sender.sendMessage(sendMessage("prefix") + sendMessage("noaccount"));
-					return false;
+					return true;
 				}
 
 				Cache.change(((Player) sender).getUniqueId(), amount, false);
@@ -124,7 +124,7 @@ public class Commands implements CommandExecutor {
 
 				if (target == null) {
 					broadcastSendMessage(args[0], mess);
-					return false;
+					return true;
 				}
 
 				target.sendMessage(mess);
@@ -138,12 +138,12 @@ public class Commands implements CommandExecutor {
 					case 0: {
 						if (!(sender instanceof Player)) {
 							sender.sendMessage(sendMessage("prefix") + Messages.systemMessage("§6控制台无法使用该指令"));
-							return false;
+							return true;
 						}
 
 						if (!(sender.isOp() || sender.hasPermission("xconomy.user.balance"))) {
 							sender.sendMessage(sendMessage("prefix") + sendMessage("no_permission"));
-							return false;
+							return true;
 						}
 
 						Player player = (Player) sender;
@@ -157,13 +157,13 @@ public class Commands implements CommandExecutor {
 					case 1: {
 						if (!(sender.isOp() || sender.hasPermission("xconomy.user.balance.other"))) {
 							sender.sendMessage(sendMessage("prefix") + sendMessage("no_permission"));
-							return false;
+							return true;
 						}
 
 						UUID targetUUID = Cache.translateUUID(args[0]);
 						if (targetUUID == null) {
 							sender.sendMessage(sendMessage("prefix") + sendMessage("noaccount"));
-							return false;
+							return true;
 						}
 
 						BigDecimal targetBalance = Cache.getBalanceFromCacheOrDB(targetUUID);
@@ -178,17 +178,17 @@ public class Commands implements CommandExecutor {
 						if (!(sender.isOp() | sender.hasPermission("xconomy.admin.give")
 								| sender.hasPermission("xconomy.admin.take") | sender.hasPermission("xconomy.admin.set"))) {
 							sendHelpMessage(sender);
-							return false;
+							return true;
 						}
 
 						if (!check()) {
 							sender.sendMessage(sendMessage("prefix") + Messages.systemMessage("§cBC模式开启的情况下,无法在无人的服务器中使用OP命令"));
-							return false;
+							return true;
 						}
 
 						if (!isDouble(args[2])) {
 							sender.sendMessage(sendMessage("prefix") + sendMessage("invalid"));
-							return false;
+							return true;
 						}
 
 						BigDecimal amount = DataFormat.formatString(args[2]);
@@ -198,14 +198,14 @@ public class Commands implements CommandExecutor {
 
 						if (targetUUID == null) {
 							sender.sendMessage(sendMessage("prefix") + sendMessage("noaccount"));
-							return false;
+							return true;
 						}
 
 						switch (args[0].toLowerCase()) {
 							case "give": {
 								if (!(sender.isOp() | sender.hasPermission("xconomy.admin.give"))) {
 									sendHelpMessage(sender);
-									return false;
+									return true;
 								}
 
 								Cache.change(targetUUID, amount, true);
@@ -220,7 +220,7 @@ public class Commands implements CommandExecutor {
 
 									if (target == null) {
 										broadcastSendMessage(args[1], message);
-										return false;
+										return true;
 									}
 
 									target.sendMessage(message);
@@ -232,7 +232,7 @@ public class Commands implements CommandExecutor {
 							case "take": {
 								if (!(sender.isOp() | sender.hasPermission("xconomy.admin.take"))) {
 									sendHelpMessage(sender);
-									return false;
+									return true;
 								}
 
 								BigDecimal bal = Cache.getBalanceFromCacheOrDB(targetUUID);
@@ -241,7 +241,7 @@ public class Commands implements CommandExecutor {
 											.replace("%player%", args[1])
 											.replace("%amount%", amountFormatted));
 
-									return false;
+									return true;
 								}
 
 								Cache.change(targetUUID, amount, false);
@@ -255,7 +255,7 @@ public class Commands implements CommandExecutor {
 
 									if (target == null) {
 										broadcastSendMessage(args[1], mess);
-										return false;
+										return true;
 									}
 
 									target.sendMessage(mess);
@@ -267,7 +267,7 @@ public class Commands implements CommandExecutor {
 							case "set": {
 								if (!(sender.isOp() | sender.hasPermission("xconomy.admin.set"))) {
 									sendHelpMessage(sender);
-									return false;
+									return true;
 								}
 
 								Cache.change(targetUUID, amount, null);
@@ -282,7 +282,7 @@ public class Commands implements CommandExecutor {
 
 									if (target == null) {
 										broadcastSendMessage(args[1], mess);
-										return false;
+										return true;
 									}
 
 									target.sendMessage(mess);
@@ -316,7 +316,7 @@ public class Commands implements CommandExecutor {
 
 		}
 
-		return false;
+		return true;
 
 	}
 
@@ -336,7 +336,7 @@ public class Commands implements CommandExecutor {
 		} catch (NumberFormatException ignored) {
 		}
 
-		return false;
+		return true;
 	}
 
 	public boolean check() {
