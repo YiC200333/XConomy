@@ -1,9 +1,9 @@
-package me.YiC.XConomy.data;
+package me.yic.xconomy.data;
 
-import me.YiC.XConomy.data.caches.Cache;
-import me.YiC.XConomy.data.caches.NonPlayerCache;
-import me.YiC.XConomy.message.Messages;
-import me.YiC.XConomy.XConomy;
+import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.caches.NonPlayerCache;
+import me.yic.xconomy.message.Messages;
+import me.yic.xconomy.XConomy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

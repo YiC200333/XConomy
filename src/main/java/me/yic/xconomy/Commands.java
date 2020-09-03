@@ -1,10 +1,10 @@
-package me.YiC.XConomy;
+package me.yic.xconomy;
 
-import me.YiC.XConomy.data.DataFormat;
-import me.YiC.XConomy.data.caches.Cache;
-import me.YiC.XConomy.message.Messages;
-import me.YiC.XConomy.message.MessagesManager;
-import me.YiC.XConomy.task.SendMessTaskS;
+import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.message.Messages;
+import me.yic.xconomy.message.MessagesManager;
+import me.yic.xconomy.task.SendMessTaskS;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

@@ -1,7 +1,7 @@
-package me.YiC.XConomy.data;
+package me.yic.xconomy.data;
 
 import com.zaxxer.hikari.HikariDataSource;
-import me.YiC.XConomy.XConomy;
+import me.yic.xconomy.XConomy;
 import org.bukkit.Bukkit;
 
 import java.io.File;

@@ -1,7 +1,7 @@
-package me.YiC.XConomy;
+package me.yic.xconomy;
 
-import me.YiC.XConomy.data.caches.Cache;
-import me.YiC.XConomy.data.DataFormat;
+import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.DataFormat;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 

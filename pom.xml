@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>me.YiC</groupId>
+    <groupId>me.yic</groupId>
     <artifactId>XConomy</artifactId>
     <version>2.7.13</version>
     <packaging>jar</packaging>
@@ -202,7 +202,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.25</version>
+            <version>1.7.30</version>
             <scope>compile</scope>
         </dependency>
         <!--HikariCP-->

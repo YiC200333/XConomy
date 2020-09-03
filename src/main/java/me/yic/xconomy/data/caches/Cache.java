@@ -1,4 +1,4 @@
-package me.YiC.XConomy.data.caches;
+package me.yic.xconomy.data.caches;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -11,13 +11,13 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import me.YiC.XConomy.data.DataCon;
-import me.YiC.XConomy.data.DataFormat;
+import me.yic.xconomy.data.DataCon;
+import me.yic.xconomy.data.DataFormat;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import me.YiC.XConomy.XConomy;
-import me.YiC.XConomy.task.SendMessTaskS;
+import me.yic.xconomy.XConomy;
+import me.yic.xconomy.task.SendMessTaskS;
 
 public class Cache {
     public static Map<UUID, BigDecimal> bal = new ConcurrentHashMap<>();

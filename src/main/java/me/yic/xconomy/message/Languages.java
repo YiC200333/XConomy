@@ -1,4 +1,4 @@
-package me.YiC.XConomy.message;
+package me.yic.xconomy.message;
 
 import java.io.File;
 import java.io.IOException;

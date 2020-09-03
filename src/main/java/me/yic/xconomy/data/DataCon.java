@@ -1,6 +1,6 @@
-package me.YiC.XConomy.data;
+package me.yic.xconomy.data;
 
-import me.YiC.XConomy.XConomy;
+import me.yic.xconomy.XConomy;
 import org.bukkit.entity.Player;
 
 import java.io.File;

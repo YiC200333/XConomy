@@ -1,7 +1,7 @@
-package me.YiC.XConomy.task;
+package me.yic.xconomy.task;
 
-import me.YiC.XConomy.data.DataCon;
-import me.YiC.XConomy.XConomy;
+import me.yic.xconomy.data.DataCon;
+import me.yic.xconomy.XConomy;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 

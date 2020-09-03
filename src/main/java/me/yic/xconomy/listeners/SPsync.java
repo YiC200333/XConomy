@@ -1,10 +1,10 @@
-package me.YiC.XConomy.listeners;
+package me.yic.xconomy.listeners;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
-import me.YiC.XConomy.data.caches.Cache;
-import me.YiC.XConomy.data.DataFormat;
-import me.YiC.XConomy.XConomy;
+import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.XConomy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;

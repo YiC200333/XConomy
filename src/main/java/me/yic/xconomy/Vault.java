@@ -1,8 +1,8 @@
-package me.YiC.XConomy;
+package me.yic.xconomy;
 
-import me.YiC.XConomy.data.caches.Cache;
-import me.YiC.XConomy.data.caches.NonPlayerCache;
-import me.YiC.XConomy.data.DataFormat;
+import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.caches.NonPlayerCache;
+import me.yic.xconomy.data.DataFormat;
 import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;

@@ -1,7 +1,7 @@
-package me.YiC.XConomy.task;
+package me.yic.xconomy.task;
 
-import me.YiC.XConomy.data.caches.Cache;
-import me.YiC.XConomy.data.SQL;
+import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.SQL;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 

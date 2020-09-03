@@ -1,9 +1,9 @@
-package me.YiC.XConomy.listeners;
+package me.yic.xconomy.listeners;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
-import me.YiC.XConomy.task.SendMessTaskB;
-import me.YiC.XConomy.XConomyBungee;
+import me.yic.xconomy.task.SendMessTaskB;
+import me.yic.xconomy.XConomyBungee;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
