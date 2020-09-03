@@ -1,4 +1,4 @@
-package me.yi.xconomy.message;
+package me.YiC.XConomy.message;
 
 import java.io.File;
 import java.io.IOException;
@@ -329,6 +329,7 @@ public class Languages {
 		mess.put("top_title", "&e========= TOP10 =========");
 		mess.put("sum_text", "&f全サーバーの残高 - %balance%");
 		mess.put("top_text", "&e%index%： %player% - %balance%");
+		mess.put("top_subtitle", "&7ランキングTOP10の同期時間は5分です");
 		mess.put("top_nodata", "&cプレイヤーの経済データはないです。");
 		mess.put("pay", "&cあなたは %player% さんに %amount% を送金しました。");
 		mess.put("pay_receive", "&aあなたは %player% さんから %amount% 受け取りました。");

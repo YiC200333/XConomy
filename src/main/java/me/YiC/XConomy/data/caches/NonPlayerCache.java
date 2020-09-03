@@ -1,6 +1,6 @@
-package me.yi.xconomy.data.caches;
+package me.YiC.XConomy.data.caches;
 
-import me.yi.xconomy.data.DataCon;
+import me.YiC.XConomy.data.DataCon;
 
 import java.math.BigDecimal;
 import java.util.Map;

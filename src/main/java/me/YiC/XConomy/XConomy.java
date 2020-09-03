@@ -1,16 +1,16 @@
-package me.yi.xconomy;
+package me.YiC.XConomy;
 
-import me.yi.xconomy.data.caches.Cache;
-import me.yi.xconomy.data.DataCon;
-import me.yi.xconomy.data.DataFormat;
-import me.yi.xconomy.data.SQL;
-import me.yi.xconomy.listeners.ConnectionListeners;
-import me.yi.xconomy.listeners.SPsync;
-import me.yi.xconomy.message.MessagesManager;
-import me.yi.xconomy.message.Messages;
-import me.yi.xconomy.task.Baltop;
-import me.yi.xconomy.task.Updater;
-import me.yi.xconomy.utils.UpdateConfig;
+import me.YiC.XConomy.data.caches.Cache;
+import me.YiC.XConomy.data.DataCon;
+import me.YiC.XConomy.data.DataFormat;
+import me.YiC.XConomy.data.SQL;
+import me.YiC.XConomy.listeners.ConnectionListeners;
+import me.YiC.XConomy.listeners.SPsync;
+import me.YiC.XConomy.message.MessagesManager;
+import me.YiC.XConomy.message.Messages;
+import me.YiC.XConomy.task.Baltop;
+import me.YiC.XConomy.task.Updater;
+import me.YiC.XConomy.utils.UpdateConfig;
 import net.milkbowl.vault.economy.Economy;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -27,7 +27,7 @@ public class XConomy extends JavaPlugin {
 	private static XConomy instance;
 	public static FileConfiguration config;
 	private MessagesManager messageManager;
-	private static boolean hikariConnectionPooling = false;
+	private static boolean foundvaultpe = false;
 	public Economy econ = null;
 	private BukkitTask refresherTask = null;
 	Metrics metrics = null;
@@ -52,7 +52,7 @@ public class XConomy extends JavaPlugin {
 				logger("请在 PlaceholderAPI 的 config.yml 中设置 expansions.vault.baltop.enabled 为 false");
 				logger("或者在 XConomy 的 config.yml 中设置 Pool-Settings.usepool 为 false");
 				logger("======================================================================");
-				hikariConnectionPooling = true;
+				foundvaultpe = true;
 			}
 			setupPlaceHolderAPI();
 		}
@@ -135,14 +135,12 @@ public class XConomy extends JavaPlugin {
 	}
 
 	public static boolean allowHikariConnectionPooling() {
-		if (hikariConnectionPooling) {
+		if (foundvaultpe) {
 			return false;
 		}
-
 		if (!config.getBoolean("Settings.mysql")) {
 			return false;
 		}
-
 		return XConomy.config.getBoolean("Pool-Settings.usepool");
 	}
 
@@ -152,7 +150,6 @@ public class XConomy extends JavaPlugin {
 
 	private void setupPlaceHolderAPI() {
 		papiExpansion = new PE(this);
-
 		if (papiExpansion.register()) {
 			getLogger().info("PlaceholderAPI successfully hooked");
 		} else {

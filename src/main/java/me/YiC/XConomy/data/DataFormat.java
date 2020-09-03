@@ -1,6 +1,7 @@
-package me.yi.xconomy.data;
+package me.YiC.XConomy.data;
 
-import me.yi.xconomy.XConomy;
+import me.YiC.XConomy.XConomy;
+import org.bukkit.ChatColor;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -31,14 +32,25 @@ public class DataFormat {
 	}
 
 	public static String shown(BigDecimal am) {
-		if (am.compareTo(BigDecimal.ONE) == 1) {
-			return XConomy.config.getString("Currency.display-format")
+		if (am.compareTo(BigDecimal.ONE)==1) {
+			return ChatColor.translateAlternateColorCodes('&',XConomy.config.getString("Currency.display-format")
 					.replace("%balance%", decimalFormat.format(am))
-					.replace("%currencyname%", XConomy.getInstance().getEconomy().currencyNamePlural());
+					.replace("%currencyname%", XConomy.getInstance().getEconomy().currencyNamePlural()));
 		}
-		return XConomy.config.getString("Currency.display-format")
+		return ChatColor.translateAlternateColorCodes('&',XConomy.config.getString("Currency.display-format")
 				.replace("%balance%", decimalFormat.format(am))
-				.replace("%currencyname%", XConomy.getInstance().getEconomy().currencyNameSingular());
+				.replace("%currencyname%", XConomy.getInstance().getEconomy().currencyNameSingular()));
+	}
+
+	public static String shownd(Double am) {
+		if (am > 1) {
+			return ChatColor.translateAlternateColorCodes('&',XConomy.config.getString("Currency.display-format")
+					.replace("%balance%", decimalFormat.format(am))
+					.replace("%currencyname%", XConomy.getInstance().getEconomy().currencyNamePlural()));
+		}
+		return ChatColor.translateAlternateColorCodes('&',XConomy.config.getString("Currency.display-format")
+				.replace("%balance%", decimalFormat.format(am))
+				.replace("%currencyname%", XConomy.getInstance().getEconomy().currencyNameSingular()));
 	}
 
 	public static boolean isValid(BigDecimal am) {

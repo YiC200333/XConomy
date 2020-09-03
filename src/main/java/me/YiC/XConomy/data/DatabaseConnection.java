@@ -1,7 +1,7 @@
-package me.yi.xconomy.data;
+package me.YiC.XConomy.data;
 
 import com.zaxxer.hikari.HikariDataSource;
-import me.yi.xconomy.XConomy;
+import me.YiC.XConomy.XConomy;
 import org.bukkit.Bukkit;
 
 import java.io.File;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 
 public class DatabaseConnection {
-	private static final String driver = "com.mysql.jdbc.Driver";
+	private static final String driverA = "com.mysql.jdbc.Driver";
 	//============================================================================================
 	private static final File dataFolder = new File(XConomy.getInstance().getDataFolder(), "playerdata");
 	private static final String url = "jdbc:mysql://" + XConomy.config.getString("MySQL.host") + "/"
@@ -30,7 +30,7 @@ public class DatabaseConnection {
 	private Connection connection = null;
 	private HikariDataSource hikari = null;
 
-	private void createNewHikariConfiguration() throws SQLException {
+	private void createNewHikariConfiguration() {
 		hikari = new HikariDataSource();
 		hikari.setPoolName("XConomy");
 		hikari.setJdbcUrl(url);
@@ -44,7 +44,7 @@ public class DatabaseConnection {
 		hikari.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 		if (hikari.getMinimumIdle() < hikari.getMaximumPoolSize()) {
 			hikari.setIdleTimeout(idleTime);
-		} else if (hikari.getMinimumIdle() == hikari.getMaximumPoolSize()) {
+		} else {
 			hikari.setIdleTimeout(0);
 		}
 	}
@@ -57,7 +57,7 @@ public class DatabaseConnection {
 				closeHikariConnection(connection);
 			} else {
 				if (XConomy.config.getBoolean("Settings.mysql")) {
-					Class.forName(driver);
+					Class.forName(driverA);
 					connection = DriverManager.getConnection(url, username, password);
 				} else {
 					Class.forName(driverB);

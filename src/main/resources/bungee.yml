@@ -1,4 +1,4 @@
 name: XConomy
-main: me.yi.xconomy.XConomyBungee
+main: me.YiC.XConomy.XConomyBungee
 version: ${project.version}
 author: YiC

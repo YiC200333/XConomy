@@ -1,6 +1,6 @@
-package me.yi.xconomy.message;
+package me.YiC.XConomy.message;
 
-import me.yi.xconomy.XConomy;
+import me.YiC.XConomy.XConomy;
 
 import java.io.File;
 import java.io.FileOutputStream;

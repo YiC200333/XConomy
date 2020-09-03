@@ -1,4 +1,4 @@
-package me.yi.xconomy.utils;
+package me.YiC.XConomy.utils;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

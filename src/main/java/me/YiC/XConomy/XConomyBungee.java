@@ -1,6 +1,6 @@
-package me.yi.xconomy;
+package me.YiC.XConomy;
 
-import me.yi.xconomy.listeners.BCsync;
+import me.YiC.XConomy.listeners.BCsync;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public class XConomyBungee extends Plugin {

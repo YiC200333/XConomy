@@ -1,6 +1,6 @@
-package me.yi.xconomy.message;
+package me.YiC.XConomy.message;
 
-import me.yi.xconomy.XConomy;
+import me.YiC.XConomy.XConomy;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 

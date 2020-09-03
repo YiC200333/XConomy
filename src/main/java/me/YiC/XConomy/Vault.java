@@ -1,8 +1,8 @@
-package me.yi.xconomy;
+package me.YiC.XConomy;
 
-import me.yi.xconomy.data.caches.Cache;
-import me.yi.xconomy.data.caches.NonPlayerCache;
-import me.yi.xconomy.data.DataFormat;
+import me.YiC.XConomy.data.caches.Cache;
+import me.YiC.XConomy.data.caches.NonPlayerCache;
+import me.YiC.XConomy.data.DataFormat;
 import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
@@ -73,27 +73,27 @@ public class Vault extends AbstractEconomy {
 	/**
 	 * Deposit an amount to a player's balance
 	 *
-	 * @param playerName the player name to deposit oo
+	 * @param name the player name to deposit oo
 	 * @param amount     the amount to deposit
 	 * @return {@code EconomyResponse}
 	 */
 	@Override
-	public EconomyResponse depositPlayer(String playerName, double amount) {
+	public EconomyResponse depositPlayer(String name, double amount) {
 		if (XConomy.isBungeecord() & Bukkit.getOnlinePlayers().isEmpty()) {
 			return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
 					"[BungeeCord] No player in server");
 		}
-		double currentBalance = getBalance(playerName);
+		double currentBalance = getBalance(name);
 
-		Player fetchedPlayer = Bukkit.getPlayer(playerName);
+		Player a = Bukkit.getPlayerExact(name);
 		BigDecimal formattedAmount = DataFormat.formatDouble(amount);
-		if (isNonPlayerAccount(playerName)) {
-			NonPlayerCache.change(playerName, formattedAmount, true);
+		if (isNonPlayerAccount(name)) {
+			NonPlayerCache.change(name, formattedAmount, true);
 			return new EconomyResponse(amount, currentBalance, EconomyResponse.ResponseType.SUCCESS, "");
 		}
 
-		if (fetchedPlayer == null) {
-			UUID playerUUID = Cache.translateUUID(playerName);
+		if (a == null) {
+			UUID playerUUID = Cache.translateUUID(name);
 			if (playerUUID == null) {
 				return new EconomyResponse(0.0D, currentBalance, EconomyResponse.ResponseType.FAILURE, "No Account!");
 			}
@@ -102,7 +102,7 @@ public class Vault extends AbstractEconomy {
 			return new EconomyResponse(amount, currentBalance, EconomyResponse.ResponseType.SUCCESS, "");
 		}
 
-		Cache.change(fetchedPlayer.getUniqueId(), formattedAmount, true);
+		Cache.change(a.getUniqueId(), formattedAmount, true);
 		return new EconomyResponse(amount, currentBalance, EconomyResponse.ResponseType.SUCCESS, "");
 	}
 
@@ -113,13 +113,16 @@ public class Vault extends AbstractEconomy {
 
 	@Override
 	public String format(double sum) {
-		return DataFormat.decimalFormat.format(sum);
+		return DataFormat.shownd(sum);
 	}
 
 	@Override
 	public int fractionalDigits() {
-		return -1;
-	}
+		if (DataFormat.isInteger) {
+			return 0;
+		}
+		return 2;
+		}
 
 	@Override
 	public double getBalance(String name) {
@@ -127,8 +130,8 @@ public class Vault extends AbstractEconomy {
 			return NonPlayerCache.getBalanceFromCacheOrDB(name).doubleValue();
 		}
 
-		if (Bukkit.getPlayer(name) != null) {
-			return Cache.getBalanceFromCacheOrDB(Bukkit.getPlayer(name).getUniqueId()).doubleValue();
+		if (Bukkit.getPlayerExact(name) != null) {
+			return Cache.getBalanceFromCacheOrDB(Bukkit.getPlayerExact(name).getUniqueId()).doubleValue();
 		}
 
 		UUID uuid = Cache.translateUUID(name);
@@ -213,7 +216,7 @@ public class Vault extends AbstractEconomy {
 		}
 
 		double bal = getBalance(name);
-		Player player = Bukkit.getPlayer(name);
+		Player player = Bukkit.getPlayerExact(name);
 		BigDecimal amountFormatted = DataFormat.formatDouble(amount);
 
 		if (bal < amount) {

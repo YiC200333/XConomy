@@ -1,9 +1,9 @@
-package me.yi.xconomy.data;
+package me.YiC.XConomy.data;
 
-import me.yi.xconomy.data.caches.Cache;
-import me.yi.xconomy.data.caches.NonPlayerCache;
-import me.yi.xconomy.message.Messages;
-import me.yi.xconomy.XConomy;
+import me.YiC.XConomy.data.caches.Cache;
+import me.YiC.XConomy.data.caches.NonPlayerCache;
+import me.YiC.XConomy.message.Messages;
+import me.YiC.XConomy.XConomy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -16,7 +16,7 @@ public class SQL {
 	public static String tableName = "xconomy";
 	public static String tableNonPlayerName = "xconomynon";
 	public final static DatabaseConnection database = new DatabaseConnection();
-	private static final Double iam = XConomy.config.getDouble("Settings.initial-bal");
+	private static final Double ibal = XConomy.config.getDouble("Settings.initial-bal");
 
 	public static boolean con() {
 		return database.setGlobalConnection();
@@ -274,7 +274,7 @@ public class SQL {
 				user = rs.getString(2);
 			} else {
 				user = name;
-				createAccount(UID, user, iam, connection);
+				createAccount(UID, user, ibal, connection);
 			}
 			rs.close();
 			statement.close();

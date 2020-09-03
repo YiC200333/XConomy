@@ -1,4 +1,4 @@
-package me.yi.xconomy.task;
+package me.YiC.XConomy.task;
 
 import net.md_5.bungee.api.config.ServerInfo;
 

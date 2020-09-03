@@ -1,10 +1,10 @@
-package me.yi.xconomy;
+package me.YiC.XConomy;
 
-import me.yi.xconomy.data.DataFormat;
-import me.yi.xconomy.data.caches.Cache;
-import me.yi.xconomy.message.Messages;
-import me.yi.xconomy.message.MessagesManager;
-import me.yi.xconomy.task.SendMessTaskS;
+import me.YiC.XConomy.data.DataFormat;
+import me.YiC.XConomy.data.caches.Cache;
+import me.YiC.XConomy.message.Messages;
+import me.YiC.XConomy.message.MessagesManager;
+import me.YiC.XConomy.task.SendMessTaskS;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -75,7 +75,7 @@ public class Commands implements CommandExecutor {
 					return true;
 				}
 
-				if (sender.isOp() | sender.hasPermission("xconomy.user.pay")) {
+				if (!(sender.isOp() || sender.hasPermission("xconomy.user.pay"))) {
 					sender.sendMessage(sendMessage("prefix") + sendMessage("no_permission"));
 					return true;
 				}
@@ -105,7 +105,7 @@ public class Commands implements CommandExecutor {
 					return true;
 				}
 
-				Player target = Bukkit.getPlayer(args[0]);
+				Player target = Bukkit.getPlayerExact(args[0]);
 				UUID targetUUID = Cache.translateUUID(args[0]);
 				if (targetUUID == null) {
 					sender.sendMessage(sendMessage("prefix") + sendMessage("noaccount"));
@@ -193,7 +193,7 @@ public class Commands implements CommandExecutor {
 
 						BigDecimal amount = DataFormat.formatString(args[2]);
 						String amountFormatted = DataFormat.shown(amount);
-						Player target = Bukkit.getPlayer(args[1]);
+						Player target = Bukkit.getPlayerExact(args[1]);
 						UUID targetUUID = Cache.translateUUID(args[1]);
 
 						if (targetUUID == null) {

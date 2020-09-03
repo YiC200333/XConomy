@@ -1,6 +1,6 @@
-package me.yi.xconomy.task;
+package me.YiC.XConomy.task;
 
-import me.yi.xconomy.XConomy;
+import me.YiC.XConomy.XConomy;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.BufferedReader;

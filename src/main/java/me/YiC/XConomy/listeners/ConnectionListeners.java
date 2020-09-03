@@ -1,9 +1,9 @@
-package me.yi.xconomy.listeners;
+package me.YiC.XConomy.listeners;
 
-import me.yi.xconomy.XConomy;
-import me.yi.xconomy.data.DataCon;
-import me.yi.xconomy.data.caches.Cache;
-import me.yi.xconomy.task.Updater;
+import me.YiC.XConomy.XConomy;
+import me.YiC.XConomy.data.DataCon;
+import me.YiC.XConomy.data.caches.Cache;
+import me.YiC.XConomy.task.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

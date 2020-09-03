@@ -1,6 +1,6 @@
 name: XConomy
 version: ${project.version}
-main: me.yi.xconomy.XConomy
+main: me.YiC.XConomy.XConomy
 author: YiC
 load: STARTUP
 depend: [ Vault ]
@@ -25,6 +25,7 @@ commands:
   pay:
     usage: /<command>
     description: XConomy.
+
 permissions:
   xconomy.user.balance:
     default: true
