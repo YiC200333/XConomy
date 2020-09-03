@@ -1,6 +1,6 @@
 name: XConomy
 version: ${project.version}
-main: me.YiC.XConomy.XConomy
+main: me.yic.xconomy.XConomy
 author: YiC
 load: STARTUP
 depend: [ Vault ]

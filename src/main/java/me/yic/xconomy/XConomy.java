@@ -79,7 +79,6 @@ public class XConomy extends JavaPlugin {
 			if (isBungeecord()) {
 				getServer().getMessenger().registerIncomingPluginChannel(this, "xconomy:aca", new SPsync());
 				getServer().getMessenger().registerOutgoingPluginChannel(this, "xconomy:acb");
-				getServer().getMessenger().registerOutgoingPluginChannel(this, "xconomy:messb");
 				logger("已开启BC同步");
 			} else if (!config.getBoolean("Settings.mysql")) {
 				if (config.getString("SQLite.path").equalsIgnoreCase("Default")) {
@@ -103,7 +102,6 @@ public class XConomy extends JavaPlugin {
 
 	public void onDisable() {
 		getServer().getServicesManager().unregister(econ);
-
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			try {
 				papiExpansion.unregister();
@@ -114,7 +112,6 @@ public class XConomy extends JavaPlugin {
 		if (isBungeecord()) {
 			getServer().getMessenger().unregisterIncomingPluginChannel(this, "xconomy:aca", new SPsync());
 			getServer().getMessenger().unregisterOutgoingPluginChannel(this, "xconomy:acb");
-			getServer().getMessenger().unregisterOutgoingPluginChannel(this, "xconomy:messb");
 		}
 
 		refresherTask.cancel();
@@ -200,22 +197,17 @@ public class XConomy extends JavaPlugin {
 
 	private static boolean checkVaultPE() {
 		File peFolder = new File(Bukkit.getPluginManager().getPlugin("PlaceholderAPI").getDataFolder(), "config.yml");
-
 		boolean cvap = false;
-
 		if (!peFolder.exists()) {
 			return false;
 		}
-
 		FileConfiguration peConfig = YamlConfiguration.loadConfiguration(peFolder);
 		if (peConfig.contains("expansions.vault.baltop.enabled")) {
 			cvap = peConfig.getBoolean("expansions.vault.baltop.enabled");
 		}
-
 		if (config.getBoolean("Settings.mysql") && config.getBoolean("Pool-Settings.usepool")) {
 			return cvap;
 		}
-
 		return false;
 	}
 
