@@ -32,7 +32,7 @@ public class DataFormat {
 	}
 
 	public static String shown(BigDecimal am) {
-		if (am.compareTo(BigDecimal.ONE)==1) {
+		if (am.compareTo(BigDecimal.ONE) > 0) {
 			return ChatColor.translateAlternateColorCodes('&',XConomy.config.getString("Currency.display-format")
 					.replace("%balance%", decimalFormat.format(am))
 					.replace("%currencyname%", XConomy.getInstance().getEconomy().currencyNamePlural()));
@@ -60,7 +60,8 @@ public class DataFormat {
 	public static void load() {
 		maxNumber = new BigDecimal("10000000000000000");
 		isInteger = XConomy.config.getBoolean("Currency.integer-bal");
-		String format = "###" + XConomy.config.getString("Currency.thousands-separator") + "##0";
+		String format = "###,##0";
+		String gpoint = XConomy.config.getString("Currency.thousands-separator");
 
 		if (isInteger) {
 			decimalFormat = new DecimalFormat(format);
@@ -69,9 +70,11 @@ public class DataFormat {
 
 		format = format + ".00";
 		decimalFormat = new DecimalFormat(format);
-		DecimalFormatSymbols sf = new DecimalFormatSymbols();
-		sf.setDecimalSeparator('.');
-		decimalFormat.setDecimalFormatSymbols(sf);
-
+		DecimalFormatSymbols spoint = new DecimalFormatSymbols();
+		spoint.setDecimalSeparator('.');
+		if (gpoint.length()==1){
+			spoint.setGroupingSeparator(gpoint.charAt(0));
+		}
+		decimalFormat.setDecimalFormatSymbols(spoint);
 	}
 }

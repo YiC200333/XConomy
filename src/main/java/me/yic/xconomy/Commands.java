@@ -34,6 +34,10 @@ public class Commands implements CommandExecutor {
 						return true;
 					}
 				}
+				if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
+					sendHelpMessage(sender);
+					return true;
+				}
 				showVersion(sender);
 				break;
 			}

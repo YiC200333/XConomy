@@ -40,21 +40,27 @@ public class PE extends PlaceholderExpansion {
 			BigDecimal bal = Cache.getBalanceFromCacheOrDB(player.getUniqueId());
 			return bal.toString();
 		} else if (identifier.contains("top_player_")) {
-			String nm = identifier.substring(identifier.indexOf("top_player_") + 11);
-			if (isNumber(nm)) {
-				int ii = Integer.parseInt(nm) - 1;
+			String index = identifier.substring(identifier.indexOf("top_player_") + 11);
+			if (isNumber(index)) {
+				if (outindex(index)) {
+					return "NO DATA";
+				}
+				int ii = Integer.parseInt(index) - 1;
 				return Cache.baltop_papi.get(ii);
 			} else {
 				return "[XConomy]Invalid index";
 			}
 		} else if (identifier.contains("top_balance_")) {
-			String placement = identifier.substring(identifier.indexOf("top_balance_") + 12);
+			String index = identifier.substring(identifier.indexOf("top_balance_") + 12);
 			if (identifier.contains("top_balance_value")) {
-				placement = identifier.substring(identifier.indexOf("top_balance_value_") + 18);
+				index = identifier.substring(identifier.indexOf("top_balance_value_") + 18);
 			}
-			if (isNumber(placement)) {
-				int placementInt = Integer.parseInt(placement) - 1;
-				String name = Cache.baltop_papi.get(placementInt);
+			if (isNumber(index)) {
+				if (outindex(index)) {
+					return "NO DATA";
+				}
+				int indexInt = Integer.parseInt(index) - 1;
+				String name = Cache.baltop_papi.get(indexInt);
 				BigDecimal bal = Cache.baltop.get(name);
 				if (identifier.contains("top_balance_value")) {
 					return bal.toString();
@@ -91,13 +97,17 @@ public class PE extends PlaceholderExpansion {
 		return true;
 	}
 
-	public boolean isNumber(String str) {
+	private boolean isNumber(String str) {
 		if (str.equals("10")) {
 			return true;
 		}
-		if (str.matches("[0-9]")) {
-			return Integer.parseInt(str) <= Cache.baltop_papi.size();
+		if (str.equals("0")) {
+			return false;
 		}
-		return false;
+		return str.matches("[0-9]");
+	}
+
+	private boolean outindex(String str) {
+		return Integer.parseInt(str) > Cache.baltop_papi.size();
 	}
 }
