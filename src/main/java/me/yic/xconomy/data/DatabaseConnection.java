@@ -42,6 +42,7 @@ public class DatabaseConnection {
 		hikari.addDataSourceProperty("cachePrepStmts", "true");
 		hikari.addDataSourceProperty("prepStmtCacheSize", "250");
 		hikari.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+		hikari.addDataSourceProperty("userServerPrepStmts", "true");
 		if (hikari.getMinimumIdle() < hikari.getMaximumPoolSize()) {
 			hikari.setIdleTimeout(idleTime);
 		} else {
@@ -91,7 +92,6 @@ public class DatabaseConnection {
 		if (!canConnect()) {
 			return null;
 		}
-
 		try {
 			if (XConomy.allowHikariConnectionPooling()) {
 				return hikari.getConnection();

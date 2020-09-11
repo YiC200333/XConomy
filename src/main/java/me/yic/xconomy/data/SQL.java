@@ -57,7 +57,6 @@ public class SQL {
 			if (XConomy.config.getBoolean("Settings.non-player-account")) {
 				statement.executeUpdate(query2);
 			}
-
 			statement.close();
 			database.closeHikariConnection(connection);
 
@@ -164,15 +163,11 @@ public class SQL {
 		try {
 			Connection connection = database.getConnection();
 			String query;
-
-			if (isAdd == null) {
+			if (isAdd) {
 				query = " set balance = balance + " + amount + " where account = ?";
-			} else if (isAdd) {
-				query = " set balance = balance - " + amount + " where account = ?";
 			} else {
-				query = " set balance = " + amount + " where account = ?";
+				query = " set balance = balance - " + amount + " where account = ?";
 			}
-
 			PreparedStatement statement = connection.prepareStatement("update " + tableNonPlayerName + query);
 			statement.setString(1, account);
 			statement.executeUpdate();
@@ -264,7 +259,7 @@ public class SQL {
 	}
 
 	private static void selectUser(String UID, String name, Connection connection) {
-		String user = "";
+		String user = "#";
 
 		try {
 			PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
@@ -281,8 +276,7 @@ public class SQL {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-		if (!user.equals(name)) {
+		if (!user.equals(name)&&!user.equals("#")) {
 			updateUser(UID, name, connection);
 			XConomy.getInstance().logger(name + Messages.systemMessage(" 名称已更改!"));
 		}

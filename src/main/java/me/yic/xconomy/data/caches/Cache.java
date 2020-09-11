@@ -104,7 +104,7 @@ public class Cache {
         return null;
     }
 
-    public static void sendmess(UUID u, BigDecimal amount, BigDecimal amountc, Boolean isAdd) {
+    private static void sendmess(UUID u, BigDecimal amount, BigDecimal amountc, Boolean isAdd) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         DataOutputStream output = new DataOutputStream(stream);
         try {
