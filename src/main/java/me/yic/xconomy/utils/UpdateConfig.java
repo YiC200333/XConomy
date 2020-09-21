@@ -82,6 +82,15 @@ public class UpdateConfig {
 			}
 			update = true;
 		}
+		if (!ck.contains("Settings.eco-command")) {
+			config.createSection("Settings.eco-command");
+			config.set("Settings.eco-command", true);
+			config.createSection("Currency.max-number");
+			config.set("Currency.max-number", "10000000000000000");
+			config.createSection("MySQL.encoding");
+			config.set("MySQL.encoding", "utf8");
+			update = true;
+		}
 		return update;
 	}
 }

@@ -53,12 +53,12 @@ public class DataFormat {
 				.replace("%currencyname%", XConomy.getInstance().getEconomy().currencyNameSingular()));
 	}
 
-	public static boolean isValid(BigDecimal am) {
-		return am.compareTo(maxNumber) < 0;
+	public static boolean isMAX(BigDecimal am) {
+		return am.compareTo(maxNumber) > 0;
 	}
 
 	public static void load() {
-		maxNumber = new BigDecimal("10000000000000000");
+		maxNumber = setmaxnumber();
 		isInteger = XConomy.config.getBoolean("Currency.integer-bal");
 		String format = "###,##0";
 		String gpoint = XConomy.config.getString("Currency.thousands-separator");
@@ -76,5 +76,20 @@ public class DataFormat {
 			spoint.setGroupingSeparator(gpoint.charAt(0));
 		}
 		decimalFormat.setDecimalFormatSymbols(spoint);
+	}
+
+
+	private static BigDecimal setmaxnumber() {
+		String maxn = XConomy.config.getString("Currency.max-number");
+		BigDecimal defaultmaxnumber = new BigDecimal("10000000000000000");
+		if (maxn.length()>17){
+			return defaultmaxnumber;
+		}
+		BigDecimal mnumber = new BigDecimal(maxn);
+		if (mnumber.compareTo(defaultmaxnumber)>=0){
+			return defaultmaxnumber;
+		}else{
+			return mnumber;
+		}
 	}
 }

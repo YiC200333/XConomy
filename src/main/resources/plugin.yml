@@ -18,6 +18,10 @@ commands:
     usage: /<command>
     description: XConomy.
     aliases: [ bal ]
+  economy:
+    usage: /<command>
+    description: XConomy.
+    aliases: [ eco ]
   balancetop:
     usage: /<command>
     description: XConomy.

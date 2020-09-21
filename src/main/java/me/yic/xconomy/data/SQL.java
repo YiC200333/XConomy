@@ -16,6 +16,7 @@ public class SQL {
 	public static String tableName = "xconomy";
 	public static String tableNonPlayerName = "xconomynon";
 	public final static DatabaseConnection database = new DatabaseConnection();
+	private static final String encoding = XConomy.config.getString("MySQL.encoding");
 	private static final Double ibal = XConomy.config.getDouble("Settings.initial-bal");
 
 	public static boolean con() {
@@ -40,10 +41,10 @@ public class SQL {
 			if (XConomy.config.getBoolean("Settings.mysql")) {
 				query1 = "CREATE TABLE IF NOT EXISTS " + tableName
 						+ "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, "
-						+ "primary key (UID)) DEFAULT CHARSET = utf8;";
+						+ "primary key (UID)) DEFAULT CHARSET = "+encoding+";";
 				query2 = "CREATE TABLE IF NOT EXISTS " + tableNonPlayerName
 						+ "(account varchar(50) not null, balance double(20,2) not null, "
-						+ "primary key (account)) DEFAULT CHARSET = utf8;";
+						+ "primary key (account)) DEFAULT CHARSET = "+encoding+";";
 			} else {
 				query1 = "CREATE TABLE IF NOT EXISTS " + tableName
 						+ "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, "

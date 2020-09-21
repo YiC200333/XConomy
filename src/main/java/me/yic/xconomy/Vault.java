@@ -83,21 +83,26 @@ public class Vault extends AbstractEconomy {
 			return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
 					"[BungeeCord] No player in server");
 		}
-		double currentBalance = getBalance(name);
 
+		double bal = getBalance(name);
 		Player player = Bukkit.getPlayerExact(name);
-		BigDecimal formattedAmount = DataFormat.formatDouble(amount);
+		BigDecimal amountFormatted = DataFormat.formatDouble(amount);
+
+		if (DataFormat.isMAX(DataFormat.formatDouble(bal).add(amountFormatted))) {
+			return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Max balance!");
+		}
+
 		if (isNonPlayerAccount(name)) {
-			NonPlayerCache.change(name, formattedAmount, true);
-			return new EconomyResponse(amount, currentBalance, EconomyResponse.ResponseType.SUCCESS, "");
+			NonPlayerCache.change(name, amountFormatted, true);
+			return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
 		}
 
 		UUID playerUUID = Cache.translateUUID(name);
 		if (playerUUID == null) {
-			return new EconomyResponse(0.0D, currentBalance, EconomyResponse.ResponseType.FAILURE, "No Account!");
+			return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "No Account!");
 		}
-		Cache.change(playerUUID, formattedAmount, true);
-		return new EconomyResponse(amount, currentBalance, EconomyResponse.ResponseType.SUCCESS, "");
+		Cache.change(playerUUID, amountFormatted, true);
+		return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
 	}
 
 	@Override

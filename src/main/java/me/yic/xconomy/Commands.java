@@ -101,9 +101,9 @@ public class Commands implements CommandExecutor {
 
 				BigDecimal amount = DataFormat.formatString(args[1]);
 				String amountFormatted = DataFormat.shown(amount);
-				BigDecimal bal = Cache.getBalanceFromCacheOrDB(((Player) sender).getUniqueId());
+				BigDecimal bal_sender = Cache.getBalanceFromCacheOrDB(((Player) sender).getUniqueId());
 
-				if (bal.compareTo(amount) < 0) {
+				if (bal_sender.compareTo(amount) < 0) {
 					sender.sendMessage(sendMessage("prefix") + sendMessage("pay_fail")
 							.replace("%amount%", amountFormatted));
 					return true;
@@ -113,6 +113,12 @@ public class Commands implements CommandExecutor {
 				UUID targetUUID = Cache.translateUUID(args[0]);
 				if (targetUUID == null) {
 					sender.sendMessage(sendMessage("prefix") + sendMessage("noaccount"));
+					return true;
+				}
+
+				BigDecimal bal_target = Cache.getBalanceFromCacheOrDB(targetUUID);
+				if (DataFormat.isMAX(bal_target.add(amount))) {
+					sender.sendMessage(sendMessage("prefix") + sendMessage("over_maxnumber"));
 					return true;
 				}
 
@@ -136,7 +142,8 @@ public class Commands implements CommandExecutor {
 			}
 
 			case "money":
-			case "balance": {
+			case "balance":
+			case "economy": {
 
 				switch (args.length) {
 					case 0: {
@@ -209,6 +216,12 @@ public class Commands implements CommandExecutor {
 							case "give": {
 								if (!(sender.isOp() | sender.hasPermission("xconomy.admin.give"))) {
 									sendHelpMessage(sender);
+									return true;
+								}
+
+								BigDecimal bal = Cache.getBalanceFromCacheOrDB(targetUUID);
+								if (DataFormat.isMAX(bal.add(amount))) {
+									sender.sendMessage(sendMessage("prefix") + sendMessage("over_maxnumber"));
 									return true;
 								}
 
@@ -334,13 +347,13 @@ public class Commands implements CommandExecutor {
 			}
 
 			if (Double.parseDouble(s) >= 1) {
-				return DataFormat.isValid(DataFormat.formatString(s));
+				return !DataFormat.isMAX(DataFormat.formatString(s));
 			}
 
 		} catch (NumberFormatException ignored) {
 		}
 
-		return true;
+		return false;
 	}
 
 	public boolean check() {

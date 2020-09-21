@@ -15,7 +15,8 @@ public class DatabaseConnection {
 	//============================================================================================
 	private static final File dataFolder = new File(XConomy.getInstance().getDataFolder(), "playerdata");
 	private static final String url = "jdbc:mysql://" + XConomy.config.getString("MySQL.host") + "/"
-			+ XConomy.config.getString("MySQL.database") + "?characterEncoding=utf-8&useSSL=false";
+			+ XConomy.config.getString("MySQL.database") + "?characterEncoding="
+			+ XConomy.config.getString("MySQL.encoding") + "&useSSL=false";
 	private static final String username = XConomy.config.getString("MySQL.user");
 	private static final String password = XConomy.config.getString("MySQL.pass");
 	private static final Integer maxPoolSize = XConomy.config.getInt("Pool-Settings.maximum-pool-size");

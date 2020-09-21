@@ -67,7 +67,9 @@ public class XConomy extends JavaPlugin {
 		Bukkit.getPluginCommand("balancetop").setExecutor(new Commands());
 		Bukkit.getPluginCommand("pay").setExecutor(new Commands());
 		Bukkit.getPluginCommand("xconomy").setExecutor(new Commands());
-
+		if (config.getBoolean("Settings.eco-command")) {
+			Bukkit.getPluginCommand("economy").setExecutor(new Commands());
+		}
 		if (!DataCon.create()) {
 			onDisable();
 			return;
