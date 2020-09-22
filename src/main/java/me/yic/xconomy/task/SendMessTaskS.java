@@ -2,6 +2,7 @@ package me.yic.xconomy.task;
 
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.utils.RecordData;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -14,19 +15,21 @@ public class SendMessTaskS extends BukkitRunnable {
 	private final UUID u;
 	private final BigDecimal amount;
 	private final Boolean type;
+	private final RecordData x;
 
-	public SendMessTaskS(ByteArrayOutputStream stream, UUID u, BigDecimal amount, Boolean type) {
+	public SendMessTaskS(ByteArrayOutputStream stream, UUID u, BigDecimal amount, Boolean type, RecordData x) {
 		this.stream = stream;
 		this.u = u;
 		this.amount = amount;
 		this.type = type;
+		this.x = x;
 	}
 
 	@Override
 	public void run() {
 		Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", this.stream.toByteArray());
 		if (u != null) {
-			DataCon.save(u, amount, type);
+			DataCon.save(u, amount, type, x);
 		}
 	}
 }

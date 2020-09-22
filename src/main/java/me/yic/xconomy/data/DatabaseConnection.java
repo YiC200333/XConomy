@@ -89,21 +89,25 @@ public class DatabaseConnection {
 		return false;
 	}
 
-	public Connection getConnection() {
+	public Connection getConnectionAndCheck() {
 		if (!canConnect()) {
 			return null;
 		}
 		try {
-			if (XConomy.allowHikariConnectionPooling()) {
-				return hikari.getConnection();
-			} else {
-				return connection;
-			}
+			return getConnection();
 		} catch (SQLException e1) {
 			XConomy.getInstance().logger("无法连接到数据库-----");
 			close();
 			e1.printStackTrace();
 			return null;
+		}
+	}
+
+	public Connection getConnection() throws SQLException {
+		if (XConomy.allowHikariConnectionPooling()) {
+			return hikari.getConnection();
+		} else {
+			return connection;
 		}
 	}
 

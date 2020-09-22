@@ -15,6 +15,9 @@ Settings:
   #It can solve the problem that some plugins need to create non-player accounts, such as Factions,Towny
   #Non-player account data is not synced with BC
   non-player-account: false
+  #Dose save transaction record
+  #Only MySQL is supported
+  transaction-record: true
 
 
 #The display of the currency

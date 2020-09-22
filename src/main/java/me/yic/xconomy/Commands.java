@@ -24,7 +24,6 @@ public class Commands implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		String commandName = cmd.getName().toLowerCase();
-
 		switch (commandName) {
 			case "xconomy": {
 				if (sender.isOp()) {
@@ -122,12 +121,13 @@ public class Commands implements CommandExecutor {
 					return true;
 				}
 
-				Cache.change(((Player) sender).getUniqueId(), amount, false);
+				String com = commandName + " " + args[0] + " " + args[1];
+						Cache.change(((Player) sender).getUniqueId(), amount, false, "PLAYER_COMMAND", ((Player) sender).getName(), com);
 				sender.sendMessage(sendMessage("prefix") + sendMessage("pay")
 						.replace("%player%", args[0])
 						.replace("%amount%", amountFormatted));
 
-				Cache.change(targetUUID, amount, true);
+				Cache.change(targetUUID, amount, true, "PLAYER_COMMAND", args[0], com);
 				String mess = sendMessage("prefix") + sendMessage("pay_receive")
 						.replace("%player%", sender.getName())
 						.replace("%amount%", amountFormatted);
@@ -212,6 +212,7 @@ public class Commands implements CommandExecutor {
 							return true;
 						}
 
+						String com = commandName + " " + args[0] + " " + args[1] + " " + args[2];
 						switch (args[0].toLowerCase()) {
 							case "give": {
 								if (!(sender.isOp() | sender.hasPermission("xconomy.admin.give"))) {
@@ -225,7 +226,7 @@ public class Commands implements CommandExecutor {
 									return true;
 								}
 
-								Cache.change(targetUUID, amount, true);
+								Cache.change(targetUUID, amount, true,"ADMIN_COMMAND", args[1], com);
 								sender.sendMessage(sendMessage("prefix") + sendMessage("money_give")
 										.replace("%player%", args[1])
 										.replace("%amount%", amountFormatted));
@@ -261,7 +262,7 @@ public class Commands implements CommandExecutor {
 									return true;
 								}
 
-								Cache.change(targetUUID, amount, false);
+								Cache.change(targetUUID, amount, false,"ADMIN_COMMAND", args[1], com);
 								sender.sendMessage(sendMessage("prefix") + sendMessage("money_take")
 										.replace("%player%", args[1])
 										.replace("%amount%", amountFormatted));
@@ -287,7 +288,7 @@ public class Commands implements CommandExecutor {
 									return true;
 								}
 
-								Cache.change(targetUUID, amount, null);
+								Cache.change(targetUUID, amount, null,"ADMIN_COMMAND", args[1], com);
 								sender.sendMessage(sendMessage("prefix") + sendMessage("money_set")
 										.replace("%player%", args[1])
 										.replace("%amount%", amountFormatted));
@@ -408,7 +409,7 @@ public class Commands implements CommandExecutor {
 			e.printStackTrace();
 		}
 
-		new SendMessTaskS(stream, null, null, null).runTaskAsynchronously(XConomy.getInstance());
+		new SendMessTaskS(stream, null, null, null, null).runTaskAsynchronously(XConomy.getInstance());
 
 	}
 

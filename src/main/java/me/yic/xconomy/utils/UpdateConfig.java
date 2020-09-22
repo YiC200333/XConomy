@@ -85,6 +85,8 @@ public class UpdateConfig {
 		if (!ck.contains("Settings.eco-command")) {
 			config.createSection("Settings.eco-command");
 			config.set("Settings.eco-command", true);
+			config.createSection("Settings.transaction-record");
+			config.set("Settings.transaction-record", true);
 			config.createSection("Currency.max-number");
 			config.set("Currency.max-number", "10000000000000000");
 			config.createSection("MySQL.encoding");

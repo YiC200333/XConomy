@@ -4,15 +4,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.utils.RecordData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -57,7 +54,7 @@ public class Cache {
         return amount;
     }
 
-    public static void change(UUID u, BigDecimal amount, Boolean isAdd) {
+    public static void change(UUID u, BigDecimal amount, Boolean isAdd, String type, String playername, String reason) {
         BigDecimal newvalue = amount;
         if (isAdd != null) {
             BigDecimal bal = getBalanceFromCacheOrDB(u);
@@ -68,10 +65,14 @@ public class Cache {
             }
         }
         insertIntoCache(u, newvalue);
+        RecordData x = null;
+        if (XConomy.config.getBoolean("Settings.mysql") && XConomy.config.getBoolean("Settings.transaction-record")) {
+             x = new RecordData(type, u, playername, newvalue, amount, isAdd, reason);
+        }
         if (XConomy.isBungeecord()) {
-            sendmess(u, newvalue, amount, isAdd);
+            sendmess(u, newvalue, amount, isAdd, x);
         } else {
-            DataCon.save(u, amount, isAdd);
+            DataCon.save(u, amount, isAdd, x);
         }
     }
 
@@ -104,7 +105,7 @@ public class Cache {
         return null;
     }
 
-    private static void sendmess(UUID u, BigDecimal amount, BigDecimal amountc, Boolean isAdd) {
+    private static void sendmess(UUID u, BigDecimal amount, BigDecimal amountc, Boolean isAdd, RecordData x) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         DataOutputStream output = new DataOutputStream(stream);
         try {
@@ -116,7 +117,7 @@ public class Cache {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        new SendMessTaskS(stream, u, amountc, isAdd).runTaskAsynchronously(XConomy.getInstance());
+        new SendMessTaskS(stream, u, amountc, isAdd, x).runTaskAsynchronously(XConomy.getInstance());
     }
 
 }

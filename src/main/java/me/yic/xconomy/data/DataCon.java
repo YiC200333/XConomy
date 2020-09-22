@@ -1,6 +1,7 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.utils.RecordData;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -70,18 +71,19 @@ public class DataCon extends XConomy {
 		return SQL.sumBal();
 	}
 
-	public static void save(UUID UID, BigDecimal amount, Boolean isAdd) {
-		SQL.save(UID.toString(), amount.doubleValue(), isAdd);
+	public static void save(UUID UID, BigDecimal amount, Boolean isAdd, RecordData x) {
+		SQL.save(UID.toString(), amount.doubleValue(), isAdd, x);
 	}
 
-	public static void saveNonPlayer(String account, BigDecimal amount, Boolean isAdd) {
-		SQL.saveNonPlayer(account, amount.doubleValue(), isAdd);
+	public static void saveNonPlayer(String account, BigDecimal amount, Boolean isAdd, RecordData x) {
+		SQL.saveNonPlayer(account, amount.doubleValue(), isAdd, x);
 	}
 
 	private static void setupMySqlTable() {
 		if (config.getString("MySQL.table_suffix") != null & !config.getString("MySQL.table_suffix").equals("")) {
 			SQL.tableName = "xconomy_" + config.getString("MySQL.table_suffix").replace("%sign%", getSign());
 			SQL.tableNonPlayerName = "xconomynon_" + config.getString("MySQL.table_suffix").replace("%sign%", getSign());
+			SQL.tableRecordName = "xconomyrecord_" + config.getString("MySQL.table_suffix").replace("%sign%", getSign());
 		}
 	}
 

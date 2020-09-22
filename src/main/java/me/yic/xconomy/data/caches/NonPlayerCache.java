@@ -1,6 +1,8 @@
 package me.yic.xconomy.data.caches;
 
+import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
+import me.yic.xconomy.utils.RecordData;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -23,7 +25,7 @@ public class NonPlayerCache {
 
     }
 
-    public static void change(String u, BigDecimal amount, Boolean isAdd) {
+    public static void change(String u, BigDecimal amount, Boolean isAdd, String type) {
         BigDecimal newvalue = amount;
 		if (isAdd != null) {
 			BigDecimal bal = getBalanceFromCacheOrDB(u);
@@ -34,7 +36,11 @@ public class NonPlayerCache {
 			}
 		}
         insertIntoCache(u, newvalue);
-        DataCon.saveNonPlayer(u, amount, isAdd);
+        RecordData x = null;
+        if (XConomy.config.getBoolean("Settings.mysql") && XConomy.config.getBoolean("Settings.transaction-record")) {
+            x = new RecordData(type, null, u, newvalue, amount, isAdd, "N/A");
+        }
+        DataCon.saveNonPlayer(u, amount, isAdd, x);
     }
 
 }
