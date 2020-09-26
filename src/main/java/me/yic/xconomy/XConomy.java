@@ -10,10 +10,13 @@ import me.yic.xconomy.message.MessagesManager;
 import me.yic.xconomy.message.Messages;
 import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
+import me.yic.xconomy.utils.EconomyCommand;
 import me.yic.xconomy.utils.UpdateConfig;
 import net.milkbowl.vault.economy.Economy;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.ServicePriority;
@@ -21,6 +24,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class XConomy extends JavaPlugin {
 
@@ -67,9 +73,18 @@ public class XConomy extends JavaPlugin {
 		Bukkit.getPluginCommand("balancetop").setExecutor(new Commands());
 		Bukkit.getPluginCommand("pay").setExecutor(new Commands());
 		Bukkit.getPluginCommand("xconomy").setExecutor(new Commands());
-		if (config.getBoolean("Settings.eco-command")) {
-			Bukkit.getPluginCommand("economy").setExecutor(new Commands());
+
+		if (Bukkit.getPluginManager().getPlugin("Essentials") != null && config.getBoolean("Settings.eco-command")) {
+			try {
+				final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+				bukkitCommandMap.setAccessible(true);
+				CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
+				coveress(commandMap);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
+
 		if (!DataCon.create()) {
 			onDisable();
 			return;
@@ -103,6 +118,9 @@ public class XConomy extends JavaPlugin {
 	}
 
 	public void onDisable() {
+		if (config.getBoolean("Settings.eco-command")) {
+
+		}
 		getServer().getServicesManager().unregister(econ);
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			try {
@@ -221,4 +239,16 @@ public class XConomy extends JavaPlugin {
 		}
 	}
 
+	private void coveress(CommandMap commandMap) {
+		Command commanda  = new EconomyCommand("economy");
+		commandMap.register("economy", commanda);
+		Command commandb  = new EconomyCommand("eco");
+		commandMap.register("eco", commandb);
+		Command commandc  = new EconomyCommand("ebalancetop");
+		commandMap.register("ebalancetop", commandc);
+		Command commandd  = new EconomyCommand("ebaltop");
+		commandMap.register("ebaltop", commandd);
+		Command commande  = new EconomyCommand("eeconomy");
+		commandMap.register("eeconomy", commande);
+	}
 }

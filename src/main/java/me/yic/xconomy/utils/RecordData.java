@@ -25,10 +25,12 @@ public class RecordData {
 		this.balance = balance.doubleValue();
 		this.amount = amount.doubleValue();
 		String operation = "SET";
-		if (isAdd) {
-			operation = "DEPOSIT";
-		} else {
-			operation = "WITHDRAW";
+		if (isAdd != null) {
+			if (isAdd) {
+				operation = "DEPOSIT";
+			} else {
+				operation = "WITHDRAW";
+			}
 		}
 		this.operation = operation;
 		this.date = (new Date()).toString();

@@ -30,6 +30,7 @@ public class DatabaseConnection {
 	//============================================================================================
 	private Connection connection = null;
 	private HikariDataSource hikari = null;
+	private boolean isfirstry = true;
 
 	private void createNewHikariConfiguration() {
 		hikari = new HikariDataSource();
@@ -96,10 +97,17 @@ public class DatabaseConnection {
 		try {
 			return getConnection();
 		} catch (SQLException e1) {
-			XConomy.getInstance().logger("无法连接到数据库-----");
-			close();
-			e1.printStackTrace();
-			return null;
+			if (isfirstry) {
+				isfirstry = false;
+				close();
+				return getConnectionAndCheck();
+			}else{
+				isfirstry = true;
+				XConomy.getInstance().logger("无法连接到数据库-----");
+				close();
+				e1.printStackTrace();
+				return null;
+			}
 		}
 	}
 
