@@ -2,6 +2,7 @@ package me.yic.xconomy.listeners;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.XConomy;
@@ -37,6 +38,25 @@ public class SPsync implements PluginMessageListener {
 			if (p != null) {
 				p.sendMessage(mess);
 			}
+		} else if (type.equalsIgnoreCase("balanceall")) {
+			String targettype = input.readUTF();
+			String amount = input.readUTF();
+			String isadds = input.readUTF();
+			if (targettype.equalsIgnoreCase("all")){
+				Cache.bal.clear();
+			}else if (targettype.equalsIgnoreCase("online")){
+				Cache.bal.clear();
+				Boolean isadd = null;
+				if (isadds.equalsIgnoreCase("add")) {
+					isadd = true;
+				} else if (isadds.equalsIgnoreCase("add")) {
+					isadd = false;
+				}
+				DataCon.saveall("online",DataFormat.formatString(amount),isadd,null);
+			}
+		}else if (type.equalsIgnoreCase("broadcast")) {
+			String mess = input.readUTF();
+			Bukkit.broadcastMessage(mess);
 		}
 	}
 

@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.List;
 import java.util.UUID;
 
 public class SQL {
@@ -168,6 +169,48 @@ public class SQL {
 			e.printStackTrace();
 		}
 		record(x,connection);
+		database.closeHikariConnection(connection);
+	}
+
+	public static void saveall(String targettype, List<UUID> players, Double amount, Boolean isAdd,  RecordData x) {
+		Connection connection = database.getConnectionAndCheck();
+		try {
+			if (targettype.equalsIgnoreCase("all")) {
+				String query;
+				if (isAdd) {
+					query = " set balance = balance + " + amount;
+				} else {
+					query = " set balance = balance - " + amount;
+				}
+				PreparedStatement statement = connection.prepareStatement("update " + tableName + query);
+				statement.executeUpdate();
+				statement.close();
+			} else if (targettype.equalsIgnoreCase("online")) {
+				String query;
+				if (isAdd) {
+					query = " set balance = balance + " + amount;
+				} else {
+					query = " set balance = balance - " + amount;
+				}
+				int jsm = players.size();
+				int js = 1;
+				for (UUID u : players) {
+					if (js == jsm) {
+						query = query + " where UID = '"+u.toString()+"'";
+					}else {
+						query = query + " where UID = '"+u.toString()+"' OR";
+					}
+				}
+				PreparedStatement statement = connection.prepareStatement("update " + tableName + query);
+				statement.executeUpdate();
+				statement.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if (x!=null) {
+			record(x, connection);
+		}
 		database.closeHikariConnection(connection);
 	}
 

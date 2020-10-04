@@ -2,10 +2,15 @@ package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.utils.RecordData;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -73,6 +78,23 @@ public class DataCon extends XConomy {
 
 	public static void save(UUID UID, BigDecimal amount, Boolean isAdd, RecordData x) {
 		SQL.save(UID.toString(), amount.doubleValue(), isAdd, x);
+	}
+
+	public static void saveall(String targettype, BigDecimal amount, Boolean isAdd, RecordData x) {
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (targettype.equalsIgnoreCase("all")) {
+					SQL.saveall(targettype, null, amount.doubleValue(), isAdd, x);
+				} else if (targettype.equalsIgnoreCase("online")) {
+					List<UUID> ol = new ArrayList<UUID>();
+					for (Player pp : Bukkit.getOnlinePlayers()) {
+						ol.add(pp.getUniqueId());
+					}
+					SQL.saveall(targettype, ol, amount.doubleValue(), isAdd, x);
+				}
+			}
+		}.runTaskAsynchronously(XConomy.getInstance());
 	}
 
 	public static void saveNonPlayer(String account, BigDecimal amount, Boolean isAdd, RecordData x) {

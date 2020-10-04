@@ -51,6 +51,16 @@ public class BCsync implements Listener {
 				} else {
 					return;
 				}
+			} else if (type.equalsIgnoreCase("balanceall")) {
+				output.writeUTF("balanceall");
+				output.writeUTF(input.readUTF());
+				output.writeUTF(input.readUTF());
+				output.writeUTF(input.readUTF());
+				output.writeUTF(input.readUTF());
+			} else if (type.equalsIgnoreCase("broadcast")) {
+				output.writeUTF("broadcast");
+				output.writeUTF(input.readUTF());
+				output.writeUTF(input.readUTF());
 			}
 		} catch (IOException e) {
 			ProxyServer.getInstance().getLogger().severe("An I/O error occurred!");

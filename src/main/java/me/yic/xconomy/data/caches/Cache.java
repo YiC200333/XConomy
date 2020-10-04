@@ -70,9 +70,21 @@ public class Cache {
              x = new RecordData(type, u, playername, newvalue, amount, isAdd, reason);
         }
         if (XConomy.isBungeecord()) {
-            sendmess(u, newvalue, amount, isAdd, x);
+            sendmessave(u, newvalue, amount, isAdd, x);
         } else {
             DataCon.save(u, amount, isAdd, x);
+        }
+    }
+
+    public static void changeall( String targettype, BigDecimal amount, Boolean isAdd, String type, String reason) {
+        RecordData x = null;
+        bal.clear();
+        if (XConomy.config.getBoolean("Settings.mysql") && XConomy.config.getBoolean("Settings.transaction-record")) {
+            x = new RecordData(type, null, null, BigDecimal.ZERO, amount, isAdd, reason);
+        }
+        DataCon.saveall(targettype, amount, isAdd, x);
+        if (XConomy.isBungeecord()) {
+            sendmessaveall(targettype, amount, isAdd);
         }
     }
 
@@ -105,19 +117,43 @@ public class Cache {
         return null;
     }
 
-    private static void sendmess(UUID u, BigDecimal amount, BigDecimal amountc, Boolean isAdd, RecordData x) {
+    private static void sendmessave(UUID u, BigDecimal amount, BigDecimal amountc, Boolean isAdd, RecordData x) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         DataOutputStream output = new DataOutputStream(stream);
         try {
-            output.writeUTF("balance");
-            output.writeUTF(XConomy.getSign());
-            output.writeUTF(u.toString());
-            output.writeUTF(amount.toString());
+              output.writeUTF("balance");
+              output.writeUTF(XConomy.getSign());
+              output.writeUTF(u.toString());
+              output.writeUTF(amount.toString());
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         new SendMessTaskS(stream, u, amountc, isAdd, x).runTaskAsynchronously(XConomy.getInstance());
+    }
+
+    private static void sendmessaveall(String targettype, BigDecimal amountc, Boolean isAdd) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DataOutputStream output = new DataOutputStream(stream);
+        try {
+            output.writeUTF("balanceall");
+            output.writeUTF(XConomy.getSign());
+            if (targettype.equals("all")) {
+                output.writeUTF("all");
+            }else if (targettype.equals("online")) {
+                output.writeUTF("online");
+            }
+            output.writeUTF(amountc.toString());
+            if (isAdd) {
+                output.writeUTF("add");
+            } else {
+                output.writeUTF("subtract");
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        new SendMessTaskS(stream, null, amountc, isAdd, null).runTaskAsynchronously(XConomy.getInstance());
     }
 
 }

@@ -82,6 +82,8 @@ public class Languages {
 		ll.add("help5");
 		ll.add("help6");
 		ll.add("help7");
+		ll.add("help8");
+		ll.add("help9");
 		ll.add("reload");
 		return ll;
 
@@ -120,6 +122,8 @@ public class Languages {
 		mess.put("help5", "&6balance/money give <player> <amount>  -  give <player> <amount>");
 		mess.put("help6", "&6balance/money take <player> <amount>  -  take <amount> from <player>");
 		mess.put("help7", "&6balance/money set <player> <amount>  -  set <player>'s balance to <amount>");
+		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  give <all/online player> <amount>");
+		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  take <amount> from <all/online player>");
 	}
 
 	private static void russian() {
@@ -155,6 +159,8 @@ public class Languages {
 		mess.put("help5", "&6balance/money give <игрок> <сумма>  -  Дать <игроку> <сумму>");
 		mess.put("help6", "&6balance/money take <игрок> <сумма>  -  Взять <сумму> у <игрока>");
 		mess.put("help7", "&6balance/money set <игрок> <сумма>  -  Установить баланс <игрока> на <сумму>");
+		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  give <all/online player> <amount>");
+		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  take <amount> from <all/online player>");
 	}
 
 	private static void spanish() {
@@ -190,6 +196,8 @@ public class Languages {
 		mess.put("help5", "&6balance/money give <Jugador> <Monto>  -  le das dinero a: <Jugador>, <Monto>");
 		mess.put("help6", "&6balance/money take <Jugador> <Monto>  -  le sacas <Monto> a: <Jugador>");
 		mess.put("help7", "&6balance/money set <Jugador> <Monto>  -  setea <Jugador> dinero a: <Monto>");
+		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  give <all/online player> <amount>");
+		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  take <amount> from <all/online player>");
 	}
 
 	private static void chinese() {
@@ -225,6 +233,8 @@ public class Languages {
 		mess.put("help5", "&6balance/money give <玩家> <金额>  -  给与<玩家><金额>");
 		mess.put("help6", "&6balance/money take <玩家> <金额>  -  从<玩家>取走<金额>");
 		mess.put("help7", "&6balance/money set <玩家> <金额>  -  设置<玩家>金额为<金额>");
+		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  给与<所有/在线玩家><金额>");
+		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  从<所有/在线玩家>取走<金额>");
 	}
 
 	private static void chinesetw() {
@@ -259,6 +269,8 @@ public class Languages {
 		mess.put("help5", "&6balance/money give <玩家> <金額>  -  給與<玩家><金額>");
 		mess.put("help6", "&6balance/money take <玩家> <金額>  -  從<玩家>取走<金額>");
 		mess.put("help7", "&6balance/money set <玩家> <金額>  -  設定<玩家>金額為<金額>");
+		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  給與<所有/在綫玩家><金额>");
+		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  從<所有/在綫玩家>取走<金額>");
 	}
 
 	private static void french() {
@@ -294,6 +306,8 @@ public class Languages {
 		mess.put("help5", "&6balance/money give <joueur> <montant>  -  Donne un montant défini au joueur visé");
 		mess.put("help6", "&6balance/money take <joueur> <montant>  -  Prend un montant défini au joueur visé");
 		mess.put("help7", "&6balance/money set <joueur> <montant>  -  Défini le montant du Solde au joueur visé");
+		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  give <all/online player> <amount>");
+		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  take <amount> from <all/online player>");
 	}
 
 	private static void turkish() {
@@ -328,6 +342,8 @@ public class Languages {
 		mess.put("help5", "&6balance/money give <player> <amount>  -  Belirtilen oyuncuya belirtilen miktarda para verir");
 		mess.put("help6", "&6balance/money take <player> <amount>  -  Belirtilen oyuncudan belirtilen miktarda para alır");
 		mess.put("help7", "&6balance/money set <player> <amount>  -  Belirtilen oyuncunun bakiyesini belirtilen miktar olarak ayarlar");
+		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  give <all/online player> <amount>");
+		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  take <amount> from <all/online player>");
 	}
 
 	private static void japanese() {
@@ -359,8 +375,10 @@ public class Languages {
 		mess.put("help2", "&6balance/money <プレイヤー>  -  <プレイヤー>の残高をチェックされました。");
 		mess.put("help3", "&6pay <プレイヤー> <金額>  -  は<プレイヤー>に<金額>を送金されました。");
 		mess.put("help4", "&6balancetop  -  残高ランキングをチェックする。");
-		mess.put("help5", "&6balance/money give <プレイヤ> <金額>  -  は<プレイヤー>に<金額>を与えた。");
-		mess.put("help6", "&6balance/money take <プレイヤー> <金額>  -  は<玩家>から<金額>を差し引きました。");
-		mess.put("help7", "&6balance/money set <プレイヤー> <金額>  -  は<玩家>さんの残高を<金額>に設定されました。");
+		mess.put("help5", "&6balance/money give <プレイヤー> <金額>  -  は<プレイヤー>に<金額>を与えた。");
+		mess.put("help6", "&6balance/money take <プレイヤー> <金額>  -  は<プレイヤー>から<金額>を差し引きました。");
+		mess.put("help7", "&6balance/money set <プレイヤー> <金額>  -  は<プレイヤー>さんの残高を<金額>に設定されました。");
+		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  は<all/online player>に<金額>を与えた。");
+		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  は<all/online player>から<金額>を差し引きました。");
 	}
 }

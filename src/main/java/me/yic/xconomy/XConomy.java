@@ -118,9 +118,6 @@ public class XConomy extends JavaPlugin {
 	}
 
 	public void onDisable() {
-		if (config.getBoolean("Settings.eco-command")) {
-
-		}
 		getServer().getServicesManager().unregister(econ);
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			try {

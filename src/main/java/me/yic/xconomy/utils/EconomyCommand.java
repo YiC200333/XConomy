@@ -15,7 +15,6 @@ public class EconomyCommand extends Command {
 			this.name = name;
 			this.description = "XConomy.";
 			this.usageMessage = "/<command>";
-			List<String> x = new ArrayList<>();
 		}
 
 	@Override

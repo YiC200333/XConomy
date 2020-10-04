@@ -21,7 +21,11 @@ public class RecordData {
 		}else {
 			this.uid = uid.toString();
 		}
-		this.player = player;
+		if (player == null){
+			this.player = "N/A";
+		}else {
+			this.player = player;
+		}
 		this.balance = balance.doubleValue();
 		this.amount = amount.doubleValue();
 		String operation = "SET";
