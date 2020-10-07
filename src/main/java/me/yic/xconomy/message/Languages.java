@@ -130,18 +130,18 @@ public class Languages {
 		mess.put("prefix", "&6[XConomy]");
 		mess.put("balance", "&aБаланс: %balance%");
 		mess.put("balance_other", "&aБаланс игрока %player%: %balance%");
-		mess.put("top_title", "&e========= TOP10 =========");
-		mess.put("sum_text", "&fServer Total - %balance%");
+		mess.put("top_title", "&e========= ТОП10 =========");
+		mess.put("sum_text", "&fСумарно по серверу: %balance%");
 		mess.put("top_text", "&e%index%: %player% - %balance%");
-		mess.put("top_subtitle", "&7TOP10 refreshed every 5 minutes");
+		mess.put("top_subtitle", "&7ТОП10 обновляется каждые 5 минут");
 		mess.put("top_nodata", "&cНет данных о ТОП10");
 		mess.put("pay", "&cВы заплатили игроку %player% %amount%");
 		mess.put("pay_receive", "&aВы получили %amount% от игрока %player%");
 		mess.put("pay_fail", "&cВаш баланс меньше, чем %amount%");
-		mess.put("pay_self", "&cВы не можете заплатить себе же");
+		mess.put("pay_self", "&cВы не можете заплатить самому себе");
 		mess.put("noaccount", "&cУказанный аккаунт не существует");
 		mess.put("invalid", "&cНекорректная сумма");
-		mess.put("over_maxnumber", "&cThe target account amount over the maximum amount");
+		mess.put("over_maxnumber", "&cУ данного игрока достигнут лимит средств");
 		mess.put("money_give", "&cВы выдали игроку %player% %amount%");
 		mess.put("money_give_receive", "&aАдминистрация выдала вам %amount%");
 		mess.put("money_take", "&cВы забрали %amount% у игрока %player%");
@@ -155,12 +155,12 @@ public class Languages {
 		mess.put("help1", "&6balance/money  -  Отображает ваш баланс");
 		mess.put("help2", "&6balance/money <игрок>  -  Отображает баланс <игрока>");
 		mess.put("help3", "&6pay <игрок> <сумма>  -  Заплатить <игроку> <сумму>");
-		mess.put("help4", "&6balancetop  -  Отображает TOP10");
-		mess.put("help5", "&6balance/money give <игрок> <сумма>  -  Дать <игроку> <сумму>");
-		mess.put("help6", "&6balance/money take <игрок> <сумма>  -  Взять <сумму> у <игрока>");
+		mess.put("help4", "&6balancetop  -  Отображает ТОП10");
+		mess.put("help5", "&6balance/money give <игрок> <сумма>  -  Выдать <игроку> <сумму>");
+		mess.put("help6", "&6balance/money take <игрок> <сумма>  -  Забрать <сумму> у <игрока>");
 		mess.put("help7", "&6balance/money set <игрок> <сумма>  -  Установить баланс <игрока> на <сумму>");
-		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  give <all/online player> <amount>");
-		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  take <amount> from <all/online player>");
+		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  Выдать <всем/онлайн игрокам> <сумму>");
+		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  Забрать <сумму> у <всех/онлайн игроков>");
 	}
 
 	private static void spanish() {
