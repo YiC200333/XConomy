@@ -74,13 +74,13 @@ public class XConomy extends JavaPlugin {
 		Bukkit.getPluginCommand("pay").setExecutor(new Commands());
 		Bukkit.getPluginCommand("xconomy").setExecutor(new Commands());
 
-		if (Bukkit.getPluginManager().getPlugin("Essentials") != null && config.getBoolean("Settings.eco-command")) {
+		if (config.getBoolean("Settings.eco-command")) {
 			try {
 				final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 				bukkitCommandMap.setAccessible(true);
 				CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
 				coveress(commandMap);
-			} catch(Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
