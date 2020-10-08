@@ -148,23 +148,36 @@ public class SQL {
 		}
 	}
 
-	public static void save(String UID, Double amount, Boolean isAdd, RecordData x) {
+	public static void save(UUID u, Double balance, BigDecimal amount, Boolean isAdd, RecordData x) {
 		Connection connection = database.getConnectionAndCheck();
 		try {
 			String query;
-
 			if (isAdd == null) {
-				query = " set balance = " + amount + " where UID = ?";
+				query = " set balance = " + amount.doubleValue() + " where UID = ?";
 			} else if (isAdd) {
-				query = " set balance = balance + " + amount + " where UID = ?";
+				query = " set balance = balance + " + amount.doubleValue() + " where UID = ?";
 			} else {
-				query = " set balance = balance - " + amount + " where UID = ?";
+				query = " set balance = balance - " + amount.doubleValue() + " where UID = ?";
 			}
-
-			PreparedStatement statement = connection.prepareStatement("update " + tableName + query);
-			statement.setString(1, UID);
-			statement.executeUpdate();
-			statement.close();
+			Boolean requirefresh = false;
+			if (XConomy.config.getBoolean("Settings.cache-correction")&&isAdd!=null){
+				requirefresh = true;
+				query = query + "AND balance = " + balance;
+			}
+			PreparedStatement statement1 = connection.prepareStatement("update " + tableName + query);
+			statement1.setString(1, u.toString());
+			Integer rs = statement1.executeUpdate();
+			statement1.close();
+			if (requirefresh && rs == 0){
+				Cache.refreshFromCache(u);
+				Cache.cachecorrection(u,amount,isAdd);
+				x.addcachecorrection();
+				query = " set balance = balance + " + amount.doubleValue() + " where UID = ?";
+				PreparedStatement statement2 = connection.prepareStatement("update " + tableName + query);
+				statement2.setString(1, u.toString());
+				statement2.executeUpdate();
+				statement2.close();
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -188,17 +201,19 @@ public class SQL {
 			} else if (targettype.equalsIgnoreCase("online")) {
 				String query;
 				if (isAdd) {
-					query = " set balance = balance + " + amount;
+					query = " set balance = balance + " + amount + " where";
 				} else {
-					query = " set balance = balance - " + amount;
+					query = " set balance = balance - " + amount + " where";
 				}
 				int jsm = players.size();
 				int js = 1;
+
 				for (UUID u : players) {
 					if (js == jsm) {
-						query = query + " where UID = '"+u.toString()+"'";
+						query = query + " UID = '"+u.toString()+"'";
 					}else {
-						query = query + " where UID = '"+u.toString()+"' OR";
+						query = query + " UID = '"+u.toString()+"' OR";
+						js = js + 1;
 					}
 				}
 				PreparedStatement statement = connection.prepareStatement("update " + tableName + query);

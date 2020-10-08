@@ -46,6 +46,16 @@ public class XConomyAPI {
 		if (XConomy.isBungeecord() & Bukkit.getOnlinePlayers().isEmpty()) {
 			return 1;
 		}
+		BigDecimal bal = getbalance(Cache.translateUUID(playername));
+		if (isadd){
+			if (ismaxnumber(bal.add(amount))){
+				return 3;
+			}
+		}else {
+			if (bal.compareTo(amount) < 0) {
+				return 2;
+			}
+		}
 		Cache.change(u ,amount ,isadd ,"PLUGIN_API" , playername, "N/A");
 		return 0;
 	}

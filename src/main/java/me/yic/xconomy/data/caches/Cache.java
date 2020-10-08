@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.SQL;
 import me.yic.xconomy.utils.RecordData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -26,6 +27,12 @@ public class Cache {
     public static void insertIntoCache(final UUID uuid, BigDecimal value) {
         if (value != null) {
             bal.put(uuid, value);
+        }
+    }
+
+    public static void refreshFromCache(final UUID uuid) {
+        if (uuid != null) {
+            SQL.select(uuid);
         }
     }
 
@@ -54,10 +61,34 @@ public class Cache {
         return amount;
     }
 
+    public static void cachecorrection(UUID u, BigDecimal amount, Boolean isAdd) {
+        BigDecimal newvalue;
+        BigDecimal bal = getBalanceFromCacheOrDB(u);
+        if (isAdd) {
+            newvalue = bal.add(amount);
+        } else {
+            newvalue = bal.subtract(amount);
+        }
+        insertIntoCache(u, newvalue);
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DataOutputStream output = new DataOutputStream(stream);
+        try {
+            output.writeUTF("balance");
+            output.writeUTF(XConomy.getSign());
+            output.writeUTF(u.toString());
+            output.writeUTF(amount.toString());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
+    }
+
     public static void change(UUID u, BigDecimal amount, Boolean isAdd, String type, String playername, String reason) {
         BigDecimal newvalue = amount;
+        BigDecimal bal = getBalanceFromCacheOrDB(u);
         if (isAdd != null) {
-            BigDecimal bal = getBalanceFromCacheOrDB(u);
             if (isAdd) {
                 newvalue = bal.add(amount);
             } else {
@@ -70,9 +101,9 @@ public class Cache {
              x = new RecordData(type, u, playername, newvalue, amount, isAdd, reason);
         }
         if (XConomy.isBungeecord()) {
-            sendmessave(u, newvalue, amount, isAdd, x);
+            sendmessave(u, bal, newvalue, amount, isAdd, x);
         } else {
-            DataCon.save(u, amount, isAdd, x);
+            DataCon.save(u, bal, amount, isAdd, x);
         }
     }
 
@@ -117,7 +148,7 @@ public class Cache {
         return null;
     }
 
-    private static void sendmessave(UUID u, BigDecimal amount, BigDecimal amountc, Boolean isAdd, RecordData x) {
+    private static void sendmessave(UUID u, BigDecimal balance, BigDecimal amount, BigDecimal amountc, Boolean isAdd, RecordData x) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         DataOutputStream output = new DataOutputStream(stream);
         try {
@@ -129,7 +160,7 @@ public class Cache {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        new SendMessTaskS(stream, u, amountc, isAdd, x).runTaskAsynchronously(XConomy.getInstance());
+        new SendMessTaskS(stream, u, balance, amountc, isAdd, x).runTaskAsynchronously(XConomy.getInstance());
     }
 
     private static void sendmessaveall(String targettype, BigDecimal amountc, Boolean isAdd) {
@@ -153,7 +184,7 @@ public class Cache {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        new SendMessTaskS(stream, null, amountc, isAdd, null).runTaskAsynchronously(XConomy.getInstance());
+        new SendMessTaskS(stream, null, null, amountc, isAdd, null).runTaskAsynchronously(XConomy.getInstance());
     }
 
 }

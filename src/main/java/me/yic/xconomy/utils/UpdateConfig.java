@@ -10,11 +10,6 @@ public class UpdateConfig {
 	public static boolean update(FileConfiguration config, File cc) {
 		boolean update = false;
 		FileConfiguration ck = YamlConfiguration.loadConfiguration(cc);
-		if (!ck.contains("Settings.check-update")) {
-			config.createSection("Settings.check-update");
-			config.set("Settings.check-update", true);
-			update = true;
-		}
 		if (!ck.contains("MySQL.table_suffix")) {
 			config.createSection("MySQL.table_suffix");
 			config.set("MySQL.table_suffix", "");
@@ -91,6 +86,10 @@ public class UpdateConfig {
 			config.set("Currency.max-number", "10000000000000000");
 			config.createSection("MySQL.encoding");
 			config.set("MySQL.encoding", "utf8");
+			update = true;
+		}
+		if (!ck.contains("Settings.cache-correction")) {
+			config.set("Settings.cache-correction", false);
 			update = true;
 		}
 		return update;

@@ -753,19 +753,6 @@ public class Messages {
 		return newMessage;
 	}
 
-	static void translatorName(String lang, File file) {
-		if (lang.equalsIgnoreCase("French")) {
-			translateFile("#============================== Translator - Xx_Fluoxe_xX ==============================", file);
-		} else if (lang.equalsIgnoreCase("Spanish")) {
-			translateFile("#============================== Translator - gabyfig ==============================", file);
-		} else if (lang.equalsIgnoreCase("Russian")) {
-			translateFile("#============================== Translator - Trimitor ==============================", file);
-		} else if (lang.equalsIgnoreCase("Turkish")) {
-			translateFile("#============================== Translator - erkutay007 ==============================", file);
-		} else if (lang.equalsIgnoreCase("Japanese")) {
-			translateFile("#============================== Translator - シロカミ ==============================", file);
-		}
-	}
 
 	public static String getAuthor() {
 		if (XConomy.getInstance().lang().equalsIgnoreCase("Chinese")
@@ -776,13 +763,4 @@ public class Messages {
 		}
 	}
 
-	private static void translateFile(String string, File file) {
-		try {
-			FileOutputStream f = new FileOutputStream(file, true);
-			f.write(string.getBytes());
-			f.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }

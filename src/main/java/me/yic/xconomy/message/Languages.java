@@ -1,6 +1,7 @@
 package me.yic.xconomy.message;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -380,5 +381,30 @@ public class Languages {
 		mess.put("help7", "&6balance/money set <プレイヤー> <金額>  -  は<プレイヤー>さんの残高を<金額>に設定されました。");
 		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  は<all/online player>に<金額>を与えた。");
 		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  は<all/online player>から<金額>を差し引きました。");
+	}
+
+	public static void translateFile(String string, File file) {
+		try {
+			FileOutputStream f = new FileOutputStream(file, true);
+			f.write(string.getBytes());
+			f.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	static void translatorName(String lang, File file) {
+		if (lang.equalsIgnoreCase("French")) {
+			translateFile("#============================== Translator - Xx_Fluoxe_xX ==============================", file);
+		} else if (lang.equalsIgnoreCase("Spanish")) {
+			translateFile("#============================== Translator - gabyfig ==============================", file);
+		} else if (lang.equalsIgnoreCase("Russian")) {
+			translateFile("#============================== Translator1 - Trimitor ==============================", file);
+			translateFile("#============================== Translator2 - Dbarkovski ==============================", file);
+		} else if (lang.equalsIgnoreCase("Turkish")) {
+			translateFile("#============================== Translator - erkutay007 ==============================", file);
+		} else if (lang.equalsIgnoreCase("Japanese")) {
+			translateFile("#============================== Translator - シロカミ ==============================", file);
+		}
 	}
 }

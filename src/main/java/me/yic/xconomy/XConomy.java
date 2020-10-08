@@ -1,13 +1,13 @@
 package me.yic.xconomy;
 
-import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.SQL;
+import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.listeners.ConnectionListeners;
 import me.yic.xconomy.listeners.SPsync;
-import me.yic.xconomy.message.MessagesManager;
 import me.yic.xconomy.message.Messages;
+import me.yic.xconomy.message.MessagesManager;
 import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
 import me.yic.xconomy.utils.EconomyCommand;
@@ -25,8 +25,6 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 public class XConomy extends JavaPlugin {
 

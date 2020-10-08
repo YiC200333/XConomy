@@ -34,7 +34,7 @@ public class MessagesManager {
 		messageFile = YamlConfiguration.loadConfiguration(file);
 		Languages.compare(plugin.lang(), file);
 		if (translate) {
-			Messages.translatorName(plugin.lang(), file);
+			Languages.translatorName(plugin.lang(), file);
 		}
 	}
 }

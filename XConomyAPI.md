@@ -1,6 +1,6 @@
 ##About XConomyAPI
 
-For XConomy 2.8.2
+For XConomy 2.8.3
 
 Chinese
 ```xml
@@ -14,6 +14,7 @@ xcapi.isbungeecordmode()
 
 xcapi.translateUUID(String playername)
 将玩家名称转换为UUID，返回UUID
+如果玩家不存在，返回null
 
 xcapi.formatdouble(String amount)
 格式化amount，返回BigDecimal
@@ -31,7 +32,9 @@ xcapi.ismaxnumber(BigDecimal amount)
 xcapi.changebalance(UUID u, String playername, BigDecimal amount, Boolean isadd)
 对金额进行修改，返回Integer
 0 表示成功
-1 表示BC模式且没有玩家存在，失败
+1 失败，表示BC模式且没有玩家存在
+2 失败,表示玩家余额不足
+3 失败,表示玩家余额超出最大值
 
 xcapi.getbalancetop()
 获取TOP10名单，返回List<String>
@@ -52,6 +55,7 @@ Check whether BC mode is enabled, return Boolean
 
 xcapi.translateUUID(String playername)
 Convert the player name to UUID, return UUID
+If the player does not exist, return null
 
 xcapi.formatdouble(String amount)
 Format amount, return BigDecimal
@@ -69,7 +73,9 @@ Check whether the amount is the maximum value, return Boolean
 xcapi.changebalance(UUID u, String playername, BigDecimal amount, Boolean isadd)
 Modify the amount, return Integer
 0 means success
-1 means failure, BungeeCord mode is enabled and no player is online
+1 failure means that BungeeCord mode is enabled and no player is online
+2 failure means that the player's balance is insufficient
+3 failure means that the player's balance exceeds the maximum value
 
 xcapi.getbalancetop()
 Get the list of TOP10, return List<String>

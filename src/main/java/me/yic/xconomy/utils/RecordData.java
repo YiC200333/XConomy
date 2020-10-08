@@ -12,7 +12,7 @@ public class RecordData {
 	private final Double amount;
 	private final String operation;
 	private final String date;
-	private final String command;
+	private String command;
 
 	public RecordData(String type, UUID uid, String player, BigDecimal balance, BigDecimal amount, Boolean isAdd, String command) {
 		this.type = type;
@@ -71,5 +71,9 @@ public class RecordData {
 
 	public String getcommand() {
 		return command;
+	}
+
+	public void addcachecorrection() {
+		command = command+"   (Cache Correction)";
 	}
 }

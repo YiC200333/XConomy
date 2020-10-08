@@ -7,8 +7,6 @@ import me.yic.xconomy.message.MessagesManager;
 import me.yic.xconomy.task.SendMessTaskS;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -126,7 +124,7 @@ public class CommandHandler{
 				}
 
 				String com = commandName + " " + args[0] + " " + args[1];
-				Cache.change(((Player) sender).getUniqueId(), amount, false, "PLAYER_COMMAND", ((Player) sender).getName(), com);
+				Cache.change(((Player) sender).getUniqueId(), amount, false, "PLAYER_COMMAND", sender.getName(), com);
 				sender.sendMessage(sendMessage("prefix") + sendMessage("pay")
 						.replace("%player%", args[0])
 						.replace("%amount%", amountFormatted));
@@ -163,6 +161,12 @@ public class CommandHandler{
 						}
 
 						Player player = (Player) sender;
+
+
+						if (XConomy.config.getBoolean("Settings.cache-correction")){
+							Cache.refreshFromCache(player.getUniqueId());
+						}
+
 						BigDecimal a = Cache.getBalanceFromCacheOrDB(player.getUniqueId());
 						sender.sendMessage(sendMessage("prefix") + sendMessage("balance")
 								.replace("%balance%", DataFormat.shown((a))));
@@ -535,7 +539,7 @@ public class CommandHandler{
 			e.printStackTrace();
 		}
 
-		new SendMessTaskS(stream, null, null, null, null).runTaskAsynchronously(XConomy.getInstance());
+		new SendMessTaskS(stream, null, null,null, null, null).runTaskAsynchronously(XConomy.getInstance());
 
 	}
 
