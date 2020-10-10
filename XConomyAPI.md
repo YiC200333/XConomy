@@ -31,6 +31,9 @@ xcapi.ismaxnumber(BigDecimal amount)
 
 xcapi.changebalance(UUID u, String playername, BigDecimal amount, Boolean isadd)
 对金额进行修改，返回Integer
+isadd = true 为增加金额
+isadd = false 为扣除金额
+isadd = null 为设置金额
 0 表示成功
 1 失败，表示BC模式且没有玩家存在
 2 失败,表示玩家余额不足
@@ -72,6 +75,9 @@ Check whether the amount is the maximum value, return Boolean
 
 xcapi.changebalance(UUID u, String playername, BigDecimal amount, Boolean isadd)
 Modify the amount, return Integer
+isadd = true add amount to balacne
+isadd = false take amount from balance
+isadd = null set amount to balance
 0 means success
 1 failure means that BungeeCord mode is enabled and no player is online
 2 failure means that the player's balance is insufficient
