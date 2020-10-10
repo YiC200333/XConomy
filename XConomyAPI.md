@@ -34,10 +34,10 @@ xcapi.changebalance(UUID u, String playername, BigDecimal amount, Boolean isadd)
 isadd = true 为增加金额
 isadd = false 为扣除金额
 isadd = null 为设置金额
-0 表示成功
-1 失败，表示BC模式且没有玩家存在
-2 失败,表示玩家余额不足
-3 失败,表示玩家余额超出最大值
+返回0 表示成功
+返回1 失败，表示BC模式且没有玩家存在
+返回2 失败,表示玩家余额不足
+返回3 失败,表示玩家余额超出最大值
 
 xcapi.getbalancetop()
 获取TOP10名单，返回List<String>
@@ -75,13 +75,13 @@ Check whether the amount is the maximum value, return Boolean
 
 xcapi.changebalance(UUID u, String playername, BigDecimal amount, Boolean isadd)
 Modify the amount, return Integer
-isadd = true add amount to balacne
-isadd = false take amount from balance
-isadd = null set amount to balance
-0 means success
-1 failure means that BungeeCord mode is enabled and no player is online
-2 failure means that the player's balance is insufficient
-3 failure means that the player's balance exceeds the maximum value
+isadd = true, add amount to balacne
+isadd = false, take amount from balance
+isadd = null, set amount to balance
+return 0 means success
+return 1 means failure that BungeeCord mode is enabled and no player is online
+return 2 means failure that the player's balance is insufficient
+return 3 means failure that the player's balance exceeds the maximum value
 
 xcapi.getbalancetop()
 Get the list of TOP10, return List<String>
