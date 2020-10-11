@@ -92,6 +92,11 @@ public class UpdateConfig {
 			config.set("Settings.cache-correction", false);
 			update = true;
 		}
+		if (!ck.contains("MySQL.timezone")) {
+			config.createSection("MySQL.timezone");
+			config.set("MySQL.timezone", "");
+			update = true;
+		}
 		return update;
 	}
 }

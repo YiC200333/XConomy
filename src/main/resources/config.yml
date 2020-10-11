@@ -59,6 +59,7 @@ MySQL:
   #auto add "_", can use %sign% to dicate Server ID (BungeeCord settings)
   table_suffix: ''
   encoding: utf8
+  timezone: ''
 
 
 #Connection pool settings

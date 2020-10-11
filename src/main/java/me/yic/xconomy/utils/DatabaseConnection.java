@@ -14,7 +14,7 @@ public class DatabaseConnection {
 	private String driver = "com.mysql.jdbc.Driver";
 	//============================================================================================
 	private static final File dataFolder = new File(XConomy.getInstance().getDataFolder(), "playerdata");
-	private static final String url = "jdbc:mysql://" + XConomy.config.getString("MySQL.host") + "/"
+	private static String url = "jdbc:mysql://" + XConomy.config.getString("MySQL.host") + "/"
 			+ XConomy.config.getString("MySQL.database") + "?characterEncoding="
 			+ XConomy.config.getString("MySQL.encoding") + "&useSSL=false";
 	private static final String username = XConomy.config.getString("MySQL.user");
@@ -70,8 +70,14 @@ public class DatabaseConnection {
 		}
 	}
 
+	private void setTimezone() {
+		if (!XConomy.config.getString("MySQL.timezone").equals("")){
+			url = url+"&serverTimezone="+XConomy.config.getString("MySQL.timezone");
+		}
+	}
 
 	public boolean setGlobalConnection() {
+		setTimezone();
 		setDriver();
 		try {
 			if (XConomy.allowHikariConnectionPooling()) {
