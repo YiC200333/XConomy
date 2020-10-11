@@ -4,6 +4,8 @@ import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.SQL;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.depend.Placeholder;
+import me.yic.xconomy.depend.Vault;
 import me.yic.xconomy.listeners.ConnectionListeners;
 import me.yic.xconomy.listeners.SPsync;
 import me.yic.xconomy.message.Messages;
@@ -35,7 +37,8 @@ public class XConomy extends JavaPlugin {
 	public Economy econ = null;
 	private BukkitTask refresherTask = null;
 	Metrics metrics = null;
-	private PE papiExpansion = null;
+	private Placeholder papiExpansion = null;
+	public static Boolean ddrivers = false;
 
 	public void onEnable() {
 		instance = this;
@@ -59,6 +62,11 @@ public class XConomy extends JavaPlugin {
 				foundvaultpe = true;
 			}
 			setupPlaceHolderAPI();
+		}
+
+		if (Bukkit.getPluginManager().getPlugin("DatabaseDrivers") != null) {
+			logger("发现 DatabaseDrivers");
+			ddrivers = true;
 		}
 
 		getServer().getServicesManager().register(Economy.class, econ, this, ServicePriority.Normal);
@@ -161,7 +169,7 @@ public class XConomy extends JavaPlugin {
 	}
 
 	private void setupPlaceHolderAPI() {
-		papiExpansion = new PE(this);
+		papiExpansion = new Placeholder(this);
 		if (papiExpansion.register()) {
 			getLogger().info("PlaceholderAPI successfully hooked");
 		} else {
@@ -233,6 +241,7 @@ public class XConomy extends JavaPlugin {
 			saveConfig();
 		}
 	}
+
 
 	private void coveress(CommandMap commandMap) {
 		Command commanda  = new EconomyCommand("economy");

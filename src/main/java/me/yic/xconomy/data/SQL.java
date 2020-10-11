@@ -4,6 +4,7 @@ import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.NonPlayerCache;
 import me.yic.xconomy.message.Messages;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.utils.DatabaseConnection;
 import me.yic.xconomy.utils.RecordData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

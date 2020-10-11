@@ -4,7 +4,7 @@ main: me.yic.xconomy.XConomy
 author: YiC
 load: STARTUP
 depend: [ Vault ]
-softdepend: [ PlaceholderAPI ]
+softdepend: [ DatabaseDrivers, PlaceholderAPI ]
 
 commands:
   xconomy:

@@ -1,4 +1,4 @@
-package me.yic.xconomy.data;
+package me.yic.xconomy.utils;
 
 import com.zaxxer.hikari.HikariDataSource;
 import me.yic.xconomy.XConomy;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 
 public class DatabaseConnection {
-	private static final String driverA = "com.mysql.jdbc.Driver";
+	private String driver = "com.mysql.jdbc.Driver";
 	//============================================================================================
 	private static final File dataFolder = new File(XConomy.getInstance().getDataFolder(), "playerdata");
 	private static final String url = "jdbc:mysql://" + XConomy.config.getString("MySQL.host") + "/"
@@ -25,7 +25,6 @@ public class DatabaseConnection {
 	private static final Long idleTime = XConomy.config.getLong("Pool-Settings.idle-timeout");
 	private static boolean secon = false;
 	//============================================================================================
-	private static final String driverB = "org.sqlite.JDBC";
 	public static File userdata = new File(dataFolder, "data.db");
 	//============================================================================================
 	private Connection connection = null;
@@ -45,6 +44,9 @@ public class DatabaseConnection {
 		hikari.addDataSourceProperty("prepStmtCacheSize", "250");
 		hikari.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 		hikari.addDataSourceProperty("userServerPrepStmts", "true");
+		if (XConomy.ddrivers){
+			hikari.setDriverClassName(driver);
+		}
 		if (hikari.getMinimumIdle() < hikari.getMaximumPoolSize()) {
 			hikari.setIdleTimeout(idleTime);
 		} else {
@@ -52,18 +54,35 @@ public class DatabaseConnection {
 		}
 	}
 
+	private void setDriver() {
+		if (XConomy.ddrivers){
+			if (XConomy.config.getBoolean("Settings.mysql")) {
+				driver = ("me.yic.libs.mysql.cj.jdbc.Driver");
+			}else{
+				driver = ("me.yic.libs.sqlite.JDBC");
+			}
+		}else{
+			if (XConomy.config.getBoolean("Settings.mysql")) {
+				driver = ("com.mysql.jdbc.Driver");
+			}else{
+				driver = ("org.sqlite.JDBC");
+			}
+		}
+	}
+
+
 	public boolean setGlobalConnection() {
+		setDriver();
 		try {
 			if (XConomy.allowHikariConnectionPooling()) {
 				createNewHikariConfiguration();
 				Connection connection = getConnection();
 				closeHikariConnection(connection);
 			} else {
+				Class.forName(driver);
 				if (XConomy.config.getBoolean("Settings.mysql")) {
-					Class.forName(driverA);
 					connection = DriverManager.getConnection(url, username, password);
 				} else {
-					Class.forName(driverB);
 					connection = DriverManager.getConnection("jdbc:sqlite:" + userdata.toString());
 				}
 			}

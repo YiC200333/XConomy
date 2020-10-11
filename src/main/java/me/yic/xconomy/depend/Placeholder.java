@@ -1,5 +1,6 @@
-package me.yic.xconomy;
+package me.yic.xconomy.depend;
 
+import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.DataFormat;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -7,11 +8,11 @@ import org.bukkit.OfflinePlayer;
 
 import java.math.BigDecimal;
 
-public class PE extends PlaceholderExpansion {
+public class Placeholder extends PlaceholderExpansion {
 
 	private final XConomy plugin;
 
-	public PE(XConomy plugin) {
+	public Placeholder(XConomy plugin) {
 		this.plugin = plugin;
 	}
 

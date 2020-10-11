@@ -2,9 +2,6 @@ package me.yic.xconomy.message;
 
 import me.yic.xconomy.XConomy;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
 public class Messages {
 
 	public static String systemMessage(String message) {
@@ -103,52 +100,6 @@ public class Messages {
 					newMessage = "選択したのフォルダは不存在です";
 				}
 				break;
-//		    case "数据文件创建异常":
-//			if (lang.equalsIgnoreCase("English")) {
-//				newMessage = "Exception in creating data file";
-//			}
-//			if (lang.equalsIgnoreCase("French")) {
-//				newMessage = "Exception à la création d'un fichier de données";
-//			}
-//			if (lang.equalsIgnoreCase("Spanish")) {
-//				newMessage = "Excepción al crear archivo de datos";
-//			}
-//			if (lang.equalsIgnoreCase("Russian")) {
-//				newMessage = "Исключение при создании файла данных";
-//			}
-//			if (lang.equalsIgnoreCase("ChineseTW")) {
-//				newMessage = "數據文件創建異常";
-//			}
-//			if (lang.equalsIgnoreCase("Turkish")) {
-//				newMessage = "Veri dosyası oluşturulurken hata oluştu";
-//			}
-//			if (lang.equalsIgnoreCase("Japanese")) {
-//				newMessage = "データファイル作成異常";
-//			}
-//				break;
-//		    case "找到数据文件":
-//			if (lang.equalsIgnoreCase("English")) {
-//				newMessage = "Data file found";
-//			}
-//			if (lang.equalsIgnoreCase("French")) {
-//				newMessage = "Fichier de données trouvé";
-//			}
-//			if (lang.equalsIgnoreCase("Spanish")) {
-//				newMessage = "Archivo de Datos Encontrado";
-//			}
-//			if (lang.equalsIgnoreCase("Russian")) {
-//				newMessage = "Файл данных найден";
-//			}
-//			if (lang.equalsIgnoreCase("ChineseTW")) {
-//				newMessage = "找到數據文件";
-//			}
-//			if (lang.equalsIgnoreCase("Turkish")) {
-//				newMessage = "Veri dosyası bulundu";
-//			}
-//			if (lang.equalsIgnoreCase("Japanese")) {
-//				newMessage = "データファイルが発見されました";
-//			}
-//				break;
 			case "数据保存方式 - MySQL":
 				if (lang.equalsIgnoreCase("English")) {
 					newMessage = "Saving method - MySQL";
@@ -491,7 +442,30 @@ public class Messages {
 					newMessage = "Found PlaceholderAPI";
 				}
 				if (lang.equalsIgnoreCase("Japanese")) {
-					newMessage = "PlaceholderAPIが発見された";
+					newMessage = "PlaceholderAPI が発見された";
+				}
+				break;
+			case "发现 DatabaseDrivers":
+				if (lang.equalsIgnoreCase("English")) {
+					newMessage = "Found DatabaseDrivers";
+				}
+				if (lang.equalsIgnoreCase("French")) {
+					newMessage = "Found DatabaseDrivers";
+				}
+				if (lang.equalsIgnoreCase("Spanish")) {
+					newMessage = "Found DatabaseDrivers";
+				}
+				if (lang.equalsIgnoreCase("Russian")) {
+					newMessage = "Found DatabaseDrivers";
+				}
+				if (lang.equalsIgnoreCase("ChineseTW")) {
+					newMessage = "發現 DatabaseDrivers";
+				}
+				if (lang.equalsIgnoreCase("Turkish")) {
+					newMessage = "Found DatabaseDrivers";
+				}
+				if (lang.equalsIgnoreCase("Japanese")) {
+					newMessage = "DatabaseDrivers が発見された";
 				}
 				break;
 			case "已是最新版本":
@@ -701,54 +675,6 @@ public class Messages {
 				if (lang.equalsIgnoreCase("Japanese")) {
 					newMessage = "§6コンソールがこの命令を使えできません";
 				}
-				// -----------------------------------------------------------------------------------------
-				break;
-			case "&a&l数据缓存已保存 &7>>> ":
-				if (lang.equalsIgnoreCase("English")) {
-					newMessage = "&a&lData cache saved &7>>> ";
-				}
-				if (lang.equalsIgnoreCase("French")) {
-					newMessage = "&a&lCache de données sauvegardé &7>>>> ";
-				}
-				if (lang.equalsIgnoreCase("Spanish")) {
-					newMessage = "&a&lCache de datos guardado &7>>> ";
-				}
-				if (lang.equalsIgnoreCase("Russian")) {
-					newMessage = "&a&lКэш данных сохранен &7>>> ";
-				}
-				if (lang.equalsIgnoreCase("ChineseTW")) {
-					newMessage = "&a&l數據緩存已保存 &7>>> ";
-				}
-				if (lang.equalsIgnoreCase("Turkish")) {
-					newMessage = "&a&lVeri önbelleği kaydedildi &7>>> ";
-				}
-				if (lang.equalsIgnoreCase("Japanese")) {
-					newMessage = "&a&lファイルキャッシュが保存成功 &7>>>";
-				}
-				break;
-			case "&a&l 条":
-				if (lang.equalsIgnoreCase("English")) {
-					newMessage = "&a&l players";
-				}
-				if (lang.equalsIgnoreCase("French")) {
-					newMessage = "&a&l joueurs de";
-				}
-				if (lang.equalsIgnoreCase("Spanish")) {
-					newMessage = "&a&l jugadores";
-				}
-				if (lang.equalsIgnoreCase("Russian")) {
-					newMessage = "&a&l игроков";
-				}
-				if (lang.equalsIgnoreCase("ChineseTW")) {
-					newMessage = "&a&l 條";
-				}
-				if (lang.equalsIgnoreCase("Turkish")) {
-					newMessage = "&a&l oyuncuları";
-				}
-				if (lang.equalsIgnoreCase("Japanese")) {
-					newMessage = "&a&l 列";
-				}
-				break;
 		}
 		return newMessage;
 	}

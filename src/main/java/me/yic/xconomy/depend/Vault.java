@@ -1,5 +1,6 @@
-package me.yic.xconomy;
+package me.yic.xconomy.depend;
 
+import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.NonPlayerCache;
 import me.yic.xconomy.data.DataFormat;
