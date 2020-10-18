@@ -22,7 +22,9 @@ public class DataCon extends XConomy {
 			setupMySqlTable();
 
 			if (SQL.con()) {
+				SQL.getwaittimeout();
 				SQL.createTable();
+				SQL.updataTable();
 				getInstance().logger("MySQL连接正常");
 			} else {
 				getInstance().logger("MySQL连接异常");
@@ -37,6 +39,7 @@ public class DataCon extends XConomy {
 			dataFolder.mkdirs();
 			if (SQL.con()) {
 				SQL.createTable();
+				SQL.updataTable();
 				getInstance().logger("SQLite连接正常");
 			} else {
 				getInstance().logger("SQLite连接异常");
@@ -67,6 +70,10 @@ public class DataCon extends XConomy {
 
 	public static void getTopBal() {
 		SQL.getBaltop();
+	}
+
+	public static void setTopBalHide(UUID u,Integer type) {
+		SQL.hidetop(u,type);
 	}
 
 	public static String getBalSum() {
@@ -102,10 +109,10 @@ public class DataCon extends XConomy {
 	}
 
 	private static void setupMySqlTable() {
-		if (config.getString("MySQL.table_suffix") != null & !config.getString("MySQL.table_suffix").equals("")) {
-			SQL.tableName = "xconomy_" + config.getString("MySQL.table_suffix").replace("%sign%", getSign());
-			SQL.tableNonPlayerName = "xconomynon_" + config.getString("MySQL.table_suffix").replace("%sign%", getSign());
-			SQL.tableRecordName = "xconomyrecord_" + config.getString("MySQL.table_suffix").replace("%sign%", getSign());
+		if (config.getString("MySQL.table-suffix") != null & !config.getString("MySQL.table-suffix").equals("")) {
+			SQL.tableName = "xconomy_" + config.getString("MySQL.table-suffix").replace("%sign%", getSign());
+			SQL.tableNonPlayerName = "xconomynon_" + config.getString("MySQL.table-suffix").replace("%sign%", getSign());
+			SQL.tableRecordName = "xconomyrecord_" + config.getString("MySQL.table-suffix").replace("%sign%", getSign());
 		}
 	}
 

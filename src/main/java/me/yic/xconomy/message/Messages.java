@@ -192,6 +192,29 @@ public class Messages {
 					newMessage = "MySQL再連結成功";
 				}
 				break;
+			case "升级数据库表格。。。":
+				if (lang.equalsIgnoreCase("English")) {
+					newMessage = "Upgrade database table...";
+				}
+				if (lang.equalsIgnoreCase("French")) {
+					newMessage = "Upgrade database table...";
+				}
+				if (lang.equalsIgnoreCase("Spanish")) {
+					newMessage = "Upgrade database table...";
+				}
+				if (lang.equalsIgnoreCase("Russian")) {
+					newMessage = "Upgrade database table...";
+				}
+				if (lang.equalsIgnoreCase("ChineseTW")) {
+					newMessage = "升級數據庫表格。。。";
+				}
+				if (lang.equalsIgnoreCase("Turkish")) {
+					newMessage = "Upgrade database table...";
+				}
+				if (lang.equalsIgnoreCase("Japanese")) {
+					newMessage = "Upgrade database table...";
+				}
+				break;
 			case "XConomy加载成功":
 				if (lang.equalsIgnoreCase("English")) {
 					newMessage = "XConomy successfully enabled";

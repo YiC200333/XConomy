@@ -1,5 +1,6 @@
 package me.yic.xconomy;
 
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.message.Messages;
@@ -38,6 +39,8 @@ public class CommandHandler{
 			}
 
 			case "balancetop": {
+				if (args.length == 0) {
+
 				if (!(sender.isOp() || sender.hasPermission("xconomy.user.balancetop"))) {
 					sender.sendMessage(sendMessage("prefix") + sendMessage("no_permission"));
 					return true;
@@ -66,6 +69,32 @@ public class CommandHandler{
 					sender.sendMessage(sendMessage("top_subtitle"));
 
 				break;
+			}else if (args.length == 2) {
+				 if (args[0].equalsIgnoreCase("hide") || args[0].equalsIgnoreCase("display")) {
+
+					if (!(sender.isOp() || sender.hasPermission("xconomy.admin.balancetop"))) {
+						sendHelpMessage(sender);
+						return true;
+					}
+
+					UUID targetUUID = Cache.translateUUID(args[1]);
+
+					if (targetUUID == null) {
+						sender.sendMessage(sendMessage("prefix") + sendMessage("noaccount"));
+						return true;
+					}
+
+					 if (args[0].equalsIgnoreCase("hide")) {
+						 DataCon.setTopBalHide(targetUUID,1);
+						 sender.sendMessage(sendMessage("prefix") + sendMessage("top_hidden").replace("%player%", args[1]));
+					 }else if (args[0].equalsIgnoreCase("display")) {
+						 DataCon.setTopBalHide(targetUUID,0);
+						 sender.sendMessage(sendMessage("prefix") + sendMessage("top_displayed").replace("%player%", args[1]));
+					 }
+
+					break;
+				}
+				}
 			}
 
 			case "pay": {
@@ -465,10 +494,11 @@ public class CommandHandler{
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	private static boolean isDouble(String s) {
-		try {
+	    try {
 			Double.parseDouble(s);
+			BigDecimal value = new BigDecimal(s);
 
-			if (Double.parseDouble(s) >= 1) {
+			if (value.compareTo(BigDecimal.ONE) >= 0) {
 				return !DataFormat.isMAX(DataFormat.formatString(s));
 			}
 
@@ -514,6 +544,9 @@ public class CommandHandler{
 		}
 		if (sender.isOp() | sender.hasPermission("xconomy.admin.set")) {
 			sender.sendMessage(sendMessage("help7"));
+		}
+		if (sender.isOp() | sender.hasPermission("xconomy.admin.balancetop")) {
+			sender.sendMessage(sendMessage("help10"));
 		}
 	}
 

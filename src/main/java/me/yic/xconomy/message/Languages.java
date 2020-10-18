@@ -60,6 +60,8 @@ public class Languages {
 		ll.add("top_text");
 		ll.add("top_subtitle");
 		ll.add("top_nodata");
+		ll.add("top_hidden");
+		ll.add("top_displayed");
 		ll.add("pay");
 		ll.add("pay_receive");
 		ll.add("pay_fail");
@@ -85,7 +87,7 @@ public class Languages {
 		ll.add("help7");
 		ll.add("help8");
 		ll.add("help9");
-		ll.add("reload");
+		ll.add("help10");
 		return ll;
 
 	}
@@ -93,12 +95,14 @@ public class Languages {
 	private static void english() {
 		mess.put("prefix", "&6[XConomy]");
 		mess.put("balance", "&aBalance: %balance%");
-		mess.put("balance_other", "&a%player%'s balance: %balance%");
+		mess.put("balance_other", "&aPlayer hidden");
 		mess.put("top_title", "&e========= TOP10 =========");
 		mess.put("sum_text", "&fServer Total - %balance%");
 		mess.put("top_text", "&e%index%: %player% - %balance%");
 		mess.put("top_subtitle", "&7TOP10 refreshed every 5 minutes");
 		mess.put("top_nodata", "&cNo TOP10 data");
+		mess.put("top_hidden", "&a%player% is hidden");
+		mess.put("top_displayed", "&a%player% is displayed");
 		mess.put("pay", "&cYou pay %player% %amount%");
 		mess.put("pay_receive", "&aYou receive %amount% from %player%");
 		mess.put("pay_fail", "&cYour balance is less than %amount%");
@@ -114,7 +118,6 @@ public class Languages {
 		mess.put("money_set", "&cYou set %player%'s balance to %amount%");
 		mess.put("money_set_receive", "&cAdministrator set your balance to %amount%");
 		mess.put("no_permission", "&cYou don't have permission to use this command");
-		// mess.put("help_title", "&6HELP");
 		mess.put("help_title_full", "&6=============== [XConomy] HELP ===============");
 		mess.put("help1", "&6balance/money  -  Displays your balance");
 		mess.put("help2", "&6balance/money <player>  -  Displays <player>'s balance");
@@ -125,6 +128,7 @@ public class Languages {
 		mess.put("help7", "&6balance/money set <player> <amount>  -  set <player>'s balance to <amount>");
 		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  give <all/online player> <amount>");
 		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  take <amount> from <all/online player>");
+		mess.put("help10", "&6balancetop hide/display <player>  -  Hide or display a <player>'s data from TOP10");
 	}
 
 	private static void russian() {
@@ -136,6 +140,8 @@ public class Languages {
 		mess.put("top_text", "&e%index%: %player% - %balance%");
 		mess.put("top_subtitle", "&7ТОП10 обновляется каждые 5 минут");
 		mess.put("top_nodata", "&cНет данных о ТОП10");
+		mess.put("top_hidden", "&a%player% is hidden");
+		mess.put("top_displayed", "&a%player% is displayed");
 		mess.put("pay", "&cВы заплатили игроку %player% %amount%");
 		mess.put("pay_receive", "&aВы получили %amount% от игрока %player%");
 		mess.put("pay_fail", "&cВаш баланс меньше, чем %amount%");
@@ -162,6 +168,7 @@ public class Languages {
 		mess.put("help7", "&6balance/money set <игрок> <сумма>  -  Установить баланс <игрока> на <сумму>");
 		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  Выдать <всем/онлайн игрокам> <сумму>");
 		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  Забрать <сумму> у <всех/онлайн игроков>");
+		mess.put("help10", "&6balancetop hide/display <player>  -  Hide or display a <player>'s data from TOP10");
 	}
 
 	private static void spanish() {
@@ -173,6 +180,8 @@ public class Languages {
 		mess.put("top_text", "&e%index%: %player% - %balance%");
 		mess.put("top_subtitle", "&7TOP10 refreshed every 5 minutes");
 		mess.put("top_nodata", "&cNo se encontro datos sobre TOP10");
+		mess.put("top_hidden", "&a%player% is hidden");
+		mess.put("top_displayed", "&a%player% is displayed");
 		mess.put("pay", "&cle pagaste a %player% por %amount%");
 		mess.put("pay_receive", "&aRecibiste %amount% de: %player%");
 		mess.put("pay_fail", "&cTienes menos de %amount%");
@@ -188,7 +197,6 @@ public class Languages {
 		mess.put("money_set", "&cLe seteaste el dinero a %player%, %amount%");
 		mess.put("money_set_receive", "&cUn Staff te seteo el dinero a %amount%");
 		mess.put("no_permission", "&cNo tienes permisos para usar este comando");
-		// mess.put("help_title", "&6HELP");
 		mess.put("help_title_full", "&6=============== [XConomy] HELP ===============");
 		mess.put("help1", "&6balance/money  -  Muestra cuanto dinero tienes");
 		mess.put("help2", "&6balance/money <Jugador>  -  Muestra el dinero de: <player>");
@@ -199,6 +207,7 @@ public class Languages {
 		mess.put("help7", "&6balance/money set <Jugador> <Monto>  -  setea <Jugador> dinero a: <Monto>");
 		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  give <all/online player> <amount>");
 		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  take <amount> from <all/online player>");
+		mess.put("help10", "&6balancetop hide/display <player>  -  Hide or display a <player>'s data from TOP10");
 	}
 
 	private static void chinese() {
@@ -210,6 +219,8 @@ public class Languages {
 		mess.put("top_text", "&e%index%: %player% - %balance%");
 		mess.put("top_subtitle", "&7TOP10每5分钟刷新一次");
 		mess.put("top_nodata", "&c无玩家经济数据");
+		mess.put("top_hidden", "&a%player% 已隐藏");
+		mess.put("top_displayed", "&a%player% 已显示");
 		mess.put("pay", "&c你转账给%player% 余额  %amount%");
 		mess.put("pay_receive", "&a你从 %player% 收到转账  %amount%");
 		mess.put("pay_fail", "&c你的余额不足  %amount%");
@@ -236,6 +247,7 @@ public class Languages {
 		mess.put("help7", "&6balance/money set <玩家> <金额>  -  设置<玩家>金额为<金额>");
 		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  给与<所有/在线玩家><金额>");
 		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  从<所有/在线玩家>取走<金额>");
+		mess.put("help10", "&6balancetop hide/display <player>  -  将<玩家>的数据从Top10上隐藏或显示");
 	}
 
 	private static void chinesetw() {
@@ -247,6 +259,8 @@ public class Languages {
 		mess.put("top_text", "&e%index%： %player% - %balance%");
 		mess.put("top_subtitle", "&7TOP10每五分鐘刷新一次");
 		mess.put("top_nodata", "&c無玩家經濟資料");
+		mess.put("top_hidden", "&a%player% 已隱藏");
+		mess.put("top_displayed", "&a%player% 已顯示");
 		mess.put("pay", "&c你轉帳給 %player% 餘額 %amount%");
 		mess.put("pay_receive", "&a你從 %player% 收到轉帳 %amount%");
 		mess.put("pay_fail", "&c你的餘額不足 %amount%");
@@ -272,6 +286,7 @@ public class Languages {
 		mess.put("help7", "&6balance/money set <玩家> <金額>  -  設定<玩家>金額為<金額>");
 		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  給與<所有/在綫玩家><金额>");
 		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  從<所有/在綫玩家>取走<金額>");
+		mess.put("help10", "&6balancetop hide/display <player>  -  將<玩家>的數據從Top10上隱藏或顯示");
 	}
 
 	private static void french() {
@@ -283,6 +298,8 @@ public class Languages {
 		mess.put("top_text", "&e%index%: %player% - %balance%");
 		mess.put("top_subtitle", "&7TOP10 refreshed every 5 minutes");
 		mess.put("top_nodata", "&cTOP10 indisponible");
+		mess.put("top_hidden", "&a%player% is hidden");
+		mess.put("top_displayed", "&a%player% is displayed");
 		mess.put("pay", "&aVous avez versé &a%amount% à %player% ");
 		mess.put("pay_receive", "&aVous avez reçu %amount% de %player%");
 		mess.put("pay_fail", "&cVous n'avez que %amount%");
@@ -309,6 +326,7 @@ public class Languages {
 		mess.put("help7", "&6balance/money set <joueur> <montant>  -  Défini le montant du Solde au joueur visé");
 		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  give <all/online player> <amount>");
 		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  take <amount> from <all/online player>");
+		mess.put("help10", "&6balancetop hide/display <player>  -  Hide or display a <player>'s data from TOP10");
 	}
 
 	private static void turkish() {
@@ -320,6 +338,8 @@ public class Languages {
 		mess.put("top_text", "&e%index%: %player% - %balance%");
 		mess.put("top_subtitle", "&7TOP10 refreshed every 5 minutes");
 		mess.put("top_nodata", "&cEn iyi ilk 10 listesine ait veri bulunamadı");
+		mess.put("top_hidden", "&a%player% is hidden");
+		mess.put("top_displayed", "&a%player% is displayed");
 		mess.put("pay", "&c%player% adlı oyuncuya %amount% gönderildi");
 		mess.put("pay_receive", "&a%player% adlı oyuncudan %amount% aldın");
 		mess.put("pay_fail", "&cBakiyen %amount%''dan az");
@@ -345,6 +365,7 @@ public class Languages {
 		mess.put("help7", "&6balance/money set <player> <amount>  -  Belirtilen oyuncunun bakiyesini belirtilen miktar olarak ayarlar");
 		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  give <all/online player> <amount>");
 		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  take <amount> from <all/online player>");
+		mess.put("help10", "&6balancetop hide/display <player>  -  Hide or display a <player>'s data from TOP10");
 	}
 
 	private static void japanese() {
@@ -356,6 +377,8 @@ public class Languages {
 		mess.put("top_text", "&e%index%： %player% - %balance%");
 		mess.put("top_subtitle", "&7ランキングTOP10の同期時間は5分です");
 		mess.put("top_nodata", "&cプレイヤーの経済データはないです。");
+		mess.put("top_hidden", "&a%player% is hidden");
+		mess.put("top_displayed", "&a%player% is displayed");
 		mess.put("pay", "&cあなたは %player% さんに %amount% を送金しました。");
 		mess.put("pay_receive", "&aあなたは %player% さんから %amount% 受け取りました。");
 		mess.put("pay_fail", "&cあなたの残高は不足です %amount%。");
@@ -381,6 +404,7 @@ public class Languages {
 		mess.put("help7", "&6balance/money set <プレイヤー> <金額>  -  は<プレイヤー>さんの残高を<金額>に設定されました。");
 		mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  は<all/online player>に<金額>を与えた。");
 		mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  は<all/online player>から<金額>を差し引きました。");
+		mess.put("help10", "&6balancetop hide/display <player>  -  Hide or display a <player>'s data from TOP10");
 	}
 
 	public static void translateFile(String string, File file) {

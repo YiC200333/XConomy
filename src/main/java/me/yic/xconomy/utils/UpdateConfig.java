@@ -10,9 +10,13 @@ public class UpdateConfig {
 	public static boolean update(FileConfiguration config, File cc) {
 		boolean update = false;
 		FileConfiguration ck = YamlConfiguration.loadConfiguration(cc);
-		if (!ck.contains("MySQL.table_suffix")) {
-			config.createSection("MySQL.table_suffix");
-			config.set("MySQL.table_suffix", "");
+		if (!ck.contains("MySQL.table-suffix")) {
+			config.createSection("MySQL.table-suffix");
+			if (ck.contains("MySQL.table_suffix")) {
+				config.set("MySQL.table-suffix", config.getString("MySQL.table_suffix"));
+			}else {
+				config.set("MySQL.table-suffix", "");
+			}
 			update = true;
 		}
 		if (!ck.contains("Settings.non-player-account")) {

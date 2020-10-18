@@ -57,7 +57,7 @@ MySQL:
   pass: root
   database: data
   #auto add "_", can use %sign% to dicate Server ID (BungeeCord settings)
-  table_suffix: ''
+  table-suffix: ''
   encoding: utf8
   timezone: ''
 
@@ -65,7 +65,7 @@ MySQL:
 #Connection pool settings
 Pool-Settings:
   #use connection pool or not
-  usepool: true
+  usepool: false
   maximum-pool-size: 10
   minimum-idle: 10
   maximum-lifetime: 180000

@@ -31,6 +31,34 @@ public class SQL {
 		database.close();
 	}
 
+	public static void getwaittimeout() {
+		if (XConomy.config.getBoolean("Settings.mysql") && !XConomy.allowHikariConnectionPooling()) {
+			try {
+				Connection connection = database.getConnectionAndCheck();
+
+				String query = "show variables like 'wait_timeout'";
+
+				PreparedStatement statement = connection.prepareStatement(query);
+
+				ResultSet rs = statement.executeQuery();
+				if (rs.next()) {
+					Integer waittime = rs.getInt(2);
+					if (waittime > 50){
+						DatabaseConnection.waittimeout = waittime - 30;
+					}
+
+				}
+
+				rs.close();
+				statement.close();
+				database.closeHikariConnection(connection);
+
+			} catch (SQLException ignored) {
+				XConomy.getInstance().logger("Get 'wait_timeout' error");
+			}
+		}
+	}
+
 	public static void createTable() {
 		try {
 			Connection connection = database.getConnectionAndCheck();
@@ -49,14 +77,14 @@ public class SQL {
 					+ "primary key (id)) DEFAULT CHARSET = "+encoding+";";
 			if (XConomy.config.getBoolean("Settings.mysql")) {
 				query1 = "CREATE TABLE IF NOT EXISTS " + tableName
-						+ "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, "
+						+ "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, hidden int(5) not null, "
 						+ "primary key (UID)) DEFAULT CHARSET = "+encoding+";";
 				query2 = "CREATE TABLE IF NOT EXISTS " + tableNonPlayerName
 						+ "(account varchar(50) not null, balance double(20,2) not null, "
 						+ "primary key (account)) DEFAULT CHARSET = "+encoding+";";
 			} else {
 				query1 = "CREATE TABLE IF NOT EXISTS " + tableName
-						+ "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, "
+						+ "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, hidden int(5) not null, "
 						+ "primary key (UID));";
 				query2 = "CREATE TABLE IF NOT EXISTS " + tableNonPlayerName
 						+ "(account varchar(50) not null, balance double(20,2) not null, "
@@ -78,6 +106,32 @@ public class SQL {
 		}
 	}
 
+	public static void updataTable() {
+		Connection connection = database.getConnectionAndCheck();
+		try {
+
+			PreparedStatement statementa = connection.prepareStatement("select * from " + tableName + " where hidden = '1'");
+
+			statementa.executeQuery();
+			statementa.close();
+			database.closeHikariConnection(connection);
+
+		} catch (SQLException e) {
+			try {
+			XConomy.getInstance().logger("升级数据库表格。。。");
+
+			PreparedStatement statementb = connection.prepareStatement("alter table " + tableName + " add column hidden int(5) not null default '0'");
+
+			statementb.executeUpdate();
+			statementb.close();
+			database.closeHikariConnection(connection);
+
+			} catch (SQLException throwables) {
+				throwables.printStackTrace();
+			}
+		}
+	}
+
 	public static void newPlayer(Player player) {
 		Connection connection = database.getConnectionAndCheck();
 		checkUser(player, connection);
@@ -89,19 +143,20 @@ public class SQL {
 		try {
 			String query;
 			if (XConomy.config.getBoolean("Settings.mysql")) {
-				query = "INSERT INTO " + tableName + "(UID,player,balance) values(?,?,?) "
+				query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
 						+ "ON DUPLICATE KEY UPDATE UID = ?";
 			} else {
-				query = "INSERT INTO " + tableName + "(UID,player,balance) values(?,?,?) ";
+				query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) ";
 			}
 
 			PreparedStatement statement = co_a.prepareStatement(query);
 			statement.setString(1, UID);
 			statement.setString(2, user);
 			statement.setDouble(3, amount);
+			statement.setInt(4, 0);
 
 			if (XConomy.config.getBoolean("Settings.mysql")) {
-				statement.setString(4, UID);
+				statement.setString(5, UID);
 			}
 
 			statement.executeUpdate();
@@ -387,7 +442,7 @@ public class SQL {
 		try {
 			Connection connection = database.getConnectionAndCheck();
 			PreparedStatement statement = connection.prepareStatement(
-					"select * from " + tableName + " where length(player) < 20" + " order by balance desc limit 10");
+					"select * from " + tableName + " where hidden != '1' order by balance desc limit 10");
 
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
@@ -423,6 +478,22 @@ public class SQL {
 		}
 
 		return bal;
+	}
+
+	public static void hidetop(UUID u, Integer type) {
+		Connection connection = database.getConnectionAndCheck();
+		try {
+			String query = " set hidden = ? where UID = ?";
+			PreparedStatement statement = connection.prepareStatement("update " + tableName + query);
+			statement.setInt(1, type);
+			statement.setString(2, u.toString());
+			statement.executeUpdate();
+			statement.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		database.closeHikariConnection(connection);
 	}
 
 	public static void record(RecordData x,Connection co) {

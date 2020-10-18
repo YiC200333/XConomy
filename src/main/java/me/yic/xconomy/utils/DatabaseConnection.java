@@ -24,6 +24,7 @@ public class DatabaseConnection {
 	private static final Integer maxLife = XConomy.config.getInt("Pool-Settings.maximum-lifetime");
 	private static final Long idleTime = XConomy.config.getLong("Pool-Settings.idle-timeout");
 	private static boolean secon = false;
+	public static Integer waittimeout = 30;
 	//============================================================================================
 	public static File userdata = new File(dataFolder, "data.db");
 	//============================================================================================
@@ -162,6 +163,13 @@ public class DatabaseConnection {
 
 				if (connection.isClosed()) {
 					return setGlobalConnection();
+				}
+
+				if (XConomy.config.getBoolean("Settings.mysql")) {
+					if (!connection.isValid(waittimeout)) {
+						secon = false;
+						return setGlobalConnection();
+					}
 				}
 			}
 		} catch (SQLException e) {
