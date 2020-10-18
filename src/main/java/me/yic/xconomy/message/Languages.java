@@ -95,7 +95,7 @@ public class Languages {
 	private static void english() {
 		mess.put("prefix", "&6[XConomy]");
 		mess.put("balance", "&aBalance: %balance%");
-		mess.put("balance_other", "&aPlayer hidden");
+		mess.put("balance_other", "&a%player%'s balance: %balance%");
 		mess.put("top_title", "&e========= TOP10 =========");
 		mess.put("sum_text", "&fServer Total - %balance%");
 		mess.put("top_text", "&e%index%: %player% - %balance%");
