@@ -219,13 +219,12 @@ public class XConomy extends JavaPlugin {
 
 	private static boolean checkVaultPE() {
 		File peFolder = new File(Bukkit.getPluginManager().getPlugin("PlaceholderAPI").getDataFolder(), "config.yml");
-		boolean cvap = false;
 		if (!peFolder.exists()) {
 			return false;
 		}
 		FileConfiguration peConfig = YamlConfiguration.loadConfiguration(peFolder);
 		if (peConfig.contains("expansions.vault.baltop.enabled")) {
-			return cvap = peConfig.getBoolean("expansions.vault.baltop.enabled");
+			return peConfig.getBoolean("expansions.vault.baltop.enabled");
 		}
 		return false;
 	}
