@@ -55,9 +55,8 @@ public class XConomy extends JavaPlugin {
 			logger("发现 PlaceholderAPI");
 			if (checkVaultPE()) {
 				logger("======================================================================");
-				logger("XConomy 的连接池 不支持 Vault 变量的 baltop 功能");
+				logger("不推荐开启 Vault 中 baltop 变量的功能");
 				logger("请在 PlaceholderAPI 的 config.yml 中设置 expansions.vault.baltop.enabled 为 false");
-				logger("或者在 XConomy 的 config.yml 中设置 Pool-Settings.usepool 为 false");
 				logger("======================================================================");
 				foundvaultpe = true;
 			}
@@ -226,10 +225,7 @@ public class XConomy extends JavaPlugin {
 		}
 		FileConfiguration peConfig = YamlConfiguration.loadConfiguration(peFolder);
 		if (peConfig.contains("expansions.vault.baltop.enabled")) {
-			cvap = peConfig.getBoolean("expansions.vault.baltop.enabled");
-		}
-		if (config.getBoolean("Settings.mysql") && config.getBoolean("Pool-Settings.usepool")) {
-			return cvap;
+			return cvap = peConfig.getBoolean("expansions.vault.baltop.enabled");
 		}
 		return false;
 	}

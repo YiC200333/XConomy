@@ -80,7 +80,9 @@ public class Cache {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
+        if (XConomy.isBungeecord()) {
+            Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
+        }
     }
 
     public static void change(UUID u, BigDecimal amount, Boolean isAdd, String type, String playername, String reason) {

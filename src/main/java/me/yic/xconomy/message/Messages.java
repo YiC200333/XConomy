@@ -560,27 +560,27 @@ public class Messages {
 					newMessage = "§amessage.ymlリロード";
 				}
 				break;
-			case "XConomy 的连接池 不支持 Vault 变量的 baltop 功能":
+			case "不推荐开启 Vault 中 baltop 变量的功能":
 				if (lang.equalsIgnoreCase("English")) {
-					newMessage = "XConomy does not support the baltop function of vault papi with connnection pool";
+					newMessage = "It is not recommended to enable the baltop function of vault papi";
 				}
 				if (lang.equalsIgnoreCase("French")) {
-					newMessage = "XConomy does not support the baltop function of vault papi with connnection pool";
+					newMessage = "It is not recommended to enable the baltop function of vault papi";
 				}
 				if (lang.equalsIgnoreCase("Spanish")) {
-					newMessage = "XConomy does not support the baltop function of vault papi with connnection pool";
+					newMessage = "It is not recommended to enable the baltop function of vault papi";
 				}
 				if (lang.equalsIgnoreCase("Russian")) {
-					newMessage = "XConomy does not support the baltop function of vault papi with connnection pool";
+					newMessage = "It is not recommended to enable the baltop function of vault papi";
 				}
 				if (lang.equalsIgnoreCase("ChineseTW")) {
-					newMessage = "XConomy 的連接池不支援 Vault 變數的 baltop 功能";
+					newMessage = "不推薦開啓 Vault 中 baltop 變量的功能";
 				}
 				if (lang.equalsIgnoreCase("Turkish")) {
-					newMessage = "XConomy does not support the baltop function of vault papi with connnection pool";
+					newMessage = "It is not recommended to enable the baltop function of vault papi";
 				}
 				if (lang.equalsIgnoreCase("Japanese")) {
-					newMessage = "XConomy does not support the baltop function of vault papi with connnection pool";
+					newMessage = "It is not recommended to enable the baltop function of vault papi";
 				}
 				break;
 			case "请在 PlaceholderAPI 的 config.yml 中设置 expansions.vault.baltop.enabled 为 false":
@@ -604,29 +604,6 @@ public class Messages {
 				}
 				if (lang.equalsIgnoreCase("Japanese")) {
 					newMessage = "Please set 'expansions.vault.baltop.enabled' to false in the config.yml of PlaceholderAPI";
-				}
-				break;
-			case "或者在 XConomy 的 config.yml 中设置 Pool-Settings.usepool 为 false":
-				if (lang.equalsIgnoreCase("English")) {
-					newMessage = "Or set 'Pool-Settings.usepool' to false in the config.yml of XConomy";
-				}
-				if (lang.equalsIgnoreCase("French")) {
-					newMessage = "Or set 'Pool-Settings.usepool' to false in the config.yml of XConomy";
-				}
-				if (lang.equalsIgnoreCase("Spanish")) {
-					newMessage = "Or set 'Pool-Settings.usepool' to false in the config.yml of XConomy";
-				}
-				if (lang.equalsIgnoreCase("Russian")) {
-					newMessage = "Or set 'Pool-Settings.usepool' to false in the config.yml of XConomy";
-				}
-				if (lang.equalsIgnoreCase("ChineseTW")) {
-					newMessage = "或者在 XConomy 的 config.yml 中設置 Pool-Settings.usepool 為 false";
-				}
-				if (lang.equalsIgnoreCase("Turkish")) {
-					newMessage = "Or set 'Pool-Settings.usepool' to false in the config.yml of XConomy";
-				}
-				if (lang.equalsIgnoreCase("Japanese")) {
-					newMessage = "Or set 'Pool-Settings.usepool' to false in the config.yml of XConomy";
 				}
 				// -----------------------------------------------------------------------------------------
 				break;
