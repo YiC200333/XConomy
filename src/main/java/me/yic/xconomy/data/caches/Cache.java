@@ -101,9 +101,9 @@ public class Cache {
              x = new RecordData(type, u, playername, newvalue, amount, isAdd, reason);
         }
         if (XConomy.isBungeecord()) {
-            sendmessave(u, bal, newvalue, amount, isAdd, x);
+            sendmessave(u, newvalue, bal, amount, isAdd, x);
         } else {
-            DataCon.save(u, bal, amount, isAdd, x);
+            DataCon.save(u, newvalue, bal, amount, isAdd, x);
         }
     }
 
@@ -148,19 +148,19 @@ public class Cache {
         return null;
     }
 
-    private static void sendmessave(UUID u, BigDecimal balance, BigDecimal amount, BigDecimal amountc, Boolean isAdd, RecordData x) {
+    private static void sendmessave(UUID u,  BigDecimal newbalance, BigDecimal balance, BigDecimal amount, Boolean isAdd, RecordData x) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         DataOutputStream output = new DataOutputStream(stream);
         try {
               output.writeUTF("balance");
               output.writeUTF(XConomy.getSign());
               output.writeUTF(u.toString());
-              output.writeUTF(amount.toString());
+              output.writeUTF(newbalance.toString());
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        new SendMessTaskS(stream, u, balance, amountc, isAdd, x).runTaskAsynchronously(XConomy.getInstance());
+        new SendMessTaskS(stream, u, newbalance, balance, amount, isAdd, x).runTaskAsynchronously(XConomy.getInstance());
     }
 
     private static void sendmessaveall(String targettype, BigDecimal amountc, Boolean isAdd) {
@@ -184,7 +184,7 @@ public class Cache {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        new SendMessTaskS(stream, null, null, amountc, isAdd, null).runTaskAsynchronously(XConomy.getInstance());
+        new SendMessTaskS(stream, null, null, null, amountc, isAdd, null).runTaskAsynchronously(XConomy.getInstance());
     }
 
 }

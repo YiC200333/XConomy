@@ -40,7 +40,7 @@ public class NonPlayerCache {
         if (XConomy.config.getBoolean("Settings.mysql") && XConomy.config.getBoolean("Settings.transaction-record")) {
             x = new RecordData(type, null, u, newvalue, amount, isAdd, "N/A");
         }
-        DataCon.saveNonPlayer(u, amount, isAdd, x);
+        DataCon.saveNonPlayer(u, newvalue, x);
     }
 
 }

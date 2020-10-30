@@ -83,8 +83,8 @@ public class DataCon extends XConomy {
 		return SQL.sumBal();
 	}
 
-	public static void save(UUID UID, BigDecimal balance, BigDecimal amount, Boolean isAdd, RecordData x) {
-		SQL.save(UID, balance.doubleValue(), amount, isAdd, x);
+	public static void save(UUID UID, BigDecimal newbalance, BigDecimal balance, BigDecimal amount, Boolean isAdd, RecordData x) {
+		SQL.save(UID, newbalance, balance, amount, isAdd, x);
 	}
 
 	public static void saveall(String targettype, BigDecimal amount, Boolean isAdd, RecordData x) {
@@ -104,8 +104,8 @@ public class DataCon extends XConomy {
 		}.runTaskAsynchronously(XConomy.getInstance());
 	}
 
-	public static void saveNonPlayer(String account, BigDecimal amount, Boolean isAdd, RecordData x) {
-		SQL.saveNonPlayer(account, amount.doubleValue(), isAdd, x);
+	public static void saveNonPlayer(String account, BigDecimal newbalance, RecordData x) {
+		SQL.saveNonPlayer(account, newbalance.doubleValue(), x);
 	}
 
 	private static void setupMySqlTable() {

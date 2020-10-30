@@ -13,15 +13,17 @@ import java.util.UUID;
 public class SendMessTaskS extends BukkitRunnable {
 	private final ByteArrayOutputStream stream;
 	private final UUID u;
+	private final BigDecimal newbalance;
 	private final BigDecimal balance;
 	private final BigDecimal amount;
 	private final Boolean type;
 	private final RecordData x;
 
-	public SendMessTaskS(ByteArrayOutputStream stream, UUID u, BigDecimal balance, BigDecimal amount, Boolean type, RecordData x) {
+	public SendMessTaskS(ByteArrayOutputStream stream, UUID u, BigDecimal newbalance, BigDecimal balance, BigDecimal amount, Boolean type, RecordData x) {
 		this.stream = stream;
 		this.u = u;
 		this.balance = balance;
+		this.newbalance = newbalance;
 		this.amount = amount;
 		this.type = type;
 		this.x = x;
@@ -31,7 +33,7 @@ public class SendMessTaskS extends BukkitRunnable {
 	public void run() {
 		Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", this.stream.toByteArray());
 		if (u != null) {
-			DataCon.save(u, balance, amount, type, x);
+			DataCon.save(u, newbalance, balance, amount, type, x);
 		}
 	}
 }

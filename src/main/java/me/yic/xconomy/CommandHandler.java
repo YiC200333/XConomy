@@ -572,7 +572,7 @@ public class CommandHandler{
 			e.printStackTrace();
 		}
 
-		new SendMessTaskS(stream, null, null,null, null, null).runTaskAsynchronously(XConomy.getInstance());
+		new SendMessTaskS(stream, null, null,null,null, null, null).runTaskAsynchronously(XConomy.getInstance());
 
 	}
 

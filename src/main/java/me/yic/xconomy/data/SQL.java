@@ -204,21 +204,15 @@ public class SQL {
 		}
 	}
 
-	public static void save(UUID u, Double balance, BigDecimal amount, Boolean isAdd, RecordData x) {
+	public static void save(UUID u, BigDecimal newbalance, BigDecimal balance, BigDecimal amount, Boolean isAdd, RecordData x) {
 		Connection connection = database.getConnectionAndCheck();
 		try {
 			String query;
-			if (isAdd == null) {
-				query = " set balance = " + amount.doubleValue() + " where UID = ?";
-			} else if (isAdd) {
-				query = " set balance = balance + " + amount.doubleValue() + " where UID = ?";
-			} else {
-				query = " set balance = balance - " + amount.doubleValue() + " where UID = ?";
-			}
+				query = " set balance = " + newbalance.doubleValue() + " where UID = ?";
 			Boolean requirefresh = false;
 			if (XConomy.config.getBoolean("Settings.cache-correction")&&isAdd!=null){
 				requirefresh = true;
-				query = query + "AND balance = " + balance;
+				query = query + "AND balance = " + balance.toString();
 			}
 			PreparedStatement statement1 = connection.prepareStatement("update " + tableName + query);
 			statement1.setString(1, u.toString());
@@ -228,7 +222,11 @@ public class SQL {
 				Cache.refreshFromCache(u);
 				Cache.cachecorrection(u,amount,isAdd);
 				x.addcachecorrection();
+				if (isAdd) {
 				query = " set balance = balance + " + amount.doubleValue() + " where UID = ?";
+				} else {
+				query = " set balance = balance - " + amount.doubleValue() + " where UID = ?";
+				}
 				PreparedStatement statement2 = connection.prepareStatement("update " + tableName + query);
 				statement2.setString(1, u.toString());
 				statement2.executeUpdate();
@@ -285,15 +283,11 @@ public class SQL {
 		database.closeHikariConnection(connection);
 	}
 
-	public static void saveNonPlayer(String account, Double amount, Boolean isAdd, RecordData x) {
+	public static void saveNonPlayer(String account, Double newbalance, RecordData x) {
 		Connection connection = database.getConnectionAndCheck();
 		try {
 			String query;
-			if (isAdd) {
-				query = " set balance = balance + " + amount + " where account = ?";
-			} else {
-				query = " set balance = balance - " + amount + " where account = ?";
-			}
+				query = " set balance = " + newbalance + " where account = ?";
 			PreparedStatement statement = connection.prepareStatement("update " + tableNonPlayerName + query);
 			statement.setString(1, account);
 			statement.executeUpdate();
