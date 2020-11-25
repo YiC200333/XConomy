@@ -163,7 +163,7 @@ public class Cache {
         new SendMessTaskS(stream, u, newbalance, balance, amount, isAdd, x).runTaskAsynchronously(XConomy.getInstance());
     }
 
-    private static void sendmessaveall(String targettype, BigDecimal amountc, Boolean isAdd) {
+    private static void sendmessaveall(String targettype, BigDecimal amount, Boolean isAdd) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         DataOutputStream output = new DataOutputStream(stream);
         try {
@@ -174,7 +174,7 @@ public class Cache {
             }else if (targettype.equals("online")) {
                 output.writeUTF("online");
             }
-            output.writeUTF(amountc.toString());
+            output.writeUTF(amount.toString());
             if (isAdd) {
                 output.writeUTF("add");
             } else {
@@ -184,7 +184,7 @@ public class Cache {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        new SendMessTaskS(stream, null, null, null, amountc, isAdd, null).runTaskAsynchronously(XConomy.getInstance());
+        new SendMessTaskS(stream, null, null, null, amount, isAdd, null).runTaskAsynchronously(XConomy.getInstance());
     }
 
 }

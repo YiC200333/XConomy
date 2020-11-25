@@ -7,6 +7,9 @@ public class Messages {
 	public static String systemMessage(String message) {
 		String newMessage = message;
 		String lang = XConomy.getInstance().lang();
+		if (lang.equalsIgnoreCase("German")){
+			lang = "English";
+		}
 		switch (message) {
 			case "数据保存方式 - SQLite":
 				if (lang.equalsIgnoreCase("English")) {

@@ -43,8 +43,8 @@ public class SQL {
 				ResultSet rs = statement.executeQuery();
 				if (rs.next()) {
 					Integer waittime = rs.getInt(2);
-					if (waittime > 20){
-						DatabaseConnection.waittimeout = waittime - 10;
+					if (waittime > 50){
+						DatabaseConnection.waittimeout = waittime - 30;
 					}
 
 				}

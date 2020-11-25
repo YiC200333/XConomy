@@ -101,6 +101,11 @@ public class UpdateConfig {
 			config.set("MySQL.timezone", "");
 			update = true;
 		}
+		if (!ck.contains("Settings.disable-essentials")) {
+			config.createSection("Settings.disable-essentials");
+			config.set("Settings.disable-essentials", true);
+			update = true;
+		}
 		return update;
 	}
 }

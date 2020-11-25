@@ -26,6 +26,8 @@ public class Languages {
 			turkish();
 		} else if (lang.equalsIgnoreCase("Japanese")) {
 			japanese();
+		} else if (lang.equalsIgnoreCase("German")) {
+			german();
 		} else {
 			chinese();
 		}
@@ -407,6 +409,46 @@ public class Languages {
 		mess.put("help10", "&6balancetop hide/display <player>  -  Hide or display a <player>'s data from TOP10");
 	}
 
+
+	private static void german() {
+		mess.put("prefix", "&6[XConomy]");
+		mess.put("balance", "&aKontostand: %balance%");
+		mess.put("balance_other", "&a%player%''s Kontostand: %balance%");
+		mess.put("top_title", "&e========= TOP10 =========");
+		mess.put("sum_text", "&fServer Gesamtgeld - %balance%");
+		mess.put("top_text", "&e%index%: %player% - %balance%");
+		mess.put("top_subtitle", "&7Die TOP10 aktualisieren sich alle 5 Minuten");
+		mess.put("top_nodata", "&cKeine TOP10 Daten vorhanden");
+		mess.put("top_hidden", "&a%player% ist versteckt");
+		mess.put("top_displayed", "&a%player% ist sichtbar");
+		mess.put("pay", "&cDu hast %amount% an %player% gezahlt");
+		mess.put("pay_receive", "&aDu hast %amount% von %player% bekommen");
+		mess.put("pay_fail", "&cDein Kontostand ist weniger als %amount%");
+		mess.put("pay_self", "cDu kannst dir selbst nichts zahlen");
+		mess.put("noaccount", "&cDer Spieler existiert nicht");
+		mess.put("invalid", "&cFalsche Zahleneingabe");
+		mess.put("over_maxnumber", "&cDer Zielkontobetrag liegt über dem Maximalbetrag");
+		mess.put("money_give", "&cDu hast %player% %amount% gegeben");
+		mess.put("money_give_receive", "&aAdministrator hat dir %amount% gegeben");
+		mess.put("money_take", "&cDu hast %amount% von %player% abgezogen");
+		mess.put("money_take_fail", "&c%player%''s Kontostand ist weniger als %amount%");
+		mess.put("money_take_receive", "&cAdministrator hat dir %amount% abgenommen");
+		mess.put("money_set", "&cDu hast den Kontostand von %player% auf %amount% gesetzt");
+		mess.put("money_set_receive", "&cAdministrator hat deinen Kontostand auf %amount% gesetzt");
+		mess.put("no_permission", "&cDu hast keine Berechtigung für diesen Befehl");
+		mess.put("help_title_full", "&6=============== [XConomy] HILFE ===============");
+		mess.put("help1", "&6balance/money  -  Zeigt deinen Kontostand");
+		mess.put("help2", "&6balance/money <Spieler>  -  Zeigt den Kontostand von <Spieler>");
+		mess.put("help3", "&6pay <Spieler> <Betrag>  -  Zahlt dem <Spieler> <Betrag>");
+		mess.put("help4", "&6balancetop  -  Zeigt die TOP10");
+		mess.put("help5", "&6balance/money give <Spieler> <Betrag>  -  gibt <Spieler> <Betrag>");
+		mess.put("help6", "&6balance/money take <Spieler> <Betrag>  -  nimmt <Betrag> von <Spieler>");
+		mess.put("help7", "&6balance/money set <Spieler> <Betrag>  -  setze den Kontostand von <Spieler> auf <Betrag>");
+		mess.put("help8", "&6balance/money give * <all/online> <Betrag> <Grund>  -  gebe <Alle/Online Spieler> <Betrag>");
+		mess.put("help9", "&6balance/money take * <all/online> <Betrag> <Grund>  -  nimmt <Betrag> von <Alle/Online Spieler>");
+		mess.put("help10", "&6balancetop hide/display <Spieler>  -  Verstecke oder Zeige den Kontostand von <Spieler> in den TOP10");
+	}
+
 	public static void translateFile(String string, File file) {
 		try {
 			FileOutputStream f = new FileOutputStream(file, true);
@@ -429,6 +471,8 @@ public class Languages {
 			translateFile("#============================== Translator - erkutay007 ==============================", file);
 		} else if (lang.equalsIgnoreCase("Japanese")) {
 			translateFile("#============================== Translator - シロカミ ==============================", file);
+		} else if (lang.equalsIgnoreCase("German")) {
+			translateFile("#============================== Translator - Thund3rst0rm89 ==============================", file);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 Settings:
-  #Chinese ChineseTW English French Spanish Russian Turkish Japanese
+  #Chinese ChineseTW English French Spanish Russian Turkish Japanese German
   language: English
   #Whether to check for new version
   check-update: true
@@ -16,6 +16,9 @@ Settings:
   #Please keep in mind that if Essentials is installed on your server
   #XConomy will take over these commands.
   eco-command: true
+  #XConomy will disable the economic function of Essentials.
+  #Just the economic function.
+  disable-essentials: true
   #Initial balance
   initial-bal: 0
   #Whether to enable non-player accounts.
