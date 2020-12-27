@@ -4,7 +4,7 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.task.SendMessTaskS;
-import me.yic.xconomy.utils.RecordData;
+import me.yic.xconomy.utils.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -96,23 +96,17 @@ public class Cache {
             }
         }
         insertIntoCache(u, newvalue);
-        RecordData x = null;
-        if (XConomy.config.getBoolean("Settings.mysql") && XConomy.config.getBoolean("Settings.transaction-record")) {
-             x = new RecordData(type, u, playername, newvalue, amount, isAdd, reason);
-        }
+        PlayerData pd = new PlayerData(type, u, playername, bal, amount, newvalue, isAdd, reason);
         if (XConomy.isBungeecord()) {
-            sendmessave(u, newvalue, bal, amount, isAdd, x);
+            sendmessave(u, isAdd, pd);
         } else {
-            DataCon.save(u, newvalue, bal, amount, isAdd, x);
+            DataCon.save(u, isAdd, pd);
         }
     }
 
     public static void changeall( String targettype, BigDecimal amount, Boolean isAdd, String type, String reason) {
-        RecordData x = null;
         bal.clear();
-        if (XConomy.config.getBoolean("Settings.mysql") && XConomy.config.getBoolean("Settings.transaction-record")) {
-            x = new RecordData(type, null, null, BigDecimal.ZERO, amount, isAdd, reason);
-        }
+        PlayerData x = new PlayerData(type, null, null, null, amount, BigDecimal.ZERO, isAdd, reason);
         DataCon.saveall(targettype, amount, isAdd, x);
         if (XConomy.isBungeecord()) {
             sendmessaveall(targettype, amount, isAdd);
@@ -148,19 +142,19 @@ public class Cache {
         return null;
     }
 
-    private static void sendmessave(UUID u,  BigDecimal newbalance, BigDecimal balance, BigDecimal amount, Boolean isAdd, RecordData x) {
+    private static void sendmessave(UUID u, Boolean isAdd, PlayerData pd) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         DataOutputStream output = new DataOutputStream(stream);
         try {
               output.writeUTF("balance");
               output.writeUTF(XConomy.getSign());
               output.writeUTF(u.toString());
-              output.writeUTF(newbalance.toString());
+              output.writeUTF(pd.getnewbalance().toString());
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        new SendMessTaskS(stream, u, newbalance, balance, amount, isAdd, x).runTaskAsynchronously(XConomy.getInstance());
+        new SendMessTaskS(stream, u, isAdd, pd).runTaskAsynchronously(XConomy.getInstance());
     }
 
     private static void sendmessaveall(String targettype, BigDecimal amount, Boolean isAdd) {
@@ -184,7 +178,7 @@ public class Cache {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        new SendMessTaskS(stream, null, null, null, amount, isAdd, null).runTaskAsynchronously(XConomy.getInstance());
+        new SendMessTaskS(stream, null, isAdd, null).runTaskAsynchronously(XConomy.getInstance());
     }
 
 }

@@ -5,6 +5,7 @@ author: YiC
 load: STARTUP
 depend: [ Vault ]
 softdepend: [ DatabaseDrivers, PlaceholderAPI ]
+api-version: "1.13"
 
 commands:
   xconomy:

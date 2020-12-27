@@ -2,11 +2,7 @@ package me.yic.xconomy;
 
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.utils.EconomyCommand;
-import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandMap;
 
 import java.math.BigDecimal;
 import java.util.List;

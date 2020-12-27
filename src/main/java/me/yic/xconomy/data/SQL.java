@@ -5,7 +5,7 @@ import me.yic.xconomy.data.caches.NonPlayerCache;
 import me.yic.xconomy.message.Messages;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.utils.DatabaseConnection;
-import me.yic.xconomy.utils.RecordData;
+import me.yic.xconomy.utils.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -204,14 +204,16 @@ public class SQL {
 		}
 	}
 
-	public static void save(UUID u, BigDecimal newbalance, BigDecimal balance, BigDecimal amount, Boolean isAdd, RecordData x) {
+	public static void save(UUID u, Boolean isAdd, PlayerData pd) {
 		Connection connection = database.getConnectionAndCheck();
+		BigDecimal newbalance = pd.getnewbalance();
 		try {
 			String query;
 				query = " set balance = " + newbalance.doubleValue() + " where UID = ?";
 			Boolean requirefresh = false;
 			if (XConomy.config.getBoolean("Settings.cache-correction")&&isAdd!=null){
 				requirefresh = true;
+				BigDecimal balance = pd.getbalance();
 				query = query + "AND balance = " + balance.toString();
 			}
 			PreparedStatement statement1 = connection.prepareStatement("update " + tableName + query);
@@ -220,8 +222,9 @@ public class SQL {
 			statement1.close();
 			if (requirefresh && rs == 0){
 				Cache.refreshFromCache(u);
+				BigDecimal amount = pd.getbalance();
 				Cache.cachecorrection(u,amount,isAdd);
-				x.addcachecorrection();
+				pd.addcachecorrection();
 				if (isAdd) {
 				query = " set balance = balance + " + amount.doubleValue() + " where UID = ?";
 				} else {
@@ -235,11 +238,11 @@ public class SQL {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		record(x,connection);
+		record(pd,connection);
 		database.closeHikariConnection(connection);
 	}
 
-	public static void saveall(String targettype, List<UUID> players, Double amount, Boolean isAdd,  RecordData x) {
+	public static void saveall(String targettype, List<UUID> players, Double amount, Boolean isAdd,  PlayerData x) {
 		Connection connection = database.getConnectionAndCheck();
 		try {
 			if (targettype.equalsIgnoreCase("all")) {
@@ -283,7 +286,7 @@ public class SQL {
 		database.closeHikariConnection(connection);
 	}
 
-	public static void saveNonPlayer(String account, Double newbalance, RecordData x) {
+	public static void saveNonPlayer(String account, Double newbalance, PlayerData x) {
 		Connection connection = database.getConnectionAndCheck();
 		try {
 			String query;
@@ -457,7 +460,7 @@ public class SQL {
 
 		try {
 			Connection connection = database.getConnectionAndCheck();
-			PreparedStatement statement = connection.prepareStatement("select SUM(balance) from " + tableName);
+			PreparedStatement statement = connection.prepareStatement("select SUM(balance) from " + tableName + " where hidden != '1'");
 
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
@@ -490,7 +493,7 @@ public class SQL {
 		database.closeHikariConnection(connection);
 	}
 
-	public static void record(RecordData x,Connection co) {
+	public static void record(PlayerData x, Connection co) {
 		if (XConomy.config.getBoolean("Settings.mysql") && XConomy.config.getBoolean("Settings.transaction-record")) {
 			try {
 				String query;
@@ -499,8 +502,8 @@ public class SQL {
 				statement.setString(1, x.gettype());
 				statement.setString(2, x.getuid());
 				statement.setString(3, x.getplayer());
-				statement.setDouble(4, x.getbalance());
-				statement.setDouble(5, x.getamount());
+				statement.setDouble(4, x.getnewbalance().doubleValue());
+				statement.setDouble(5, x.getamount().doubleValue());
 				statement.setString(6, x.getoperation());
 				statement.setString(7, x.getdate());
 				statement.setString(8, x.getcommand());

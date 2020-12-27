@@ -2,7 +2,7 @@ package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.utils.DatabaseConnection;
-import me.yic.xconomy.utils.RecordData;
+import me.yic.xconomy.utils.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -83,29 +83,29 @@ public class DataCon extends XConomy {
 		return SQL.sumBal();
 	}
 
-	public static void save(UUID UID, BigDecimal newbalance, BigDecimal balance, BigDecimal amount, Boolean isAdd, RecordData x) {
-		SQL.save(UID, newbalance, balance, amount, isAdd, x);
+	public static void save(UUID UID, Boolean isAdd, PlayerData pd) {
+		SQL.save(UID, isAdd, pd);
 	}
 
-	public static void saveall(String targettype, BigDecimal amount, Boolean isAdd, RecordData x) {
+	public static void saveall(String targettype, BigDecimal amount, Boolean isAdd, PlayerData pd) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				if (targettype.equalsIgnoreCase("all")) {
-					SQL.saveall(targettype, null, amount.doubleValue(), isAdd, x);
+					SQL.saveall(targettype, null, amount.doubleValue(), isAdd, pd);
 				} else if (targettype.equalsIgnoreCase("online")) {
 					List<UUID> ol = new ArrayList<UUID>();
 					for (Player pp : Bukkit.getOnlinePlayers()) {
 						ol.add(pp.getUniqueId());
 					}
-					SQL.saveall(targettype, ol, amount.doubleValue(), isAdd, x);
+					SQL.saveall(targettype, ol, amount.doubleValue(), isAdd, pd);
 				}
 			}
 		}.runTaskAsynchronously(XConomy.getInstance());
 	}
 
-	public static void saveNonPlayer(String account, BigDecimal newbalance, RecordData x) {
-		SQL.saveNonPlayer(account, newbalance.doubleValue(), x);
+	public static void saveNonPlayer(String account, BigDecimal newbalance, PlayerData pd) {
+		SQL.saveNonPlayer(account, newbalance.doubleValue(), pd);
 	}
 
 	private static void setupMySqlTable() {

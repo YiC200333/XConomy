@@ -4,17 +4,18 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
-public class RecordData {
+public class PlayerData {
 	private final String type;
 	private final String uid;
 	private final String player;
-	private final Double balance;
-	private final Double amount;
+	private final BigDecimal balance;
+	private final BigDecimal amount;
+	private final BigDecimal newbalance;
 	private final String operation;
 	private final String date;
 	private String command;
 
-	public RecordData(String type, UUID uid, String player, BigDecimal balance, BigDecimal amount, Boolean isAdd, String command) {
+	public PlayerData(String type, UUID uid, String player, BigDecimal balance, BigDecimal amount, BigDecimal newbalance, Boolean isAdd, String command) {
 		this.type = type;
 		if (uid == null){
 		    this.uid = "N/A";
@@ -26,8 +27,9 @@ public class RecordData {
 		}else {
 			this.player = player;
 		}
-		this.balance = balance.doubleValue();
-		this.amount = amount.doubleValue();
+		this.balance = balance;
+		this.amount = amount;
+		this.newbalance = newbalance;
 		String operation = "SET";
 		if (isAdd != null) {
 			if (isAdd) {
@@ -53,12 +55,16 @@ public class RecordData {
 		return player;
 	}
 
-	public Double getbalance() {
+	public BigDecimal getbalance() {
 		return balance;
 	}
 
-	public Double getamount() {
+	public BigDecimal getamount() {
 		return amount;
+	}
+
+	public BigDecimal getnewbalance() {
+		return newbalance;
 	}
 
 	public String getoperation() {

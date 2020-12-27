@@ -550,7 +550,7 @@ public class CommandHandler{
 		}
 	}
 
-	public static void broadcastSendMessage(boolean ispublic, String s, String s1) {
+	public static void broadcastSendMessage(boolean ispublic, String playername, String message) {
 		if (!XConomy.isBungeecord()) {
 			return;
 		}
@@ -561,18 +561,18 @@ public class CommandHandler{
 			if (!ispublic) {
 				output.writeUTF("message");
 				output.writeUTF(XConomy.getSign());
-				output.writeUTF(s);
-				output.writeUTF(s1);
+				output.writeUTF(playername);
+				output.writeUTF(message);
 			}else{
 				output.writeUTF("broadcast");
 				output.writeUTF(XConomy.getSign());
-				output.writeUTF(s1);
+				output.writeUTF(message);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		new SendMessTaskS(stream, null, null,null,null, null, null).runTaskAsynchronously(XConomy.getInstance());
+		new SendMessTaskS(stream, null, null, null).runTaskAsynchronously(XConomy.getInstance());
 
 	}
 
