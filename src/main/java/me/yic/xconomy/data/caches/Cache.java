@@ -28,15 +28,16 @@ public class Cache {
         }
     }
 
+    public static void insertIntoUUIDCache(final String u, UUID v) {
+        uid.put(u, v);
+    }
+
     public static void refreshFromCache(final UUID uuid) {
         if (uuid != null) {
             DataCon.getBal(uuid);
         }
     }
 
-    public static void cacheUUID(final String u, UUID v) {
-        uid.put(u, v);
-    }
 
     public static void clearCache() {
         bal.clear();
@@ -59,7 +60,7 @@ public class Cache {
         return amount;
     }
 
-    public static void cachecorrection(UUID u, BigDecimal amount, Boolean isAdd) {
+    public static BigDecimal cachecorrection(UUID u, BigDecimal amount, Boolean isAdd) {
         BigDecimal newvalue;
         BigDecimal bal = getBalanceFromCacheOrDB(u);
         if (isAdd) {
@@ -83,9 +84,10 @@ public class Cache {
         if (XConomy.isBungeecord()) {
             Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
         }
+        return newvalue;
     }
 
-    public static void change(UUID u, BigDecimal amount, Boolean isAdd, String type, String playername, String reason) {
+    public static void change(UUID u, String playername, BigDecimal amount, Boolean isAdd, String type, String reason) {
         BigDecimal newvalue = amount;
         BigDecimal bal = getBalanceFromCacheOrDB(u);
         if (isAdd != null) {
@@ -124,13 +126,17 @@ public class Cache {
         sumbalance = DataFormat.formatString(DataCon.getBalSum());
     }
 
-    public static UUID translateUUID(String name) {
+
+    public static Player getplayer(String name) {
+        return Bukkit.getPlayer(translateUUID(name,null));
+    }
+
+    public static UUID translateUUID(String name, Player pp) {
         if (uid.containsKey(name)) {
             return uid.get(name);
         } else {
-            Player pp = Bukkit.getPlayerExact(name);
             if (pp != null) {
-                uid.put(name, pp.getUniqueId());
+                insertIntoUUIDCache(name, pp.getUniqueId());
                 return uid.get(name);
             } else {
                 DataCon.getUid(name);

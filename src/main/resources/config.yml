@@ -7,12 +7,12 @@ Settings:
   mysql: false
   #TOP10 and the Server Total refresh time interval (Seconds)
   refresh-time: 300
-    #If set to true, XConomy will register the following commands:
+  #If set to true, XConomy will register the following commands:
     # - economy
     # - eco
     # - ebalancetop
     # - ebaltop
-  # - eeconomy
+    # - eeconomy
   #Please keep in mind that if Essentials is installed on your server
   #XConomy will take over these commands.
   eco-command: true

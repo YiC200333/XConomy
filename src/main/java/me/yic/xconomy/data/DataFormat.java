@@ -31,6 +31,14 @@ public class DataFormat {
 		}
 	}
 
+	public static BigDecimal formatBigDeciaml(BigDecimal am) {
+		if (isInteger) {
+			return am.setScale(0, BigDecimal.ROUND_DOWN);
+		} else {
+			return am.setScale(2, BigDecimal.ROUND_DOWN);
+		}
+	}
+
 	public static String shown(BigDecimal am) {
 		if (am.compareTo(BigDecimal.ONE) > 0) {
 			return ChatColor.translateAlternateColorCodes('&',XConomy.config.getString("Currency.display-format")

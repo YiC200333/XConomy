@@ -15,6 +15,7 @@ import net.md_5.bungee.event.EventHandler;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.UUID;
 
 public class BCsync implements Listener {
 
@@ -43,10 +44,10 @@ public class BCsync implements Listener {
 			} else if (type.equalsIgnoreCase("message")) {
 				output.writeUTF("message");
 				output.writeUTF(input.readUTF());
-				String name = input.readUTF();
-				ProxiedPlayer p = ProxyServer.getInstance().getPlayer(name);
+				String uid = input.readUTF();
+				ProxiedPlayer p = ProxyServer.getInstance().getPlayer(UUID.fromString(uid));
 				if (p != null) {
-					output.writeUTF(name);
+					output.writeUTF(uid);
 					output.writeUTF(input.readUTF());
 				} else {
 					return;

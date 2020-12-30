@@ -221,10 +221,15 @@ public class SQL {
 			Integer rs = statement1.executeUpdate();
 			statement1.close();
 			if (requirefresh && rs == 0){
-				Cache.refreshFromCache(u);
-				BigDecimal amount = pd.getbalance();
-				Cache.cachecorrection(u,amount,isAdd);
 				pd.addcachecorrection();
+			}
+			record(pd,connection);
+			if (requirefresh && rs == 0){
+				Cache.refreshFromCache(u);
+				BigDecimal amount = pd.getamount();
+				BigDecimal newv = Cache.cachecorrection(u,amount,isAdd);
+				pd.addcachecorrection();
+				PlayerData cpd = new PlayerData("CACHE_CORRECTION", u, pd.getplayer(), null, amount, newv, isAdd, "Cache Correction Detail");
 				if (isAdd) {
 				query = " set balance = balance + " + amount.doubleValue() + " where UID = ?";
 				} else {
@@ -234,11 +239,11 @@ public class SQL {
 				statement2.setString(1, u.toString());
 				statement2.executeUpdate();
 				statement2.close();
+				record(cpd,connection);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		record(pd,connection);
 		database.closeHikariConnection(connection);
 	}
 
@@ -423,7 +428,7 @@ public class SQL {
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
 				UUID id = UUID.fromString(rs.getString(1));
-				Cache.cacheUUID(name, id);
+				Cache.insertIntoUUIDCache(name, id);
 				Cache.insertIntoCache(id, DataFormat.formatString(rs.getString(3)));
 			}
 

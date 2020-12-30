@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,7 +32,11 @@ public class CommandHandler{
 					}
 				}
 				if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
-					sendHelpMessage(sender);
+					sendHelpMessage(sender, 1);
+					return true;
+				}
+				if (args.length == 2 && args[0].equalsIgnoreCase("help")) {
+					sendHelpMessage(sender, Integer.valueOf(args[1]));
 					return true;
 				}
 				showVersion(sender);
@@ -73,11 +78,11 @@ public class CommandHandler{
 				 if (args[0].equalsIgnoreCase("hide") || args[0].equalsIgnoreCase("display")) {
 
 					if (!(sender.isOp() || sender.hasPermission("xconomy.admin.balancetop"))) {
-						sendHelpMessage(sender);
+						sendHelpMessage(sender, 1);
 						return true;
 					}
 
-					UUID targetUUID = Cache.translateUUID(args[1]);
+					UUID targetUUID = Cache.translateUUID(args[1],null);
 
 					if (targetUUID == null) {
 						sender.sendMessage(sendMessage("prefix") + sendMessage("noaccount"));
@@ -109,7 +114,7 @@ public class CommandHandler{
 				}
 
 				if (args.length != 2) {
-					sendHelpMessage(sender);
+					sendHelpMessage(sender, 1);
 					return true;
 				}
 
@@ -139,8 +144,8 @@ public class CommandHandler{
 					return true;
 				}
 
-				Player target = Bukkit.getPlayerExact(args[0]);
-				UUID targetUUID = Cache.translateUUID(args[0]);
+				Player target = Cache.getplayer(args[0]);
+				UUID targetUUID = Cache.translateUUID(args[0],null);
 				if (targetUUID == null) {
 					sender.sendMessage(sendMessage("prefix") + sendMessage("noaccount"));
 					return true;
@@ -153,18 +158,18 @@ public class CommandHandler{
 				}
 
 				String com = commandName + " " + args[0] + " " + args[1];
-				Cache.change(((Player) sender).getUniqueId(), amount, false, "PLAYER_COMMAND", sender.getName(), com);
+				Cache.change(((Player) sender).getUniqueId(), sender.getName(), amount, false, "PLAYER_COMMAND", com);
 				sender.sendMessage(sendMessage("prefix") + sendMessage("pay")
 						.replace("%player%", args[0])
 						.replace("%amount%", amountFormatted));
 
-				Cache.change(targetUUID, amount, true, "PLAYER_COMMAND", args[0], com);
+				Cache.change(targetUUID, args[0], amount, true, "PLAYER_COMMAND", com);
 				String mess = sendMessage("prefix") + sendMessage("pay_receive")
 						.replace("%player%", sender.getName())
 						.replace("%amount%", amountFormatted);
 
 				if (target == null) {
-					broadcastSendMessage(false, args[0], mess);
+					broadcastSendMessage(false, targetUUID, mess);
 					return true;
 				}
 
@@ -209,7 +214,7 @@ public class CommandHandler{
 							return true;
 						}
 
-						UUID targetUUID = Cache.translateUUID(args[0]);
+						UUID targetUUID = Cache.translateUUID(args[0],null);
 						if (targetUUID == null) {
 							sender.sendMessage(sendMessage("prefix") + sendMessage("noaccount"));
 							return true;
@@ -227,7 +232,7 @@ public class CommandHandler{
 					case 4:  {
 						if (!(sender.isOp() | sender.hasPermission("xconomy.admin.give")
 								| sender.hasPermission("xconomy.admin.take") | sender.hasPermission("xconomy.admin.set"))) {
-							sendHelpMessage(sender);
+							sendHelpMessage(sender, 1);
 							return true;
 						}
 
@@ -243,8 +248,8 @@ public class CommandHandler{
 
 						BigDecimal amount = DataFormat.formatString(args[2]);
 						String amountFormatted = DataFormat.shown(amount);
-						Player target = Bukkit.getPlayerExact(args[1]);
-						UUID targetUUID = Cache.translateUUID(args[1]);
+						Player target = Cache.getplayer(args[1]);
+						UUID targetUUID = Cache.translateUUID(args[1],null);
 						String reason = null;
 						if (args.length==4) {
 							reason = args[3];
@@ -259,7 +264,7 @@ public class CommandHandler{
 						switch (args[0].toLowerCase()) {
 							case "give": {
 								if (!(sender.isOp() | sender.hasPermission("xconomy.admin.give"))) {
-									sendHelpMessage(sender);
+									sendHelpMessage(sender, 1);
 									return true;
 								}
 
@@ -274,7 +279,7 @@ public class CommandHandler{
 									return true;
 								}
 
-								Cache.change(targetUUID, amount, true,"ADMIN_COMMAND", args[1], com);
+								Cache.change(targetUUID, args[1], amount, true,"ADMIN_COMMAND", com);
 								sender.sendMessage(sendMessage("prefix") + sendMessage("money_give")
 										.replace("%player%", args[1])
 										.replace("%amount%", amountFormatted));
@@ -290,7 +295,7 @@ public class CommandHandler{
 									}
 
 									if (target == null) {
-										broadcastSendMessage(false, args[1], message);
+										broadcastSendMessage(false, targetUUID, message);
 										return true;
 									}
 
@@ -302,7 +307,7 @@ public class CommandHandler{
 
 							case "take": {
 								if (!(sender.isOp() | sender.hasPermission("xconomy.admin.take"))) {
-									sendHelpMessage(sender);
+									sendHelpMessage(sender, 1);
 									return true;
 								}
 
@@ -320,7 +325,7 @@ public class CommandHandler{
 									return true;
 								}
 
-								Cache.change(targetUUID, amount, false,"ADMIN_COMMAND", args[1], com);
+								Cache.change(targetUUID, args[1], amount, false,"ADMIN_COMMAND", com);
 								sender.sendMessage(sendMessage("prefix") + sendMessage("money_take")
 										.replace("%player%", args[1])
 										.replace("%amount%", amountFormatted));
@@ -334,7 +339,7 @@ public class CommandHandler{
 									}
 
 									if (target == null) {
-										broadcastSendMessage(false, args[1], mess);
+										broadcastSendMessage(false, targetUUID, mess);
 										return true;
 									}
 
@@ -346,11 +351,11 @@ public class CommandHandler{
 
 							case "set": {
 								if (!(sender.isOp() | sender.hasPermission("xconomy.admin.set"))) {
-									sendHelpMessage(sender);
+									sendHelpMessage(sender, 1);
 									return true;
 								}
 
-								Cache.change(targetUUID, amount, null,"ADMIN_COMMAND", args[1], com);
+								Cache.change(targetUUID, args[1], amount, null,"ADMIN_COMMAND", com);
 								sender.sendMessage(sendMessage("prefix") + sendMessage("money_set")
 										.replace("%player%", args[1])
 										.replace("%amount%", amountFormatted));
@@ -365,7 +370,7 @@ public class CommandHandler{
 									}
 
 									if (target == null) {
-										broadcastSendMessage(false, args[1], mess);
+										broadcastSendMessage(false, targetUUID, mess);
 										return true;
 									}
 
@@ -376,7 +381,7 @@ public class CommandHandler{
 							}
 
 							default: {
-								sendHelpMessage(sender);
+								sendHelpMessage(sender, 1);
 								break;
 							}
 
@@ -387,17 +392,17 @@ public class CommandHandler{
 					case 5: {
 						if (!(sender.isOp() | sender.hasPermission("xconomy.admin.give")
 								| sender.hasPermission("xconomy.admin.take") | sender.hasPermission("xconomy.admin.set"))) {
-							sendHelpMessage(sender);
+							sendHelpMessage(sender, 1);
 							return true;
 						}
 
 						if (!args[1].equals("*")) {
-							sendHelpMessage(sender);
+							sendHelpMessage(sender, 1);
 							return true;
 						}
 
 						if (!(args[2].equalsIgnoreCase("all") | args[2].equalsIgnoreCase("online"))) {
-							sendHelpMessage(sender);
+							sendHelpMessage(sender, 1);
 							return true;
 						}
 
@@ -430,7 +435,7 @@ public class CommandHandler{
 						switch (args[0].toLowerCase()) {
 							case "give": {
 								if (!(sender.isOp() | sender.hasPermission("xconomy.admin.give"))) {
-									sendHelpMessage(sender);
+									sendHelpMessage(sender, 1);
 									return true;
 								}
 
@@ -447,7 +452,7 @@ public class CommandHandler{
 
 							case "take": {
 								if (!(sender.isOp() | sender.hasPermission("xconomy.admin.take"))) {
-									sendHelpMessage(sender);
+									sendHelpMessage(sender, 1);
 									return true;
 								}
 
@@ -464,7 +469,7 @@ public class CommandHandler{
 							}
 
 							default: {
-								sendHelpMessage(sender);
+								sendHelpMessage(sender, 1);
 								break;
 							}
 
@@ -474,7 +479,7 @@ public class CommandHandler{
 					}
 
 					default: {
-						sendHelpMessage(sender);
+						sendHelpMessage(sender, 1);
 						break;
 					}
 
@@ -483,7 +488,7 @@ public class CommandHandler{
 			}
 
 			default: {
-				sendHelpMessage(sender);
+				sendHelpMessage(sender, 1);
 				break;
 			}
 
@@ -528,29 +533,46 @@ public class CommandHandler{
 				+ XConomy.getInstance().getDescription().getVersion() + ") §6|§7 Author: §f" + Messages.getAuthor());
 	}
 
-	private static void sendHelpMessage(CommandSender sender) {
-		sender.sendMessage(sendMessage("help_title_full"));
-		sender.sendMessage(sendMessage("help1"));
-		sender.sendMessage(sendMessage("help2"));
-		sender.sendMessage(sendMessage("help3"));
-		sender.sendMessage(sendMessage("help4"));
+	private static void sendHelpMessage(CommandSender sender, Integer num) {
+		List<String> helplist = new ArrayList<>();
+		helplist.add(sendMessage("help1"));
+		helplist.add(sendMessage("help2"));
+		helplist.add(sendMessage("help3"));
+		helplist.add(sendMessage("help4"));
 		if (sender.isOp() | sender.hasPermission("xconomy.admin.give")) {
-			sender.sendMessage(sendMessage("help5"));
-			sender.sendMessage(sendMessage("help8"));
+			helplist.add(sendMessage("help5"));
+			helplist.add(sendMessage("help8"));
 		}
 		if (sender.isOp() | sender.hasPermission("xconomy.admin.take")) {
-			sender.sendMessage(sendMessage("help6"));
-			sender.sendMessage(sendMessage("help9"));
+			helplist.add(sendMessage("help6"));
+			helplist.add(sendMessage("help9"));
 		}
 		if (sender.isOp() | sender.hasPermission("xconomy.admin.set")) {
-			sender.sendMessage(sendMessage("help7"));
+			helplist.add(sendMessage("help7"));
 		}
 		if (sender.isOp() | sender.hasPermission("xconomy.admin.balancetop")) {
-			sender.sendMessage(sendMessage("help10"));
+			helplist.add(sendMessage("help10"));
+		}
+		Integer maxipages = 0;
+		if (helplist.size() % 5 == 0){
+			maxipages = helplist.size() / 5;
+		}else{
+			maxipages = helplist.size() / 5 + 1;
+		}
+		if (num > maxipages){
+			num = maxipages;
+		}
+		sender.sendMessage(sendMessage("help_title_full").replace("%page%", num.toString() + "/" + maxipages.toString()));
+		Integer indexpage = 0;
+		while (indexpage < 5) {
+			if (helplist.size() > indexpage + (num - 1) * 5) {
+				sender.sendMessage(helplist.get(indexpage + (num - 1) * 5));
+			}
+			indexpage += 1;
 		}
 	}
 
-	public static void broadcastSendMessage(boolean ispublic, String playername, String message) {
+	public static void broadcastSendMessage(boolean ispublic, UUID u, String message) {
 		if (!XConomy.isBungeecord()) {
 			return;
 		}
@@ -561,7 +583,7 @@ public class CommandHandler{
 			if (!ispublic) {
 				output.writeUTF("message");
 				output.writeUTF(XConomy.getSign());
-				output.writeUTF(playername);
+				output.writeUTF(u.toString());
 				output.writeUTF(message);
 			}else{
 				output.writeUTF("broadcast");

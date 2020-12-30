@@ -19,7 +19,7 @@ public class XConomyAPI {
 	}
 
 	public UUID translateUUID(String playername) {
-		return Cache.translateUUID(playername);
+		return Cache.translateUUID(playername, null);
 	}
 
 	public BigDecimal formatdouble(String amount) {
@@ -42,7 +42,7 @@ public class XConomyAPI {
 		if (XConomy.isBungeecord() & Bukkit.getOnlinePlayers().isEmpty()) {
 			return 1;
 		}
-		BigDecimal bal = getbalance(Cache.translateUUID(playername));
+		BigDecimal bal = getbalance(u);
 		if (isadd){
 			if (ismaxnumber(bal.add(amount))){
 				return 3;
@@ -52,7 +52,7 @@ public class XConomyAPI {
 				return 2;
 			}
 		}
-		Cache.change(u ,amount ,isadd ,"PLUGIN_API" , playername, "N/A");
+		Cache.change(u, playername, amount ,isadd ,"PLUGIN_API", "N/A");
 		return 0;
 	}
 
