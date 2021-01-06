@@ -106,6 +106,11 @@ public class UpdateConfig {
 			config.set("Settings.disable-essentials", true);
 			update = true;
 		}
+		if (!ck.contains("Settings.semi-online-mode")) {
+			config.createSection("Settings.semi-online-mode");
+			config.set("Settings.semi-online-mode", false);
+			update = true;
+		}
 		return update;
 	}
 }

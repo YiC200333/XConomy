@@ -2,12 +2,11 @@ package me.yic.xconomy.depend;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.data.caches.NonPlayerCache;
+import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.data.DataFormat;
 import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -93,7 +92,7 @@ public class Vault extends AbstractEconomy {
 		}
 
 		if (isNonPlayerAccount(name)) {
-			NonPlayerCache.change(name, amountFormatted, true,"PLUGIN");
+			CacheNonPlayer.change(name, amountFormatted, true,"PLUGIN");
 			return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
 		}
 
@@ -126,7 +125,7 @@ public class Vault extends AbstractEconomy {
 	@Override
 	public double getBalance(String name) {
 		if (isNonPlayerAccount(name)) {
-			return NonPlayerCache.getBalanceFromCacheOrDB(name).doubleValue();
+			return CacheNonPlayer.getBalanceFromCacheOrDB(name).doubleValue();
 		}
 
 		UUID uuid = Cache.translateUUID(name, null);
@@ -218,7 +217,7 @@ public class Vault extends AbstractEconomy {
 		}
 
 		if (isNonPlayerAccount(name)) {
-			NonPlayerCache.change(name, amountFormatted, false,"PLUGIN");
+			CacheNonPlayer.change(name, amountFormatted, false,"PLUGIN");
 			return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
 		}
 
@@ -244,7 +243,7 @@ public class Vault extends AbstractEconomy {
 			return true;
 		}
 
-		if (NonPlayerCache.bal.containsKey(name)) {
+		if (CacheNonPlayer.bal.containsKey(name)) {
 			return true;
 		}
 

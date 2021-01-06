@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class NonPlayerCache {
+public class CacheNonPlayer {
     public static Map<String, BigDecimal> bal = new ConcurrentHashMap<>();
 
     public static void insertIntoCache(final String playerName, BigDecimal value) {

@@ -4,6 +4,7 @@ import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.SQL;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.depend.Placeholder;
 import me.yic.xconomy.depend.Vault;
 import me.yic.xconomy.listeners.ConnectionListeners;
@@ -148,6 +149,7 @@ public class XConomy extends JavaPlugin {
 		}
 
 		refresherTask.cancel();
+		CacheSemiOnline.save();
 		SQL.close();
 		logger("XConomy已成功卸载");
 	}
@@ -216,6 +218,12 @@ public class XConomy extends JavaPlugin {
 		return !config.getBoolean("Settings.mysql") & !config.getString("SQLite.path").equalsIgnoreCase("Default");
 
 	}
+
+
+	public static boolean issemionlinemode() {
+		return XConomy.config.getBoolean("Settings.semi-online-mode");
+	}
+
 
 	public static boolean checkup() {
 		return config.getBoolean("Settings.check-update");

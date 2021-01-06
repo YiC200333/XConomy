@@ -195,6 +195,29 @@ public class Messages {
 					newMessage = "MySQL再連結成功";
 				}
 				break;
+			case "缓存文件创建异常":
+				if (lang.equalsIgnoreCase("English")) {
+					newMessage = "Cache file creation exception";
+				}
+				if (lang.equalsIgnoreCase("French")) {
+					newMessage = "Cache file creation exception";
+				}
+				if (lang.equalsIgnoreCase("Spanish")) {
+					newMessage = "Cache file creation exception";
+				}
+				if (lang.equalsIgnoreCase("Russian")) {
+					newMessage = "Cache file creation exception";
+				}
+				if (lang.equalsIgnoreCase("ChineseTW")) {
+					newMessage = "緩存文檔創建異常";
+				}
+				if (lang.equalsIgnoreCase("Turkish")) {
+					newMessage = "Cache file creation exception";
+				}
+				if (lang.equalsIgnoreCase("Japanese")) {
+					newMessage = "Cache file creation exception";
+				}
+				break;
 			case "升级数据库表格。。。":
 				if (lang.equalsIgnoreCase("English")) {
 					newMessage = "Upgrade database table...";

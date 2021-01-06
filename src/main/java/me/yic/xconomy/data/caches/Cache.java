@@ -32,6 +32,12 @@ public class Cache {
         uid.put(u, v);
     }
 
+    public static void removeFromUUIDCache(final String u) {
+        if (uid.containsKey(u)) {
+            uid.remove(u);
+        }
+    }
+
     public static void refreshFromCache(final UUID uuid) {
         if (uuid != null) {
             DataCon.getBal(uuid);
@@ -128,14 +134,22 @@ public class Cache {
 
 
     public static Player getplayer(String name) {
-        return Bukkit.getPlayer(translateUUID(name,null));
+        UUID u = translateUUID(name,null);
+        Player mainp = Bukkit.getPlayer(u);
+        if (XConomy.issemionlinemode()) {
+            Player subp = Bukkit.getPlayer(CacheSemiOnline.CacheSubUUID_getsubuuid(u.toString()));
+            if (subp != null){
+                return subp;
+            }
+        }
+        return mainp;
     }
 
     public static UUID translateUUID(String name, Player pp) {
         if (uid.containsKey(name)) {
             return uid.get(name);
         } else {
-            if (pp != null) {
+            if (!XConomy.issemionlinemode() && pp != null) {
                 insertIntoUUIDCache(name, pp.getUniqueId());
                 return uid.get(name);
             } else {

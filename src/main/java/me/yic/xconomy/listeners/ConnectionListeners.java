@@ -30,7 +30,10 @@ public class ConnectionListeners implements Listener {
 				DataCon.newPlayer(a);
 			}
 		}.runTaskAsynchronously(XConomy.getInstance());
-		Cache.translateUUID(a.getName(), a);
+
+		if (!XConomy.config.getBoolean("Settings.semi-online-mode")) {
+			Cache.translateUUID(a.getName(), a);
+		}
 
 		if (a.isOp()) {
 			notifyUpdate(a);
