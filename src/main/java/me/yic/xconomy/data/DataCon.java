@@ -14,47 +14,49 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public class DataCon extends XConomy {
 
     public static boolean create() {
         if (config.getBoolean("Settings.mysql")) {
-            getInstance().logger("数据保存方式 - MySQL");
+            getInstance().logger("数据保存方式", " - MySQL");
             setupMySqlTable();
 
             if (SQL.con()) {
                 SQL.getwaittimeout();
                 SQL.createTable();
                 SQL.updataTable();
-                getInstance().logger("MySQL连接正常");
+                getInstance().logger("MySQL连接正常", null);
             } else {
-                getInstance().logger("MySQL连接异常");
+                getInstance().logger("MySQL连接异常", null);
                 return false;
             }
 
         } else {
-            getInstance().logger("数据保存方式 - SQLite");
+            getInstance().logger("数据保存方式", " - SQLite");
             setupSqLiteAddress();
 
             File dataFolder = new File(getInstance().getDataFolder(), "playerdata");
-            dataFolder.mkdirs();
+            if (!dataFolder.exists() && !dataFolder.mkdirs()) {
+                getInstance().logger("文件夹创建异常", null);
+                return false;
+            }
             if (SQL.con()) {
                 SQL.createTable();
                 SQL.updataTable();
-                getInstance().logger("SQLite连接正常");
+                getInstance().logger("SQLite连接正常", null);
             } else {
-                getInstance().logger("SQLite连接异常");
+                getInstance().logger("SQLite连接异常", null);
                 return false;
             }
 
             Convert.convert(dataFolder);
         }
 
-		if (!CacheSemiOnline.createfile()){
-			return false;
-		}
+        if (!CacheSemiOnline.createfile()) {
+            return false;
+        }
 
-        getInstance().logger("XConomy加载成功");
+        getInstance().logger("XConomy加载成功", null);
         return true;
     }
 
@@ -100,7 +102,7 @@ public class DataCon extends XConomy {
                 if (targettype.equalsIgnoreCase("all")) {
                     SQL.saveall(targettype, null, amount.doubleValue(), isAdd, pd);
                 } else if (targettype.equalsIgnoreCase("online")) {
-                    List<UUID> ol = new ArrayList<UUID>();
+                    List<UUID> ol = new ArrayList<>();
                     for (Player pp : Bukkit.getOnlinePlayers()) {
                         ol.add(pp.getUniqueId());
                     }
@@ -114,6 +116,7 @@ public class DataCon extends XConomy {
         SQL.saveNonPlayer(account, newbalance.doubleValue(), pd);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private static void setupMySqlTable() {
         if (config.getString("MySQL.table-suffix") != null & !config.getString("MySQL.table-suffix").equals("")) {
             SQL.tableName = "xconomy_" + config.getString("MySQL.table-suffix").replace("%sign%", getSign());
@@ -122,6 +125,7 @@ public class DataCon extends XConomy {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private static void setupSqLiteAddress() {
         if (config.getString("SQLite.path").equalsIgnoreCase("Default")) {
             return;
@@ -131,7 +135,7 @@ public class DataCon extends XConomy {
         if (folder.exists()) {
             DatabaseConnection.userdata = new File(folder, "data.db");
         } else {
-            getInstance().logger("自定义文件夹路径不存在");
+            getInstance().logger("自定义文件夹路径不存在", null);
         }
 
     }

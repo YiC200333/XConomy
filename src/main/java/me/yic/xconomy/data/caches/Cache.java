@@ -32,6 +32,7 @@ public class Cache {
         uid.put(u, v);
     }
 
+    @SuppressWarnings("all")
     public static void removeFromUUIDCache(final String u) {
         if (uid.containsKey(u)) {
             uid.remove(u);
@@ -112,7 +113,7 @@ public class Cache {
         }
     }
 
-    public static void changeall( String targettype, BigDecimal amount, Boolean isAdd, String type, String reason) {
+    public static void changeall(String targettype, BigDecimal amount, Boolean isAdd, String type, String reason) {
         bal.clear();
         PlayerData x = new PlayerData(type, null, null, null, amount, BigDecimal.ZERO, isAdd, reason);
         DataCon.saveall(targettype, amount, isAdd, x);
@@ -134,12 +135,18 @@ public class Cache {
 
 
     public static Player getplayer(String name) {
-        UUID u = translateUUID(name,null);
-        Player mainp = Bukkit.getPlayer(u);
-        if (XConomy.issemionlinemode()) {
-            Player subp = Bukkit.getPlayer(CacheSemiOnline.CacheSubUUID_getsubuuid(u.toString()));
-            if (subp != null){
-                return subp;
+        UUID u = translateUUID(name, null);
+        Player mainp = null;
+        if (u != null) {
+            mainp = Bukkit.getPlayer(u);
+            if (mainp == null && XConomy.issemionlinemode()) {
+                UUID subu = CacheSemiOnline.CacheSubUUID_getsubuuid(u.toString());
+                if (subu != null) {
+                    Player subp = Bukkit.getPlayer(subu);
+                    if (subp != null) {
+                        return subp;
+                    }
+                }
             }
         }
         return mainp;
@@ -166,10 +173,10 @@ public class Cache {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         DataOutputStream output = new DataOutputStream(stream);
         try {
-              output.writeUTF("balance");
-              output.writeUTF(XConomy.getSign());
-              output.writeUTF(u.toString());
-              output.writeUTF(pd.getnewbalance().toString());
+            output.writeUTF("balance");
+            output.writeUTF(XConomy.getSign());
+            output.writeUTF(u.toString());
+            output.writeUTF(pd.getnewbalance().toString());
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -185,7 +192,7 @@ public class Cache {
             output.writeUTF(XConomy.getSign());
             if (targettype.equals("all")) {
                 output.writeUTF("all");
-            }else if (targettype.equals("online")) {
+            } else if (targettype.equals("online")) {
                 output.writeUTF("online");
             }
             output.writeUTF(amount.toString());

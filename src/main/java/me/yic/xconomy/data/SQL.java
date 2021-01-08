@@ -1,10 +1,9 @@
 package me.yic.xconomy.data;
 
+import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
-import me.yic.xconomy.message.Messages;
-import me.yic.xconomy.XConomy;
 import me.yic.xconomy.utils.DatabaseConnection;
 import me.yic.xconomy.utils.PlayerData;
 import org.bukkit.Bukkit;
@@ -43,7 +42,7 @@ public class SQL {
 
                 ResultSet rs = statement.executeQuery();
                 if (rs.next()) {
-                    Integer waittime = rs.getInt(2);
+                    int waittime = rs.getInt(2);
                     if (waittime > 50) {
                         DatabaseConnection.waittimeout = waittime - 30;
                     }
@@ -55,7 +54,7 @@ public class SQL {
                 database.closeHikariConnection(connection);
 
             } catch (SQLException ignored) {
-                XConomy.getInstance().logger("Get 'wait_timeout' error");
+                XConomy.getInstance().logger("Get 'wait_timeout' error", null);
             }
         }
     }
@@ -119,7 +118,7 @@ public class SQL {
 
         } catch (SQLException e) {
             try {
-                XConomy.getInstance().logger("升级数据库表格。。。");
+                XConomy.getInstance().logger("升级数据库表格。。。", null);
 
                 PreparedStatement statementb = connection.prepareStatement("alter table " + tableName + " add column hidden int(5) not null default '0'");
 
@@ -135,15 +134,15 @@ public class SQL {
 
     public static void newPlayer(Player player) {
         Connection connection = database.getConnectionAndCheck();
-		Boolean doubledata = checkUser(player, connection);
-		if (!doubledata) {
-			selectUser(player.getUniqueId().toString(), player.getName(), connection);
-		}
+        boolean doubledata = checkUser(player, connection);
+        if (!doubledata) {
+            selectUser(player.getUniqueId().toString(), player.getName(), connection);
+        }
         database.closeHikariConnection(connection);
     }
 
     private static boolean checkUser(Player player, Connection connection) {
-        Boolean doubledata = false;
+        boolean doubledata = false;
         try {
             String query;
 
@@ -267,7 +266,7 @@ public class SQL {
         if (!user.equals(name) && !user.equals("#")) {
             Cache.removeFromUUIDCache(name);
             updateUser(UID, name, connection);
-            XConomy.getInstance().logger(name + Messages.systemMessage(" 名称已更改!"));
+            XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
         }
     }
 
@@ -278,7 +277,7 @@ public class SQL {
         try {
             String query;
             query = " set balance = " + newbalance.doubleValue() + " where UID = ?";
-            Boolean requirefresh = false;
+            boolean requirefresh = false;
             if (XConomy.config.getBoolean("Settings.cache-correction") && isAdd != null) {
                 requirefresh = true;
                 BigDecimal balance = pd.getbalance();
@@ -286,7 +285,7 @@ public class SQL {
             }
             PreparedStatement statement1 = connection.prepareStatement("update " + tableName + query);
             statement1.setString(1, u.toString());
-            Integer rs = statement1.executeUpdate();
+            int rs = statement1.executeUpdate();
             statement1.close();
             if (requirefresh && rs == 0) {
                 pd.addcachecorrection();
@@ -329,20 +328,20 @@ public class SQL {
                 statement.executeUpdate();
                 statement.close();
             } else if (targettype.equalsIgnoreCase("online")) {
-                String query;
+                StringBuilder query;
                 if (isAdd) {
-                    query = " set balance = balance + " + amount + " where";
+                    query = new StringBuilder(" set balance = balance + " + amount + " where");
                 } else {
-                    query = " set balance = balance - " + amount + " where";
+                    query = new StringBuilder(" set balance = balance - " + amount + " where");
                 }
                 int jsm = players.size();
                 int js = 1;
 
                 for (UUID u : players) {
                     if (js == jsm) {
-                        query = query + " UID = '" + u.toString() + "'";
+                        query.append(" UID = '").append(u.toString()).append("'");
                     } else {
-                        query = query + " UID = '" + u.toString() + "' OR";
+                        query.append(" UID = '").append(u.toString()).append("' OR");
                         js = js + 1;
                     }
                 }

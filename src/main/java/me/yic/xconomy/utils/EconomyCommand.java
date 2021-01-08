@@ -6,17 +6,18 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 public class EconomyCommand extends Command {
-	    private final String name;
-		public EconomyCommand(String name) {
-			super(name);
-			this.name = name;
-			this.description = "XConomy.";
-			this.usageMessage = "/<command>";
-		}
+    private final String name;
 
-	@Override
-	public boolean execute(@NotNull CommandSender sender, @NotNull String s, @NotNull String[] args) {
-		return CommandHandler.onCommand(sender,name,args);
-	}
+    public EconomyCommand(String name) {
+        super(name);
+        this.name = name;
+        this.description = "XConomy.";
+        this.usageMessage = "/<command>";
+    }
+
+    @Override
+    public boolean execute(@NotNull CommandSender sender, @NotNull String s, @NotNull String[] args) {
+        return CommandHandler.onCommand(sender, name, args);
+    }
 
 }

@@ -15,7 +15,7 @@ public class CacheNonPlayer {
             bal.put(playerName, value);
         }
     }
-    
+
     public static BigDecimal getBalanceFromCacheOrDB(String u) {
         if (!bal.containsKey(u)) {
             DataCon.getBalNonPlayer(u);
@@ -27,13 +27,13 @@ public class CacheNonPlayer {
     public static void change(String u, BigDecimal amount, Boolean isAdd, String type) {
         BigDecimal newvalue = amount;
         BigDecimal balance = getBalanceFromCacheOrDB(u);
-		if (isAdd != null) {
-			if (isAdd) {
-				newvalue = balance.add(amount);
-			} else {
-				newvalue = balance.subtract(amount);
-			}
-		}
+        if (isAdd != null) {
+            if (isAdd) {
+                newvalue = balance.add(amount);
+            } else {
+                newvalue = balance.subtract(amount);
+            }
+        }
         insertIntoCache(u, newvalue);
         PlayerData pd = new PlayerData(type, null, u, balance, amount, newvalue, isAdd, "N/A");
         DataCon.saveNonPlayer(u, newvalue, pd);

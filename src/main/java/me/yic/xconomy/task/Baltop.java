@@ -7,14 +7,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Baltop extends BukkitRunnable {
 
-	@Override
-	public void run() {
-		Cache.baltop_papi.clear();
-		Cache.baltop.clear();
-		SQL.getBaltop();
-		Cache.sumbal();
-		if (Bukkit.getOnlinePlayers().size() == 0) {
-			Cache.clearCache();
-		}
-	}
+    @Override
+    public void run() {
+        Cache.baltop_papi.clear();
+        Cache.baltop.clear();
+        SQL.getBaltop();
+        Cache.sumbal();
+        if (Bukkit.getOnlinePlayers().size() == 0) {
+            Cache.clearCache();
+        }
+    }
 }
