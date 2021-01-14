@@ -1,0 +1,46 @@
+name: XConomy
+version: ${project.version}
+main: xconomy.bukkit.XConomy
+author: YiC
+load: STARTUP
+depend: [ Vault ]
+softdepend: [ DatabaseDrivers, PlaceholderAPI ]
+api-version: "1.13"
+
+commands:
+  xconomy:
+    usage: /<command>
+    description: XConomy.
+    aliases: [ xc ]
+  money:
+    usage: /<command>
+    description: XConomy.
+  balance:
+    usage: /<command>
+    description: XConomy.
+    aliases: [ bal ]
+  balancetop:
+    usage: /<command>
+    description: XConomy.
+    aliases: [ baltop ]
+  pay:
+    usage: /<command>
+    description: XConomy.
+
+permissions:
+  xconomy.user.balance:
+    default: true
+    children:
+      xconomy.user.balance.other: true
+  xconomy.user.pay:
+    default: true
+  xconomy.user.balancetop:
+    default: true
+  xconomy.admin.give:
+    default: op
+  xconomy.admin.take:
+    default: op
+  xconomy.admin.set:
+    default: op
+  xconomy.admin.balancetop:
+    default: op
