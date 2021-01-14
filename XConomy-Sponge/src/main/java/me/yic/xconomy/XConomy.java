@@ -1,9 +1,29 @@
-package me.yic.xconomy;
+package me.yic.xconomy;/*
+ *  This file (XConomy.java) is a part of project XConomy
+ *  Copyright (C) YiC and contributors
+ *
+ *  This program is free software: you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ *  for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
 import com.google.inject.Inject;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.economyapi.XCAccount;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.listeners.ConnectionListeners;
+import me.yic.xconomy.task.Baltop;
+import me.yic.xconomy.task.Updater;
 import me.yic.xconomy.utils.ServerINFO;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
@@ -17,6 +37,7 @@ import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.text.Text;
 
@@ -27,13 +48,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
-@Plugin(id = "xconomy", name = "XConomy", version = "0.0", description = "Example")
+@Plugin(id = "xconomy", name = "XConomy")
 
 public class XConomy {
 
     private static XConomy instance;
-    private static String version;
+    public static String version;
 
     private MessagesManager messageManager;
     public EconomyService econ = null;
@@ -61,11 +83,10 @@ public class XConomy {
     @SuppressWarnings("ConstantConditions")
     @Listener
     public void onEnable(GamePreInitializationEvent event) {
-        ServerINFO.ServerType = "Sponge";
         loadconfig();
         readserverinfo();
         if (checkup()) {
-            //Sponge.getScheduler().createAsyncExecutor(this).execute(new Updater());
+            Sponge.getScheduler().createAsyncExecutor(this).execute(new Updater());
         }
         // 检查更新
         messageManager = new MessagesManager(this);
@@ -107,10 +128,10 @@ public class XConomy {
         //Bukkit.getPluginCommand("xconomy").setExecutor(new Commands());
 
         allowHikariConnectionPooling();
-        //if (!DataCon.create()) {
-         //  onDisable();
-         //   return;
-        //}
+        if (!DataCon.create()) {
+          // onDisable();
+            return;
+        }
 
         //Cache.baltop();
 
@@ -135,9 +156,9 @@ public class XConomy {
         }
 
         refresherTask = Sponge.getScheduler().createAsyncExecutor(this);
-        //refresherTask.schedule(() -> {
-        //    Task.builder().execute(new Baltop() {
-        //}); }, time, TimeUnit.SECONDS);
+        refresherTask.schedule(() -> {
+            Task.builder().execute(new Baltop() {
+        }); }, time, TimeUnit.SECONDS);
 
         logger(null, "===== YiC =====");
 
@@ -199,7 +220,7 @@ public class XConomy {
         }
         URL vurl = null;
         try {
-            vurl = new URL(jarPath.substring(0,i+4) + "!/plugin.yml");
+            vurl = new URL(jarPath.substring(0,i+4) + "!/mcmod.info");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -219,6 +240,7 @@ public class XConomy {
         ServerINFO.IsBungeeCordMode = isBungeecord();
         ServerINFO.IsSemiOnlineMode = config.getNode("Settings","semi-online-mode").getBoolean();
         ServerINFO.Sign = config.getNode("BungeeCord","sign").getString();
+        ServerINFO.InitialAmount = config.getNode("Settings.initial-bal").getDouble();
     }
 
     public static void allowHikariConnectionPooling() {
@@ -256,6 +278,10 @@ public class XConomy {
                 }
             }
         }
+    }
+
+    public static String getSign() {
+        return config.getNode("BungeeCord.sign").getString();
     }
 
     public static boolean checkup() {

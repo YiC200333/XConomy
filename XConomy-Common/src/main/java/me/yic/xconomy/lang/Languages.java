@@ -1,4 +1,21 @@
-package me.yic.xconomy.lang;
+package me.yic.xconomy.lang;/*
+ *  This file (Languages.java) is a part of project XConomy
+ *  Copyright (C) YiC and contributors
+ *
+ *  This program is free software: you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ *  for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,6 +35,7 @@ public class Languages {
         ll.add("top_text");
         ll.add("top_subtitle");
         ll.add("top_nodata");
+        ll.add("top_out");
         ll.add("top_hidden");
         ll.add("top_displayed");
         ll.add("pay");
@@ -59,6 +77,7 @@ public class Languages {
         mess.put("top_text", "&e%index%: %player% - %balance%");
         mess.put("top_subtitle", "&7TOP10 refreshed every 5 minutes");
         mess.put("top_nodata", "&cNo TOP10 data");
+        mess.put("top_out", "&cOut of the TOP10");
         mess.put("top_hidden", "&a%player% is hidden");
         mess.put("top_displayed", "&a%player% is displayed");
         mess.put("pay", "&cYou pay %player% %amount%");
@@ -98,6 +117,7 @@ public class Languages {
         mess.put("top_text", "&e%index%: %player% - %balance%");
         mess.put("top_subtitle", "&7ТОП10 обновляется каждые 5 минут");
         mess.put("top_nodata", "&cНет данных о ТОП10");
+        mess.put("top_out", "&cOut of the TOP10");
         mess.put("top_hidden", "&a%player% is hidden");
         mess.put("top_displayed", "&a%player% is displayed");
         mess.put("pay", "&cВы заплатили игроку %player% %amount%");
@@ -138,6 +158,7 @@ public class Languages {
         mess.put("top_text", "&e%index%: %player% - %balance%");
         mess.put("top_subtitle", "&7TOP10 refreshed every 5 minutes");
         mess.put("top_nodata", "&cNo se encontro datos sobre TOP10");
+        mess.put("top_out", "&cOut of the TOP10");
         mess.put("top_hidden", "&a%player% is hidden");
         mess.put("top_displayed", "&a%player% is displayed");
         mess.put("pay", "&cle pagaste a %player% por %amount%");
@@ -177,6 +198,7 @@ public class Languages {
         mess.put("top_text", "&e%index%: %player% - %balance%");
         mess.put("top_subtitle", "&7TOP10每5分钟刷新一次");
         mess.put("top_nodata", "&c无玩家经济数据");
+        mess.put("top_out", "&c在 TOP10 以外");
         mess.put("top_hidden", "&a%player% 已隐藏");
         mess.put("top_displayed", "&a%player% 已显示");
         mess.put("pay", "&c你转账给%player% 余额  %amount%");
@@ -217,6 +239,7 @@ public class Languages {
         mess.put("top_text", "&e%index%： %player% - %balance%");
         mess.put("top_subtitle", "&7TOP10每五分鐘刷新一次");
         mess.put("top_nodata", "&c無玩家經濟資料");
+        mess.put("top_out", "&c在 TOP10 以外");
         mess.put("top_hidden", "&a%player% 已隱藏");
         mess.put("top_displayed", "&a%player% 已顯示");
         mess.put("pay", "&c你轉帳給 %player% 餘額 %amount%");
@@ -256,6 +279,7 @@ public class Languages {
         mess.put("top_text", "&e%index%: %player% - %balance%");
         mess.put("top_subtitle", "&7TOP10 refreshed every 5 minutes");
         mess.put("top_nodata", "&cTOP10 indisponible");
+        mess.put("top_out", "&cOut of the TOP10");
         mess.put("top_hidden", "&a%player% is hidden");
         mess.put("top_displayed", "&a%player% is displayed");
         mess.put("pay", "&aVous avez versé &a%amount% à %player% ");
@@ -296,6 +320,7 @@ public class Languages {
         mess.put("top_text", "&e%index%: %player% - %balance%");
         mess.put("top_subtitle", "&7TOP10 refreshed every 5 minutes");
         mess.put("top_nodata", "&cEn iyi ilk 10 listesine ait veri bulunamadı");
+        mess.put("top_out", "&cOut of the TOP10");
         mess.put("top_hidden", "&a%player% is hidden");
         mess.put("top_displayed", "&a%player% is displayed");
         mess.put("pay", "&c%player% adlı oyuncuya %amount% gönderildi");
@@ -335,6 +360,7 @@ public class Languages {
         mess.put("top_text", "&e%index%： %player% - %balance%");
         mess.put("top_subtitle", "&7ランキングTOP10の同期時間は5分です");
         mess.put("top_nodata", "&cプレイヤーの経済データはないです。");
+        mess.put("top_out", "&cOut of the TOP10");
         mess.put("top_hidden", "&a%player% is hidden");
         mess.put("top_displayed", "&a%player% is displayed");
         mess.put("pay", "&cあなたは %player% さんに %amount% を送金しました。");
@@ -375,6 +401,7 @@ public class Languages {
         mess.put("top_text", "&e%index%: %player% - %balance%");
         mess.put("top_subtitle", "&7Die TOP10 aktualisieren sich alle 5 Minuten");
         mess.put("top_nodata", "&cKeine TOP10 Daten vorhanden");
+        mess.put("top_out", "&cOut of the TOP10");
         mess.put("top_hidden", "&a%player% ist versteckt");
         mess.put("top_displayed", "&a%player% ist sichtbar");
         mess.put("pay", "&cDu hast %amount% an %player% gezahlt");

@@ -19,7 +19,6 @@ package me.yic.xconomy.utils;/*
 
 import com.zaxxer.hikari.HikariDataSource;
 import me.yic.xconomy.XConomy;
-import org.bukkit.Bukkit;
 
 import java.io.File;
 import java.sql.Connection;
@@ -30,16 +29,16 @@ import java.util.Arrays;
 public class DatabaseConnection {
     private String driver = "com.mysql.jdbc.Driver";
     //============================================================================================
-    private final File dataFolder = new File(XConomy.getInstance().getDataFolder(), "playerdata");
-    private String url = "jdbc:mysql://" + XConomy.config.getString("MySQL.host") + "/"
-            + XConomy.config.getString("MySQL.database") + "?characterEncoding="
-            + XConomy.config.getString("MySQL.encoding") + "&useSSL=false";
-    private final String username = XConomy.config.getString("MySQL.user");
-    private final String password = XConomy.config.getString("MySQL.pass");
-    private final Integer maxPoolSize = XConomy.config.getInt("Pool-Settings.maximum-pool-size");
-    private final Integer minIdle = XConomy.config.getInt("Pool-Settings.minimum-idle");
-    private final Integer maxLife = XConomy.config.getInt("Pool-Settings.maximum-lifetime");
-    private final Long idleTime = XConomy.config.getLong("Pool-Settings.idle-timeout");
+    private final File dataFolder = new File(XConomy.getInstance().configDir.toFile(), "playerdata");
+    private String url = "jdbc:mysql://" + XConomy.config.getNode("MySQL","host").getString() + "/"
+            + XConomy.config.getNode("MySQL","database").getString() + "?characterEncoding="
+            + XConomy.config.getNode("MySQL","encoding").getString() + "&useSSL=false";
+    private final String username = XConomy.config.getNode("MySQL","user").getString();
+    private final String password = XConomy.config.getNode("MySQL","pass").getString();
+    private final Integer maxPoolSize = XConomy.config.getNode("Pool-Settings","maximum-pool-size").getInt();
+    private final Integer minIdle = XConomy.config.getNode("Pool-Settings","minimum-idle").getInt();
+    private final Integer maxLife = XConomy.config.getNode("Pool-Settings","maximum-lifetime").getInt();
+    private final Long idleTime = XConomy.config.getNode("Pool-Settings","idle-timeout").getLong();
     private boolean secon = false;
     public Integer waittimeout = 10;
     //============================================================================================
@@ -74,13 +73,13 @@ public class DatabaseConnection {
 
     private void setDriver() {
         if (ServerINFO.DDrivers) {
-            if (XConomy.config.getBoolean("Settings.mysql")) {
+            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
                 driver = ("me.yic.libs.mysql.cj.jdbc.Driver");
             } else {
                 driver = ("me.yic.libs.sqlite.JDBC");
             }
         } else {
-            if (XConomy.config.getBoolean("Settings.mysql")) {
+            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
                 driver = ("com.mysql.jdbc.Driver");
             } else {
                 driver = ("org.sqlite.JDBC");
@@ -106,14 +105,14 @@ public class DatabaseConnection {
                 closeHikariConnection(connection);
             } else {
                 Class.forName(driver);
-                if (XConomy.config.getBoolean("Settings.mysql")) {
+                if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
                     connection = DriverManager.getConnection(url, username, password);
                 } else {
                     connection = DriverManager.getConnection("jdbc:sqlite:" + userdata.toString());
                 }
             }
 
-            if (XConomy.config.getBoolean("Settings.mysql")) {
+            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
                 if (secon) {
                     XConomy.getInstance().logger("MySQL重新连接成功", null);
                 } else {
@@ -184,7 +183,7 @@ public class DatabaseConnection {
                     return setGlobalConnection();
                 }
 
-                if (XConomy.config.getBoolean("Settings.mysql")) {
+                if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
                     if (!connection.isValid(waittimeout)) {
                         secon = false;
                         return setGlobalConnection();
@@ -192,7 +191,7 @@ public class DatabaseConnection {
                 }
             }
         } catch (SQLException e) {
-            Arrays.stream(e.getStackTrace()).forEach(d -> Bukkit.getLogger().info(d.toString()));
+            Arrays.stream(e.getStackTrace()).forEach(d -> XConomy.getInstance().logger(null,d.toString()));
             return false;
         }
         return true;
@@ -219,7 +218,7 @@ public class DatabaseConnection {
                 hikari.close();
             }
         } catch (SQLException e) {
-            if (XConomy.config.getBoolean("Settings.mysql")) {
+            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
                 XConomy.getInstance().logger("MySQL连接断开失败", null);
             }
             e.printStackTrace();

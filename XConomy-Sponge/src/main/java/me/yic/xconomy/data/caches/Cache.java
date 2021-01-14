@@ -24,8 +24,8 @@ import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.task.SendMessTaskS;
 import me.yic.xconomy.utils.ServerINFO;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -77,13 +77,12 @@ public class Cache {
                 amount = bal.get(u);
             }
         }
-        if (Bukkit.getOnlinePlayers().size() == 0) {
+        if (Sponge.getServer().getOnlinePlayers().size() == 0) {
             clearCache();
         }
         return amount;
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     public static BigDecimal cachecorrection(UUID u, BigDecimal amount, Boolean isAdd) {
         BigDecimal newvalue;
         BigDecimal bal = getBalanceFromCacheOrDB(u);
@@ -94,13 +93,14 @@ public class Cache {
         }
         insertIntoCache(u, newvalue);
 
+        ByteArrayDataOutput output = ByteStreams.newDataOutput();
+        output.writeUTF("balance");
+        output.writeUTF(XConomy.getSign());
+        output.writeUTF(u.toString());
+        output.writeUTF(amount.toString());
         if (ServerINFO.IsBungeeCordMode) {
-            ByteArrayDataOutput output = ByteStreams.newDataOutput();
-            output.writeUTF("balance");
-            output.writeUTF(XConomy.getSign());
-            output.writeUTF(u.toString());
-            output.writeUTF(amount.toString());
-            Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", output.toByteArray());
+            Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), "xconomy:acb").sendTo(
+                    Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> output.toByteArray());
         }
         return newvalue;
     }
@@ -144,16 +144,16 @@ public class Cache {
         UUID u = translateUUID(name, null);
         Player mainp = null;
         if (u != null) {
-            mainp = Bukkit.getPlayer(u);
-            if (mainp == null && ServerINFO.IsSemiOnlineMode) {
-                UUID subu = CacheSemiOnline.CacheSubUUID_getsubuuid(u.toString());
-                if (subu != null) {
-                    Player subp = Bukkit.getPlayer(subu);
-                    if (subp != null) {
-                        return subp;
-                    }
-                }
-            }
+            mainp = Sponge.getServer().getPlayer(u).get();
+            //if (mainp == null && ServerINFO.IsSemiOnlineMode) {
+            //    UUID subu = CacheSemiOnline.CacheSubUUID_getsubuuid(u.toString());
+            //    if (subu != null) {
+             //       Player subp = Bukkit.getPlayer(subu);
+            //        if (subp != null) {
+            //            return subp;
+             //       }
+             //   }
+            //}
         }
         return mainp;
     }

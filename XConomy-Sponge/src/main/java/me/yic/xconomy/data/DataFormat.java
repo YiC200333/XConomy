@@ -18,7 +18,7 @@ package me.yic.xconomy.data;/*
  */
 
 import me.yic.xconomy.XConomy;
-import org.bukkit.ChatColor;
+import org.spongepowered.api.text.Text;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -29,9 +29,9 @@ public class DataFormat {
     public static boolean isInteger = false;
     public static DecimalFormat decimalFormat;
     public static BigDecimal maxNumber;
-    final static String displayformat = XConomy.config.getString("Currency.display-format");
-    final static String pluralname = XConomy.config.getString("Currency.plural-name");
-    final static String singularname = XConomy.config.getString("Currency.singular-name");
+    final static String displayformat = XConomy.config.getNode("Currency","display-format").getString();
+    final static String pluralname = XConomy.config.getNode("Currency","plural-name").getString();
+    final static String singularname = XConomy.config.getNode("Currency","singular-name").getString();
 
     public static BigDecimal formatString(String am) {
         BigDecimal bigDecimal = new BigDecimal(am);
@@ -54,25 +54,22 @@ public class DataFormat {
     @SuppressWarnings("ConstantConditions")
     public static String shown(BigDecimal am) {
         if (am.compareTo(BigDecimal.ONE) > 0) {
-            return ChatColor.translateAlternateColorCodes('&', displayformat
-                    .replace("%balance%", decimalFormat.format(am))
-                    .replace("%currencyname%", pluralname));
+            return displayformat.replace("%balance%", decimalFormat.format(am))
+                    .replace("%currencyname%", pluralname);
         }
-        return ChatColor.translateAlternateColorCodes('&', displayformat
+        return displayformat
                 .replace("%balance%", decimalFormat.format(am))
-                .replace("%currencyname%", singularname));
+                .replace("%currencyname%", singularname);
     }
 
     @SuppressWarnings("ConstantConditions")
     public static String shownd(Double am) {
         if (am > 1) {
-            return ChatColor.translateAlternateColorCodes('&', displayformat
-                    .replace("%balance%", decimalFormat.format(am))
-                    .replace("%currencyname%", pluralname));
+            return displayformat.replace("%balance%", decimalFormat.format(am))
+                    .replace("%currencyname%", pluralname);
         }
-        return ChatColor.translateAlternateColorCodes('&', displayformat
-                .replace("%balance%", decimalFormat.format(am))
-                .replace("%currencyname%", singularname));
+        return displayformat.replace("%balance%", decimalFormat.format(am))
+                .replace("%currencyname%", singularname);
     }
 
     public static boolean isMAX(BigDecimal am) {
@@ -81,7 +78,7 @@ public class DataFormat {
 
     public static void load() {
         maxNumber = setmaxnumber();
-        isInteger = XConomy.config.getBoolean("Currency.integer-bal");
+        isInteger = XConomy.config.getNode("Currency","integer-bal").getBoolean();
         String format = "###,##0";
         String gpoint = XConomy.config.getString("Currency.thousands-separator");
 

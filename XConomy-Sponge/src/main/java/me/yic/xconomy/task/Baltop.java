@@ -1,5 +1,5 @@
-package me.yic.xconomy.utils;/*
- *  This file (EconomyCommand.java) is a part of project XConomy
+package me.yic.xconomy.task;/*
+ *  This file (Baltop.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -17,24 +17,21 @@ package me.yic.xconomy.utils;/*
  *
  */
 
-import me.yic.xconomy.CommandHandler;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
+import me.yic.xconomy.data.SQL;
 
-public class EconomyCommand extends Command {
-    private final String name;
+import me.yic.xconomy.data.caches.Cache;
+import org.spongepowered.api.Sponge;
 
-    public EconomyCommand(String name) {
-        super(name);
-        this.name = name;
-        this.description = "XConomy.";
-        this.usageMessage = "/<command>";
-    }
+public class Baltop implements Runnable {
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull String s, @NotNull String[] args) {
-        return CommandHandler.onCommand(sender, name, args);
+    public void run() {
+        Cache.baltop_papi.clear();
+        Cache.baltop.clear();
+        SQL.getBaltop();
+        Cache.sumbal();
+        if (Sponge.getServer().getOnlinePlayers().size() == 0) {
+            Cache.clearCache();
+        }
     }
-
 }

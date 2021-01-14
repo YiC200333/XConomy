@@ -20,17 +20,17 @@ package me.yic.xconomy.data;/*
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
-import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.utils.DatabaseConnection;
 import me.yic.xconomy.utils.ServerINFO;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.Date;
 
 public class SQL {
 
@@ -49,7 +49,7 @@ public class SQL {
     }
 
     public static void getwaittimeout() {
-        if (XConomy.config.getBoolean("Settings.mysql") && !ServerINFO.EnableConnectionPool) {
+        if (XConomy.config.getNode("Settings","mysql").getBoolean() && !ServerINFO.EnableConnectionPool) {
             try {
                 Connection connection = database.getConnectionAndCheck();
 
@@ -92,7 +92,7 @@ public class SQL {
                     + "balance double(20,2), amount double(20,2) not null, operation varchar(50) not null,"
                     + " date varchar(50) not null, command varchar(50) not null,"
                     + "primary key (id)) DEFAULT CHARSET = " + encoding + ";";
-            if (XConomy.config.getBoolean("Settings.mysql")) {
+            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
                 query1 = "CREATE TABLE IF NOT EXISTS " + tableName
                         + "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, hidden int(5) not null, "
                         + "primary key (UID)) DEFAULT CHARSET = " + encoding + ";";
@@ -109,10 +109,10 @@ public class SQL {
             }
 
             statement.executeUpdate(query1);
-            if (XConomy.config.getBoolean("Settings.non-player-account")) {
+            if (XConomy.config.getNode("Settings","non-player-account").getBoolean()) {
                 statement.executeUpdate(query2);
             }
-            if (XConomy.config.getBoolean("Settings.mysql") && XConomy.config.getBoolean("Settings.transaction-record")) {
+            if (XConomy.config.getNode("Settings","mysql").getBoolean() && XConomy.config.getNode("Settings","transaction-record").getBoolean()) {
                 statement.executeUpdate(query3);
             }
             statement.close();
@@ -163,7 +163,7 @@ public class SQL {
         try {
             String query;
 
-            if (XConomy.config.getBoolean("Settings.mysql")) {
+            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
                 query = "select * from " + tableName + " where binary player = ?";
             } else {
                 query = "select * from " + tableName + " where player = ?";
@@ -178,11 +178,11 @@ public class SQL {
                     doubledata = true;
                     if (!ServerINFO.IsSemiOnlineMode) {
                         if (player.isOnline()) {
-                            Bukkit.getScheduler().runTask(XConomy.getInstance(), () ->
-                                    player.kickPlayer("[XConomy] The player with the same name exists on the server"));
+                            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() ->
+                                    player.kick(Text.of("[XConomy] The player with the same name exists on the server")));
                         }
                     } else {
-                        CacheSemiOnline.CacheSubUUID_checkUser(rs.getString(1), player);
+                        //CacheSemiOnline.CacheSubUUID_checkUser(rs.getString(1), player);
                     }
                 }
             }
@@ -199,7 +199,7 @@ public class SQL {
     private static void createAccount(String UID, String user, Double amount, Connection co_a) {
         try {
             String query;
-            if (XConomy.config.getBoolean("Settings.mysql")) {
+            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
                 query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
                         + "ON DUPLICATE KEY UPDATE UID = ?";
             } else {
@@ -212,7 +212,7 @@ public class SQL {
             statement.setDouble(3, amount);
             statement.setInt(4, 0);
 
-            if (XConomy.config.getBoolean("Settings.mysql")) {
+            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
                 statement.setString(5, UID);
             }
 
@@ -227,7 +227,7 @@ public class SQL {
     public static void createNonPlayerAccount(String account, Double bal, Connection co) {
         try {
             String query;
-            if (XConomy.config.getBoolean("Settings.mysql")) {
+            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
                 query = "INSERT INTO " + tableNonPlayerName + "(account,balance) values(?,?) "
                         + "ON DUPLICATE KEY UPDATE account = ?";
             } else {
@@ -238,7 +238,7 @@ public class SQL {
             statement.setString(1, account);
             statement.setDouble(2, bal);
 
-            if (XConomy.config.getBoolean("Settings.mysql")) {
+            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
                 statement.setString(3, account);
             }
 
@@ -295,7 +295,7 @@ public class SQL {
             String query;
             query = " set balance = " + newbalance.doubleValue() + " where UID = ?";
             boolean requirefresh = false;
-            if (XConomy.config.getBoolean("Settings.cache-correction") && isAdd != null) {
+            if (XConomy.config.getNode("Settings.cache-correction").getBoolean() && isAdd != null) {
                 requirefresh = true;
                 query = query + "AND balance = " + balance.toString();
             }
@@ -415,7 +415,7 @@ public class SQL {
             Connection connection = database.getConnectionAndCheck();
             String query;
 
-            if (XConomy.config.getBoolean("Settings.mysql")) {
+            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
                 query = "select * from " + tableNonPlayerName + " where binary account = ?";
             } else {
                 query = "select * from " + tableNonPlayerName + " where account = ?";
@@ -445,7 +445,7 @@ public class SQL {
             Connection connection = database.getConnectionAndCheck();
             String query;
 
-            if (XConomy.config.getBoolean("Settings.mysql")) {
+            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
                 query = "select * from " + tableName + " where binary player = ?";
             } else {
                 query = "select * from " + tableName + " where player = ?";
@@ -529,7 +529,7 @@ public class SQL {
 
     public static void record(Connection co, String type, String UID, String player, Boolean isAdd,
                               BigDecimal amount, BigDecimal newbalance, String command) {
-        if (XConomy.config.getBoolean("Settings.mysql") && XConomy.config.getBoolean("Settings.transaction-record")) {
+        if (XConomy.config.getNode("Settings","mysql").getBoolean() && XConomy.config.getNode("Settings","transaction-record").getBoolean()) {
             String operation = "Error";
             if (isAdd != null) {
                 if (isAdd) {

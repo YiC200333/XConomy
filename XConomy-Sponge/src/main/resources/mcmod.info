@@ -1,0 +1,15 @@
+[
+    {
+        "modid": "xconomy",
+        "name": "XConomy",
+        "version": ${project.version},
+        "dependencies": [
+            "minecraft@[1.7.10]",
+            "spongeapi@[3.1]"
+        ],
+        "requiredMods": [
+            "minecraft@[1.7.10]",
+            "spongeapi@[3.1]"
+        ]
+    }
+]

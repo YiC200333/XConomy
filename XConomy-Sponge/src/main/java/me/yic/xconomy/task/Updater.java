@@ -19,7 +19,6 @@ package me.yic.xconomy.task;/*
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.utils.ServerINFO;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -28,7 +27,7 @@ import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.List;
 
-public class Updater extends BukkitRunnable {
+public class Updater implements Runnable {
 
     public static boolean old = false;
     public static String newVersion = "none";
@@ -42,7 +41,7 @@ public class Updater extends BukkitRunnable {
             newVersion = new BufferedReader(new InputStreamReader(conn.getInputStream())).readLine();
 
             List<String> versionList = Arrays.asList(newVersion.split("\\."));
-            List<String> newVersionList = Arrays.asList(XConomy.getInstance().getDescription().getVersion().split("\\."));
+            List<String> newVersionList = Arrays.asList(XConomy.version.split("\\."));
 
             if (!compare(versionList, newVersionList)) {
                 XConomy.getInstance().logger("已是最新版本", null);
