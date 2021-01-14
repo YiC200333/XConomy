@@ -1,4 +1,4 @@
-package me.yic.xconomy;/*
+/*
  *  This file (Commands.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
@@ -16,6 +16,7 @@ package me.yic.xconomy;/*
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package me.yic.xconomy;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

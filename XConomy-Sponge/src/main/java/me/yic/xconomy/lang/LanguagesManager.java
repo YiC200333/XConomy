@@ -1,4 +1,4 @@
-package me.yic.xconomy.lang;/*
+/*
  *  This file (LanguagesManager.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
@@ -16,7 +16,7 @@ package me.yic.xconomy.lang;/*
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
+package me.yic.xconomy.lang;
 
 import java.io.File;
 import java.io.IOException;

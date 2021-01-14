@@ -1,4 +1,4 @@
-package me.yic.xconomy.task;/*
+/*
  *  This file (Baltop.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
@@ -16,6 +16,7 @@ package me.yic.xconomy.task;/*
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package me.yic.xconomy.task;
 
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.SQL;

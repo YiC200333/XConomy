@@ -1,4 +1,4 @@
-package me.yic.xconomy.utils;/*
+/*
  *  This file (DatabaseConnection.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
@@ -16,6 +16,7 @@ package me.yic.xconomy.utils;/*
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package me.yic.xconomy.utils;
 
 import com.zaxxer.hikari.HikariDataSource;
 import me.yic.xconomy.XConomy;

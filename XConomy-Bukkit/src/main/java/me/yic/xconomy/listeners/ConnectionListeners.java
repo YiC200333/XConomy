@@ -1,4 +1,4 @@
-package me.yic.xconomy.listeners;/*
+/*
  *  This file (ConnectionListeners.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
@@ -16,6 +16,7 @@ package me.yic.xconomy.listeners;/*
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package me.yic.xconomy.listeners;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
