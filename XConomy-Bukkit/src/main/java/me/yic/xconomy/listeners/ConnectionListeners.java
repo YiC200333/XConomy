@@ -45,7 +45,11 @@ public class ConnectionListeners implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player a = event.getPlayer();
-        Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataCon.newPlayer(a));
+        if (ServerINFO.RequireAsyncRun) {
+            Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataCon.newPlayer(a));
+        }else{
+            DataCon.newPlayer(a);
+        }
 
         if (!XConomy.config.getBoolean("Settings.semi-online-mode")) {
             Cache.translateUUID(a.getName(), a);

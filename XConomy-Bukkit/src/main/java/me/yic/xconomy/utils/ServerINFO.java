@@ -34,6 +34,6 @@ public class ServerINFO {
 
     public static Double InitialAmount = 0.0;
 
-    public static Double AsyncPercentage = 0.25;
+    public static Boolean RequireAsyncRun = false;
 
 }

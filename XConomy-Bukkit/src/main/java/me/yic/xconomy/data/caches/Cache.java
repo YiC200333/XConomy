@@ -182,7 +182,7 @@ public class Cache {
         if (ServerINFO.IsBungeeCordMode) {
             sendmessave(type, u, player, isAdd, balance, amount, newbalance, reason);
         } else {
-            if (ServerINFO.AsyncPercentage >= Math.random()) {
+            if (ServerINFO.RequireAsyncRun) {
                 Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () ->
                         DataCon.save(type, u, player, isAdd, balance, amount, newbalance, reason));
             } else {
@@ -199,7 +199,7 @@ public class Cache {
         output.writeUTF(XConomy.getSign());
         output.writeUTF(u.toString());
         output.writeUTF(newbalance.toString());
-        if (ServerINFO.AsyncPercentage >= Math.random()) {
+        if (ServerINFO.RequireAsyncRun) {
             new SendMessTaskS(output, type, u, player, isAdd, balance, amount, newbalance, command).runTaskAsynchronously(XConomy.getInstance());
         }else{
             SendMessTask(output, type, u, player, isAdd, balance, amount, newbalance, command);
@@ -222,7 +222,7 @@ public class Cache {
         } else {
             output.writeUTF("subtract");
         }
-        if (ServerINFO.AsyncPercentage >= Math.random()) {
+        if (ServerINFO.RequireAsyncRun) {
             new SendMessTaskS(output, null, null, null, isAdd, null, null, null, null).runTaskAsynchronously(XConomy.getInstance());
         }else{
             SendMessTask(output, null, null, null, isAdd, null, null, null, null);

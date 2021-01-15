@@ -55,7 +55,7 @@ public class CacheNonPlayer {
             }
         }
         insertIntoCache(u, newvalue);
-        if (ServerINFO.AsyncPercentage >= Math.random()) {
+        if (ServerINFO.RequireAsyncRun) {
             BigDecimal finalNewvalue = newvalue;
             Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () ->
             DataCon.saveNonPlayer(type, u, amount, finalNewvalue, isAdd));

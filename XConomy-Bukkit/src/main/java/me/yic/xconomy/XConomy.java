@@ -183,17 +183,14 @@ public class XConomy extends JavaPlugin {
         messageManager.load();
     }
 
-    public Economy getEconomy() {
-        return econ;
-    }
-
     public void readserverinfo() {
         ServerINFO.Lang = config.getString("Settings.language");
         ServerINFO.IsBungeeCordMode = isBungeecord();
         ServerINFO.IsSemiOnlineMode = config.getBoolean("Settings.semi-online-mode");
         ServerINFO.Sign = config.getString("BungeeCord.sign");
         ServerINFO.InitialAmount = config.getDouble("Settings.initial-bal");
-        ServerINFO.AsyncPercentage = config.getDouble("Settings.async-percentage");
+
+        ServerINFO.RequireAsyncRun = config.getBoolean("Settings.mysql");
     }
 
     public static void allowHikariConnectionPooling() {
