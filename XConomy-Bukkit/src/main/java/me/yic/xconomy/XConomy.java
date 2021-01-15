@@ -193,15 +193,16 @@ public class XConomy extends JavaPlugin {
         ServerINFO.IsSemiOnlineMode = config.getBoolean("Settings.semi-online-mode");
         ServerINFO.Sign = config.getString("BungeeCord.sign");
         ServerINFO.InitialAmount = config.getDouble("Settings.initial-bal");
+        ServerINFO.AsyncPercentage = config.getDouble("Settings.async-percentage");
     }
 
     public static void allowHikariConnectionPooling() {
         if (foundvaultpe) {
             return;
         }
-        if (!config.getBoolean("Settings.mysql")) {
-            return;
-        }
+        //if (!config.getBoolean("Settings.mysql")) {
+        //   return;
+        //}
         ServerINFO.EnableConnectionPool = XConomy.config.getBoolean("Pool-Settings.usepool");
     }
 

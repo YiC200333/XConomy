@@ -129,6 +129,11 @@ public class UpdateConfig {
             config.set("Settings.semi-online-mode", false);
             update = true;
         }
+        if (!ck.contains("Settings.async-percentage")) {
+            config.createSection("Settings.async-percentage");
+            config.set("Settings.async-percentage", 0.25);
+            update = true;
+        }
         return update;
     }
 }

@@ -23,8 +23,8 @@ import com.google.common.io.ByteStreams;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.task.SendMessTaskS;
 import me.yic.xconomy.utils.ServerINFO;
+import me.yic.xconomy.task.SendMessTaskS;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -117,7 +117,7 @@ public class Cache {
             }
         }
         insertIntoCache(u, newvalue);
-        sendmessave(type, u, playername, isAdd, bal, amount, newvalue, reason);
+        presavedata(type, u, playername, isAdd, bal, amount, newvalue, reason);
 
     }
 
@@ -176,6 +176,21 @@ public class Cache {
         return null;
     }
 
+    private static void presavedata(String type, UUID u, String player, Boolean isAdd,
+                                    BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String reason) {
+
+        if (ServerINFO.IsBungeeCordMode) {
+            sendmessave(type, u, player, isAdd, balance, amount, newbalance, reason);
+        } else {
+            if (ServerINFO.AsyncPercentage >= Math.random()) {
+                Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () ->
+                        DataCon.save(type, u, player, isAdd, balance, amount, newbalance, reason));
+            } else {
+                DataCon.save(type, u, player, isAdd, balance, amount, newbalance, reason);
+            }
+        }
+    }
+
     @SuppressWarnings("UnstableApiUsage")
     private static void sendmessave(String type, UUID u, String player, Boolean isAdd,
                                     BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
@@ -184,7 +199,11 @@ public class Cache {
         output.writeUTF(XConomy.getSign());
         output.writeUTF(u.toString());
         output.writeUTF(newbalance.toString());
-        SendMessTaskS.Scheduler(output, type, u, player, isAdd, balance, amount, newbalance, command);
+        if (ServerINFO.AsyncPercentage >= Math.random()) {
+            new SendMessTaskS(output, type, u, player, isAdd, balance, amount, newbalance, command).runTaskAsynchronously(XConomy.getInstance());
+        }else{
+            SendMessTask(output, type, u, player, isAdd, balance, amount, newbalance, command);
+        }
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -203,7 +222,20 @@ public class Cache {
         } else {
             output.writeUTF("subtract");
         }
-        SendMessTaskS.Scheduler(output, null, null, null, isAdd, null, null, null, null);
+        if (ServerINFO.AsyncPercentage >= Math.random()) {
+            new SendMessTaskS(output, null, null, null, isAdd, null, null, null, null).runTaskAsynchronously(XConomy.getInstance());
+        }else{
+            SendMessTask(output, null, null, null, isAdd, null, null, null, null);
+        }
+
     }
 
+
+    public static void SendMessTask(ByteArrayDataOutput stream, String type, UUID u, String player, Boolean isAdd,
+                                    BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
+        Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
+        if (u != null) {
+            DataCon.save(type, u, player, isAdd, balance, amount, newbalance, command);
+        }
+    }
 }
