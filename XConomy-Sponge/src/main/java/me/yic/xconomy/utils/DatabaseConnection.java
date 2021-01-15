@@ -89,9 +89,9 @@ public class DatabaseConnection {
 
     @SuppressWarnings("ConstantConditions")
     private void setTimezone() {
-        if (XConomy.config.getString("MySQL.timezone") != null &&
-                !XConomy.config.getString("MySQL.timezone").equals("")) {
-            url = url + "&serverTimezone=" + XConomy.config.getString("MySQL.timezone");
+        if (XConomy.config.getNode("MySQL","timezone").getString() != null &&
+                !XConomy.config.getNode("MySQL","timezone").getString().equals("")) {
+            url = url + "&serverTimezone=" + XConomy.config.getNode("MySQL","timezone").getString();
         }
     }
 

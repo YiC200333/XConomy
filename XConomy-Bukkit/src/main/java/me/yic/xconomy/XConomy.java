@@ -224,7 +224,7 @@ public class XConomy extends JavaPlugin {
                 getLogger().info(MessagesManager.systemMessage(tag));
             } else {
                 if (message.startsWith("<#>")) {
-                    getLogger().info(message.substring(2) + MessagesManager.systemMessage(tag));
+                    getLogger().info(message.substring(3) + MessagesManager.systemMessage(tag));
                 } else {
                     getLogger().info(MessagesManager.systemMessage(tag) + message);
                 }

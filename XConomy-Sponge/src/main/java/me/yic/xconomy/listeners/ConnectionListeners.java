@@ -44,10 +44,14 @@ public class ConnectionListeners {
     @Listener
     public void onJoin(ClientConnectionEvent.Join event) {
         Player a = event.getTargetEntity();
-        DataCon.newPlayer(a);
+        if (ServerINFO.RequireAsyncRun) {
+            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataCon.newPlayer(a));
+        } else {
+            DataCon.newPlayer(a);
+        }
 
-        if (!XConomy.config.getNode("Settings","semi-online-mode").getBoolean()) {
-               Cache.translateUUID(a.getName(), a);
+        if (!XConomy.config.getNode("Settings", "semi-online-mode").getBoolean()) {
+            Cache.translateUUID(a.getName(), a);
         }
         if (a.hasPermission("xconomy.admin.op")) {
             notifyUpdate(a);

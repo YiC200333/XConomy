@@ -19,6 +19,7 @@
 package me.yic.xconomy;
 
 import com.google.inject.Inject;
+import me.yic.xconomy.data.SQL;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.economyapi.XCAccount;
 import me.yic.xconomy.lang.MessagesManager;
@@ -177,7 +178,7 @@ public class XConomy {
 
         refresherTask.shutdown();
         //CacheSemiOnline.save();
-        //SQL.close();
+        SQL.close();
         logger("XConomy已成功卸载", null);
     }
 
@@ -242,6 +243,8 @@ public class XConomy {
         ServerINFO.IsSemiOnlineMode = config.getNode("Settings","semi-online-mode").getBoolean();
         ServerINFO.Sign = config.getNode("BungeeCord","sign").getString();
         ServerINFO.InitialAmount = config.getNode("Settings.initial-bal").getDouble();
+
+        ServerINFO.RequireAsyncRun = config.getNode("Settings","mysql").getBoolean();
     }
 
     public static void allowHikariConnectionPooling() {
@@ -273,7 +276,7 @@ public class XConomy {
                 inforation.info(MessagesManager.systemMessage(tag));
             } else {
                 if (message.startsWith("<#>")) {
-                    inforation.info(message.substring(2) + MessagesManager.systemMessage(tag));
+                    inforation.info(message.substring(3) + MessagesManager.systemMessage(tag));
                 } else {
                     inforation.info(MessagesManager.systemMessage(tag) + message);
                 }

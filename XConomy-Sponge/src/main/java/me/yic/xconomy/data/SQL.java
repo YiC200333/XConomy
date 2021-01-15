@@ -39,7 +39,7 @@ public class SQL {
     public static String tableNonPlayerName = "xconomynon";
     public static String tableRecordName = "xconomyrecord";
     public final static DatabaseConnection database = new DatabaseConnection();
-    private static final String encoding = XConomy.config.getString("MySQL.encoding");
+    private static final String encoding = XConomy.config.getNode("MySQL","encoding").getString();
 
     public static boolean con() {
         return database.setGlobalConnection();
