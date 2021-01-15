@@ -21,7 +21,6 @@ package me.yic.xconomy.listeners;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import me.yic.xconomy.XConomyBungee;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -79,7 +78,8 @@ public class BCsync implements Listener {
 
         for (ServerInfo s : ProxyServer.getInstance().getServers().values()) {
             if (!s.getName().equals(senderServer.getInfo().getName()) && s.getPlayers().size() > 0) {
-                ProxyServer.getInstance().getScheduler().runAsync(XConomyBungee.getInstance(), () -> SendMessTaskB(s, output));
+                SendMessTaskB(s, output);
+                //ProxyServer.getInstance().getScheduler().runAsync(XConomyBungee.getInstance(), () -> SendMessTaskB(s, output));
             }
         }
 
