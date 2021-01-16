@@ -19,6 +19,7 @@
 package me.yic.xconomy;
 
 import com.google.inject.Inject;
+import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.SQL;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.economyapi.XCAccount;
@@ -28,12 +29,15 @@ import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
 import me.yic.xconomy.utils.ServerINFO;
 import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
@@ -44,7 +48,6 @@ import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.text.Text;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -57,9 +60,9 @@ import java.util.concurrent.TimeUnit;
 public class XConomy {
 
     private static XConomy instance;
-    public static String version;
 
     private MessagesManager messageManager;
+    public static String version;
     public EconomyService econ = null;
 
     private SpongeExecutorService refresherTask;
@@ -67,6 +70,7 @@ public class XConomy {
 
     @Inject
     private Logger inforation;
+
 
     @Inject
     @ConfigDir(sharedRoot = false)
@@ -119,9 +123,9 @@ public class XConomy {
 
         //Bukkit.getPluginCommand("money").setExecutor(new Commands());
         CommandSpec balcmd = CommandSpec.builder()
-                .description(Text.of("Hello World Command"))
                 .permission("xconomy.user.balance")
-                .executor(new CommandSponge())
+                .executor(new Command())
+                .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("Player"))))
                 .build();
 
         Sponge.getCommandManager().register(this, balcmd, "balance", "bal");
@@ -150,7 +154,7 @@ public class XConomy {
         //    }
         }
 
-        //DataFormat.load();
+        DataFormat.load();
 
         int time = config.getNode("Settings","refresh-time").getInt();
         if (time < 30) {
@@ -194,10 +198,6 @@ public class XConomy {
         return econ;
     }
 
-    public String getversion() {
-        return version;
-    }
-
     private void loadconfig() {
         if(!Files.exists(configDir)) {
             try {
@@ -220,14 +220,13 @@ public class XConomy {
                 e.printStackTrace();
             }
         }
-        URL vurl = null;
-        try {
-            vurl = new URL(jarPath.substring(0,i+4) + "!/mcmod.info");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        YAMLConfigurationLoader vloader = YAMLConfigurationLoader.builder().setURL(vurl).build();
+        URL vurl = Sponge.getAssetManager().getAsset(this,"version.json").get().getUrl();
+        //try {
+        //    vurl = new URL(jarPath.substring(0,i+4) + "!/mcmod.info");
+       // } catch (MalformedURLException e) {
+        //    e.printStackTrace();
+        //}
+        HoconConfigurationLoader vloader = HoconConfigurationLoader.builder().setURL(vurl).build();
         YAMLConfigurationLoader loader = YAMLConfigurationLoader.builder().setPath(configpath).build();
             try {
                 version = vloader.load().getNode("version").getString();

@@ -33,10 +33,6 @@ Settings:
   #Dose save transaction record
   #Only MySQL is supported
   transaction-record: true
-  #If your server is semi online mode, please set to true
-  #semi online mode is not online mode, nor offline mode
-  #semi online mode is not perfectly compatible with the function of sending transfer notification between BungeeCord
-  semi-online-mode: false
 
 
 #The display of the currency
