@@ -34,6 +34,7 @@ import me.yic.xconomy.utils.EconomyCommand;
 import me.yic.xconomy.utils.ServerINFO;
 import me.yic.xconomy.utils.UpdateConfig;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -57,6 +58,7 @@ public class XConomy extends JavaPlugin {
     private MessagesManager messageManager;
     private static boolean foundvaultpe = false;
     public Economy econ = null;
+    public static Permission vaultPerm = null;
     private BukkitTask refresherTask = null;
     Metrics metrics = null;
     private Placeholder papiExpansion = null;
@@ -102,6 +104,9 @@ public class XConomy extends JavaPlugin {
                 }
             }
         }
+        
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        vaultPerm = rsp.getProvider();
 
         metrics = new Metrics(this, 6588);
 
