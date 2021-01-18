@@ -34,6 +34,8 @@ permissions:
       xconomy.user.balance.other: true
   xconomy.user.pay:
     default: true
+  xconomy.user.receive:
+    default: true
   xconomy.user.balancetop:
     default: true
   xconomy.admin.give:
