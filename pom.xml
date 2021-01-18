@@ -5,32 +5,19 @@
 
     <groupId>me.yic</groupId>
     <artifactId>XConomy</artifactId>
-    <version>2.9.4</version>
-    <packaging>jar</packaging>
+    <version>2.9.13</version>
+    <modules>
+        <module>XConomy-Bukkit</module>
+        <module>XConomy-Sponge</module>
+        <module>XConomy-Common</module>
+    </modules>
+    <packaging>pom</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
-        <defaultGoal>clean install</defaultGoal>
-        <sourceDirectory>src/main/java</sourceDirectory>
-
-        <resources>
-            <resource>
-                <directory>${project.basedir}</directory>
-                <includes>
-                    <include>LICENSE</include>
-                </includes>
-                <targetPath>META-INF</targetPath>
-            </resource>
-
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -61,72 +48,6 @@
                     </archive>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <filters>
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/versions/11/module-info*</exclude>
-                                    </excludes>
-                                </filter>
-                                <filter>
-                                    <artifact>org.bstats:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/MANIFEST.MF</exclude>
-                                    </excludes>
-                                </filter>
-                                <filter>
-                                    <artifact>com.zaxxer:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/MANIFEST.MF</exclude>
-                                    </excludes>
-                                </filter>
-                                <filter>
-                                    <artifact>org.slf4j:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/MANIFEST.MF</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <artifactSet>
-                        <includes>
-                            <include>org.bstats:*</include>
-                            <include>com.zaxxer:*</include>
-                            <include>org.slf4j:*</include>
-                        </includes>
-                    </artifactSet>
-                    <relocations>
-                        <relocation>
-                            <pattern>org.bstats</pattern>
-                            <shadedPattern>me.yic.libs.bstats</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>com.zaxxer</pattern>
-                            <shadedPattern>me.yic.libs.zaxxer</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>org.slf4j</pattern>
-                            <shadedPattern>me.yic.libs.slf4j</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
@@ -136,20 +57,8 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
         <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>CodeMC</id>
-            <url>https://repo.codemc.org/repository/maven-public</url>
-        </repository>
-        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
-        </repository>
-        <repository>
-            <id>placeholderapi</id>
-            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
     </repositories>
 
@@ -169,34 +78,6 @@
             <version>1.15-SNAPSHOT</version>
             <type>javadoc</type>
             <scope>provided</scope>
-        </dependency>
-        <!--Spigot 1.15-->
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.15.2-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <!--Vault-->
-        <dependency>
-            <groupId>com.github.MilkBowl</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>1.7</version>
-            <scope>provided</scope>
-        </dependency>
-        <!--Placeholder API-->
-        <dependency>
-            <groupId>me.clip</groupId>
-            <artifactId>placeholderapi</artifactId>
-            <version>2.10.9</version>
-            <scope>provided</scope>
-        </dependency>
-        <!--BStats-->
-        <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>1.7</version>
-            <scope>compile</scope>
         </dependency>
         <!--slf4j-->
         <dependency>
