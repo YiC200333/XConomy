@@ -167,7 +167,7 @@ public class CommandHandler {
                     return true;
                 }
                 
-                if(target == null || !target.isOnline()) {
+                if(XConomy.foundvaultOfflinePermManager && (target == null || !target.isOnline())) {
                   // Offline receiver permission node check with Vault API
                   Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), new Runnable() {
                     @Override
@@ -198,7 +198,7 @@ public class CommandHandler {
                       broadcastSendMessage(false, targetUUID, mess);
                     }});
                   return true;
-                }else if (!target.hasPermission("xconomy.user.receive")) {
+                }else if (XConomy.foundvaultOfflinePermManager && !target.hasPermission("xconomy.user.receive")) {
                   sender.sendMessage(sendMessage("prefix") + sendMessage("no_receive_permission"));
                   return true;
                 }
@@ -219,6 +219,11 @@ public class CommandHandler {
                 String mess = sendMessage("prefix") + sendMessage("pay_receive")
                         .replace("%player%", sender.getName())
                         .replace("%amount%", amountFormatted);
+                
+                if (target == null) {
+                    broadcastSendMessage(false, targetUUID, mess);
+                    return true;
+                }
 
                 target.sendMessage(mess);
                 break;
