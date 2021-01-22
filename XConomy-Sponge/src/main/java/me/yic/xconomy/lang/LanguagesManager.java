@@ -18,7 +18,6 @@
  */
 package me.yic.xconomy.lang;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -50,9 +49,8 @@ public class LanguagesManager extends Languages {
         List<String> messages = index();
         for (String message : messages) {
             boolean renew = false;
-            if (MessagesManager.messageFile.getNode(message).isEmpty()) {
+            if (MessagesManager.messageFile.getNode(message).isVirtual()) {
                 renew = true;
-                MessagesManager.messageFile.getNode(message).appendListNode();
                 MessagesManager.messageFile.getNode(message).setValue(mess.get(message));
             }
 
@@ -67,7 +65,4 @@ public class LanguagesManager extends Languages {
         }
     }
 
-    public static void translatorName(String lang, File file) {
-        translatorName(lang, file);
-    }
 }

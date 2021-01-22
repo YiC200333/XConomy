@@ -53,13 +53,9 @@ public class DatabaseConnection {
     private void createNewHikariConfiguration() {
         hikari = new HikariDataSource();
         hikari.setPoolName("XConomy");
-        if (XConomy.config.getBoolean("Settings.mysql")) {
-            hikari.setJdbcUrl(url);
-            hikari.setUsername(username);
-            hikari.setPassword(password);
-        } else {
-            hikari.setJdbcUrl("jdbc:sqlite:" + userdata.toString());
-        }
+        hikari.setJdbcUrl(url);
+        hikari.setUsername(username);
+        hikari.setPassword(password);
         hikari.setMaximumPoolSize(maxPoolSize);
         hikari.setMinimumIdle(minIdle);
         hikari.setMaxLifetime(maxLife);

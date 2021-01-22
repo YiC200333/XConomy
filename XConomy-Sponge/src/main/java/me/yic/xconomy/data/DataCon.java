@@ -19,6 +19,7 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.utils.ServerINFO;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 
@@ -31,14 +32,13 @@ import java.util.UUID;
 public class DataCon {
 
     public static boolean create() {
-        if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
+        if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
             XConomy.getInstance().logger("数据保存方式", " - MySQL");
             setupMySqlTable();
 
             if (SQL.con()) {
                 SQL.getwaittimeout();
                 SQL.createTable();
-                SQL.updataTable();
                 XConomy.getInstance().logger("MySQL连接正常", null);
             } else {
                 XConomy.getInstance().logger("MySQL连接异常", null);
@@ -56,7 +56,6 @@ public class DataCon {
             }
             if (SQL.con()) {
                 SQL.createTable();
-                SQL.updataTable();
                 XConomy.getInstance().logger("SQLite连接正常", null);
             } else {
                 XConomy.getInstance().logger("SQLite连接异常", null);
@@ -65,9 +64,6 @@ public class DataCon {
 
         }
 
-        //if (!CacheSemiOnline.createfile()) {
-        //    return false;
-        //}
 
         XConomy.getInstance().logger("XConomy加载成功", null);
         return true;
@@ -112,15 +108,15 @@ public class DataCon {
 
     public static void saveall(String targettype, String type, BigDecimal amount, Boolean isAdd, String reason) {
         Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> {
-                        if (targettype.equalsIgnoreCase("all")) {
-                            SQL.saveall(targettype, type, null, amount, isAdd, reason);
-                        } else if (targettype.equalsIgnoreCase("online")) {
-                            List<UUID> ol = new ArrayList<>();
-                            for (Player pp : Sponge.getServer().getOnlinePlayers()) {
-                                ol.add(pp.getUniqueId());
-                            }
-                            SQL.saveall(targettype, type, ol, amount, isAdd, reason);
+                    if (targettype.equalsIgnoreCase("all")) {
+                        SQL.saveall(targettype, type, null, amount, isAdd, reason);
+                    } else if (targettype.equalsIgnoreCase("online")) {
+                        List<UUID> ol = new ArrayList<>();
+                        for (Player pp : Sponge.getServer().getOnlinePlayers()) {
+                            ol.add(pp.getUniqueId());
                         }
+                        SQL.saveall(targettype, type, ol, amount, isAdd, reason);
+                    }
                 }
         );
     }
@@ -132,20 +128,20 @@ public class DataCon {
 
     @SuppressWarnings("ConstantConditions")
     private static void setupMySqlTable() {
-        if (XConomy.config.getNode("MySQL","table-suffix").getString() != null & !XConomy.config.getNode("MySQL","table-suffix").getString().equals("")) {
-            SQL.tableName = "xconomy_" + XConomy.config.getNode("MySQL","table-suffix").getString().replace("%sign%", XConomy.getSign());
-            SQL.tableNonPlayerName = "xconomynon_" + XConomy.config.getNode("MySQL","table-suffix").getString().replace("%sign%", XConomy.getSign());
-            SQL.tableRecordName = "xconomyrecord_" + XConomy.config.getNode("MySQL","table-suffix").getString().replace("%sign%", XConomy.getSign());
+        if (XConomy.config.getNode("MySQL", "table-suffix").getString() != null & !XConomy.config.getNode("MySQL", "table-suffix").getString().equals("")) {
+            SQL.tableName = "xconomy_" + XConomy.config.getNode("MySQL", "table-suffix").getString().replace("%sign%", XConomy.getSign());
+            SQL.tableNonPlayerName = "xconomynon_" + XConomy.config.getNode("MySQL", "table-suffix").getString().replace("%sign%", XConomy.getSign());
+            SQL.tableRecordName = "xconomyrecord_" + XConomy.config.getNode("MySQL", "table-suffix").getString().replace("%sign%", XConomy.getSign());
         }
     }
 
     @SuppressWarnings("ConstantConditions")
     private static void setupSqLiteAddress() {
-        if (XConomy.config.getNode("SQLite","path").getString().equalsIgnoreCase("Default")) {
+        if (XConomy.config.getNode("SQLite", "path").getString().equalsIgnoreCase("Default")) {
             return;
         }
 
-        File folder = new File(XConomy.config.getNode("SQLite","path").getString());
+        File folder = new File(XConomy.config.getNode("SQLite", "path").getString());
         if (folder.exists()) {
             SQL.database.userdata = new File(folder, "data.db");
         } else {

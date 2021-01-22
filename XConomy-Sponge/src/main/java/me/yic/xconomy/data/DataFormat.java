@@ -42,12 +42,11 @@ public class DataFormat {
         }
     }
 
-    public static BigDecimal formatDouble(Double am) {
-        BigDecimal bigDecimal = BigDecimal.valueOf(am);
+    public static BigDecimal formatBigDecimal(BigDecimal am) {
         if (isInteger) {
-            return bigDecimal.setScale(0, BigDecimal.ROUND_DOWN);
+            return am.setScale(0, BigDecimal.ROUND_DOWN);
         } else {
-            return bigDecimal.setScale(2, BigDecimal.ROUND_DOWN);
+            return am.setScale(2, BigDecimal.ROUND_DOWN);
         }
     }
 

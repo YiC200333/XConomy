@@ -56,6 +56,7 @@ public class ConnectionListeners {
         if (a.hasPermission("xconomy.admin.op")) {
             notifyUpdate(a);
         }
+
     }
 
 

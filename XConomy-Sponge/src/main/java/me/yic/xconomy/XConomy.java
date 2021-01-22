@@ -19,12 +19,15 @@
 package me.yic.xconomy;
 
 import com.google.inject.Inject;
+import me.yic.xconomy.command.*;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.SQL;
 import me.yic.xconomy.data.DataCon;
-import me.yic.xconomy.economyapi.XCAccount;
+import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.depend.economyapi.XCService;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.listeners.ConnectionListeners;
+import me.yic.xconomy.listeners.SPsync;
 import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
 import me.yic.xconomy.utils.ServerINFO;
@@ -33,14 +36,16 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
+import org.spongepowered.api.Platform;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
+import org.spongepowered.api.network.ChannelBinding;
+import org.spongepowered.api.network.RawDataListener;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 import org.spongepowered.api.scheduler.Task;
@@ -52,10 +57,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-@Plugin(id = "xconomy", name = "XConomy")
+@Plugin(id = "xconomy", name = "XConomy", authors = {"YiC"})
 
 public class XConomy {
 
@@ -63,10 +67,11 @@ public class XConomy {
 
     private MessagesManager messageManager;
     public static String version;
-    public EconomyService econ = null;
 
     private SpongeExecutorService refresherTask;
     private Metrics2 metrics;
+    private ChannelBinding.RawDataChannel channel;
+    private RawDataListener channellistener;
 
     @Inject
     private Logger inforation;
@@ -91,6 +96,7 @@ public class XConomy {
     public void onEnable(GamePreInitializationEvent event) {
         loadconfig();
         readserverinfo();
+        metrics.addCustomChart(new Metrics2.SimplePie("serverSoftware", () -> "Sponge"));
         if (checkup()) {
             Sponge.getScheduler().createAsyncExecutor(this).execute(new Updater());
         }
@@ -98,11 +104,7 @@ public class XConomy {
         messageManager = new MessagesManager(this);
         messageManager.load();
 
-        Sponge.getServiceManager().setProvider(this, EconomyService.class, new XCAccount());
-        //Sponge.getRegistry().registerModule(Currency.class, new XConomyRegistry());
-
-        Optional<EconomyService> serviceOpt = Sponge.getServiceManager().provide(EconomyService.class);
-        econ = serviceOpt.get();
+        Sponge.getServiceManager().setProvider(this, EconomyService.class, new XCService());
 
         if (Sponge.getPluginManager().getPlugin("DatabaseDrivers").isPresent()) {
             logger("发现 DatabaseDrivers", null);
@@ -111,27 +113,44 @@ public class XConomy {
 
         Sponge.getEventManager().registerListeners(this, new ConnectionListeners());
 
-        //if (config.getBoolean("Settings.disable-essentials")) {
-        //    Collection<RegisteredServiceProvider<Economy>> econs = Bukkit.getPluginManager().getPlugin("Vault").getServer().getServicesManager().getRegistrations(Economy.class);
-        //    for (RegisteredServiceProvider<Economy> econ : econs) {
-        //        if (econ.getProvider().getName().equalsIgnoreCase("Essentials Economy")) {
-        //            getServer().getServicesManager().unregister(econ.getProvider());
-        //        }
-        //    }
-        //}
-        //metricsFactory.make(6588);
 
-        //Bukkit.getPluginCommand("money").setExecutor(new Commands());
+
         CommandSpec balcmd = CommandSpec.builder()
-                .permission("xconomy.user.balance")
-                .executor(new Command())
-                .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("Player"))))
+                .executor(new CommandBalance())
+                .arguments(GenericArguments.seq(GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg1"))),
+                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg2"))),
+                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg3"))),
+                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg4"))),
+                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg5")))))
                 .build();
 
-        Sponge.getCommandManager().register(this, balcmd, "balance", "bal");
-        //Bukkit.getPluginCommand("balancetop").setExecutor(new Commands());
-        //Bukkit.getPluginCommand("pay").setExecutor(new Commands());
-        //Bukkit.getPluginCommand("xconomy").setExecutor(new Commands());
+        CommandSpec paycmd = CommandSpec.builder()
+                .executor(new CommandPay())
+                .arguments(GenericArguments.seq(GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg1"))),
+                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg2")))))
+                .build();
+        CommandSpec baltopcmd = CommandSpec.builder()
+                .executor(new CommandBaltop())
+                .arguments(GenericArguments.seq(GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg1"))),
+                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg2")))))
+                .build();
+        CommandSpec xccmd = CommandSpec.builder()
+                .executor(new CommandSystem())
+                .arguments(GenericArguments.seq(GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg1"))),
+                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg2")))))
+                .build();
+
+        if (config.getNode("Settings","eco-command").getBoolean()) {
+            Sponge.getCommandManager().register(this, balcmd,
+                    "balance", "bal", "money", "economy", "eeconomy", "eco");
+            Sponge.getCommandManager().register(this, baltopcmd,
+                    "balancetop", "baltop", "ebalancetop", "ebaltop");
+        }else{
+            Sponge.getCommandManager().register(this, balcmd, "balance", "bal", "money");
+            Sponge.getCommandManager().register(this, baltopcmd, "balancetop", "baltop");
+        }
+        Sponge.getCommandManager().register(this, paycmd, "pay");
+        Sponge.getCommandManager().register(this, xccmd, "xconomy", "xc");
 
         allowHikariConnectionPooling();
         if (!DataCon.create()) {
@@ -139,19 +158,21 @@ public class XConomy {
             return;
         }
 
-        //Cache.baltop();
+        Cache.baltop();
 
         if (config.getNode("BungeeCord","enable").getBoolean()) {
             if (isBungeecord()) {
-         //       Sponge.getChannelRegistrar().registerChannel.registerIncomingPluginChannel(this, "xconomy:aca", new SPsync());
-         //       getServer().getMessenger().registerOutgoingPluginChannel(this, "xconomy:acb");
-         //       logger("已开启BungeeCord同步", null);
-         //   } else if (!config.getBoolean("Settings.mysql")) {
-         //       if (config.getString("SQLite.path").equalsIgnoreCase("Default")) {
-        //            logger("SQLite文件路径设置错误", null);
-        //            logger("BungeeCord同步未开启", null);
+                channel = Sponge.getChannelRegistrar().createRawChannel(this, "xconomy:aca");
+                channellistener = new SPsync();
+                channel.addListener(Platform.Type.SERVER, channellistener);
+                Sponge.getChannelRegistrar().createRawChannel(this, "xconomy:acb");
+                logger("已开启BungeeCord同步", null);
+            } else if (!config.getNode("Settings","mysql").getBoolean()) {
+                if (config.getNode("SQLite","path").getString().equalsIgnoreCase("Default")) {
+                    logger("SQLite文件路径设置错误", null);
+                    logger("BungeeCord同步未开启", null);
                 }
-        //    }
+            }
         }
 
         DataFormat.load();
@@ -172,16 +193,11 @@ public class XConomy {
 
     @Listener
     public void onDisable(GameStoppingServerEvent event) {
-        //getServer().getServicesManager().unregister(econ);
-
-
-       // if (isBungeecord()) {
-      //      getServer().getMessenger().unregisterIncomingPluginChannel(this, "xconomy:aca", new SPsync());
-      //      getServer().getMessenger().unregisterOutgoingPluginChannel(this, "xconomy:acb");
-       // }
 
         refresherTask.shutdown();
-        //CacheSemiOnline.save();
+        if (isBungeecord()) {
+            channel.removeListener(channellistener);
+        }
         SQL.close();
         logger("XConomy已成功卸载", null);
     }
@@ -190,12 +206,8 @@ public class XConomy {
         return instance;
     }
 
-    //public void reloadMessages() {
-    //    messageManager.load();
-    //}
-
-    public EconomyService getEconomy() {
-        return econ;
+    public void reloadMessages() {
+        messageManager.load();
     }
 
     private void loadconfig() {
@@ -221,11 +233,7 @@ public class XConomy {
             }
         }
         URL vurl = Sponge.getAssetManager().getAsset(this,"version.json").get().getUrl();
-        //try {
-        //    vurl = new URL(jarPath.substring(0,i+4) + "!/mcmod.info");
-       // } catch (MalformedURLException e) {
-        //    e.printStackTrace();
-        //}
+
         HoconConfigurationLoader vloader = HoconConfigurationLoader.builder().setURL(vurl).build();
         YAMLConfigurationLoader loader = YAMLConfigurationLoader.builder().setPath(configpath).build();
             try {
@@ -239,7 +247,6 @@ public class XConomy {
     public void readserverinfo() {
         ServerINFO.Lang = config.getNode("Settings","language").getString();
         ServerINFO.IsBungeeCordMode = isBungeecord();
-        ServerINFO.IsSemiOnlineMode = config.getNode("Settings","semi-online-mode").getBoolean();
         ServerINFO.Sign = config.getNode("BungeeCord","sign").getString();
         ServerINFO.InitialAmount = config.getNode("Settings.initial-bal").getDouble();
 
@@ -284,7 +291,7 @@ public class XConomy {
     }
 
     public static String getSign() {
-        return config.getNode("BungeeCord.sign").getString();
+        return config.getNode("BungeeCord","sign").getString();
     }
 
     public static boolean checkup() {

@@ -76,7 +76,7 @@ public class MessagesManager {
 
         LanguagesManager.compare(ServerINFO.Lang);
         if (translate) {
-            LanguagesManager.translatorName(ServerINFO.Lang, mfile.toFile());
+            Languages.translatorName(ServerINFO.Lang, mfile.toFile());
         }
     }
 
@@ -95,7 +95,7 @@ public class MessagesManager {
 
     @SuppressWarnings("ConstantConditions")
     public static String getTranslatorS() {
-        String trm = langFile.getString("translation-author");
+        String trm = langFile.getNode("translation-author").getString();
         if (!trm.equalsIgnoreCase("None")) {
             return trm;
         } else {

@@ -39,7 +39,7 @@ public class SQL {
     public static String tableNonPlayerName = "xconomynon";
     public static String tableRecordName = "xconomyrecord";
     public final static DatabaseConnection database = new DatabaseConnection();
-    private static final String encoding = XConomy.config.getNode("MySQL","encoding").getString();
+    private static final String encoding = XConomy.config.getNode("MySQL", "encoding").getString();
 
     public static boolean con() {
         return database.setGlobalConnection();
@@ -50,7 +50,7 @@ public class SQL {
     }
 
     public static void getwaittimeout() {
-        if (XConomy.config.getNode("Settings","mysql").getBoolean() && !ServerINFO.EnableConnectionPool) {
+        if (XConomy.config.getNode("Settings", "mysql").getBoolean() && !ServerINFO.EnableConnectionPool) {
             try {
                 Connection connection = database.getConnectionAndCheck();
 
@@ -93,7 +93,7 @@ public class SQL {
                     + "balance double(20,2), amount double(20,2) not null, operation varchar(50) not null,"
                     + " date varchar(50) not null, command varchar(50) not null,"
                     + "primary key (id)) DEFAULT CHARSET = " + encoding + ";";
-            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
+            if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
                 query1 = "CREATE TABLE IF NOT EXISTS " + tableName
                         + "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, hidden int(5) not null, "
                         + "primary key (UID)) DEFAULT CHARSET = " + encoding + ";";
@@ -110,10 +110,10 @@ public class SQL {
             }
 
             statement.executeUpdate(query1);
-            if (XConomy.config.getNode("Settings","non-player-account").getBoolean()) {
+            if (XConomy.config.getNode("Settings", "non-player-account").getBoolean()) {
                 statement.executeUpdate(query2);
             }
-            if (XConomy.config.getNode("Settings","mysql").getBoolean() && XConomy.config.getNode("Settings","transaction-record").getBoolean()) {
+            if (XConomy.config.getNode("Settings", "mysql").getBoolean() && XConomy.config.getNode("Settings", "transaction-record").getBoolean()) {
                 statement.executeUpdate(query3);
             }
             statement.close();
@@ -121,32 +121,6 @@ public class SQL {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-    public static void updataTable() {
-        Connection connection = database.getConnectionAndCheck();
-        try {
-
-            PreparedStatement statementa = connection.prepareStatement("select * from " + tableName + " where hidden = '1'");
-
-            statementa.executeQuery();
-            statementa.close();
-            database.closeHikariConnection(connection);
-
-        } catch (SQLException e) {
-            try {
-                XConomy.getInstance().logger("升级数据库表格。。。", null);
-
-                PreparedStatement statementb = connection.prepareStatement("alter table " + tableName + " add column hidden int(5) not null default '0'");
-
-                statementb.executeUpdate();
-                statementb.close();
-                database.closeHikariConnection(connection);
-
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
         }
     }
 
@@ -164,7 +138,7 @@ public class SQL {
         try {
             String query;
 
-            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
+            if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
                 query = "select * from " + tableName + " where binary player = ?";
             } else {
                 query = "select * from " + tableName + " where player = ?";
@@ -177,13 +151,9 @@ public class SQL {
             if (rs.next()) {
                 if (!player.getUniqueId().toString().equals(rs.getString(1))) {
                     doubledata = true;
-                    if (!ServerINFO.IsSemiOnlineMode) {
-                        if (player.isOnline()) {
-                            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() ->
-                                    player.kick(Text.of("[XConomy] The player with the same name exists on the server")));
-                        }
-                    } else {
-                        //CacheSemiOnline.CacheSubUUID_checkUser(rs.getString(1), player);
+                    if (player.isOnline()) {
+                        Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() ->
+                                player.kick(Text.of("[XConomy] The player with the same name exists on the server")));
                     }
                 }
             }
@@ -196,11 +166,10 @@ public class SQL {
         return doubledata;
     }
 
-
     private static void createAccount(String UID, String user, Double amount, Connection co_a) {
         try {
             String query;
-            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
+            if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
                 query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
                         + "ON DUPLICATE KEY UPDATE UID = ?";
             } else {
@@ -213,7 +182,7 @@ public class SQL {
             statement.setDouble(3, amount);
             statement.setInt(4, 0);
 
-            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
+            if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
                 statement.setString(5, UID);
             }
 
@@ -228,7 +197,7 @@ public class SQL {
     public static void createNonPlayerAccount(String account, Double bal, Connection co) {
         try {
             String query;
-            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
+            if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
                 query = "INSERT INTO " + tableNonPlayerName + "(account,balance) values(?,?) "
                         + "ON DUPLICATE KEY UPDATE account = ?";
             } else {
@@ -239,7 +208,7 @@ public class SQL {
             statement.setString(1, account);
             statement.setDouble(2, bal);
 
-            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
+            if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
                 statement.setString(3, account);
             }
 
@@ -416,7 +385,7 @@ public class SQL {
             Connection connection = database.getConnectionAndCheck();
             String query;
 
-            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
+            if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
                 query = "select * from " + tableNonPlayerName + " where binary account = ?";
             } else {
                 query = "select * from " + tableNonPlayerName + " where account = ?";
@@ -446,7 +415,7 @@ public class SQL {
             Connection connection = database.getConnectionAndCheck();
             String query;
 
-            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
+            if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
                 query = "select * from " + tableName + " where binary player = ?";
             } else {
                 query = "select * from " + tableName + " where player = ?";
@@ -530,7 +499,7 @@ public class SQL {
 
     public static void record(Connection co, String type, String UID, String player, Boolean isAdd,
                               BigDecimal amount, BigDecimal newbalance, String command) {
-        if (XConomy.config.getNode("Settings","mysql").getBoolean() && XConomy.config.getNode("Settings","transaction-record").getBoolean()) {
+        if (XConomy.config.getNode("Settings", "mysql").getBoolean() && XConomy.config.getNode("Settings", "transaction-record").getBoolean()) {
             String operation = "Error";
             if (isAdd != null) {
                 if (isAdd) {

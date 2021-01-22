@@ -1,5 +1,5 @@
-package me.yic.xconomy.utils;/*
- *  This file (ServerINFO.java) is a part of project XConomy
+/*
+ *  This file (XCEconomyCommon.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -16,20 +16,27 @@ package me.yic.xconomy.utils;/*
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package me.yic.xconomy.depend.economyapi;
 
-public class ServerINFO {
+import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.caches.CacheNonPlayer;
 
-    public static Boolean IsBungeeCordMode = false;
+public class XCEconomyCommon {
 
-    public static String Lang;
+    public static boolean isNonPlayerAccount(String name) {
+        if (!XConomy.config.getNode("Settings","non-player-account").getBoolean()) {
+            return false;
+        }
 
-    public static Boolean EnableConnectionPool = false;
+        if (name.length() >= 17) {
+            return true;
+        }
 
-    public static String Sign;
+        if (CacheNonPlayer.bal.containsKey(name)) {
+            return true;
+        }
 
-    public static Boolean DDrivers = false;
-
-    public static Double InitialAmount = 0.0;
-
-    public static Boolean RequireAsyncRun = false;
+        return Cache.translateUUID(name, null) == null;
+    }
 }

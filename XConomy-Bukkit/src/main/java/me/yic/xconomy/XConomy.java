@@ -197,9 +197,9 @@ public class XConomy extends JavaPlugin {
         if (foundvaultpe) {
             return;
         }
-        //if (!config.getBoolean("Settings.mysql")) {
-        //   return;
-        //}
+        if (!config.getBoolean("Settings.mysql")) {
+           return;
+        }
         ServerINFO.EnableConnectionPool = XConomy.config.getBoolean("Pool-Settings.usepool");
     }
 

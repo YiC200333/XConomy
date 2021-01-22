@@ -27,6 +27,8 @@ import me.yic.xconomy.task.SendMessTaskS;
 import me.yic.xconomy.utils.ServerINFO;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.service.user.UserStorageService;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -94,12 +96,12 @@ public class Cache {
         }
         insertIntoCache(u, newvalue);
 
-        ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF("balance");
-        output.writeUTF(XConomy.getSign());
-        output.writeUTF(u.toString());
-        output.writeUTF(amount.toString());
         if (ServerINFO.IsBungeeCordMode) {
+            ByteArrayDataOutput output = ByteStreams.newDataOutput();
+            output.writeUTF("balance");
+            output.writeUTF(XConomy.getSign());
+            output.writeUTF(u.toString());
+            output.writeUTF(amount.toString());
             Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), "xconomy:acb").sendTo(
                     Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> output.toByteArray());
         }
@@ -117,7 +119,7 @@ public class Cache {
             }
         }
         insertIntoCache(u, newvalue);
-        sendmessave(type, u, playername, isAdd, bal, amount, newvalue, reason);
+        presavedata(type, u, playername, isAdd, bal, amount, newvalue, reason);
 
     }
 
@@ -141,29 +143,21 @@ public class Cache {
     }
 
 
-    public static Player getplayer(String name) {
+    public static User getplayer(String name) {
         UUID u = translateUUID(name, null);
-        Player mainp = null;
+        User mainp = null;
         if (u != null) {
-            mainp = Sponge.getServer().getPlayer(u).get();
-            //if (mainp == null && ServerINFO.IsSemiOnlineMode) {
-            //    UUID subu = CacheSemiOnline.CacheSubUUID_getsubuuid(u.toString());
-            //    if (subu != null) {
-             //       Player subp = Bukkit.getPlayer(subu);
-            //        if (subp != null) {
-            //            return subp;
-             //       }
-             //   }
-            //}
+            mainp = Sponge.getServiceManager().provide(UserStorageService.class).get().get(u).get();
         }
         return mainp;
     }
+
 
     public static UUID translateUUID(String name, Player pp) {
         if (uid.containsKey(name)) {
             return uid.get(name);
         } else {
-            if (!ServerINFO.IsSemiOnlineMode && pp != null) {
+            if (pp != null) {
                 insertIntoUUIDCache(name, pp.getUniqueId());
                 return uid.get(name);
             } else {
@@ -176,6 +170,21 @@ public class Cache {
         return null;
     }
 
+    private static void presavedata(String type, UUID u, String player, Boolean isAdd,
+                                    BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String reason) {
+
+        if (ServerINFO.IsBungeeCordMode) {
+            sendmessave(type, u, player, isAdd, balance, amount, newbalance, reason);
+        } else {
+            if (ServerINFO.RequireAsyncRun) {
+                Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() ->
+                        DataCon.save(type, u, player, isAdd, balance, amount, newbalance, reason));
+            } else {
+                DataCon.save(type, u, player, isAdd, balance, amount, newbalance, reason);
+            }
+        }
+    }
+
     @SuppressWarnings("UnstableApiUsage")
     private static void sendmessave(String type, UUID u, String player, Boolean isAdd,
                                     BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
@@ -184,7 +193,12 @@ public class Cache {
         output.writeUTF(XConomy.getSign());
         output.writeUTF(u.toString());
         output.writeUTF(newbalance.toString());
-        SendMessTaskS.Scheduler(output, type, u, player, isAdd, balance, amount, newbalance, command);
+        if (ServerINFO.RequireAsyncRun) {
+            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(new SendMessTaskS(
+                    output, type, u, player, isAdd, balance, amount, newbalance, command));
+        } else {
+            SendMessTask(output, type, u, player, isAdd, balance, amount, newbalance, command);
+        }
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -203,7 +217,22 @@ public class Cache {
         } else {
             output.writeUTF("subtract");
         }
-        SendMessTaskS.Scheduler(output, null, null, null, isAdd, null, null, null, null);
+        if (ServerINFO.RequireAsyncRun) {
+            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(new SendMessTaskS(
+                    output, null, null, null, isAdd, null, null, null, null));
+        } else {
+            SendMessTask(output, null, null, null, isAdd, null, null, null, null);
+        }
+    }
+
+
+    public static void SendMessTask(ByteArrayDataOutput stream, String type, UUID u, String player, Boolean isAdd,
+                                    BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
+        Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), "xconomy:acb").sendTo(
+                Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> buf.writeBytes(stream.toByteArray()));
+        if (u != null) {
+            DataCon.save(type, u, player, isAdd, balance, amount, newbalance, command);
+        }
     }
 
 }

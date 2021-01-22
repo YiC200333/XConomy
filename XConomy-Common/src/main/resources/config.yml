@@ -36,11 +36,8 @@ Settings:
   #If your server is semi online mode, please set to true
   #semi online mode is not online mode, nor offline mode
   #semi online mode is not perfectly compatible with the function of sending transfer notification between BungeeCord
+  #This function do not support Sponge servers
   semi-online-mode: false
-  #Max value is 1, Min value is 0
-  #Zero means that all transfer operations are completed synchronously
-  #One means that all transfer operations are completed asynchronously
-  async-percentage: 0.25
 
 
 #The display of the currency

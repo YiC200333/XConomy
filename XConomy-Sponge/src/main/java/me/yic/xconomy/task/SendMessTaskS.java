@@ -15,35 +15,49 @@
  *  You should have received a copy of the GNU General Public License along
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-package me.yic.xconomy.task;
+ */package me.yic.xconomy.task;
 
 import com.google.common.io.ByteArrayDataOutput;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
-import me.yic.xconomy.utils.ServerINFO;
 import org.spongepowered.api.Sponge;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class SendMessTaskS {
+public class SendMessTaskS implements Runnable {
+    private final ByteArrayDataOutput stream;
+    private final String type;
+    private final UUID u;
+    private final String player;
+    private final Boolean isAdd;
+    private final BigDecimal balance;
+    private final BigDecimal amount;
+    private final BigDecimal newbalance;
+    private final String command;
 
-    public static void Scheduler(ByteArrayDataOutput stream, String type, UUID u, String player, Boolean isAdd,
-                                 BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
-        Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() ->
-                SendMess(stream, type, u, player, isAdd, balance, amount, newbalance, command));
-
+    public SendMessTaskS(ByteArrayDataOutput stream, String type, UUID u, String player, Boolean isAdd,
+                         BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
+        this.stream = stream;
+        this.type = type;
+        this.u = u;
+        this.player = player;
+        this.isAdd = isAdd;
+        this.balance = balance;
+        this.amount = amount;
+        this.newbalance = newbalance;
+        this.command = command;
     }
 
-    public static void SendMess(ByteArrayDataOutput stream, String type, UUID u, String player, Boolean isAdd,
-                                BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
-        if (ServerINFO.IsBungeeCordMode) {
-            Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), "xconomy:acb").sendTo(
-                    Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> stream.toByteArray());
-        }
+    @Override
+    public void run() {
+        Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), "xconomy:acb").sendTo(
+                Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> buf.writeBytes(stream.toByteArray()));
         if (u != null) {
             DataCon.save(type, u, player, isAdd, balance, amount, newbalance, command);
         }
     }
+
+
+
 }

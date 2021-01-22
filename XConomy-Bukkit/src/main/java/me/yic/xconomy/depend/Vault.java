@@ -89,13 +89,6 @@ public class Vault extends AbstractEconomy {
         return null;
     }
 
-    /**
-     * Deposit an amount to a player's balance
-     *
-     * @param name   the player name to deposit oo
-     * @param amount the amount to deposit
-     * @return {@code EconomyResponse}
-     */
     @Override
     public EconomyResponse depositPlayer(String name, double amount) {
         if (ServerINFO.IsBungeeCordMode & Bukkit.getOnlinePlayers().isEmpty()) {
