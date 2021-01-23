@@ -224,7 +224,7 @@ public class CommandHandler {
                                 commndlength = 4;
                                 int count = 3;
                                 while (count < args.length) {
-                                    reasonmessages.append(args[count]+" ");
+                                    reasonmessages.append(args[count]).append(" ");
                                     count += 1;
                                 }
                             } else {
@@ -234,7 +234,7 @@ public class CommandHandler {
                                     commndlength = 5;
                                     int count = 4;
                                     while (count < args.length) {
-                                        reasonmessages.append(args[count]+" ");
+                                        reasonmessages.append(args[count]).append(" ");
                                         count += 1;
                                     }
                                 }
