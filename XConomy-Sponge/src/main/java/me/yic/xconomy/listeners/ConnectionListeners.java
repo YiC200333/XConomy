@@ -65,7 +65,7 @@ public class ConnectionListeners {
             return;
         }
         player.sendMessage(Text.of("§f[XConomy]§b" + MessagesManager.systemMessage("发现新版本 ") + Updater.newVersion));
-        player.sendMessage(Text.of("§f[XConomy]§ahttps://www.spigotmc.org/resources/xconomy.75669/"));
+        player.sendMessage(Text.of("§f[XConomy]§ahttps://ore.spongepowered.org/YiC/XConomy"));
 
         if (ServerINFO.Lang.equalsIgnoreCase("Chinese")
                 | ServerINFO.Lang.equalsIgnoreCase("ChineseTW")) {

@@ -39,16 +39,16 @@ public class MessagesManager {
     public void load() {
         String jarPath = "jar:file:" + this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
         Reader reader = null;
+        InputStream is = null;
         try {
             URL url = new URL(jarPath + "!/lang/" + ServerINFO.Lang.toLowerCase() + ".yml");
-            InputStream is = url.openStream();
+            is = url.openStream();
             reader = new InputStreamReader(is, StandardCharsets.UTF_8);
         } catch (IOException e) {
             try {
                 URL url = new URL(jarPath + "!/lang/english.yml");
-                InputStream is = url.openStream();
+                is = url.openStream();
                 reader = new InputStreamReader(is, StandardCharsets.UTF_8);
-                is.close();
             } catch (IOException ioException) {
                 XConomy.getInstance().getLogger().info("System languages file read error");
                 ioException.printStackTrace();
@@ -59,6 +59,13 @@ public class MessagesManager {
             return;
         }
         langFile = YamlConfiguration.loadConfiguration(reader);
+
+        try {
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         File mfile = new File(XConomy.getInstance().getDataFolder(), "message.yml");
         boolean translate = false;

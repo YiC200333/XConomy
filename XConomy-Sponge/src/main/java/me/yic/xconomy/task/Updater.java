@@ -51,7 +51,7 @@ public class Updater implements Runnable {
             }
 
             XConomy.getInstance().logger("发现新版本 ", newVersion);
-            XConomy.getInstance().logger(null, "https://www.spigotmc.org/resources/xconomy.75669/");
+            XConomy.getInstance().logger(null, "https://ore.spongepowered.org/YiC/XConomy");
 
             if (ServerINFO.Lang.equalsIgnoreCase("Chinese")
                     | ServerINFO.Lang.equalsIgnoreCase("ChineseTW")) {
