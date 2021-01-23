@@ -166,6 +166,42 @@ public class CommandHandler {
                     sender.sendMessage(sendMessage("prefix") + sendMessage("noaccount"));
                     return true;
                 }
+                
+                if(XConomy.foundvaultOfflinePermManager && (target == null || !target.isOnline())) {
+                  // Offline receiver permission node check with Vault API
+                  Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), new Runnable() {
+                    @Override
+                    public void run() {
+                      if(!XConomy.vaultPerm.playerHas(null, Bukkit.getOfflinePlayer(targetUUID), "xconomy.user.receive")) {
+                        sender.sendMessage(sendMessage("prefix") + sendMessage("no_receive_permission"));
+                        return;
+                      }
+                      
+                      // Same process as in lines 206 to 221
+                      BigDecimal bal_target = Cache.getBalanceFromCacheOrDB(targetUUID);
+                      if (DataFormat.isMAX(bal_target.add(amount))) {
+                          sender.sendMessage(sendMessage("prefix") + sendMessage("over_maxnumber"));
+                          return;
+                      }
+
+                      String com = commandName + " " + args[0] + " " + args[1];
+                      Cache.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), sender.getName(), amount, false, com);
+                      sender.sendMessage(sendMessage("prefix") + sendMessage("pay")
+                              .replace("%player%", args[0])
+                              .replace("%amount%", amountFormatted));
+
+                      Cache.change("PLAYER_COMMAND", targetUUID, args[0], amount, true, com);
+                      String mess = sendMessage("prefix") + sendMessage("pay_receive")
+                              .replace("%player%", sender.getName())
+                              .replace("%amount%", amountFormatted);
+
+                      broadcastSendMessage(false, targetUUID, mess);
+                    }});
+                  return true;
+                }else if (XConomy.foundvaultOfflinePermManager && !target.hasPermission("xconomy.user.receive")) {
+                  sender.sendMessage(sendMessage("prefix") + sendMessage("no_receive_permission"));
+                  return true;
+                }
 
                 BigDecimal bal_target = Cache.getBalanceFromCacheOrDB(targetUUID);
                 if (DataFormat.isMAX(bal_target.add(amount))) {
@@ -183,7 +219,7 @@ public class CommandHandler {
                 String mess = sendMessage("prefix") + sendMessage("pay_receive")
                         .replace("%player%", sender.getName())
                         .replace("%amount%", amountFormatted);
-
+                
                 if (target == null) {
                     broadcastSendMessage(false, targetUUID, mess);
                     return true;

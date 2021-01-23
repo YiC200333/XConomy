@@ -53,6 +53,7 @@ public class Languages {
         ll.add("money_take_receive");
         ll.add("money_set");
         ll.add("money_set_receive");
+        ll.add("no_receive_permission");
         ll.add("no_permission");
         ll.add("help_title_full");
         ll.add("help1");
@@ -95,6 +96,7 @@ public class Languages {
         mess.put("money_take_receive", "&cAdministrator take %amount% from your account");
         mess.put("money_set", "&cYou set %player%'s balance to %amount%");
         mess.put("money_set_receive", "&cAdministrator set your balance to %amount%");
+        mess.put("no_receive_permission", "&cThe target user can't receive your payment!");
         mess.put("no_permission", "&cYou don't have permission to use this command");
         mess.put("help_title_full", "&6=============== [XConomy] HELP <Page %page%> ===============");
         mess.put("help1", "&6balance/money  -  Displays your balance");
@@ -135,6 +137,7 @@ public class Languages {
         mess.put("money_take_receive", "&cАдминистрация забрала %amount% с вашего аккаунта");
         mess.put("money_set", "&cВы установили баланс игрока %player% на %amount%");
         mess.put("money_set_receive", "&cАдминистрация установила ваш баланс на %amount%");
+        mess.put("no_receive_permission", "&cThe target user can't receive your payment!");
         mess.put("no_permission", "&cУ вас нет прав для использования этой команды");
         // mess.put("help_title", "&6ПОМОЩЬ");
         mess.put("help_title_full", "&6=============== [XConomy] ПОМОЩЬ <Page %page%> ===============");
@@ -168,7 +171,7 @@ public class Languages {
         mess.put("pay_self", "&cNo puedes pagarte a ti mismo");
         mess.put("noaccount", "&cEsa cuenta no existe");
         mess.put("invalid", "&cMonto invalido");
-        mess.put("over_maxnumber", "&cThe target account amount over the maximum amount");
+        mess.put("over_maxnumber", "&cLa cuenta del usuario supera la cantidad maxima!");
         mess.put("money_give", "&cRecibiste %player% %amount%");
         mess.put("money_give_receive", "&aUn Staff te dio %amount%");
         mess.put("money_take", "&cRecibiste %amount% de: %player%");
@@ -176,6 +179,7 @@ public class Languages {
         mess.put("money_take_receive", "&cUn Staff te quito %amount%");
         mess.put("money_set", "&cLe seteaste el dinero a %player%, %amount%");
         mess.put("money_set_receive", "&cUn Staff te seteo el dinero a %amount%");
+        mess.put("no_receive_permission", "&cEl usuario no tiene permisos para recibir dinero!");
         mess.put("no_permission", "&cNo tienes permisos para usar este comando");
         mess.put("help_title_full", "&6=============== [XConomy] HELP <Page %page%> ===============");
         mess.put("help1", "&6balance/money  -  Muestra cuanto dinero tienes");
@@ -216,6 +220,7 @@ public class Languages {
         mess.put("money_take_receive", "&c管理员扣除了  %amount% 余额");
         mess.put("money_set", "&c你将  %player% 的金额设置为 %amount%");
         mess.put("money_set_receive", "&c管理员设置你的余额为  %amount%");
+        mess.put("no_receive_permission", "&cThe target user can't receive your payment!");
         mess.put("no_permission", "&c你没有权限使用这个指令");
         // mess.put("help_title", "&6帮助");
         mess.put("help_title_full", "&6=============== [XConomy] 帮助 <第 %page% 页> ===============");
@@ -257,6 +262,7 @@ public class Languages {
         mess.put("money_take_receive", "&c管理員扣除了 %amount% 餘額");
         mess.put("money_set", "&c你將 %player% 的金額設定為 %amount%");
         mess.put("money_set_receive", "&c管理員設定你的餘額為 %amount%");
+        mess.put("no_receive_permission", "&cThe target user can't receive your payment!");
         mess.put("no_permission", "&c你沒有許可權使用這個指令");
         mess.put("help_title_full", "&6=============== [XConomy]幫助 <第 %page% 頁> ===============");
         mess.put("help1", "&6balance/money  -  查詢餘額");
@@ -297,6 +303,7 @@ public class Languages {
         mess.put("money_take_receive", "&cUn administrateur vous a pris %amount%");
         mess.put("money_set", "&cVous avez défini le solde de %player% à %amount%");
         mess.put("money_set_receive", "&cUn administrateur a défini votre solde à %amount%");
+        mess.put("no_receive_permission", "&cThe target user can't receive your payment!");
         mess.put("no_permission", "&cVous n'avez pas la permission d'utiliser cette commande");
         // mess.put("help_title", "&6HELP");
         mess.put("help_title_full", "&6=============== [XConomy] HELP <Page %page%> ===============");
@@ -338,6 +345,7 @@ public class Languages {
         mess.put("money_take_receive", "&cBir yönetici senden %amount% aldı");
         mess.put("money_set", "&c%player% adlı oyuncunun bakiyesi %amount% olarak ayarlandı");
         mess.put("money_set_receive", "&cBir yönetici bakiyeni %amount% olarak ayarladı");
+        mess.put("no_receive_permission", "&cThe target user can't receive your payment!");
         mess.put("no_permission", "&cBu komutu kullanabilmek için yetkin yok.");
         mess.put("help_title_full", "&6=============== [XConomy] YARDIM <Page %page%> ===============");
         mess.put("help1", "&6balance/money  -  Bakiyeni gösterir");
@@ -378,6 +386,7 @@ public class Languages {
         mess.put("money_take_receive", "&cGMさんは %amount% を差し引きました。");
         mess.put("money_set", "&cあなたは %player% さんの残高を %amount% に設定されました。");
         mess.put("money_set_receive", "&cGMさんはあなたの残高を %amount% に設定されました。");
+        mess.put("no_receive_permission", "&cThe target user can't receive your payment!");
         mess.put("no_permission", "&cあなたはこの命令を実行する権限はない。");
         mess.put("help_title_full", "&6=============== [XConomy]幫助 <Page %page%> ===============");
         mess.put("help1", "&6balance/money  -  残高照会");
@@ -419,6 +428,7 @@ public class Languages {
         mess.put("money_take_receive", "&cAdministrator hat dir %amount% abgenommen");
         mess.put("money_set", "&cDu hast den Kontostand von %player% auf %amount% gesetzt");
         mess.put("money_set_receive", "&cAdministrator hat deinen Kontostand auf %amount% gesetzt");
+        mess.put("no_receive_permission", "&cThe target user can't receive your payment!");
         mess.put("no_permission", "&cDu hast keine Berechtigung für diesen Befehl");
         mess.put("help_title_full", "&6=============== [XConomy] HILFE <Page %page%> ===============");
         mess.put("help1", "&6balance/money  -  Zeigt deinen Kontostand");
