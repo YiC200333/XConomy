@@ -75,7 +75,11 @@ public class XConomy extends JavaPlugin {
         // 检查更新
         messageManager = new MessagesManager(this);
         messageManager.load();
+
         econ = new Vault();
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        vaultPerm = rsp.getProvider();
+        foundvaultOfflinePermManager = checkVaultOfflinePermManager();
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             logger("发现 PlaceholderAPI", null);
@@ -105,10 +109,6 @@ public class XConomy extends JavaPlugin {
                 }
             }
         }
-        
-        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        vaultPerm = rsp.getProvider();
-        foundvaultOfflinePermManager = checkVaultOfflinePermManager();
 
         metrics = new Metrics(this, 6588);
 
@@ -205,7 +205,7 @@ public class XConomy extends JavaPlugin {
             return;
         }
         if (!config.getBoolean("Settings.mysql")) {
-           return;
+            return;
         }
         ServerINFO.EnableConnectionPool = XConomy.config.getBoolean("Pool-Settings.usepool");
     }
@@ -299,14 +299,15 @@ public class XConomy extends JavaPlugin {
         Command commande = new EconomyCommand("eeconomy");
         commandMap.register("eeconomy", commande);
     }
-    
+
+    @SuppressWarnings("all")
     private boolean checkVaultOfflinePermManager() {
-      // Check if vault is linked to a permission system that supports offline player checks.
-      switch(vaultPerm.getName()) {
-        // Add other plugins that also have an offline player permissions manager.
-        case "LuckPerms":
-          return true;
-      }
-      return false;
+        // Check if vault is linked to a permission system that supports offline player checks.
+        switch (vaultPerm.getName()) {
+            // Add other plugins that also have an offline player permissions manager.
+            case "LuckPerms":
+                return true;
+        }
+        return false;
     }
 }

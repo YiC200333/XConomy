@@ -35,7 +35,7 @@ import java.util.UUID;
 
 public class SPsync implements RawDataListener {
 
-    @SuppressWarnings("UnstableApiUsage")
+    @SuppressWarnings({"OptionalGetWithoutIsPresent", "NullableProblems"})
     @Override
     public void handlePayload(ChannelBuf data, RemoteConnection connection, Platform.Type side) {
         String type = data.readUTF();
@@ -49,8 +49,8 @@ public class SPsync implements RawDataListener {
             String bal = data.readUTF();
             Cache.bal.put(u, DataFormat.formatString(bal));
         } else if (type.equalsIgnoreCase("message")) {
-            User p = Sponge.getServiceManager().provide(UserStorageService.class)
-                    .get().get(UUID.fromString(data.readUTF())).get();
+            User p = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(
+                    provide -> provide.get(UUID.fromString(data.readUTF()))).get();
 
             String mess = data.readUTF();
             if (p.isOnline()) {

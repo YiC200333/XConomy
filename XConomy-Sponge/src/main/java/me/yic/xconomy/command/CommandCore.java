@@ -15,7 +15,8 @@
  *  You should have received a copy of the GNU General Public License along
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */package me.yic.xconomy.command;
+ */
+package me.yic.xconomy.command;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -24,11 +25,11 @@ import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.lang.MessagesManager;
+import me.yic.xconomy.utils.PluginINFO;
 import me.yic.xconomy.utils.ServerINFO;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.text.Text;
@@ -40,6 +41,7 @@ import java.util.UUID;
 
 public class CommandCore {
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static CommandResult onCommand(CommandSource sender, String commandName, String[] args) {
         switch (commandName) {
             case "xconomy": {
@@ -104,7 +106,7 @@ public class CommandCore {
                         UUID targetUUID = Cache.translateUUID(args[1], null);
 
                         if (targetUUID == null) {
-                            sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("noaccount")));
+                            sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("no_account")));
                             return CommandResult.success();
                         }
 
@@ -143,14 +145,14 @@ public class CommandCore {
                 }
 
                 if (!isDouble(args[1])) {
-                    sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("invalid")));
+                    sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("invalid_amount")));
                     return CommandResult.success();
                 }
 
                 BigDecimal amount = DataFormat.formatString(args[1]);
 
                 if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                    sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("invalid")));
+                    sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("invalid_amount")));
                     return CommandResult.success();
                 }
 
@@ -166,7 +168,12 @@ public class CommandCore {
                 User target = Cache.getplayer(args[0]);
                 UUID targetUUID = Cache.translateUUID(args[0], null);
                 if (targetUUID == null) {
-                    sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("noaccount")));
+                    sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("no_account")));
+                    return CommandResult.success();
+                }
+
+                if (!target.hasPermission("xconomy.user.pay.receive")) {
+                    sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("no_receive_permission")));
                     return CommandResult.success();
                 }
 
@@ -216,7 +223,7 @@ public class CommandCore {
                         Player player = (Player) sender;
 
 
-                        if (XConomy.config.getNode("Settings","cache-correction").getBoolean()) {
+                        if (XConomy.config.getNode("Settings", "cache-correction").getBoolean()) {
                             Cache.refreshFromCache(player.getUniqueId());
                         }
 
@@ -235,7 +242,7 @@ public class CommandCore {
 
                         UUID targetUUID = Cache.translateUUID(args[0], null);
                         if (targetUUID == null) {
-                            sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("noaccount")));
+                            sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("no_account")));
                             return CommandResult.success();
                         }
 
@@ -261,7 +268,7 @@ public class CommandCore {
                         }
 
                         if (!isDouble(args[2])) {
-                            sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("invalid")));
+                            sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("invalid_amount")));
                             return CommandResult.success();
                         }
 
@@ -275,7 +282,7 @@ public class CommandCore {
                         }
 
                         if (targetUUID == null) {
-                            sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("noaccount")));
+                            sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("no_account")));
                             return CommandResult.success();
                         }
 
@@ -288,7 +295,7 @@ public class CommandCore {
                                 }
 
                                 if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                                    sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("invalid")));
+                                    sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("invalid_amount")));
                                     return CommandResult.success();
                                 }
 
@@ -331,7 +338,7 @@ public class CommandCore {
                                 }
 
                                 if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                                    sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("invalid")));
+                                    sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("invalid_amount")));
                                     return CommandResult.success();
                                 }
 
@@ -431,14 +438,14 @@ public class CommandCore {
                         }
 
                         if (!isDouble(args[3])) {
-                            sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("invalid")));
+                            sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("invalid_amount")));
                             return CommandResult.success();
                         }
 
                         BigDecimal amount = DataFormat.formatString(args[3]);
 
                         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                            sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("invalid")));
+                            sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("invalid_amount")));
                             return CommandResult.success();
                         }
 
@@ -521,26 +528,6 @@ public class CommandCore {
         return p.hasPermission("xconomy.op");
     }
 
-    public static Integer CommandIndex(CommandSource sender, CommandContext args) {
-        Integer count = 0;
-        if (args.hasAny(Text.of("arg1"))) {
-            if (args.hasAny(Text.of("arg2"))) {
-                if (args.hasAny(Text.of("arg3"))) {
-                    if (args.hasAny(Text.of("arg4"))) {
-                        count = 3;
-                    }else{
-                        count = 4;
-                    }
-                } else {
-                    count = 2;
-                }
-            }else {
-                count = 1;
-            }
-        }
-        return count;
-    }
-
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isDouble(String s) {
         try {
@@ -562,19 +549,18 @@ public class CommandCore {
         return Sponge.getServer().getOnlinePlayers().isEmpty() & ServerINFO.IsBungeeCordMode;
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static boolean checkMessage(String message) {
         return !MessagesManager.messageFile.getString(message).equals("");
     }
 
     @SuppressWarnings("ConstantConditions")
     public static String sendMessage(String message) {
-        return MessagesManager.messageFile.getNode(message).getString().replace("&","§");
+        return MessagesManager.messageFile.getNode(message).getString().replace("&", "§");
     }
 
     public static void showVersion(CommandSource sender) {
         sender.sendMessage(Text.of(sendMessage("prefix") + "§6 XConomy §f(Version: "
-                + XConomy.version + ") §6|§7 Author: §f" + MessagesManager.getAuthor()));
+                + PluginINFO.VERSION + ") §6|§7 Author: §f" + MessagesManager.getAuthor()));
         String trs = MessagesManager.getTranslatorS();
         if (trs != null) {
             sender.sendMessage(Text.of(sendMessage("prefix") + "§7 Translator (system): §f" + trs));

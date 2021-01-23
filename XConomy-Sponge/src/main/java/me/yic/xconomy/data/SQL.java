@@ -528,14 +528,4 @@ public class SQL {
         }
     }
 
-
-    public static void convertData(String UID, String name, Double amount) {
-        Connection co = database.getConnectionAndCheck();
-        createAccount(UID, name, amount, co);
-    }
-
-    public static void convertNonPlayerData(String acc, Double amount) {
-        Connection co = database.getConnectionAndCheck();
-        createNonPlayerAccount(acc, amount, co);
-    }
 }

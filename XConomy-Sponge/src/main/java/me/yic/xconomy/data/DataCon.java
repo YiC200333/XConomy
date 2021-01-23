@@ -19,7 +19,6 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.utils.ServerINFO;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 

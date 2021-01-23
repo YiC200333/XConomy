@@ -29,10 +29,10 @@ import org.spongepowered.api.service.user.UserStorageService;
 
 import java.util.*;
 
+@SuppressWarnings("NullableProblems")
 public class XCService implements EconomyService {
 
     public final XCurrency xc = new XCurrency();
-    public static Map<UUID, UniqueAccount> uacache = new HashMap<>();
 
     @Override
     public Currency getDefaultCurrency() {
@@ -44,6 +44,7 @@ public class XCService implements EconomyService {
         return null;
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
     public boolean hasAccount(UUID uuid) {
         return hasAccount(Sponge.getServiceManager().provide(UserStorageService.class).get().get(uuid).get().getName());
@@ -57,11 +58,12 @@ public class XCService implements EconomyService {
         return Cache.translateUUID(identifier, null) != null;
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
     public Optional<UniqueAccount> getOrCreateAccount(UUID uuid) {
         if (hasAccount(uuid)) {
             return Optional.of(new XCUniqueAccount(
-                    Sponge.getServiceManager().provide(UserStorageService.class).get().get(uuid).get()));
+                    Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(uuid)).get()));
         }
         return Optional.empty();
     }

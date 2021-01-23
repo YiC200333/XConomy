@@ -19,10 +19,13 @@
 package me.yic.xconomy;
 
 import com.google.inject.Inject;
-import me.yic.xconomy.command.*;
+import me.yic.xconomy.command.CommandBalance;
+import me.yic.xconomy.command.CommandBaltop;
+import me.yic.xconomy.command.CommandPay;
+import me.yic.xconomy.command.CommandSystem;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.SQL;
-import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.depend.economyapi.XCService;
 import me.yic.xconomy.lang.MessagesManager;
@@ -30,9 +33,9 @@ import me.yic.xconomy.listeners.ConnectionListeners;
 import me.yic.xconomy.listeners.SPsync;
 import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
+import me.yic.xconomy.utils.PluginINFO;
 import me.yic.xconomy.utils.ServerINFO;
 import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
@@ -59,30 +62,29 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
-@Plugin(id = "xconomy", name = "XConomy", authors = {"YiC"})
+@Plugin(id = "xconomy", name = "XConomy", version = PluginINFO.VERSION, authors = {"YiC"})
 
 public class XConomy {
 
     private static XConomy instance;
 
     private MessagesManager messageManager;
-    public static String version;
 
     private SpongeExecutorService refresherTask;
-    private Metrics2 metrics;
+    private final Metrics2 metrics;
     private ChannelBinding.RawDataChannel channel;
     private RawDataListener channellistener;
 
     @Inject
-    private Logger inforation;
-
+    private final Logger inforation;
 
     @Inject
     @ConfigDir(sharedRoot = false)
     public Path configDir;
 
     @Inject
-    public XConomy(Metrics2.Factory metricsFactory) {
+    public XConomy(Metrics2.Factory metricsFactory, Logger inforation) {
+        this.inforation = inforation;
         instance = this;
         metrics = metricsFactory.make(6588);
     }
@@ -91,7 +93,7 @@ public class XConomy {
     public static ConfigurationNode config;
 
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings(value = {"unused","ConstantConditions"})
     @Listener
     public void onEnable(GamePreInitializationEvent event) {
         loadconfig();
@@ -121,7 +123,7 @@ public class XConomy {
                         GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg2"))),
                         GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg3"))),
                         GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg4"))),
-                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg5")))))
+                        GenericArguments.optionalWeak(GenericArguments.remainingJoinedStrings(Text.of("arg5")))))
                 .build();
 
         CommandSpec paycmd = CommandSpec.builder()
@@ -191,6 +193,8 @@ public class XConomy {
 
     }
 
+
+    @SuppressWarnings("unused")
     @Listener
     public void onDisable(GameStoppingServerEvent event) {
 
@@ -232,12 +236,9 @@ public class XConomy {
                 e.printStackTrace();
             }
         }
-        URL vurl = Sponge.getAssetManager().getAsset(this,"version.json").get().getUrl();
 
-        HoconConfigurationLoader vloader = HoconConfigurationLoader.builder().setURL(vurl).build();
         YAMLConfigurationLoader loader = YAMLConfigurationLoader.builder().setPath(configpath).build();
             try {
-                version = vloader.load().getNode("version").getString();
                 config = loader.load();
             } catch (IOException e) {
                 e.printStackTrace();

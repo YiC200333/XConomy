@@ -26,6 +26,7 @@ import org.spongepowered.api.text.Text;
 
 public class CommandPay extends CommandCore implements CommandExecutor {
 
+    @SuppressWarnings({"OptionalGetWithoutIsPresent", "NullableProblems"})
     @Override
     public CommandResult execute(CommandSource sender, CommandContext args) {
         if (args.hasAny(Text.of("arg1"))) {

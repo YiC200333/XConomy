@@ -26,6 +26,7 @@ import org.spongepowered.api.text.Text;
 
 public class CommandBalance extends CommandCore implements CommandExecutor {
 
+    @SuppressWarnings({"OptionalGetWithoutIsPresent", "NullableProblems"})
     @Override
     public CommandResult execute(CommandSource sender, CommandContext args) {
         if (args.hasAny(Text.of("arg1"))) {
@@ -33,13 +34,22 @@ public class CommandBalance extends CommandCore implements CommandExecutor {
                 if (args.hasAny(Text.of("arg3"))) {
                     if (args.hasAny(Text.of("arg4"))) {
                         if (args.hasAny(Text.of("arg5"))) {
-                            String[] cmd = {args.<String>getOne("arg1").get().trim(),
-                                    args.<String>getOne("arg2").get().trim(),
-                                    args.<String>getOne("arg3").get().trim(),
-                                    args.<String>getOne("arg4").get().trim(),
-                                    args.<String>getOne("arg5").get().trim()};
-                            return onCommand(sender, "balance", cmd);
-
+                            String amountortype = args.<String>getOne("arg3").get().trim();
+                            if (!isDouble(amountortype)) {
+                                String[] cmd = {args.<String>getOne("arg1").get().trim(),
+                                        args.<String>getOne("arg2").get().trim(),
+                                        amountortype,
+                                        args.<String>getOne("arg4").get().trim(),
+                                        args.<String>getOne("arg5").get().trim()};
+                                return onCommand(sender, "balance", cmd);
+                            }else{
+                                String[] cmd = {args.<String>getOne("arg1").get().trim(),
+                                        args.<String>getOne("arg2").get().trim(),
+                                        amountortype,
+                                        args.<String>getOne("arg4").get().trim() +
+                                        args.<String>getOne("arg5").get().trim()};
+                                return onCommand(sender, "balance", cmd);
+                            }
                         } else {
                             String[] cmd = {args.<String>getOne("arg1").get().trim(),
                                     args.<String>getOne("arg2").get().trim(),

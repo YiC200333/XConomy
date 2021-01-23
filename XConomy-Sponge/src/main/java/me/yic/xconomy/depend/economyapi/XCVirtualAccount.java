@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+@SuppressWarnings("NullableProblems")
 public class XCVirtualAccount implements VirtualAccount {
 
     private final String account;

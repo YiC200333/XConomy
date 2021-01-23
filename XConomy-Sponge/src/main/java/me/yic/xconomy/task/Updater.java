@@ -19,6 +19,7 @@
 package me.yic.xconomy.task;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.utils.PluginINFO;
 import me.yic.xconomy.utils.ServerINFO;
 
 import java.io.BufferedReader;
@@ -42,7 +43,7 @@ public class Updater implements Runnable {
             newVersion = new BufferedReader(new InputStreamReader(conn.getInputStream())).readLine();
 
             List<String> versionList = Arrays.asList(newVersion.split("\\."));
-            List<String> newVersionList = Arrays.asList(XConomy.version.split("\\."));
+            List<String> newVersionList = Arrays.asList(PluginINFO.VERSION.split("\\."));
 
             if (!compare(versionList, newVersionList)) {
                 XConomy.getInstance().logger("已是最新版本", null);

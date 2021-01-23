@@ -101,7 +101,7 @@ public class CommandHandler {
                         UUID targetUUID = Cache.translateUUID(args[1], null);
 
                         if (targetUUID == null) {
-                            sender.sendMessage(sendMessage("prefix") + sendMessage("noaccount"));
+                            sender.sendMessage(sendMessage("prefix") + sendMessage("no_account"));
                             return true;
                         }
 
@@ -140,14 +140,14 @@ public class CommandHandler {
                 }
 
                 if (!isDouble(args[1])) {
-                    sender.sendMessage(sendMessage("prefix") + sendMessage("invalid"));
+                    sender.sendMessage(sendMessage("prefix") + sendMessage("invalid_amount"));
                     return true;
                 }
 
                 BigDecimal amount = DataFormat.formatString(args[1]);
 
                 if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                    sender.sendMessage(sendMessage("prefix") + sendMessage("invalid"));
+                    sender.sendMessage(sendMessage("prefix") + sendMessage("invalid_amount"));
                     return true;
                 }
 
@@ -163,44 +163,21 @@ public class CommandHandler {
                 Player target = Cache.getplayer(args[0]);
                 UUID targetUUID = Cache.translateUUID(args[0], null);
                 if (targetUUID == null) {
-                    sender.sendMessage(sendMessage("prefix") + sendMessage("noaccount"));
+                    sender.sendMessage(sendMessage("prefix") + sendMessage("no_account"));
                     return true;
                 }
-                
-                if(XConomy.foundvaultOfflinePermManager && (target == null || !target.isOnline())) {
-                  // Offline receiver permission node check with Vault API
-                  Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), new Runnable() {
-                    @Override
-                    public void run() {
-                      if(!XConomy.vaultPerm.playerHas(null, Bukkit.getOfflinePlayer(targetUUID), "xconomy.user.receive")) {
+
+                if (XConomy.foundvaultOfflinePermManager) {
+                    if (target == null || !target.isOnline()) {
+                        if (!XConomy.vaultPerm.playerHas(null, Bukkit.getOfflinePlayer(targetUUID), "xconomy.user.pay.receive")) {
+                            sender.sendMessage(sendMessage("prefix") + sendMessage("no_receive_permission"));
+                            return true;
+                        }
+
+                    } else if (!target.hasPermission("xconomy.user.pay.receive")) {
                         sender.sendMessage(sendMessage("prefix") + sendMessage("no_receive_permission"));
-                        return;
-                      }
-                      
-                      // Same process as in lines 206 to 221
-                      BigDecimal bal_target = Cache.getBalanceFromCacheOrDB(targetUUID);
-                      if (DataFormat.isMAX(bal_target.add(amount))) {
-                          sender.sendMessage(sendMessage("prefix") + sendMessage("over_maxnumber"));
-                          return;
-                      }
-
-                      String com = commandName + " " + args[0] + " " + args[1];
-                      Cache.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), sender.getName(), amount, false, com);
-                      sender.sendMessage(sendMessage("prefix") + sendMessage("pay")
-                              .replace("%player%", args[0])
-                              .replace("%amount%", amountFormatted));
-
-                      Cache.change("PLAYER_COMMAND", targetUUID, args[0], amount, true, com);
-                      String mess = sendMessage("prefix") + sendMessage("pay_receive")
-                              .replace("%player%", sender.getName())
-                              .replace("%amount%", amountFormatted);
-
-                      broadcastSendMessage(false, targetUUID, mess);
-                    }});
-                  return true;
-                }else if (XConomy.foundvaultOfflinePermManager && !target.hasPermission("xconomy.user.receive")) {
-                  sender.sendMessage(sendMessage("prefix") + sendMessage("no_receive_permission"));
-                  return true;
+                        return true;
+                    }
                 }
 
                 BigDecimal bal_target = Cache.getBalanceFromCacheOrDB(targetUUID);
@@ -219,7 +196,7 @@ public class CommandHandler {
                 String mess = sendMessage("prefix") + sendMessage("pay_receive")
                         .replace("%player%", sender.getName())
                         .replace("%amount%", amountFormatted);
-                
+
                 if (target == null) {
                     broadcastSendMessage(false, targetUUID, mess);
                     return true;
@@ -234,7 +211,39 @@ public class CommandHandler {
             case "economy":
             case "eco": {
 
-                switch (args.length) {
+                int commndlength = args.length;
+                StringBuilder reasonmessages = null;
+                if (sender.isOp() | sender.hasPermission("xconomy.admin.give")
+                        | sender.hasPermission("xconomy.admin.take") | sender.hasPermission("xconomy.admin.set")) {
+                    if (args.length >= 4) {
+                        if (args.length == 4) {
+                            reasonmessages = new StringBuilder(args[3]);
+                        } else {
+                            reasonmessages = new StringBuilder();
+                            if (isDouble(args[2])) {
+                                commndlength = 4;
+                                int count = 3;
+                                while (count < args.length) {
+                                    reasonmessages.append(args[count]+" ");
+                                    count += 1;
+                                }
+                            } else {
+                                if (args.length == 5) {
+                                    reasonmessages = new StringBuilder(args[4]);
+                                } else {
+                                    commndlength = 5;
+                                    int count = 4;
+                                    while (count < args.length) {
+                                        reasonmessages.append(args[count]+" ");
+                                        count += 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                switch (commndlength) {
                     case 0: {
                         if (!(sender instanceof Player)) {
                             sender.sendMessage(sendMessage("prefix") + MessagesManager.systemMessage("§6控制台无法使用该指令"));
@@ -268,7 +277,7 @@ public class CommandHandler {
 
                         UUID targetUUID = Cache.translateUUID(args[0], null);
                         if (targetUUID == null) {
-                            sender.sendMessage(sendMessage("prefix") + sendMessage("noaccount"));
+                            sender.sendMessage(sendMessage("prefix") + sendMessage("no_account"));
                             return true;
                         }
 
@@ -294,7 +303,7 @@ public class CommandHandler {
                         }
 
                         if (!isDouble(args[2])) {
-                            sender.sendMessage(sendMessage("prefix") + sendMessage("invalid"));
+                            sender.sendMessage(sendMessage("prefix") + sendMessage("invalid_amount"));
                             return true;
                         }
 
@@ -302,13 +311,9 @@ public class CommandHandler {
                         String amountFormatted = DataFormat.shown(amount);
                         Player target = Cache.getplayer(args[1]);
                         UUID targetUUID = Cache.translateUUID(args[1], null);
-                        String reason = null;
-                        if (args.length == 4) {
-                            reason = args[3];
-                        }
 
                         if (targetUUID == null) {
-                            sender.sendMessage(sendMessage("prefix") + sendMessage("noaccount"));
+                            sender.sendMessage(sendMessage("prefix") + sendMessage("no_account"));
                             return true;
                         }
 
@@ -321,7 +326,7 @@ public class CommandHandler {
                                 }
 
                                 if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                                    sender.sendMessage(sendMessage("prefix") + sendMessage("invalid"));
+                                    sender.sendMessage(sendMessage("prefix") + sendMessage("invalid_amount"));
                                     return true;
                                 }
 
@@ -336,14 +341,14 @@ public class CommandHandler {
                                         .replace("%player%", args[1])
                                         .replace("%amount%", amountFormatted));
 
-                                if (checkMessage("money_give_receive") | args.length == 4) {
+                                if (checkMessage("money_give_receive") | commndlength == 4) {
 
                                     String message = sendMessage("prefix") + sendMessage("money_give_receive")
                                             .replace("%player%", args[1])
                                             .replace("%amount%", amountFormatted);
 
-                                    if (args.length == 4) {
-                                        message = sendMessage("prefix") + reason;
+                                    if (commndlength == 4) {
+                                        message = sendMessage("prefix") + reasonmessages;
                                     }
 
                                     if (target == null) {
@@ -364,7 +369,7 @@ public class CommandHandler {
                                 }
 
                                 if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                                    sender.sendMessage(sendMessage("prefix") + sendMessage("invalid"));
+                                    sender.sendMessage(sendMessage("prefix") + sendMessage("invalid_amount"));
                                     return true;
                                 }
 
@@ -382,12 +387,12 @@ public class CommandHandler {
                                         .replace("%player%", args[1])
                                         .replace("%amount%", amountFormatted));
 
-                                if (checkMessage("money_give_receive") | args.length == 4) {
+                                if (checkMessage("money_give_receive") | commndlength == 4) {
                                     String mess = sendMessage("prefix") + sendMessage("money_take_receive")
                                             .replace("%player%", args[1]).replace("%amount%", amountFormatted);
 
-                                    if (args.length == 4) {
-                                        mess = sendMessage("prefix") + reason;
+                                    if (commndlength == 4) {
+                                        mess = sendMessage("prefix") + reasonmessages;
                                     }
 
                                     if (target == null) {
@@ -412,13 +417,13 @@ public class CommandHandler {
                                         .replace("%player%", args[1])
                                         .replace("%amount%", amountFormatted));
 
-                                if (checkMessage("money_give_receive") | args.length == 4) {
+                                if (checkMessage("money_give_receive") | commndlength == 4) {
                                     String mess = sendMessage("prefix") + sendMessage("money_set_receive")
                                             .replace("%player%", args[1])
                                             .replace("%amount%", amountFormatted);
 
-                                    if (args.length == 4) {
-                                        mess = sendMessage("prefix") + reason;
+                                    if (commndlength == 4) {
+                                        mess = sendMessage("prefix") + reasonmessages;
                                     }
 
                                     if (target == null) {
@@ -469,14 +474,14 @@ public class CommandHandler {
                         }
 
                         if (!isDouble(args[3])) {
-                            sender.sendMessage(sendMessage("prefix") + sendMessage("invalid"));
+                            sender.sendMessage(sendMessage("prefix") + sendMessage("invalid_amount"));
                             return true;
                         }
 
                         BigDecimal amount = DataFormat.formatString(args[3]);
 
                         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                            sender.sendMessage(sendMessage("prefix") + sendMessage("invalid"));
+                            sender.sendMessage(sendMessage("prefix") + sendMessage("invalid_amount"));
                             return true;
                         }
 
@@ -487,7 +492,7 @@ public class CommandHandler {
 
                         String amountFormatted = DataFormat.shown(amount);
 
-                        String com = commandName + " " + args[0] + " " + args[1] + " " + args[2] + " " + args[3] + " " + args[4];
+                        String com = commandName + " " + args[0] + " " + args[1] + " " + args[2] + " " + args[3] + " " + reasonmessages;
 
                         switch (args[0].toLowerCase()) {
                             case "give": {
@@ -501,7 +506,7 @@ public class CommandHandler {
                                         .replace("%player%", target)
                                         .replace("%amount%", amountFormatted));
 
-                                String message = sendMessage("prefix") + args[4];
+                                String message = sendMessage("prefix") + reasonmessages;
                                 Bukkit.broadcastMessage(message);
                                 broadcastSendMessage(true, null, message);
                                 break;
@@ -518,7 +523,7 @@ public class CommandHandler {
                                         .replace("%player%", target)
                                         .replace("%amount%", amountFormatted));
 
-                                String message = sendMessage("prefix") + args[4];
+                                String message = sendMessage("prefix") + reasonmessages;
                                 Bukkit.broadcastMessage(message);
                                 broadcastSendMessage(true, null, message);
 
@@ -554,7 +559,6 @@ public class CommandHandler {
         return true;
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean isDouble(String s) {
         try {
             Double.parseDouble(s);
