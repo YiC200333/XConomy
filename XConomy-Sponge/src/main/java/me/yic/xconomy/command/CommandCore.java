@@ -622,8 +622,8 @@ public class CommandCore {
             output.writeUTF(XConomy.getSign());
             output.writeUTF(message);
         }
-        Cache.SendMessTask(output, null, null, null, null, null, null,
-                null, null);
+        Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), "xconomy:acb").sendTo(
+                Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> buf.writeBytes(output.toByteArray()));
 
     }
 }

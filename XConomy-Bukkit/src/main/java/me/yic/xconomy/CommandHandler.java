@@ -24,6 +24,7 @@ import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.lang.MessagesManager;
+import me.yic.xconomy.task.CompletableFutureTask;
 import me.yic.xconomy.utils.ServerINFO;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -168,13 +169,7 @@ public class CommandHandler {
                 }
 
                 if (XConomy.foundvaultOfflinePermManager) {
-                    if (target == null || !target.isOnline()) {
-                        if (!XConomy.vaultPerm.playerHas(null, Bukkit.getOfflinePlayer(targetUUID), "xconomy.user.pay.receive")) {
-                            sender.sendMessage(sendMessage("prefix") + sendMessage("no_receive_permission"));
-                            return true;
-                        }
-
-                    } else if (!target.hasPermission("xconomy.user.pay.receive")) {
+                    if (!CompletableFutureTask.hasreceivepermission(target, targetUUID)) {
                         sender.sendMessage(sendMessage("prefix") + sendMessage("no_receive_permission"));
                         return true;
                     }
@@ -653,8 +648,8 @@ public class CommandHandler {
             output.writeUTF(XConomy.getSign());
             output.writeUTF(message);
         }
-        Cache.SendMessTask(output, null, null, null, null, null, null,
-                null, null);
+        Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(),
+                "xconomy:acb", output.toByteArray());
 
     }
 
