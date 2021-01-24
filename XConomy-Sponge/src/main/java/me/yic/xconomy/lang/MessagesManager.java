@@ -37,7 +37,7 @@ public class MessagesManager {
     private final XConomy plugin;
     public static ConfigurationNode messageFile;
     public static ConfigurationNode langFile;
-    public static ConfigurationLoader<CommentedConfigurationNode> loader;
+    public static ConfigurationLoader loader;
 
     public MessagesManager(XConomy plugin) {
         this.plugin = plugin;

@@ -21,8 +21,12 @@ package me.yic.xconomy.task;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.utils.PluginINFO;
 import me.yic.xconomy.utils.ServerINFO;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -37,10 +41,15 @@ public class Updater implements Runnable {
     @Override
     public void run() {
         try {
-            URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=75669");
+            URL url = new URL("https://ore.spongepowered.org/api/v1/projects/xconomy");
             URLConnection conn = url.openConnection();
-
-            newVersion = new BufferedReader(new InputStreamReader(conn.getInputStream())).readLine();
+            conn.addRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT)");
+            InputStream is = conn.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            ConfigurationLoader loader = HoconConfigurationLoader.builder()
+                    .setSource(()->reader).build();
+            newVersion = loader.load().getNode("recommended","name").getString();
+            is.close();
 
             List<String> versionList = Arrays.asList(newVersion.split("\\."));
             List<String> newVersionList = Arrays.asList(PluginINFO.VERSION.split("\\."));
@@ -60,6 +69,7 @@ public class Updater implements Runnable {
 
 
         } catch (Exception exception) {
+            exception.printStackTrace();
             XConomy.getInstance().logger("检查更新失败", null);
         }
     }

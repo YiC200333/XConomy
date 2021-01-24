@@ -19,6 +19,7 @@
 package me.yic.xconomy;
 
 import com.google.inject.Inject;
+import me.yic.libs.bstats.sponge.Metrics2;
 import me.yic.xconomy.command.CommandBalance;
 import me.yic.xconomy.command.CommandBaltop;
 import me.yic.xconomy.command.CommandPay;
@@ -37,7 +38,6 @@ import me.yic.xconomy.utils.PluginINFO;
 import me.yic.xconomy.utils.ServerINFO;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
-import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
 import org.spongepowered.api.Platform;
 import org.spongepowered.api.Sponge;

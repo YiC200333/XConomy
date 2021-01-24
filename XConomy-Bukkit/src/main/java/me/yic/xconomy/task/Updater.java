@@ -23,6 +23,7 @@ import me.yic.xconomy.utils.ServerINFO;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -39,8 +40,9 @@ public class Updater extends BukkitRunnable {
         try {
             URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=75669");
             URLConnection conn = url.openConnection();
-
-            newVersion = new BufferedReader(new InputStreamReader(conn.getInputStream())).readLine();
+            InputStream is = conn.getInputStream();
+            newVersion = new BufferedReader(new InputStreamReader(is)).readLine();
+            is.close();
 
             List<String> versionList = Arrays.asList(newVersion.split("\\."));
             List<String> newVersionList = Arrays.asList(XConomy.getInstance().getDescription().getVersion().split("\\."));
