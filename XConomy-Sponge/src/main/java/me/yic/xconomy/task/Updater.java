@@ -46,7 +46,7 @@ public class Updater implements Runnable {
             conn.addRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT)");
             InputStream is = conn.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            ConfigurationLoader loader = HoconConfigurationLoader.builder()
+            ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder()
                     .setSource(()->reader).build();
             newVersion = loader.load().getNode("recommended","name").getString();
             is.close();
@@ -69,7 +69,6 @@ public class Updater implements Runnable {
 
 
         } catch (Exception exception) {
-            exception.printStackTrace();
             XConomy.getInstance().logger("检查更新失败", null);
         }
     }
