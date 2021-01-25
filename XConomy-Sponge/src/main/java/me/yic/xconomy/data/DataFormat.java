@@ -78,22 +78,19 @@ public class DataFormat {
     public static void load() {
         maxNumber = setmaxnumber();
         isInteger = XConomy.config.getNode("Currency","integer-bal").getBoolean();
-        String format = "###,##0";
         String gpoint = XConomy.config.getString("Currency.thousands-separator");
+        decimalFormat = new DecimalFormat();
 
-        if (isInteger) {
-            decimalFormat = new DecimalFormat(format);
-            return;
+        if (!isInteger) {
+            decimalFormat.setMinimumFractionDigits(2);
+            decimalFormat.setMaximumFractionDigits(2);
         }
 
-        format = format + ".00";
-        decimalFormat = new DecimalFormat(format);
-        DecimalFormatSymbols spoint = new DecimalFormatSymbols();
-        spoint.setDecimalSeparator('.');
-        if (gpoint != null && gpoint.length() == 1) {
+        if (gpoint != null && !gpoint.equals("") && gpoint.length() == 1) {
+            DecimalFormatSymbols spoint = new DecimalFormatSymbols();
             spoint.setGroupingSeparator(gpoint.charAt(0));
+            decimalFormat.setDecimalFormatSymbols(spoint);
         }
-        decimalFormat.setDecimalFormatSymbols(spoint);
     }
 
 
