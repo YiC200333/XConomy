@@ -27,7 +27,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 
 public class DatabaseConnection {
-    private String driver = "com.mysql.jdbc.Driver";
+    @SuppressWarnings("FieldCanBeLocal")
+    private final String driver = "org.spongepowered.api.service.sql.SqlService";
     //============================================================================================
     private final File dataFolder = new File(XConomy.getInstance().configDir.toFile(), "playerdata");
     private String url = "jdbc:mysql://" + XConomy.config.getNode("MySQL","host").getString() + "/"
@@ -61,29 +62,10 @@ public class DatabaseConnection {
         hikari.addDataSourceProperty("prepStmtCacheSize", "250");
         hikari.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         hikari.addDataSourceProperty("userServerPrepStmts", "true");
-        if (ServerINFO.DDrivers) {
-            hikari.setDriverClassName(driver);
-        }
         if (hikari.getMinimumIdle() < hikari.getMaximumPoolSize()) {
             hikari.setIdleTimeout(idleTime);
         } else {
             hikari.setIdleTimeout(0);
-        }
-    }
-
-    private void setDriver() {
-        if (ServerINFO.DDrivers) {
-            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
-                driver = ("me.yic.libs.mysql.cj.jdbc.Driver");
-            } else {
-                driver = ("me.yic.libs.sqlite.JDBC");
-            }
-        } else {
-            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
-                driver = ("com.mysql.jdbc.Driver");
-            } else {
-                driver = ("org.sqlite.JDBC");
-            }
         }
     }
 
@@ -97,7 +79,6 @@ public class DatabaseConnection {
 
     public boolean setGlobalConnection() {
         setTimezone();
-        setDriver();
         try {
             if (ServerINFO.EnableConnectionPool) {
                 createNewHikariConfiguration();

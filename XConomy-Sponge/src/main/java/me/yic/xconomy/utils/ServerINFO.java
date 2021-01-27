@@ -27,7 +27,7 @@ public class ServerINFO {
 
     public static String Sign;
 
-    public static Boolean DDrivers = false;
+    //public static Boolean DDrivers = false;
 
     public static Double InitialAmount = 0.0;
 

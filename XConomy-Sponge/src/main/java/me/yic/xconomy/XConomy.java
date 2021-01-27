@@ -71,6 +71,7 @@ public class XConomy {
     private MessagesManager messageManager;
 
     private SpongeExecutorService refresherTask;
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private final Metrics2 metrics;
     private ChannelBinding.RawDataChannel channel;
     private RawDataListener channellistener;
@@ -86,7 +87,7 @@ public class XConomy {
     public XConomy(Metrics2.Factory metricsFactory, Logger inforation) {
         this.inforation = inforation;
         instance = this;
-        metrics = metricsFactory.make(6588);
+        metrics = metricsFactory.make(10142);
     }
 
     public static String jarPath;
@@ -98,7 +99,7 @@ public class XConomy {
     public void onEnable(GamePreInitializationEvent event) {
         loadconfig();
         readserverinfo();
-        metrics.addCustomChart(new Metrics2.SimplePie("serverSoftware", () -> "Sponge"));
+        //metrics.addCustomChart(new Metrics2.SimplePie("serverSoftware", () -> "Sponge"));
         if (checkup()) {
             Sponge.getScheduler().createAsyncExecutor(this).execute(new Updater());
         }
@@ -108,10 +109,9 @@ public class XConomy {
 
         Sponge.getServiceManager().setProvider(this, EconomyService.class, new XCService());
 
-        if (Sponge.getPluginManager().getPlugin("DatabaseDrivers").isPresent()) {
-            logger("发现 DatabaseDrivers", null);
-            ServerINFO.DDrivers = true;
-        }
+        //if (Sponge.getPluginManager().getPlugin("DatabaseDrivers").isPresent()) {
+            //logger("发现 DatabaseDrivers", null);
+        //}
 
         Sponge.getEventManager().registerListeners(this, new ConnectionListeners());
 
