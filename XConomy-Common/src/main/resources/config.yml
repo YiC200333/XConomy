@@ -1,80 +1,80 @@
+#设置
 Settings:
   #Chinese ChineseTW English French Spanish Russian Turkish Japanese German
-  language: English
-  #Whether to check for new version
+  language: Chinese
+  #是否检查新版本
   check-update: true
-  #Use MySQL or not
+  #是否使用Mysql
   mysql: false
-  #TOP10 and the Server Total refresh time interval (Seconds)
+  #TOP10和服务器总金额刷新时间间隔 (单位秒)
   refresh-time: 300
-  #If set to true, XConomy will register the following commands:
+  #如果设置为true,XConomy将会注册以下指令
     # - economy
     # - eco
     # - ebalancetop
     # - ebaltop
     # - eeconomy
-  #Please keep in mind that if Essentials is installed on your server
-  #XConomy will take over these commands.
+  #如果你服务器上有安装Essentials插件
+  #XConomy将会覆盖这些指令
   eco-command: true
-  #XConomy will disable the economic function of Essentials.
-  #Just the economic function.
+  #XConomy将会禁用Essentials插件的经济功能
+  #仅仅是经济功能.
   disable-essentials: true
-  #Initial balance
+  #初始余额
   initial-bal: 0
-  #Whether to enable non-player accounts.
-  #It can solve the problem that some plugins need to create non-player accounts, such as Factions,Towny
-  #Non-player account data is not synced with BC
+  #非玩家账户是否启用,可以解决某些插件无法创建非玩家账户问题,比如Factions,Towny
+  #非玩家账户的数据不会进行BC同步
   non-player-account: false
-  #Whether to enable cache correction
-  #If you need to modify the data in the database directly, it is recommended to enable it
-  #You need to note that cache-correction will not double verify the value of the amount in the process of deposit and withdraw
-  #This function is not supported for non player account data
+  #缓存纠正是否开启
+  #如果需要经常对数据库的数据进行修改，建议开启
+  #需要注意的是，缓存纠正不会二次验证金额的数值大小在存扣款过程中
+  #非玩家账户的数据不支持此功能
   cache-correction: false
-  #Dose save transaction record
-  #Only MySQL is supported
+  #是否保存转账记录
+  #只支持MySQL
   transaction-record: true
-  #If your server is semi online mode, please set to true
-  #semi online mode is not online mode, nor offline mode
-  #semi online mode is not perfectly compatible with the function of sending transfer notification between BungeeCord
-  #This function do not support Sponge servers
+  #如果你的服务器为半正版模式，请设置为 true
+  #半正版模式既不是正版模式，也不是离线模式
+  #半正版模式无法完美兼容在 BungeeCord 发送转账提醒的功能
+  #该功能不支持 Sponge 服务器
   semi-online-mode: false
-  #Ignore the case of player names
+  #无视玩家名称的大小写
   username-ignore-case: false
 
 
-#The display of the currency
+#货币的显示
 Currency:
   singular-name: dollar
   plural-name: dollars
-  #Is the balance an integer
+  #余额是否为整数
   integer-bal: false
   thousands-separator: ','
   display-format: '%balance% %currencyname%'
-  #Maximum amount (default is maximum)
+  #最大金额（默认值为最大值）
   max-number: '10000000000000000'
 
 
-#SQLite settings
+#SQLite设置
 SQLite:
-  #Address is the folder path
+  #地址为文件夹路径
   path: Default
 
 
-#MySQL settings
+#MySQL设置
 MySQL:
   host: localhost:3306
   user: root
   pass: root
   database: data
-  #auto add "_", can use %sign% to indicate Server ID (BungeeCord settings)
+  #自动添加 "_", 可以使用 %sign% 来表示服务器ID (见BungeeCord设置)
   table-suffix: ''
   encoding: utf8
   timezone: ''
 
 
-#Connection pool settings
+#连接池设置
 Pool-Settings:
-  #use connection pool or not
+  #是否使用连接池
   usepool: false
   maximum-pool-size: 10
   minimum-idle: 10
@@ -82,11 +82,11 @@ Pool-Settings:
   idle-timeout: 60000
 
 
-#BungeeCord settings
+#BungeeCord设置
 BungeeCord:
-  #Whether to enable BungeeCord synchronization
-  #After BungeeCord sync is turned on, the console and other plugins will not be able to modify the balance in the server without player
-  #Please Set bungeecord to true in the spigot.yml
+  #是否启用BC同步
+  #BC同步开启后,控制台和其他插件将无法在服务器无人的情况下修改金额
+  #需要在spigot.yml中设置bungeecord为true
   enable: false
-  #Server ID, keep the ID and the MySQL settings is the same between the servers requiring synchronization
+  #服务器标识,请保持需要同步的子服务器的标识和数据库的设置一致
   sign: aa

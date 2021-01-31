@@ -1,5 +1,5 @@
-package me.yic.xconomy.utils;/*
- *  This file (ServerINFO.java) is a part of project XConomy
+/*
+ *  This file (UpdateConfig.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -16,22 +16,18 @@ package me.yic.xconomy.utils;/*
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package me.yic.xconomy.utils;
 
-public class ServerINFO {
+import ninja.leaping.configurate.ConfigurationNode;
 
-    public static Boolean IsBungeeCordMode = false;
+public class UpdateConfig {
 
-    public static String Lang;
-
-    public static Boolean EnableConnectionPool = false;
-
-    public static String Sign;
-
-    //public static Boolean DDrivers = false;
-
-    public static Double InitialAmount = 0.0;
-
-    public static Boolean RequireAsyncRun = false;
-
-    public static Boolean IgnoreCase = false;
+    public static boolean update(ConfigurationNode config) {
+        boolean update = false;
+        if (config.getNode("Settings","username-ignore-case").isVirtual()) {
+            config.getNode("Settings","username-ignore-case").setValue(false);
+            update = true;
+        }
+        return update;
+    }
 }

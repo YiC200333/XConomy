@@ -171,6 +171,7 @@ public class CommandCore {
                     sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("no_account")));
                     return CommandResult.success();
                 }
+                String realname = Cache.getrealname(args[0]);
 
                 if (!target.hasPermission("xconomy.user.pay.receive")) {
                     sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("no_receive_permission")));
@@ -183,13 +184,13 @@ public class CommandCore {
                     return CommandResult.success();
                 }
 
-                String com = commandName + " " + args[0] + " " + args[1];
+                String com = commandName + " " + args[0] + " " + amount.toString();
                 Cache.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), sender.getName(), amount, false, com);
                 sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("pay")
-                        .replace("%player%", args[0])
+                        .replace("%player%", realname)
                         .replace("%amount%", amountFormatted)));
 
-                Cache.change("PLAYER_COMMAND", targetUUID, args[0], amount, true, com);
+                Cache.change("PLAYER_COMMAND", targetUUID, realname, amount, true, com);
                 String mess = sendMessage("prefix") + sendMessage("pay_receive")
                         .replace("%player%", sender.getName())
                         .replace("%amount%", amountFormatted);
@@ -245,10 +246,11 @@ public class CommandCore {
                             sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("no_account")));
                             return CommandResult.success();
                         }
+                        String realname = Cache.getrealname(args[0]);
 
                         BigDecimal targetBalance = Cache.getBalanceFromCacheOrDB(targetUUID);
                         sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("balance_other")
-                                .replace("%player%", args[0])
+                                .replace("%player%", realname)
                                 .replace("%balance%", DataFormat.shown((targetBalance)))));
 
                         break;
@@ -276,17 +278,20 @@ public class CommandCore {
                         String amountFormatted = DataFormat.shown(amount);
                         User target = Cache.getplayer(args[1]);
                         UUID targetUUID = Cache.translateUUID(args[1], null);
-                        String reason = null;
-                        if (args.length == 4) {
-                            reason = args[3];
-                        }
-
                         if (targetUUID == null) {
                             sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("no_account")));
                             return CommandResult.success();
                         }
 
-                        String com = commandName + " " + args[0] + " " + args[1] + " " + args[2];
+                        String realname = Cache.getrealname(args[1]);
+
+                        String com = commandName + " " + args[0] + " " + args[1] + " " + amount.toString();
+                        String reason = null;
+                        if (args.length == 4) {
+                            reason = args[3];
+                            com += " " + reason;
+                        }
+
                         switch (args[0].toLowerCase()) {
                             case "give": {
                                 if (!(isOp(sender) | sender.hasPermission("xconomy.admin.give"))) {
@@ -305,15 +310,15 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                Cache.change("ADMIN_COMMAND", targetUUID, args[1], amount, true, com);
+                                Cache.change("ADMIN_COMMAND", targetUUID, realname, amount, true, com);
                                 sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("money_give")
-                                        .replace("%player%", args[1])
+                                        .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
 
                                 if (checkMessage("money_give_receive") | args.length == 4) {
 
                                     String message = sendMessage("prefix") + sendMessage("money_give_receive")
-                                            .replace("%player%", args[1])
+                                            .replace("%player%", realname)
                                             .replace("%amount%", amountFormatted);
 
                                     if (args.length == 4) {
@@ -345,20 +350,20 @@ public class CommandCore {
                                 BigDecimal bal = Cache.getBalanceFromCacheOrDB(targetUUID);
                                 if (bal.compareTo(amount) < 0) {
                                     sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("money_take_fail")
-                                            .replace("%player%", args[1])
+                                            .replace("%player%", realname)
                                             .replace("%amount%", amountFormatted)));
 
                                     return CommandResult.success();
                                 }
 
-                                Cache.change("ADMIN_COMMAND", targetUUID, args[1], amount, false, com);
+                                Cache.change("ADMIN_COMMAND", targetUUID, realname, amount, false, com);
                                 sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("money_take")
-                                        .replace("%player%", args[1])
+                                        .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
 
                                 if (checkMessage("money_give_receive") | args.length == 4) {
                                     String mess = sendMessage("prefix") + sendMessage("money_take_receive")
-                                            .replace("%player%", args[1]).replace("%amount%", amountFormatted);
+                                            .replace("%player%", realname).replace("%amount%", amountFormatted);
 
                                     if (args.length == 4) {
                                         mess = sendMessage("prefix") + reason;
@@ -381,14 +386,14 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                Cache.change("ADMIN_COMMAND", targetUUID, args[1], amount, null, com);
+                                Cache.change("ADMIN_COMMAND", targetUUID, realname, amount, null, com);
                                 sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("money_set")
-                                        .replace("%player%", args[1])
+                                        .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
 
                                 if (checkMessage("money_give_receive") | args.length == 4) {
                                     String mess = sendMessage("prefix") + sendMessage("money_set_receive")
-                                            .replace("%player%", args[1])
+                                            .replace("%player%", realname)
                                             .replace("%amount%", amountFormatted);
 
                                     if (args.length == 4) {
@@ -456,7 +461,7 @@ public class CommandCore {
 
                         String amountFormatted = DataFormat.shown(amount);
 
-                        String com = commandName + " " + args[0] + " " + args[1] + " " + args[2] + " " + args[3] + " " + args[4];
+                        String com = commandName + " " + args[0] + " " + args[1] + " " + args[2] + " " + amount.toString() + " " + args[4];
 
                         switch (args[0].toLowerCase()) {
                             case "give": {

@@ -36,6 +36,7 @@ import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
 import me.yic.xconomy.utils.PluginINFO;
 import me.yic.xconomy.utils.ServerINFO;
+import me.yic.xconomy.utils.UpdateConfig;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.slf4j.Logger;
@@ -238,11 +239,19 @@ public class XConomy {
         }
 
         YAMLConfigurationLoader loader = YAMLConfigurationLoader.builder().setPath(configpath).build();
+        try {
+            config = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (UpdateConfig.update(config)){
             try {
-                config = loader.load();
+                loader.save(config);
             } catch (IOException e) {
                 e.printStackTrace();
+            }
         }
+
     }
 
     public void readserverinfo() {
@@ -250,8 +259,8 @@ public class XConomy {
         ServerINFO.IsBungeeCordMode = isBungeecord();
         ServerINFO.Sign = config.getNode("BungeeCord","sign").getString();
         ServerINFO.InitialAmount = config.getNode("Settings.initial-bal").getDouble();
-
         ServerINFO.RequireAsyncRun = config.getNode("Settings","mysql").getBoolean();
+        ServerINFO.IgnoreCase = config.getNode("Settings","username-ignore-case").getBoolean();
     }
 
     public static void allowHikariConnectionPooling() {

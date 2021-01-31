@@ -1,5 +1,5 @@
-package me.yic.xconomy.utils;/*
- *  This file (ServerINFO.java) is a part of project XConomy
+/*
+ *  This file (SendMessTaskS.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -15,23 +15,25 @@ package me.yic.xconomy.utils;/*
  *  You should have received a copy of the GNU General Public License along
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
+ */package me.yic.xconomy.utils;
 
-public class ServerINFO {
+import java.util.UUID;
 
-    public static Boolean IsBungeeCordMode = false;
+public class PlayerINFO {
+    private final UUID u;
+    private final String name;
 
-    public static String Lang;
+    public PlayerINFO(UUID u, String name) {
+        this.u = u;
+        this.name = name;
+    }
 
-    public static Boolean EnableConnectionPool = false;
+    public UUID getUniqueId() {
+        return u;
+    }
 
-    public static String Sign;
+    public String getName() {
+        return name;
+    }
 
-    //public static Boolean DDrivers = false;
-
-    public static Double InitialAmount = 0.0;
-
-    public static Boolean RequireAsyncRun = false;
-
-    public static Boolean IgnoreCase = false;
 }

@@ -23,6 +23,7 @@ import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.utils.DatabaseConnection;
+import me.yic.xconomy.utils.PlayerINFO;
 import me.yic.xconomy.utils.ServerINFO;
 
 import java.math.BigDecimal;
@@ -280,10 +281,18 @@ public class SQL {
             Connection connection = database.getConnectionAndCheck();
             String query;
 
-            if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
-                query = "select * from " + tableName + " where binary player = ?";
+            if (ServerINFO.IgnoreCase) {
+                if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
+                    query = "select * from " + tableName + " where player = ?";
+                } else {
+                    query = "select * from " + tableName + " where player = ? COLLATE NOCASE";
+                }
             } else {
-                query = "select * from " + tableName + " where player = ?";
+                if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
+                    query = "select * from " + tableName + " where binary player = ?";
+                } else {
+                    query = "select * from " + tableName + " where player = ?";
+                }
             }
 
             PreparedStatement statement = connection.prepareStatement(query);
@@ -292,7 +301,13 @@ public class SQL {
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 UUID id = UUID.fromString(rs.getString(1));
-                Cache.insertIntoUUIDCache(name, id);
+                String username = rs.getString(2);
+                PlayerINFO pi = new PlayerINFO(id, username);
+                String usernamep = name;
+                if (ServerINFO.IgnoreCase) {
+                    usernamep = name.toLowerCase();
+                }
+                Cache.insertIntoUUIDCache(usernamep, pi);
                 Cache.insertIntoCache(id, DataFormat.formatString(rs.getString(3)));
             }
 

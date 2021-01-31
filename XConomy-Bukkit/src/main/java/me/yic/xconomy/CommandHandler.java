@@ -182,7 +182,7 @@ public class CommandHandler {
                     return true;
                 }
 
-                String com = commandName + " " + args[0] + " " + args[1];
+                String com = commandName + " " + args[0] + " " + amount.toString();
                 Cache.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), sender.getName(), amount, false, com);
                 sender.sendMessage(sendMessage("prefix") + sendMessage("pay")
                         .replace("%player%", realname)
@@ -316,7 +316,10 @@ public class CommandHandler {
 
                         String realname = Cache.getrealname(args[1]);
 
-                        String com = commandName + " " + args[0] + " " + args[1] + " " + args[2];
+                        String com = commandName + " " + args[0] + " " + args[1] + " " + amount.toString();
+                        if (commndlength == 4) {
+                            com += " " + reasonmessages;
+                        }
                         switch (args[0].toLowerCase()) {
                             case "give": {
                                 if (!(sender.isOp() | sender.hasPermission("xconomy.admin.give"))) {
@@ -491,7 +494,7 @@ public class CommandHandler {
 
                         String amountFormatted = DataFormat.shown(amount);
 
-                        String com = commandName + " " + args[0] + " " + args[1] + " " + args[2] + " " + args[3] + " " + reasonmessages;
+                        String com = commandName + " " + args[0] + " " + args[1] + " " + args[2] + " " + amount.toString() + " " + reasonmessages;
 
                         switch (args[0].toLowerCase()) {
                             case "give": {

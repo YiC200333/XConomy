@@ -18,10 +18,7 @@
  */
 package me.yic.xconomy.data.caches;
 
-import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
-import me.yic.xconomy.utils.ServerINFO;
-import org.spongepowered.api.Sponge;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -55,13 +52,7 @@ public class CacheNonPlayer {
             }
         }
         insertIntoCache(u, newvalue);
-        if (ServerINFO.RequireAsyncRun) {
-            BigDecimal finalNewvalue = newvalue;
-            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(()->
-                    DataCon.saveNonPlayer(type, u, amount, finalNewvalue, isAdd));
-        }else{
-            DataCon.saveNonPlayer(type, u, amount, newvalue, isAdd);
-        }
+        DataCon.saveNonPlayer(type, u, amount, newvalue, isAdd);
     }
 
 }
