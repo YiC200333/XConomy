@@ -42,6 +42,7 @@ public class DatabaseConnection {
     private final Integer maxLife = XConomy.config.getInt("Pool-Settings.maximum-lifetime");
     private final Long idleTime = XConomy.config.getLong("Pool-Settings.idle-timeout");
     private boolean secon = false;
+    //============================================================================================
     public Integer waittimeout = 10;
     //============================================================================================
     public File userdata = new File(dataFolder, "data.db");
@@ -97,9 +98,18 @@ public class DatabaseConnection {
         }
     }
 
+
+    private void setmysqlhighversion() {
+            if (ServerINFO.DDrivers) {
+                url = url + "&allowPublicKeyRetrieval=true";
+            }
+
+    }
+
     public boolean setGlobalConnection() {
         setTimezone();
         setDriver();
+        setmysqlhighversion();
         try {
             if (ServerINFO.EnableConnectionPool) {
                 createNewHikariConfiguration();
@@ -186,9 +196,11 @@ public class DatabaseConnection {
                 }
 
                 if (XConomy.config.getBoolean("Settings.mysql")) {
-                    if (!connection.isValid(waittimeout)) {
-                        secon = false;
-                        return setGlobalConnection();
+                    if(waittimeout < 28000) {
+                        if (!connection.isValid(waittimeout)) {
+                            secon = false;
+                            return setGlobalConnection();
+                        }
                     }
                 }
             }

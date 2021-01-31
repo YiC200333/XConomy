@@ -16,22 +16,21 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.data;
+package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
-import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.utils.DatabaseConnection;
+import me.yic.xconomy.utils.PlayerINFO;
 import me.yic.xconomy.utils.ServerINFO;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.Date;
 
 public class SQL {
 
@@ -147,144 +146,6 @@ public class SQL {
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-        }
-    }
-
-    public static void newPlayer(Player player) {
-        Connection connection = database.getConnectionAndCheck();
-        boolean doubledata = checkUser(player, connection);
-        if (!doubledata) {
-            selectUser(player.getUniqueId().toString(), player.getName(), connection);
-        }
-        database.closeHikariConnection(connection);
-    }
-
-    private static boolean checkUser(Player player, Connection connection) {
-        boolean doubledata = false;
-        try {
-            String query;
-
-            if (XConomy.config.getBoolean("Settings.mysql")) {
-                query = "select * from " + tableName + " where binary player = ?";
-            } else {
-                query = "select * from " + tableName + " where player = ?";
-            }
-
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, player.getName());
-
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                if (!player.getUniqueId().toString().equals(rs.getString(1))) {
-                    doubledata = true;
-                    if (!ServerINFO.IsSemiOnlineMode) {
-                        if (player.isOnline()) {
-                            Bukkit.getScheduler().runTask(XConomy.getInstance(), () ->
-                                    player.kickPlayer("[XConomy] The player with the same name exists on the server"));
-                        }
-                    } else {
-                        CacheSemiOnline.CacheSubUUID_checkUser(rs.getString(1), player);
-                    }
-                }
-            }
-
-            rs.close();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return doubledata;
-    }
-
-
-    private static void createAccount(String UID, String user, Double amount, Connection co_a) {
-        try {
-            String query;
-            if (XConomy.config.getBoolean("Settings.mysql")) {
-                query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
-                        + "ON DUPLICATE KEY UPDATE UID = ?";
-            } else {
-                query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) ";
-            }
-
-            PreparedStatement statement = co_a.prepareStatement(query);
-            statement.setString(1, UID);
-            statement.setString(2, user);
-            statement.setDouble(3, amount);
-            statement.setInt(4, 0);
-
-            if (XConomy.config.getBoolean("Settings.mysql")) {
-                statement.setString(5, UID);
-            }
-
-            statement.executeUpdate();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public static void createNonPlayerAccount(String account, Double bal, Connection co) {
-        try {
-            String query;
-            if (XConomy.config.getBoolean("Settings.mysql")) {
-                query = "INSERT INTO " + tableNonPlayerName + "(account,balance) values(?,?) "
-                        + "ON DUPLICATE KEY UPDATE account = ?";
-            } else {
-                query = "INSERT INTO " + tableNonPlayerName + "(account,balance) values(?,?)";
-            }
-
-            PreparedStatement statement = co.prepareStatement(query);
-            statement.setString(1, account);
-            statement.setDouble(2, bal);
-
-            if (XConomy.config.getBoolean("Settings.mysql")) {
-                statement.setString(3, account);
-            }
-
-            statement.executeUpdate();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void updateUser(String UID, String user, Connection co_a) {
-        try {
-            PreparedStatement statement = co_a.prepareStatement("update " + tableName + " set player = ? where UID = ?");
-            statement.setString(1, user);
-            statement.setString(2, UID);
-            statement.executeUpdate();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private static void selectUser(String UID, String name, Connection connection) {
-        String user = "#";
-
-        try {
-            PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
-            statement.setString(1, UID);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                user = rs.getString(2);
-            } else {
-                user = name;
-                createAccount(UID, user, ServerINFO.InitialAmount, connection);
-            }
-            rs.close();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        if (!user.equals(name) && !user.equals("#")) {
-            Cache.removeFromUUIDCache(name);
-            updateUser(UID, name, connection);
-            XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
         }
     }
 
@@ -429,7 +290,7 @@ public class SQL {
             if (rs.next()) {
                 CacheNonPlayer.insertIntoCache(playerName, DataFormat.formatString(rs.getString(2)));
             } else {
-                createNonPlayerAccount(playerName, 0.0, connection);
+                SQLCreateNewAccount.createNonPlayerAccount(playerName, 0.0, connection);
                 CacheNonPlayer.insertIntoCache(playerName, DataFormat.formatString("0.0"));
             }
 
@@ -446,10 +307,18 @@ public class SQL {
             Connection connection = database.getConnectionAndCheck();
             String query;
 
-            if (XConomy.config.getBoolean("Settings.mysql")) {
-                query = "select * from " + tableName + " where binary player = ?";
-            } else {
-                query = "select * from " + tableName + " where player = ?";
+            if (ServerINFO.IgnoreCase) {
+                if (XConomy.config.getBoolean("Settings.mysql")) {
+                    query = "select * from " + tableName + " where player = ?";
+                } else {
+                    query = "select * from " + tableName + " where player = ? COLLATE NOCASE";
+                }
+            }else {
+                if (XConomy.config.getBoolean("Settings.mysql")) {
+                    query = "select * from " + tableName + " where binary player = ?";
+                } else {
+                    query = "select * from " + tableName + " where player = ?";
+                }
             }
 
             PreparedStatement statement = connection.prepareStatement(query);
@@ -458,7 +327,13 @@ public class SQL {
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 UUID id = UUID.fromString(rs.getString(1));
-                Cache.insertIntoUUIDCache(name, id);
+                String username = rs.getString(2);
+                PlayerINFO pi = new PlayerINFO(id, username);
+                String usernamep = name;
+                if (ServerINFO.IgnoreCase) {
+                    usernamep = name.toLowerCase();
+                }
+                Cache.insertIntoUUIDCache(usernamep, pi);
                 Cache.insertIntoCache(id, DataFormat.formatString(rs.getString(3)));
             }
 
@@ -559,14 +434,4 @@ public class SQL {
         }
     }
 
-
-    public static void convertData(String UID, String name, Double amount) {
-        Connection co = database.getConnectionAndCheck();
-        createAccount(UID, name, amount, co);
-    }
-
-    public static void convertNonPlayerData(String acc, Double amount) {
-        Connection co = database.getConnectionAndCheck();
-        createNonPlayerAccount(acc, amount, co);
-    }
 }

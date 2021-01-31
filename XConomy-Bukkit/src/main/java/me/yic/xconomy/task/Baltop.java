@@ -19,7 +19,7 @@
 package me.yic.xconomy.task;
 
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.data.SQL;
+import me.yic.xconomy.data.sql.SQL;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 

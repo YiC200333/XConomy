@@ -26,7 +26,7 @@ import me.yic.xconomy.command.CommandPay;
 import me.yic.xconomy.command.CommandSystem;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.SQL;
+import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.depend.economyapi.XCService;
 import me.yic.xconomy.lang.MessagesManager;

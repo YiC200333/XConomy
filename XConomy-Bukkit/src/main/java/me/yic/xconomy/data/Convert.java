@@ -19,6 +19,7 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -55,7 +56,7 @@ public class Convert extends XConomy {
                 for (String u : section1.getKeys(false)) {
                     String na = userFile.getString(u + ".username");
                     Double dd = Double.valueOf(userFile.getString(u + ".balance"));
-                    SQL.convertData(u, na, dd);
+                    SQLCreateNewAccount.convertData(u, na, dd);
                 }
             }
             if (config.getBoolean("Settings.non-player-account")) {
@@ -65,7 +66,7 @@ public class Convert extends XConomy {
                     ConfigurationSection section2 = nonPlayerFile.getConfigurationSection("");
                     for (String n : section2.getKeys(false)) {
                         Double dd = Double.valueOf(nonPlayerFile.getString(n + ".balance"));
-                        SQL.convertNonPlayerData(n, dd);
+                        SQLCreateNewAccount.convertNonPlayerData(n, dd);
 
                     }
                 }

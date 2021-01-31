@@ -20,7 +20,7 @@ package me.yic.xconomy;
 
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.SQL;
+import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.depend.Placeholder;
@@ -196,8 +196,8 @@ public class XConomy extends JavaPlugin {
         ServerINFO.IsSemiOnlineMode = config.getBoolean("Settings.semi-online-mode");
         ServerINFO.Sign = config.getString("BungeeCord.sign");
         ServerINFO.InitialAmount = config.getDouble("Settings.initial-bal");
-
         ServerINFO.RequireAsyncRun = config.getBoolean("Settings.mysql");
+        ServerINFO.IgnoreCase = config.getBoolean("Settings.username-ignore-case");
     }
 
     public static void allowHikariConnectionPooling() {

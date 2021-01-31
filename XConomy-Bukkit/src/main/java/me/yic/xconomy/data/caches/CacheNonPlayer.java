@@ -55,13 +55,7 @@ public class CacheNonPlayer {
             }
         }
         insertIntoCache(u, newvalue);
-        if (ServerINFO.RequireAsyncRun) {
-            BigDecimal finalNewvalue = newvalue;
-            Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () ->
-            DataCon.saveNonPlayer(type, u, amount, finalNewvalue, isAdd));
-        }else{
-            DataCon.saveNonPlayer(type, u, amount, newvalue, isAdd);
-        }
+        DataCon.saveNonPlayer(type, u, amount, newvalue, isAdd);
     }
 
 }

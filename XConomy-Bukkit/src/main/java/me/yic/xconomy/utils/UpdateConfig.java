@@ -129,6 +129,11 @@ public class UpdateConfig {
             config.set("Settings.semi-online-mode", false);
             update = true;
         }
+        if (!ck.contains("Settings.username-ignore-case")) {
+            config.createSection("Settings.username-ignore-case");
+            config.set("Settings.username-ignore-case", false);
+            update = true;
+        }
         return update;
     }
 }

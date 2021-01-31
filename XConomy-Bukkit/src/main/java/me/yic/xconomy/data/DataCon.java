@@ -20,6 +20,8 @@ package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
+import me.yic.xconomy.data.sql.SQL;
+import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -77,7 +79,7 @@ public class DataCon extends XConomy {
     }
 
     public static void newPlayer(Player a) {
-        SQL.newPlayer(a);
+        SQLCreateNewAccount.newPlayer(a);
     }
 
     public static void getBal(UUID u) {

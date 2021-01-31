@@ -168,6 +168,7 @@ public class CommandHandler {
                     return true;
                 }
 
+                String realname = Cache.getrealname(args[0]);
                 if (XConomy.foundvaultOfflinePermManager) {
                     if (!CompletableFutureTask.hasreceivepermission(target, targetUUID)) {
                         sender.sendMessage(sendMessage("prefix") + sendMessage("no_receive_permission"));
@@ -184,10 +185,10 @@ public class CommandHandler {
                 String com = commandName + " " + args[0] + " " + args[1];
                 Cache.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), sender.getName(), amount, false, com);
                 sender.sendMessage(sendMessage("prefix") + sendMessage("pay")
-                        .replace("%player%", args[0])
+                        .replace("%player%", realname)
                         .replace("%amount%", amountFormatted));
 
-                Cache.change("PLAYER_COMMAND", targetUUID, args[0], amount, true, com);
+                Cache.change("PLAYER_COMMAND", targetUUID, realname, amount, true, com);
                 String mess = sendMessage("prefix") + sendMessage("pay_receive")
                         .replace("%player%", sender.getName())
                         .replace("%amount%", amountFormatted);
@@ -275,10 +276,11 @@ public class CommandHandler {
                             sender.sendMessage(sendMessage("prefix") + sendMessage("no_account"));
                             return true;
                         }
+                        String realname = Cache.getrealname(args[0]);
 
                         BigDecimal targetBalance = Cache.getBalanceFromCacheOrDB(targetUUID);
                         sender.sendMessage(sendMessage("prefix") + sendMessage("balance_other")
-                                .replace("%player%", args[0])
+                                .replace("%player%", realname)
                                 .replace("%balance%", DataFormat.shown((targetBalance))));
 
                         break;
@@ -312,6 +314,8 @@ public class CommandHandler {
                             return true;
                         }
 
+                        String realname = Cache.getrealname(args[1]);
+
                         String com = commandName + " " + args[0] + " " + args[1] + " " + args[2];
                         switch (args[0].toLowerCase()) {
                             case "give": {
@@ -331,15 +335,15 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                Cache.change("ADMIN_COMMAND", targetUUID, args[1], amount, true, com);
+                                Cache.change("ADMIN_COMMAND", targetUUID, realname, amount, true, com);
                                 sender.sendMessage(sendMessage("prefix") + sendMessage("money_give")
-                                        .replace("%player%", args[1])
+                                        .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
 
                                 if (checkMessage("money_give_receive") | commndlength == 4) {
 
                                     String message = sendMessage("prefix") + sendMessage("money_give_receive")
-                                            .replace("%player%", args[1])
+                                            .replace("%player%", realname)
                                             .replace("%amount%", amountFormatted);
 
                                     if (commndlength == 4) {
@@ -371,20 +375,20 @@ public class CommandHandler {
                                 BigDecimal bal = Cache.getBalanceFromCacheOrDB(targetUUID);
                                 if (bal.compareTo(amount) < 0) {
                                     sender.sendMessage(sendMessage("prefix") + sendMessage("money_take_fail")
-                                            .replace("%player%", args[1])
+                                            .replace("%player%", realname)
                                             .replace("%amount%", amountFormatted));
 
                                     return true;
                                 }
 
-                                Cache.change("ADMIN_COMMAND", targetUUID, args[1], amount, false, com);
+                                Cache.change("ADMIN_COMMAND", targetUUID, realname, amount, false, com);
                                 sender.sendMessage(sendMessage("prefix") + sendMessage("money_take")
-                                        .replace("%player%", args[1])
+                                        .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
 
                                 if (checkMessage("money_give_receive") | commndlength == 4) {
                                     String mess = sendMessage("prefix") + sendMessage("money_take_receive")
-                                            .replace("%player%", args[1]).replace("%amount%", amountFormatted);
+                                            .replace("%player%", realname).replace("%amount%", amountFormatted);
 
                                     if (commndlength == 4) {
                                         mess = sendMessage("prefix") + reasonmessages;
@@ -407,14 +411,14 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                Cache.change("ADMIN_COMMAND", targetUUID, args[1], amount, null, com);
+                                Cache.change("ADMIN_COMMAND", targetUUID, realname, amount, null, com);
                                 sender.sendMessage(sendMessage("prefix") + sendMessage("money_set")
-                                        .replace("%player%", args[1])
+                                        .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
 
                                 if (checkMessage("money_give_receive") | commndlength == 4) {
                                     String mess = sendMessage("prefix") + sendMessage("money_set_receive")
-                                            .replace("%player%", args[1])
+                                            .replace("%player%", realname)
                                             .replace("%amount%", amountFormatted);
 
                                     if (commndlength == 4) {

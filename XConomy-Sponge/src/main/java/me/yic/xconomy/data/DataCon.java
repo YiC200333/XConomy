@@ -19,6 +19,8 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.sql.SQL;
+import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 
@@ -69,7 +71,7 @@ public class DataCon {
     }
 
     public static void newPlayer(Player a) {
-        SQL.newPlayer(a);
+        SQLCreateNewAccount.newPlayer(a);
     }
 
     public static void getBal(UUID u) {

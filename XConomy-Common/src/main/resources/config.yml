@@ -38,6 +38,8 @@ Settings:
   #semi online mode is not perfectly compatible with the function of sending transfer notification between BungeeCord
   #This function do not support Sponge servers
   semi-online-mode: false
+  #Ignore the case of player names
+  username-ignore-case: false
 
 
 #The display of the currency

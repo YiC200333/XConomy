@@ -23,7 +23,7 @@ import com.google.common.io.ByteStreams;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.task.SendMessTaskS;
+import me.yic.xconomy.utils.PlayerINFO;
 import me.yic.xconomy.utils.ServerINFO;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -36,7 +36,7 @@ public class Cache {
     public static Map<UUID, BigDecimal> bal = new ConcurrentHashMap<>();
     public static Map<String, BigDecimal> baltop = new HashMap<>();
     public static List<String> baltop_papi = new ArrayList<>();
-    public static Map<String, UUID> uid = new ConcurrentHashMap<>();
+    public static Map<String, PlayerINFO> uid = new ConcurrentHashMap<>();
     public static BigDecimal sumbalance = BigDecimal.ZERO;
 
     public static void insertIntoCache(final UUID uuid, BigDecimal value) {
@@ -45,14 +45,18 @@ public class Cache {
         }
     }
 
-    public static void insertIntoUUIDCache(final String u, UUID v) {
+    public static void insertIntoUUIDCache(final String u, PlayerINFO v) {
         uid.put(u, v);
     }
 
     @SuppressWarnings("all")
     public static void removeFromUUIDCache(final String u) {
-        if (uid.containsKey(u)) {
-            uid.remove(u);
+        String up = u;
+        if (ServerINFO.IgnoreCase) {
+            up = u.toLowerCase();
+        }
+        if (uid.containsKey(up)) {
+            uid.remove(up);
         }
     }
 
@@ -117,21 +121,10 @@ public class Cache {
             }
         }
         insertIntoCache(u, newvalue);
-        presavedata(type, u, playername, isAdd, bal, amount, newvalue, reason);
-    }
-
-    private static void presavedata(String type, UUID u, String player, Boolean isAdd,
-                                    BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String reason) {
-
         if (ServerINFO.IsBungeeCordMode) {
-            sendmessave(type, u, player, isAdd, balance, amount, newbalance, reason);
+            sendmessave(type, u, playername, isAdd, bal, amount, newvalue, reason);
         } else {
-            if (ServerINFO.RequireAsyncRun) {
-                Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () ->
-                        DataCon.save(type, u, player, isAdd, balance, amount, newbalance, reason));
-            } else {
-                DataCon.save(type, u, player, isAdd, balance, amount, newbalance, reason);
-            }
+            DataCon.save(type, u, playername, isAdd, bal, amount, newvalue, reason);
         }
     }
 
@@ -174,20 +167,37 @@ public class Cache {
     }
 
     public static UUID translateUUID(String name, Player pp) {
-        if (uid.containsKey(name)) {
-            return uid.get(name);
+        String namep = name;
+        if (ServerINFO.IgnoreCase) {
+            namep = name.toLowerCase();
+        }
+        if (uid.containsKey(namep)) {
+            return uid.get(namep).getUniqueId();
         } else {
             if (!ServerINFO.IsSemiOnlineMode && pp != null) {
-                insertIntoUUIDCache(name, pp.getUniqueId());
-                return uid.get(name);
+                PlayerINFO pi = new PlayerINFO(pp.getUniqueId(), pp.getName());
+                insertIntoUUIDCache(namep, pi);
+                return uid.get(namep).getUniqueId();
             } else {
                 DataCon.getUid(name);
-                if (uid.containsKey(name)) {
-                    return uid.get(name);
+                if (uid.containsKey(namep)) {
+                    return uid.get(namep).getUniqueId();
                 }
             }
         }
         return null;
+    }
+
+
+    public static String getrealname(String name) {
+        String namep = name;
+        if (ServerINFO.IgnoreCase) {
+            namep = name.toLowerCase();
+        }
+        if (uid.containsKey(namep)) {
+            return uid.get(namep).getName();
+        }
+        return "NULL";
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -224,13 +234,9 @@ public class Cache {
 
     private static void SendMessTask(ByteArrayDataOutput stream, String type, UUID u, String player, Boolean isAdd,
                                     BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
-        if (ServerINFO.RequireAsyncRun) {
-            new SendMessTaskS(stream, type, u, player, isAdd, balance, amount, newbalance, command).runTaskAsynchronously(XConomy.getInstance());
-        } else {
             Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
             if (u != null) {
                 DataCon.save(type, u, player, isAdd, balance, amount, newbalance, command);
             }
-        }
     }
 }

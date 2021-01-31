@@ -18,7 +18,7 @@
  */
 package me.yic.xconomy.task;
 
-import me.yic.xconomy.data.SQL;
+import me.yic.xconomy.data.sql.SQL;
 
 import me.yic.xconomy.data.caches.Cache;
 import org.spongepowered.api.Sponge;
