@@ -30,7 +30,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SQLCreateNewAccount extends SQL{
+public class SQLCreateNewAccount extends SQL {
 
     public static void newPlayer(Player player) {
         Connection connection = database.getConnectionAndCheck();
@@ -46,10 +46,18 @@ public class SQLCreateNewAccount extends SQL{
         try {
             String query;
 
-            if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
-                query = "select * from " + tableName + " where binary player = ?";
+            if (ServerINFO.IgnoreCase) {
+                if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
+                    query = "select * from " + tableName + " where player = ?";
+                } else {
+                    query = "select * from " + tableName + " where player = ? COLLATE NOCASE";
+                }
             } else {
-                query = "select * from " + tableName + " where player = ?";
+                if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
+                    query = "select * from " + tableName + " where binary player = ?";
+                } else {
+                    query = "select * from " + tableName + " where player = ?";
+                }
             }
 
             PreparedStatement statement = connection.prepareStatement(query);
