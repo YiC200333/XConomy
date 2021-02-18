@@ -100,9 +100,9 @@ public class DatabaseConnection {
 
 
     private void setmysqlhighversion() {
-            if (ServerINFO.DDrivers) {
-                url = url + "&allowPublicKeyRetrieval=true";
-            }
+        if (ServerINFO.DDrivers) {
+            url = url + "&allowPublicKeyRetrieval=true";
+        }
 
     }
 
@@ -196,11 +196,9 @@ public class DatabaseConnection {
                 }
 
                 if (XConomy.config.getBoolean("Settings.mysql")) {
-                    if(waittimeout < 28000) {
-                        if (!connection.isValid(waittimeout)) {
-                            secon = false;
-                            return setGlobalConnection();
-                        }
+                    if (!connection.isValid(waittimeout)) {
+                        secon = false;
+                        return setGlobalConnection();
                     }
                 }
             }
