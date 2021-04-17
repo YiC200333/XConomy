@@ -35,7 +35,7 @@ public class XConomyAPI {
         return XConomy.getInstance().getDescription().getVersion();
     }
 
-    public Boolean isbungeecordmode() {
+    public boolean isbungeecordmode() {
         return ServerINFO.IsBungeeCordMode;
     }
 
@@ -55,11 +55,11 @@ public class XConomyAPI {
         return Cache.getBalanceFromCacheOrDB(uid);
     }
 
-    public Boolean ismaxnumber(BigDecimal amount) {
+    public boolean ismaxnumber(BigDecimal amount) {
         return DataFormat.isMAX(amount);
     }
 
-    public Integer changebalance(UUID u, String playername, BigDecimal amount, Boolean isadd) {
+    public int changebalance(UUID u, String playername, BigDecimal amount, boolean isadd) {
         if (ServerINFO.IsBungeeCordMode & Bukkit.getOnlinePlayers().isEmpty()) {
             return 1;
         }

@@ -33,7 +33,7 @@ import java.util.UUID;
 
 public class SPsync implements PluginMessageListener {
 
-    @SuppressWarnings("UnstableApiUsage")
+    @SuppressWarnings(value = {"UnstableApiUsage", "ConstantConditions"})
     @Override
     public void onPluginMessageReceived(String channel, @NotNull Player arg1, byte[] message) {
         if (!channel.equals("xconomy:aca")) {

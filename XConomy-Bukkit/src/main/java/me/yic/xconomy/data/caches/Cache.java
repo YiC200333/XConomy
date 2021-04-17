@@ -89,7 +89,7 @@ public class Cache {
     }
 
     @SuppressWarnings("UnstableApiUsage")
-    public static BigDecimal cachecorrection(UUID u, BigDecimal amount, Boolean isAdd) {
+    public static BigDecimal cachecorrection(UUID u, BigDecimal amount, boolean isAdd) {
         BigDecimal newvalue;
         BigDecimal bal = getBalanceFromCacheOrDB(u);
         if (isAdd) {
@@ -110,6 +110,7 @@ public class Cache {
         return newvalue;
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static void change(String type, UUID u, String playername, BigDecimal amount, Boolean isAdd, String reason) {
         BigDecimal newvalue = amount;
         BigDecimal bal = getBalanceFromCacheOrDB(u);
@@ -128,7 +129,7 @@ public class Cache {
         }
     }
 
-    public static void changeall(String targettype, String type, BigDecimal amount, Boolean isAdd, String reason) {
+    public static void changeall(String targettype, String type, BigDecimal amount, boolean isAdd, String reason) {
         bal.clear();
         DataCon.saveall(targettype, type, amount, isAdd, reason);
         if (ServerINFO.IsBungeeCordMode) {
@@ -201,7 +202,7 @@ public class Cache {
     }
 
     @SuppressWarnings("UnstableApiUsage")
-    public static void sendmessave(String type, UUID u, String player, Boolean isAdd,
+    public static void sendmessave(String type, UUID u, String player, boolean isAdd,
                                    BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF("balance");
@@ -212,7 +213,7 @@ public class Cache {
     }
 
     @SuppressWarnings("UnstableApiUsage")
-    public static void sendmessaveall(String targettype, BigDecimal amount, Boolean isAdd) {
+    public static void sendmessaveall(String targettype, BigDecimal amount, boolean isAdd) {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF("balanceall");
         output.writeUTF(XConomy.getSign());
@@ -232,7 +233,7 @@ public class Cache {
     }
 
 
-    private static void SendMessTask(ByteArrayDataOutput stream, String type, UUID u, String player, Boolean isAdd,
+    private static void SendMessTask(ByteArrayDataOutput stream, String type, UUID u, String player, boolean isAdd,
                                     BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
             Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
             if (u != null) {

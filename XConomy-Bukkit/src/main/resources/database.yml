@@ -1,0 +1,35 @@
+Settings:
+  #SQLite MySQL
+  storage-type: SQLite
+  #use connection pool or not
+  usepool: false
+
+
+#SQLite settings
+SQLite:
+  #Address is the folder path
+  path: Default
+
+
+#MySQL settings
+MySQL:
+  host: localhost
+  port: 3306
+  user: root
+  pass: root
+  database: data
+  #auto add "_", can use %sign% to indicate Server ID (BungeeCord settings)
+  table-suffix: ''
+  property:
+    usessl: false
+    encoding: utf8
+    timezone: ''
+
+
+#Connection pool settings
+Pool-Settings:
+  usepool: false
+  maximum-pool-size: 10
+  minimum-idle: 10
+  maximum-lifetime: 180000
+  idle-timeout: 60000

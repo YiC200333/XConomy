@@ -22,6 +22,7 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
+import me.yic.xconomy.utils.DataBaseINFO;
 import me.yic.xconomy.utils.DatabaseConnection;
 import me.yic.xconomy.utils.PlayerINFO;
 import me.yic.xconomy.utils.ServerINFO;
@@ -38,7 +39,7 @@ public class SQL {
     public static String tableNonPlayerName = "xconomynon";
     public static String tableRecordName = "xconomyrecord";
     public final static DatabaseConnection database = new DatabaseConnection();
-    private static final String encoding = XConomy.config.getString("MySQL.encoding");
+    private static final String encoding = DataBaseINFO.DataBaseINFO.getString("MySQL.property.encoding");
 
     public static boolean con() {
         return database.setGlobalConnection();
@@ -49,7 +50,7 @@ public class SQL {
     }
 
     public static void getwaittimeout() {
-        if (XConomy.config.getBoolean("Settings.mysql") && !ServerINFO.EnableConnectionPool) {
+        if (DataBaseINFO.isMySQL() && !ServerINFO.EnableConnectionPool) {
             try {
                 Connection connection = database.getConnectionAndCheck();
 
@@ -92,7 +93,7 @@ public class SQL {
                     + "balance double(20,2), amount double(20,2) not null, operation varchar(50) not null,"
                     + " date varchar(50) not null, command varchar(50) not null,"
                     + "primary key (id)) DEFAULT CHARSET = " + encoding + ";";
-            if (XConomy.config.getBoolean("Settings.mysql")) {
+            if (DataBaseINFO.isMySQL()) {
                 query1 = "CREATE TABLE IF NOT EXISTS " + tableName
                         + "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, hidden int(5) not null, "
                         + "primary key (UID)) DEFAULT CHARSET = " + encoding + ";";
@@ -112,7 +113,7 @@ public class SQL {
             if (XConomy.config.getBoolean("Settings.non-player-account")) {
                 statement.executeUpdate(query2);
             }
-            if (XConomy.config.getBoolean("Settings.mysql") && XConomy.config.getBoolean("Settings.transaction-record")) {
+            if (DataBaseINFO.isMySQL() && XConomy.config.getBoolean("Settings.transaction-record")) {
                 statement.executeUpdate(query3);
             }
             statement.close();
@@ -189,7 +190,7 @@ public class SQL {
         database.closeHikariConnection(connection);
     }
 
-    public static void saveall(String targettype, String type, List<UUID> players, BigDecimal amount, Boolean isAdd,
+    public static void saveall(String targettype, String type, List<UUID> players, BigDecimal amount, boolean isAdd,
                                String reason) {
         Connection connection = database.getConnectionAndCheck();
         try {
@@ -236,7 +237,7 @@ public class SQL {
     }
 
     public static void saveNonPlayer(String type, String account, BigDecimal amount,
-                                     BigDecimal newbalance, Boolean isAdd) {
+                                     BigDecimal newbalance, boolean isAdd) {
         Connection connection = database.getConnectionAndCheck();
         try {
             String query;
@@ -277,7 +278,7 @@ public class SQL {
             Connection connection = database.getConnectionAndCheck();
             String query;
 
-            if (XConomy.config.getBoolean("Settings.mysql")) {
+            if (DataBaseINFO.isMySQL()) {
                 query = "select * from " + tableNonPlayerName + " where binary account = ?";
             } else {
                 query = "select * from " + tableNonPlayerName + " where account = ?";
@@ -308,13 +309,13 @@ public class SQL {
             String query;
 
             if (ServerINFO.IgnoreCase) {
-                if (XConomy.config.getBoolean("Settings.mysql")) {
+                if (DataBaseINFO.isMySQL()) {
                     query = "select * from " + tableName + " where player = ?";
                 } else {
                     query = "select * from " + tableName + " where player = ? COLLATE NOCASE";
                 }
             }else {
-                if (XConomy.config.getBoolean("Settings.mysql")) {
+                if (DataBaseINFO.isMySQL()) {
                     query = "select * from " + tableName + " where binary player = ?";
                 } else {
                     query = "select * from " + tableName + " where player = ?";
@@ -387,7 +388,7 @@ public class SQL {
         return bal;
     }
 
-    public static void hidetop(UUID u, Integer type) {
+    public static void hidetop(UUID u, int type) {
         Connection connection = database.getConnectionAndCheck();
         try {
             String query = " set hidden = ? where UID = ?";
@@ -405,7 +406,7 @@ public class SQL {
 
     public static void record(Connection co, String type, String UID, String player, Boolean isAdd,
                               BigDecimal amount, BigDecimal newbalance, String command) {
-        if (XConomy.config.getBoolean("Settings.mysql") && XConomy.config.getBoolean("Settings.transaction-record")) {
+        if (DataBaseINFO.isMySQL() && XConomy.config.getBoolean("Settings.transaction-record")) {
             String operation = "Error";
             if (isAdd != null) {
                 if (isAdd) {

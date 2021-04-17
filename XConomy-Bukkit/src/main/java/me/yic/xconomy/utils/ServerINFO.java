@@ -18,23 +18,25 @@
  */
 package me.yic.xconomy.utils;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
 public class ServerINFO {
 
-    public static Boolean IsBungeeCordMode = false;
+    public static FileConfiguration DataBaseINFO;
 
-    public static Boolean IsSemiOnlineMode = false;
+    public static boolean IsBungeeCordMode = false;
+
+    public static boolean IsSemiOnlineMode = false;
 
     public static String Lang;
 
-    public static Boolean EnableConnectionPool = false;
+    public static boolean EnableConnectionPool = false;
 
     public static String Sign;
 
-    public static Boolean DDrivers = false;
+    public static boolean DDrivers = false;
 
     public static Double InitialAmount = 0.0;
 
-    public static Boolean RequireAsyncRun = false;
-
-    public static Boolean IgnoreCase = false;
+    public static boolean IgnoreCase = false;
 }

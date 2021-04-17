@@ -27,7 +27,7 @@ import java.text.DecimalFormatSymbols;
 
 public class DataFormat {
 
-    public static boolean isInteger = false;
+    public static boolean isint = false;
     public static DecimalFormat decimalFormat;
     public static BigDecimal maxNumber;
     final static String displayformat = XConomy.config.getString("Currency.display-format");
@@ -36,7 +36,7 @@ public class DataFormat {
 
     public static BigDecimal formatString(String am) {
         BigDecimal bigDecimal = new BigDecimal(am);
-        if (isInteger) {
+        if (isint) {
             return bigDecimal.setScale(0, BigDecimal.ROUND_DOWN);
         } else {
             return bigDecimal.setScale(2, BigDecimal.ROUND_DOWN);
@@ -45,7 +45,7 @@ public class DataFormat {
 
     public static BigDecimal formatDouble(Double am) {
         BigDecimal bigDecimal = BigDecimal.valueOf(am);
-        if (isInteger) {
+        if (isint) {
             return bigDecimal.setScale(0, BigDecimal.ROUND_DOWN);
         } else {
             return bigDecimal.setScale(2, BigDecimal.ROUND_DOWN);
@@ -82,11 +82,11 @@ public class DataFormat {
 
     public static void load() {
         maxNumber = setmaxnumber();
-        isInteger = XConomy.config.getBoolean("Currency.integer-bal");
+        isint = XConomy.config.getBoolean("Currency.integer-bal");
         String gpoint = XConomy.config.getString("Currency.thousands-separator");
         decimalFormat = new DecimalFormat();
 
-        if (!isInteger) {
+        if (!isint) {
             decimalFormat.setMinimumFractionDigits(2);
             decimalFormat.setMaximumFractionDigits(2);
         }

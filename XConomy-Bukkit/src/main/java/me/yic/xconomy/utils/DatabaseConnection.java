@@ -32,18 +32,14 @@ public class DatabaseConnection {
     private String driver = "com.mysql.jdbc.Driver";
     //============================================================================================
     private final File dataFolder = new File(XConomy.getInstance().getDataFolder(), "playerdata");
-    private String url = "jdbc:mysql://" + XConomy.config.getString("MySQL.host") + "/"
-            + XConomy.config.getString("MySQL.database") + "?characterEncoding="
-            + XConomy.config.getString("MySQL.encoding") + "&useSSL=false";
-    private final String username = XConomy.config.getString("MySQL.user");
-    private final String password = XConomy.config.getString("MySQL.pass");
-    private final Integer maxPoolSize = XConomy.config.getInt("Pool-Settings.maximum-pool-size");
-    private final Integer minIdle = XConomy.config.getInt("Pool-Settings.minimum-idle");
-    private final Integer maxLife = XConomy.config.getInt("Pool-Settings.maximum-lifetime");
-    private final Long idleTime = XConomy.config.getLong("Pool-Settings.idle-timeout");
+    private String url = "";
+    private final int maxPoolSize = DataBaseINFO.DataBaseINFO.getInt("Pool-Settings.maximum-pool-size");
+    private final int minIdle = DataBaseINFO.DataBaseINFO.getInt("Pool-Settings.minimum-idle");
+    private final int maxLife = DataBaseINFO.DataBaseINFO.getInt("Pool-Settings.maximum-lifetime");
+    private final Long idleTime = DataBaseINFO.DataBaseINFO.getLong("Pool-Settings.idle-timeout");
     private boolean secon = false;
     //============================================================================================
-    public Integer waittimeout = 10;
+    public int waittimeout = 10;
     //============================================================================================
     public File userdata = new File(dataFolder, "data.db");
     //============================================================================================
@@ -55,8 +51,8 @@ public class DatabaseConnection {
         hikari = new HikariDataSource();
         hikari.setPoolName("XConomy");
         hikari.setJdbcUrl(url);
-        hikari.setUsername(username);
-        hikari.setPassword(password);
+        hikari.setUsername(DataBaseINFO.getuser());
+        hikari.setPassword(DataBaseINFO.getpass());
         hikari.setMaximumPoolSize(maxPoolSize);
         hikari.setMinimumIdle(minIdle);
         hikari.setMaxLifetime(maxLife);
@@ -76,40 +72,29 @@ public class DatabaseConnection {
 
     private void setDriver() {
         if (ServerINFO.DDrivers) {
-            if (XConomy.config.getBoolean("Settings.mysql")) {
-                driver = ("me.yic.libs.mysql.cj.jdbc.Driver");
-            } else {
-                driver = ("me.yic.libs.sqlite.JDBC");
+            switch (DataBaseINFO.getStorageType()) {
+                case 0:
+                    driver = ("me.yic.libs.sqlite.JDBC");
+                    break;
+                case 2:
+                    driver = ("me.yic.libs.mysql.cj.jdbc.Driver");
+                    break;
             }
         } else {
-            if (XConomy.config.getBoolean("Settings.mysql")) {
-                driver = ("com.mysql.jdbc.Driver");
-            } else {
-                driver = ("org.sqlite.JDBC");
+            switch (DataBaseINFO.getStorageType()) {
+                case 0:
+                    driver = ("org.sqlite.JDBC");
+                    break;
+                case 2:
+                    driver = ("com.mysql.jdbc.Driver");
+                    break;
             }
         }
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private void setTimezone() {
-        if (XConomy.config.getString("MySQL.timezone") != null &&
-                !XConomy.config.getString("MySQL.timezone").equals("")) {
-            url = url + "&serverTimezone=" + XConomy.config.getString("MySQL.timezone");
-        }
-    }
-
-
-    private void setmysqlhighversion() {
-        if (ServerINFO.DDrivers) {
-            url = url + "&allowPublicKeyRetrieval=true";
-        }
-
     }
 
     public boolean setGlobalConnection() {
-        setTimezone();
+        url = DataBaseINFO.geturl();
         setDriver();
-        setmysqlhighversion();
         try {
             if (ServerINFO.EnableConnectionPool) {
                 createNewHikariConfiguration();
@@ -117,19 +102,20 @@ public class DatabaseConnection {
                 closeHikariConnection(connection);
             } else {
                 Class.forName(driver);
-                if (XConomy.config.getBoolean("Settings.mysql")) {
-                    connection = DriverManager.getConnection(url, username, password);
-                } else {
-                    connection = DriverManager.getConnection("jdbc:sqlite:" + userdata.toString());
+                switch (DataBaseINFO.getStorageType()) {
+                    case 0:
+                        connection = DriverManager.getConnection("jdbc:sqlite:" + userdata.toString());
+                        break;
+                    case 2:
+                        connection = DriverManager.getConnection(url, DataBaseINFO.getuser(), DataBaseINFO.getpass());
+                        break;
                 }
             }
 
-            if (XConomy.config.getBoolean("Settings.mysql")) {
-                if (secon) {
-                    XConomy.getInstance().logger("MySQL重新连接成功", null);
-                } else {
-                    secon = true;
-                }
+            if (secon) {
+                DataBaseINFO.loggersysmess("重新连接成功");
+            } else {
+                secon = true;
             }
             return true;
 
@@ -195,7 +181,7 @@ public class DatabaseConnection {
                     return setGlobalConnection();
                 }
 
-                if (XConomy.config.getBoolean("Settings.mysql")) {
+                if (DataBaseINFO.getStorageType() == 2) {
                     if (!connection.isValid(waittimeout)) {
                         secon = false;
                         return setGlobalConnection();
@@ -230,9 +216,7 @@ public class DatabaseConnection {
                 hikari.close();
             }
         } catch (SQLException e) {
-            if (XConomy.config.getBoolean("Settings.mysql")) {
-                XConomy.getInstance().logger("MySQL连接断开失败", null);
-            }
+            DataBaseINFO.loggersysmess("连接断开失败");
             e.printStackTrace();
         }
     }

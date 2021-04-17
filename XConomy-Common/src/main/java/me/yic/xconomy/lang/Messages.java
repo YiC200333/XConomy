@@ -26,23 +26,20 @@ public class Messages {
             case "数据保存方式":
                 tag = "saving-mode";
                 break;
-            case "SQLite连接正常":
-                tag = "sqlite-success";
-                break;
-            case "SQLite连接异常":
-                tag = "sqlite-fail";
-                break;
             case "自定义文件夹路径不存在":
                 tag = "no-custom-path";
                 break;
-            case "MySQL连接正常":
-                tag = "mysql-success";
+            case "连接正常":
+                tag = "connect-success";
                 break;
-            case "MySQL连接异常":
-                tag = "mysql-fail";
+            case "连接异常":
+                tag = "connect-fail";
                 break;
-            case "MySQL重新连接成功":
-                tag = "mysql-reconnect-success";
+            case "重新连接成功":
+                tag = "reconnect-success";
+                break;
+            case "连接断开失败":
+                tag = "disconnect-fail";
                 break;
             case "缓存文件创建异常":
                 tag = "cache-file-creation-exception";
@@ -73,9 +70,6 @@ public class Messages {
                 break;
             case "JDBC驱动加载失败":
                 tag = "jdbc-fail";
-                break;
-            case "MySQL连接断开失败":
-                tag = "mysql-disconnect-fail";
                 break;
             case "已创建一个新的语言文件":
                 tag = "create-language-file-success";

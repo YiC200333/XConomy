@@ -3,8 +3,6 @@ Settings:
   language: English
   #Whether to check for new version
   check-update: true
-  #Use MySQL or not
-  mysql: false
   #TOP10 and the Server Total refresh time interval (Seconds)
   refresh-time: 300
   #If set to true, XConomy will register the following commands:
@@ -52,34 +50,6 @@ Currency:
   display-format: '%balance% %currencyname%'
   #Maximum amount (default is maximum)
   max-number: '10000000000000000'
-
-
-#SQLite settings
-SQLite:
-  #Address is the folder path
-  path: Default
-
-
-#MySQL settings
-MySQL:
-  host: localhost:3306
-  user: root
-  pass: root
-  database: data
-  #auto add "_", can use %sign% to indicate Server ID (BungeeCord settings)
-  table-suffix: ''
-  encoding: utf8
-  timezone: ''
-
-
-#Connection pool settings
-Pool-Settings:
-  #use connection pool or not
-  usepool: false
-  maximum-pool-size: 10
-  minimum-idle: 10
-  maximum-lifetime: 180000
-  idle-timeout: 60000
 
 
 #BungeeCord settings

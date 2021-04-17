@@ -128,7 +128,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public int fractionalDigits() {
-        if (DataFormat.isInteger) {
+        if (DataFormat.isint) {
             return 0;
         }
         return 2;

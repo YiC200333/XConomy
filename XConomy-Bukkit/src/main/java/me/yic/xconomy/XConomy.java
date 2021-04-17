@@ -30,6 +30,7 @@ import me.yic.xconomy.listeners.SPsync;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
+import me.yic.xconomy.utils.DataBaseINFO;
 import me.yic.xconomy.utils.EconomyCommand;
 import me.yic.xconomy.utils.ServerINFO;
 import me.yic.xconomy.utils.UpdateConfig;
@@ -68,6 +69,7 @@ public class XConomy extends JavaPlugin {
     public void onEnable() {
         instance = this;
         load();
+        DataBaseINFO.load();
         readserverinfo();
         if (checkup()) {
             new Updater().runTaskAsynchronously(this);
@@ -142,8 +144,8 @@ public class XConomy extends JavaPlugin {
                 getServer().getMessenger().registerIncomingPluginChannel(this, "xconomy:aca", new SPsync());
                 getServer().getMessenger().registerOutgoingPluginChannel(this, "xconomy:acb");
                 logger("已开启BungeeCord同步", null);
-            } else if (!config.getBoolean("Settings.mysql")) {
-                if (config.getString("SQLite.path").equalsIgnoreCase("Default")) {
+            } else if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
+                if (DataBaseINFO.gethost().equalsIgnoreCase("Default")) {
                     logger("SQLite文件路径设置错误", null);
                     logger("BungeeCord同步未开启", null);
                 }
@@ -157,14 +159,14 @@ public class XConomy extends JavaPlugin {
             time = 30;
         }
 
-        refresherTask = new Baltop().runTaskTimerAsynchronously(this, time * 20, time * 20);
+        refresherTask = new Baltop().runTaskTimerAsynchronously(this, time * 20L, time * 20L);
         logger(null, "===== YiC =====");
 
     }
 
     public void onDisable() {
         getServer().getServicesManager().unregister(econ);
-        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null && papiExpansion != null) {
             try {
                 papiExpansion.unregister();
             } catch (NoSuchMethodError ignored) {
@@ -196,7 +198,6 @@ public class XConomy extends JavaPlugin {
         ServerINFO.IsSemiOnlineMode = config.getBoolean("Settings.semi-online-mode");
         ServerINFO.Sign = config.getString("BungeeCord.sign");
         ServerINFO.InitialAmount = config.getDouble("Settings.initial-bal");
-        ServerINFO.RequireAsyncRun = config.getBoolean("Settings.mysql");
         ServerINFO.IgnoreCase = config.getBoolean("Settings.username-ignore-case");
     }
 
@@ -204,7 +205,7 @@ public class XConomy extends JavaPlugin {
         if (foundvaultpe) {
             return;
         }
-        if (!config.getBoolean("Settings.mysql")) {
+        if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
             return;
         }
         ServerINFO.EnableConnectionPool = XConomy.config.getBoolean("Pool-Settings.usepool");
@@ -239,17 +240,16 @@ public class XConomy extends JavaPlugin {
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static boolean isBungeecord() {
         if (!config.getBoolean("BungeeCord.enable")) {
             return false;
         }
 
-        if (config.getBoolean("Settings.mysql")) {
-            return true;
+        if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
+            return !DataBaseINFO.gethost().equalsIgnoreCase("Default");
         }
 
-        return !config.getBoolean("Settings.mysql") & !config.getString("SQLite.path").equalsIgnoreCase("Default");
+        return true;
 
     }
 
