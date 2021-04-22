@@ -42,7 +42,7 @@ public class DataBaseINFO {
         if (DataBaseINFO.getString("Settings.storage-type").equalsIgnoreCase("MySQL")) {
             return 2;
         }
-        return 0;
+        return 1;
     }
 
     public static boolean isMySQL() {
@@ -50,7 +50,7 @@ public class DataBaseINFO {
     }
 
     public static String gethost() {
-        if (getStorageType() == 0 || getStorageType() == 1) {
+        if (getStorageType() == 1) {
             return DataBaseINFO.getString("SQLite.path");
         }else if (getStorageType() == 2) {
             return DataBaseINFO.getString("MySQL.host");
@@ -103,7 +103,6 @@ public class DataBaseINFO {
     public static void loggersysmess(String tag) {
         String mess = MessagesManager.systemMessage(tag);
         switch (getStorageType()) {
-            case 0:
             case 1:
                 XConomy.getInstance().logger(null, mess.replace("%type%", "SQLite"));
                 break;

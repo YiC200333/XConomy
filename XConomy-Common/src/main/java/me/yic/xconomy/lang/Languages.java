@@ -74,7 +74,7 @@ public class Languages {
         mess.put("prefix", "&6[XConomy]");
         mess.put("balance", "&aBalance: %balance%");
         mess.put("balance_other", "&a%player%'s balance: %balance%");
-        mess.put("top_title", "&e========= TOP10 =========");
+        mess.put("top_title", "&e========= TOP10 <Page %page%> =========");
         mess.put("sum_text", "&fServer Total - %balance%");
         mess.put("top_text", "&e%index%: %player% - %balance%");
         mess.put("top_subtitle", "&7TOP10 refreshed every 5 minutes");
@@ -115,7 +115,7 @@ public class Languages {
         mess.put("prefix", "&6[XConomy]");
         mess.put("balance", "&aБаланс: %balance%");
         mess.put("balance_other", "&aБаланс игрока %player%: %balance%");
-        mess.put("top_title", "&e========= ТОП10 =========");
+        mess.put("top_title", "&e========= ТОП10 <Page %page%> =========");
         mess.put("sum_text", "&fСумарно по серверу: %balance%");
         mess.put("top_text", "&e%index%: %player% - %balance%");
         mess.put("top_subtitle", "&7ТОП10 обновляется каждые 5 минут");
@@ -157,7 +157,7 @@ public class Languages {
         mess.put("prefix", "&6[XConomy]");
         mess.put("balance", "&aDinero: %balance%");
         mess.put("balance_other", "&a%player% dinero: %balance%");
-        mess.put("top_title", "&e========= TOP10 =========");
+        mess.put("top_title", "&e========= TOP10 <Page %page%> =========");
         mess.put("sum_text", "&fServer Total - %balance%");
         mess.put("top_text", "&e%index%: %player% - %balance%");
         mess.put("top_subtitle", "&7TOP10 refreshed every 5 minutes");
@@ -198,7 +198,7 @@ public class Languages {
         mess.put("prefix", "&6[XConomy]");
         mess.put("balance", "&a你的余额: %balance%");
         mess.put("balance_other", "&a%player% 的余额: %balance%");
-        mess.put("top_title", "&e========= TOP10 =========");
+        mess.put("top_title", "&e========= TOP10 <第 %page% 页> =========");
         mess.put("sum_text", "&f服务器总金额 - %balance%");
         mess.put("top_text", "&e%index%: %player% - %balance%");
         mess.put("top_subtitle", "&7TOP10每5分钟刷新一次");
@@ -240,7 +240,7 @@ public class Languages {
         mess.put("prefix", "&6[XConomy]");
         mess.put("balance", "&a你的餘額： %balance%");
         mess.put("balance_other", "&a%player% 的餘額： %balance%");
-        mess.put("top_title", "&e========= TOP10 =========");
+        mess.put("top_title", "&e========= TOP10 <第 %page% 頁> =========");
         mess.put("sum_text", "&f伺服器總金額 - %balance%");
         mess.put("top_text", "&e%index%： %player% - %balance%");
         mess.put("top_subtitle", "&7TOP10每五分鐘刷新一次");
@@ -281,7 +281,7 @@ public class Languages {
         mess.put("prefix", "&6[XConomy]");
         mess.put("balance", "&aSolde: %balance%");
         mess.put("balance_other", "&aSolde de %player% : %balance%");
-        mess.put("top_title", "&e========= TOP10 =========");
+        mess.put("top_title", "&e========= TOP10 <Page %page%> =========");
         mess.put("sum_text", "&fServer Total - %balance%");
         mess.put("top_text", "&e%index%: %player% - %balance%");
         mess.put("top_subtitle", "&7TOP10 refreshed every 5 minutes");
@@ -323,7 +323,7 @@ public class Languages {
         mess.put("prefix", "&6[XConomy]");
         mess.put("balance", "&aBakiye: %balance%");
         mess.put("balance_other", "&a%player% adlı oyuncunun bakiyesi: %balance%");
-        mess.put("top_title", "&e========= EN IYI 10 =========");
+        mess.put("top_title", "&e========= EN IYI 10 <Page %page%> =========");
         mess.put("sum_text", "&fServer Total - %balance%");
         mess.put("top_text", "&e%index%: %player% - %balance%");
         mess.put("top_subtitle", "&7TOP10 refreshed every 5 minutes");
@@ -364,7 +364,7 @@ public class Languages {
         mess.put("prefix", "&6[XConomy]");
         mess.put("balance", "&aあなたの残高： %balance%");
         mess.put("balance_other", "&a%player% の残高： %balance%");
-        mess.put("top_title", "&e========= TOP10 =========");
+        mess.put("top_title", "&e========= TOP10 <Page %page%> =========");
         mess.put("sum_text", "&f全サーバーの残高 - %balance%");
         mess.put("top_text", "&e%index%： %player% - %balance%");
         mess.put("top_subtitle", "&7ランキングTOP10の同期時間は5分です");
@@ -406,7 +406,7 @@ public class Languages {
         mess.put("prefix", "&6[XConomy]");
         mess.put("balance", "&aKontostand: %balance%");
         mess.put("balance_other", "&a%player%''s Kontostand: %balance%");
-        mess.put("top_title", "&e========= TOP10 =========");
+        mess.put("top_title", "&e========= TOP10 <Page %page%> =========");
         mess.put("sum_text", "&fServer Gesamtgeld - %balance%");
         mess.put("top_text", "&e%index%: %player% - %balance%");
         mess.put("top_subtitle", "&7Die TOP10 aktualisieren sich alle 5 Minuten");

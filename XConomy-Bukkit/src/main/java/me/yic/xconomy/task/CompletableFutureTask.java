@@ -18,7 +18,7 @@
  */
 package me.yic.xconomy.task;
 
-import me.yic.xconomy.XConomy;
+import me.yic.xconomy.depend.economy.VaultHook;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -31,7 +31,7 @@ public class CompletableFutureTask {
     public static boolean hasreceivepermission(Player target, UUID targetUUID) {
             if (target == null || !target.isOnline()) {
                 CompletableFuture<Boolean> future = new CompletableFuture<>();
-                new Thread(() -> future.complete(XConomy.vaultPerm.playerHas(null,
+                new Thread(() -> future.complete(VaultHook.vaultPerm.playerHas(null,
                         Bukkit.getOfflinePlayer(targetUUID), "xconomy.user.pay.receive"))).start();
 
                 try {

@@ -41,7 +41,7 @@ public class DatabaseConnection {
     //============================================================================================
     public int waittimeout = 10;
     //============================================================================================
-    public File userdata = new File(dataFolder, "data.db");
+    public File userdata = new File(dataFolder, "data");
     //============================================================================================
     private Connection connection = null;
     private HikariDataSource hikari = null;
@@ -73,7 +73,7 @@ public class DatabaseConnection {
     private void setDriver() {
         if (ServerINFO.DDrivers) {
             switch (DataBaseINFO.getStorageType()) {
-                case 0:
+                case 1:
                     driver = ("me.yic.libs.sqlite.JDBC");
                     break;
                 case 2:
@@ -82,7 +82,7 @@ public class DatabaseConnection {
             }
         } else {
             switch (DataBaseINFO.getStorageType()) {
-                case 0:
+                case 1:
                     driver = ("org.sqlite.JDBC");
                     break;
                 case 2:
@@ -103,8 +103,8 @@ public class DatabaseConnection {
             } else {
                 Class.forName(driver);
                 switch (DataBaseINFO.getStorageType()) {
-                    case 0:
-                        connection = DriverManager.getConnection("jdbc:sqlite:" + userdata.toString());
+                    case 1:
+                        connection = DriverManager.getConnection("jdbc:sqlite:" + userdata.toString() + ".db");
                         break;
                     case 2:
                         connection = DriverManager.getConnection(url, DataBaseINFO.getuser(), DataBaseINFO.getpass());

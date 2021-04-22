@@ -1,5 +1,5 @@
-/*
- *  This file (ServerINFO.java) is a part of project XConomy
+package me.yic.xconomy.depend.economy;/*
+ *  This file (EnterpriseHook.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -16,29 +16,21 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.utils;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import com.github.sanctum.economy.construct.implement.AdvancedEconomy;
+import me.yic.xconomy.XConomy;
+import org.bukkit.plugin.ServicePriority;
 
-public class ServerINFO {
+public class EnterpriseHook extends XConomy {
 
-    public static FileConfiguration DataBaseINFO;
+    private static AdvancedEconomy provider;
 
-    public static boolean IsBungeeCordMode = false;
+    public static void load() {
+        provider = new Enterprise();
+        getInstance().getServer().getServicesManager().register(AdvancedEconomy.class, provider, getInstance(), ServicePriority.Normal);
+    }
 
-    public static boolean IsSemiOnlineMode = false;
-
-    public static String Lang;
-
-    public static boolean EnableConnectionPool = false;
-
-    public static String Sign;
-
-    public static boolean DDrivers = false;
-
-    public static Double InitialAmount = 0.0;
-
-    public static int RankingSize = 10;
-
-    public static boolean IgnoreCase = false;
+    public static void unload() {
+        getInstance().getServer().getServicesManager().unregister(AdvancedEconomy.class, provider);
+    }
 }

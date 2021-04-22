@@ -53,7 +53,15 @@ public class CommandHandler {
                     return true;
                 }
                 if (args.length == 2 && args[0].equalsIgnoreCase("help")) {
-                    sendHelpMessage(sender, Integer.valueOf(args[1]));
+                    if (isDouble(args[1])) {
+                        if (Integer.valueOf(args[1]) > 0) {
+                            sendHelpMessage(sender, Integer.valueOf(args[1]));
+                        } else {
+                            sendHelpMessage(sender, 1);
+                        }
+                    } else {
+                        sendHelpMessage(sender, 1);
+                    }
                     return true;
                 }
                 showVersion(sender);
@@ -61,7 +69,7 @@ public class CommandHandler {
             }
 
             case "balancetop": {
-                if (args.length == 0) {
+                if (args.length == 0 || args.length == 1) {
 
                     if (!(sender.isOp() || sender.hasPermission("xconomy.user.balancetop"))) {
                         sender.sendMessage(sendMessage("prefix") + sendMessage("no_permission"));
@@ -73,22 +81,19 @@ public class CommandHandler {
                         return true;
                     }
 
-                    sender.sendMessage(sendMessage("top_title"));
-                    sender.sendMessage(sendMessage("sum_text")
-                            .replace("%balance%", DataFormat.shown((Cache.sumbalance))));
-
-                    List<String> topNames = Cache.baltop_papi;
-                    int placement = 0;
-                    for (String topName : topNames) {
-                        placement++;
-                        sender.sendMessage(sendMessage("top_text")
-                                .replace("%index%", String.valueOf(placement))
-                                .replace("%player%", topName)
-                                .replace("%balance%", DataFormat.shown((Cache.baltop.get(topName)))));
+                    if (args.length == 0) {
+                        sendRankingMessage(sender, 1);
+                    } else {
+                        if (isDouble(args[0])) {
+                            if (Integer.valueOf(args[0]) > 0) {
+                                sendRankingMessage(sender, Integer.valueOf(args[0]));
+                            } else {
+                                sendRankingMessage(sender, 1);
+                            }
+                        } else {
+                            sendRankingMessage(sender, 1);
+                        }
                     }
-
-                    if (checkMessage("top_subtitle"))
-                        sender.sendMessage(sendMessage("top_subtitle"));
 
                     break;
                 } else if (args.length == 2) {
@@ -182,7 +187,7 @@ public class CommandHandler {
                     return true;
                 }
 
-                String com = commandName + " " + args[0] + " " + amount.toString();
+                String com = commandName + " " + args[0] + " " + amount;
                 Cache.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), sender.getName(), amount, false, com);
                 sender.sendMessage(sendMessage("prefix") + sendMessage("pay")
                         .replace("%player%", realname)
@@ -316,7 +321,7 @@ public class CommandHandler {
 
                         String realname = Cache.getrealname(args[1]);
 
-                        String com = commandName + " " + args[0] + " " + args[1] + " " + amount.toString();
+                        String com = commandName + " " + args[0] + " " + args[1] + " " + amount;
                         if (commndlength == 4) {
                             com += " " + reasonmessages;
                         }
@@ -494,7 +499,7 @@ public class CommandHandler {
 
                         String amountFormatted = DataFormat.shown(amount);
 
-                        String com = commandName + " " + args[0] + " " + args[1] + " " + args[2] + " " + amount.toString() + " " + reasonmessages;
+                        String com = commandName + " " + args[0] + " " + args[1] + " " + args[2] + " " + amount + " " + reasonmessages;
 
                         switch (args[0].toLowerCase()) {
                             case "give": {
@@ -629,7 +634,7 @@ public class CommandHandler {
         if (num > maxipages) {
             num = maxipages;
         }
-        sender.sendMessage(sendMessage("help_title_full").replace("%page%", num.toString() + "/" + maxipages.toString()));
+        sender.sendMessage(sendMessage("help_title_full").replace("%page%", num + "/" + maxipages));
         int indexpage = 0;
         while (indexpage < 5) {
             if (helplist.size() > indexpage + (num - 1) * 5) {
@@ -637,6 +642,40 @@ public class CommandHandler {
             }
             indexpage += 1;
         }
+    }
+
+    private static void sendRankingMessage(CommandSender sender, Integer num) {
+        Integer maxipages;
+        int listsize = Cache.baltop_papi.size();
+        if (listsize % 5 == 0) {
+            maxipages = listsize / 5;
+        } else {
+            maxipages = listsize / 5 + 1;
+        }
+        if (num > maxipages) {
+            num = maxipages;
+        }
+        int endindex = num * 5;
+        if (endindex >= listsize) {
+            endindex = listsize;
+        }
+        List<String> topNames = Cache.baltop_papi.subList(num * 5 - 5, endindex);
+
+        sender.sendMessage(sendMessage("top_title").replace("%page%", num + "/" + maxipages));
+        sender.sendMessage(sendMessage("sum_text")
+                .replace("%balance%", DataFormat.shown((Cache.sumbalance))));
+        int placement = 0;
+        for (String topName : topNames) {
+            placement++;
+            sender.sendMessage(sendMessage("top_text")
+                    .replace("%index%", String.valueOf(num * 5 - 5 + placement))
+                    .replace("%player%", topName)
+                    .replace("%balance%", DataFormat.shown((Cache.baltop.get(topName)))));
+        }
+
+        if (checkMessage("top_subtitle"))
+            sender.sendMessage(sendMessage("top_subtitle"));
+
     }
 
     @SuppressWarnings("UnstableApiUsage")

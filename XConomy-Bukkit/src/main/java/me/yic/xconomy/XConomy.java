@@ -20,36 +20,32 @@ package me.yic.xconomy;
 
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
+import me.yic.xconomy.data.sql.SQL;
+import me.yic.xconomy.depend.LoadEconomy;
 import me.yic.xconomy.depend.Placeholder;
-import me.yic.xconomy.depend.Vault;
+import me.yic.xconomy.depend.economy.VaultHook;
+import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.listeners.ConnectionListeners;
 import me.yic.xconomy.listeners.SPsync;
-import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
 import me.yic.xconomy.utils.DataBaseINFO;
 import me.yic.xconomy.utils.EconomyCommand;
 import me.yic.xconomy.utils.ServerINFO;
 import me.yic.xconomy.utils.UpdateConfig;
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.Collection;
 import java.util.Collections;
 
 public class XConomy extends JavaPlugin {
@@ -58,9 +54,7 @@ public class XConomy extends JavaPlugin {
     public static FileConfiguration config;
     private MessagesManager messageManager;
     private static boolean foundvaultpe = false;
-    public Economy econ = null;
     public static boolean foundvaultOfflinePermManager = false;
-    public static Permission vaultPerm = null;
     private BukkitTask refresherTask = null;
     Metrics metrics = null;
     private Placeholder papiExpansion = null;
@@ -71,6 +65,14 @@ public class XConomy extends JavaPlugin {
         load();
         DataBaseINFO.load();
         readserverinfo();
+
+        if (!LoadEconomy.load()) {
+            getLogger().info("No supported dependent plugins were found");
+            getLogger().info("[ Vault ][ Enterprise ]");
+            onDisable();
+            return;
+        }
+
         if (checkup()) {
             new Updater().runTaskAsynchronously(this);
         }
@@ -78,9 +80,6 @@ public class XConomy extends JavaPlugin {
         messageManager = new MessagesManager(this);
         messageManager.load();
 
-        econ = new Vault();
-        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        vaultPerm = rsp.getProvider();
         foundvaultOfflinePermManager = checkVaultOfflinePermManager();
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -100,17 +99,8 @@ public class XConomy extends JavaPlugin {
             ServerINFO.DDrivers = true;
         }
 
-        getServer().getServicesManager().register(Economy.class, econ, this, ServicePriority.Normal);
         getServer().getPluginManager().registerEvents(new ConnectionListeners(), this);
 
-        if (config.getBoolean("Settings.disable-essentials")) {
-            Collection<RegisteredServiceProvider<Economy>> econs = Bukkit.getPluginManager().getPlugin("Vault").getServer().getServicesManager().getRegistrations(Economy.class);
-            for (RegisteredServiceProvider<Economy> econ : econs) {
-                if (econ.getProvider().getName().equalsIgnoreCase("Essentials Economy")) {
-                    getServer().getServicesManager().unregister(econ.getProvider());
-                }
-            }
-        }
 
         metrics = new Metrics(this, 6588);
 
@@ -165,7 +155,8 @@ public class XConomy extends JavaPlugin {
     }
 
     public void onDisable() {
-        getServer().getServicesManager().unregister(econ);
+        LoadEconomy.unload();
+
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null && papiExpansion != null) {
             try {
                 papiExpansion.unregister();
@@ -199,6 +190,11 @@ public class XConomy extends JavaPlugin {
         ServerINFO.Sign = config.getString("BungeeCord.sign");
         ServerINFO.InitialAmount = config.getDouble("Settings.initial-bal");
         ServerINFO.IgnoreCase = config.getBoolean("Settings.username-ignore-case");
+
+        ServerINFO.RankingSize = config.getInt("Settings.ranking-size");
+        if (ServerINFO.RankingSize > 100){
+            ServerINFO.RankingSize = 100;
+        }
     }
 
     public static void allowHikariConnectionPooling() {
@@ -303,10 +299,12 @@ public class XConomy extends JavaPlugin {
     @SuppressWarnings("all")
     private boolean checkVaultOfflinePermManager() {
         // Check if vault is linked to a permission system that supports offline player checks.
-        switch (vaultPerm.getName()) {
-            // Add other plugins that also have an offline player permissions manager.
-            case "LuckPerms":
-                return true;
+        if (LoadEconomy.vault) {
+            switch (VaultHook.vaultPerm.getName()) {
+                // Add other plugins that also have an offline player permissions manager.
+                case "LuckPerms":
+                    return true;
+            }
         }
         return false;
     }

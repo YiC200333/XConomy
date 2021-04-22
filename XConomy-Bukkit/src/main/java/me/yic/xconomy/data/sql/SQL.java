@@ -350,7 +350,7 @@ public class SQL {
         try {
             Connection connection = database.getConnectionAndCheck();
             PreparedStatement statement = connection.prepareStatement(
-                    "select * from " + tableName + " where hidden != '1' order by balance desc limit 10");
+                    "select * from " + tableName + " where hidden != '1' order by balance desc limit " + ServerINFO.RankingSize);
 
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {

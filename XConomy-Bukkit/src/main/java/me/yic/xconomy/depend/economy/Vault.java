@@ -16,7 +16,7 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.depend;
+package me.yic.xconomy.depend.economy;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
