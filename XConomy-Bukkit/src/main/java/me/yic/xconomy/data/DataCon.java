@@ -37,7 +37,7 @@ public class DataCon extends DataBaseINFO {
 
     public static boolean create() {
         switch (getStorageType()) {
-            case 0:
+            case 1:
                 XConomy.getInstance().logger("数据保存方式", " - SQLite");
                 setupSqLiteAddress();
 

@@ -18,6 +18,7 @@
  */
 package me.yic.xconomy;
 
+import me.yic.xconomy.listeners.BCPlayerEvent;
 import me.yic.xconomy.listeners.BCsync;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -31,7 +32,9 @@ public class XConomyBungee extends Plugin {
 
         getProxy().registerChannel("xconomy:aca");
         getProxy().registerChannel("xconomy:acb");
+        getProxy().registerChannel("xconomy:global");
         getProxy().getPluginManager().registerListener(this, new BCsync());
+        getProxy().getPluginManager().registerListener(this, new BCPlayerEvent());
 
         getLogger().info("XConomy successfully enabled!");
         getLogger().info("===== YiC =====");

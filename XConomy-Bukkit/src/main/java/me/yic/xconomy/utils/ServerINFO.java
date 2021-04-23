@@ -18,11 +18,7 @@
  */
 package me.yic.xconomy.utils;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
 public class ServerINFO {
-
-    public static FileConfiguration DataBaseINFO;
 
     public static boolean IsBungeeCordMode = false;
 

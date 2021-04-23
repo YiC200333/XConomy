@@ -40,6 +40,9 @@ public class ConnectionListeners implements Listener {
         if (Bukkit.getOnlinePlayers().size() == 1) {
             Cache.clearCache();
         }
+        if (!ServerINFO.IsBungeeCordMode) {
+            TabList.PlayerList.remove(event.getPlayer().getName());
+        }
     }
 
     @SuppressWarnings("unused")
@@ -48,12 +51,16 @@ public class ConnectionListeners implements Listener {
         Player a = event.getPlayer();
         if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
             DataCon.newPlayer(a);
-        }else{
+        } else {
             Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataCon.newPlayer(a));
         }
 
         if (!XConomy.config.getBoolean("Settings.semi-online-mode")) {
             Cache.translateUUID(a.getName(), a);
+        }
+
+        if (!TabList.PlayerList.contains(a.getName())) {
+            TabList.PlayerList.add(a.getName());
         }
 
         if (a.isOp()) {

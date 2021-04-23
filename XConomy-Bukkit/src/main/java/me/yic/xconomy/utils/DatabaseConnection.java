@@ -41,7 +41,7 @@ public class DatabaseConnection {
     //============================================================================================
     public int waittimeout = 10;
     //============================================================================================
-    public File userdata = new File(dataFolder, "data");
+    public File userdata = new File(dataFolder, "data.db");
     //============================================================================================
     private Connection connection = null;
     private HikariDataSource hikari = null;
@@ -104,7 +104,7 @@ public class DatabaseConnection {
                 Class.forName(driver);
                 switch (DataBaseINFO.getStorageType()) {
                     case 1:
-                        connection = DriverManager.getConnection("jdbc:sqlite:" + userdata.toString() + ".db");
+                        connection = DriverManager.getConnection("jdbc:sqlite:" + userdata.toString());
                         break;
                     case 2:
                         connection = DriverManager.getConnection(url, DataBaseINFO.getuser(), DataBaseINFO.getpass());

@@ -28,7 +28,9 @@ import me.yic.xconomy.depend.Placeholder;
 import me.yic.xconomy.depend.economy.VaultHook;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.listeners.ConnectionListeners;
+import me.yic.xconomy.listeners.SPPsync;
 import me.yic.xconomy.listeners.SPsync;
+import me.yic.xconomy.listeners.TabList;
 import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
 import me.yic.xconomy.utils.DataBaseINFO;
@@ -65,22 +67,35 @@ public class XConomy extends JavaPlugin {
         load();
         DataBaseINFO.load();
         readserverinfo();
+        messageManager = new MessagesManager(this);
+        messageManager.load();
 
         if (!LoadEconomy.load()) {
             getLogger().info("No supported dependent plugins were found");
             getLogger().info("[ Vault ][ Enterprise ]");
-            onDisable();
+            logger("XConomy已成功卸载", null);
             return;
         }
+
+        foundvaultOfflinePermManager = checkVaultOfflinePermManager();
+
+        if (Bukkit.getPluginManager().getPlugin("DatabaseDrivers") != null) {
+            logger("发现 DatabaseDrivers", null);
+            ServerINFO.DDrivers = true;
+        }
+
+        allowHikariConnectionPooling();
+        if (!DataCon.create()) {
+            logger("XConomy已成功卸载", null);
+            return;
+        }
+
+        Cache.baltop();
 
         if (checkup()) {
             new Updater().runTaskAsynchronously(this);
         }
         // 检查更新
-        messageManager = new MessagesManager(this);
-        messageManager.load();
-
-        foundvaultOfflinePermManager = checkVaultOfflinePermManager();
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             logger("发现 PlaceholderAPI", null);
@@ -94,11 +109,6 @@ public class XConomy extends JavaPlugin {
             setupPlaceHolderAPI();
         }
 
-        if (Bukkit.getPluginManager().getPlugin("DatabaseDrivers") != null) {
-            logger("发现 DatabaseDrivers", null);
-            ServerINFO.DDrivers = true;
-        }
-
         getServer().getPluginManager().registerEvents(new ConnectionListeners(), this);
 
 
@@ -109,6 +119,12 @@ public class XConomy extends JavaPlugin {
         Bukkit.getPluginCommand("balancetop").setExecutor(new Commands());
         Bukkit.getPluginCommand("pay").setExecutor(new Commands());
         Bukkit.getPluginCommand("xconomy").setExecutor(new Commands());
+
+        this.getCommand("money").setTabCompleter(new TabList());
+        this.getCommand("balance").setTabCompleter(new TabList());
+        this.getCommand("balancetop").setTabCompleter(new TabList());
+        this.getCommand("pay").setTabCompleter(new TabList());
+        this.getCommand("xconomy").setTabCompleter(new TabList());
 
         if (config.getBoolean("Settings.eco-command")) {
             try {
@@ -121,18 +137,11 @@ public class XConomy extends JavaPlugin {
             }
         }
 
-        allowHikariConnectionPooling();
-        if (!DataCon.create()) {
-            onDisable();
-            return;
-        }
-
-        Cache.baltop();
-
         if (config.getBoolean("BungeeCord.enable")) {
             if (isBungeecord()) {
                 getServer().getMessenger().registerIncomingPluginChannel(this, "xconomy:aca", new SPsync());
                 getServer().getMessenger().registerOutgoingPluginChannel(this, "xconomy:acb");
+                getServer().getMessenger().registerIncomingPluginChannel(this, "xconomy:global", new SPPsync());
                 logger("已开启BungeeCord同步", null);
             } else if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
                 if (DataBaseINFO.gethost().equalsIgnoreCase("Default")) {
@@ -167,6 +176,7 @@ public class XConomy extends JavaPlugin {
         if (isBungeecord()) {
             getServer().getMessenger().unregisterIncomingPluginChannel(this, "xconomy:aca", new SPsync());
             getServer().getMessenger().unregisterOutgoingPluginChannel(this, "xconomy:acb");
+            getServer().getMessenger().unregisterIncomingPluginChannel(this, "xconomy:global", new SPPsync());
         }
 
         refresherTask.cancel();
