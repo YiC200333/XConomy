@@ -24,8 +24,8 @@ public class UpdateConfig {
 
     public static boolean update(ConfigurationNode config) {
         boolean update = false;
-        if (config.getNode("Settings","username-ignore-case").isVirtual()) {
-            config.getNode("Settings","username-ignore-case").setValue(false);
+        if (config.getNode("Settings","ranking-size").isVirtual()) {
+            config.getNode("Settings","ranking-size").setValue(10);
             update = true;
         }
         return update;

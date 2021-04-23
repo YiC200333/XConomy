@@ -23,6 +23,7 @@ import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.Updater;
+import me.yic.xconomy.utils.DataBaseINFO;
 import me.yic.xconomy.utils.ServerINFO;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -44,7 +45,7 @@ public class ConnectionListeners {
     @Listener
     public void onJoin(ClientConnectionEvent.Join event) {
         Player a = event.getTargetEntity();
-        if (ServerINFO.RequireAsyncRun) {
+        if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
             Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataCon.newPlayer(a));
         } else {
             DataCon.newPlayer(a);

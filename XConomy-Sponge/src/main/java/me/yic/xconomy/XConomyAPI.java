@@ -36,7 +36,7 @@ public class XConomyAPI {
         return PluginINFO.VERSION;
     }
 
-    public Boolean isbungeecordmode() {
+    public boolean isbungeecordmode() {
         return ServerINFO.IsBungeeCordMode;
     }
 
@@ -56,11 +56,11 @@ public class XConomyAPI {
         return Cache.getBalanceFromCacheOrDB(uid);
     }
 
-    public Boolean ismaxnumber(BigDecimal amount) {
+    public boolean ismaxnumber(BigDecimal amount) {
         return DataFormat.isMAX(amount);
     }
 
-    public Integer changebalance(UUID u, String playername, BigDecimal amount, Boolean isadd) {
+    public int changebalance(UUID u, String playername, BigDecimal amount, boolean isadd) {
         if (ServerINFO.IsBungeeCordMode & Sponge.getServer().getOnlinePlayers().isEmpty()) {
             return 1;
         }

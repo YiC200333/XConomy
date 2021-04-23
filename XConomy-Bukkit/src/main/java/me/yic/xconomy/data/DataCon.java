@@ -106,13 +106,13 @@ public class DataCon extends DataBaseINFO {
         return SQL.sumBal();
     }
 
-    public static void save(String type, UUID UID, String player, boolean isAdd,
+    public static void save(String type, UUID UID, String player, Boolean isAdd,
                             BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
         SQL.save(type, UID, player, isAdd, balance, amount, newbalance, command);
     }
 
 
-    public static void saveall(String targettype, String type, BigDecimal amount, boolean isAdd, String reason) {
+    public static void saveall(String targettype, String type, BigDecimal amount, Boolean isAdd, String reason) {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -130,7 +130,7 @@ public class DataCon extends DataBaseINFO {
     }
 
     public static void saveNonPlayer(String type, String account, BigDecimal amount,
-                                     BigDecimal newbalance, boolean isAdd) {
+                                     BigDecimal newbalance, Boolean isAdd) {
         SQL.saveNonPlayer(type, account, amount, newbalance, isAdd);
     }
 

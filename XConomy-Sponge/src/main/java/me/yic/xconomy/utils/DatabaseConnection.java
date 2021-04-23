@@ -31,17 +31,14 @@ public class DatabaseConnection {
     private final String driver = "org.spongepowered.api.service.sql.SqlService";
     //============================================================================================
     private final File dataFolder = new File(XConomy.getInstance().configDir.toFile(), "playerdata");
-    private String url = "jdbc:mysql://" + XConomy.config.getNode("MySQL","host").getString() + "/"
-            + XConomy.config.getNode("MySQL","database").getString() + "?characterEncoding="
-            + XConomy.config.getNode("MySQL","encoding").getString() + "&useSSL=false";
-    private final String username = XConomy.config.getNode("MySQL","user").getString();
-    private final String password = XConomy.config.getNode("MySQL","pass").getString();
-    private final Integer maxPoolSize = XConomy.config.getNode("Pool-Settings","maximum-pool-size").getInt();
-    private final Integer minIdle = XConomy.config.getNode("Pool-Settings","minimum-idle").getInt();
-    private final Integer maxLife = XConomy.config.getNode("Pool-Settings","maximum-lifetime").getInt();
-    private final Long idleTime = XConomy.config.getNode("Pool-Settings","idle-timeout").getLong();
+    private String url = "";
+    private final int maxPoolSize = DataBaseINFO.DataBaseINFO.getNode("Pool-Settings", "maximum-pool-size").getInt();
+    private final int minIdle = DataBaseINFO.DataBaseINFO.getNode("Pool-Settings", "minimum-idle").getInt();
+    private final int maxLife = DataBaseINFO.DataBaseINFO.getNode("Pool-Settings", "maximum-lifetime").getInt();
+    private final Long idleTime = DataBaseINFO.DataBaseINFO.getNode("Pool-Settings", "idle-timeout").getLong();
     private boolean secon = false;
-    public Integer waittimeout = 10;
+    //============================================================================================
+    public int waittimeout = 10;
     //============================================================================================
     public File userdata = new File(dataFolder, "data.db");
     //============================================================================================
@@ -53,8 +50,8 @@ public class DatabaseConnection {
         hikari = new HikariDataSource();
         hikari.setPoolName("XConomy");
         hikari.setJdbcUrl(url);
-        hikari.setUsername(username);
-        hikari.setPassword(password);
+        hikari.setUsername(DataBaseINFO.getuser());
+        hikari.setPassword(DataBaseINFO.getpass());
         hikari.setMaximumPoolSize(maxPoolSize);
         hikari.setMinimumIdle(minIdle);
         hikari.setMaxLifetime(maxLife);
@@ -69,16 +66,9 @@ public class DatabaseConnection {
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
-    private void setTimezone() {
-        if (XConomy.config.getNode("MySQL","timezone").getString() != null &&
-                !XConomy.config.getNode("MySQL","timezone").getString().equals("")) {
-            url = url + "&serverTimezone=" + XConomy.config.getNode("MySQL","timezone").getString();
-        }
-    }
 
     public boolean setGlobalConnection() {
-        setTimezone();
+        url = DataBaseINFO.geturl();
         try {
             if (ServerINFO.EnableConnectionPool) {
                 createNewHikariConfiguration();
@@ -86,19 +76,20 @@ public class DatabaseConnection {
                 closeHikariConnection(connection);
             } else {
                 Class.forName(driver);
-                if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
-                    connection = DriverManager.getConnection(url, username, password);
-                } else {
-                    connection = DriverManager.getConnection("jdbc:sqlite:" + userdata.toString());
+                switch (DataBaseINFO.getStorageType()) {
+                    case 1:
+                        connection = DriverManager.getConnection("jdbc:sqlite:" + userdata.toString());
+                        break;
+                    case 2:
+                        connection = DriverManager.getConnection(url, DataBaseINFO.getuser(), DataBaseINFO.getpass());
+                        break;
                 }
             }
 
-            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
-                if (secon) {
-                    XConomy.getInstance().logger("MySQL重新连接成功", null);
-                } else {
-                    secon = true;
-                }
+            if (secon) {
+                DataBaseINFO.loggersysmess("重新连接成功");
+            } else {
+                secon = true;
             }
             return true;
 
@@ -164,7 +155,7 @@ public class DatabaseConnection {
                     return setGlobalConnection();
                 }
 
-                if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
+                if (DataBaseINFO.getStorageType() == 2) {
                     if (!connection.isValid(waittimeout)) {
                         secon = false;
                         return setGlobalConnection();
@@ -172,7 +163,7 @@ public class DatabaseConnection {
                 }
             }
         } catch (SQLException e) {
-            Arrays.stream(e.getStackTrace()).forEach(d -> XConomy.getInstance().logger(null,d.toString()));
+            Arrays.stream(e.getStackTrace()).forEach(d -> XConomy.getInstance().logger(null, d.toString()));
             return false;
         }
         return true;
@@ -199,9 +190,7 @@ public class DatabaseConnection {
                 hikari.close();
             }
         } catch (SQLException e) {
-            if (XConomy.config.getNode("Settings","mysql").getBoolean()) {
-                XConomy.getInstance().logger("MySQL连接断开失败", null);
-            }
+            DataBaseINFO.loggersysmess("连接断开失败");
             e.printStackTrace();
         }
     }

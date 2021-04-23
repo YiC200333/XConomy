@@ -97,9 +97,9 @@ public class Vault extends AbstractEconomy {
         }
 
         double bal = getBalance(name);
-        BigDecimal amountFormatted = DataFormat.formatDouble(amount);
+        BigDecimal amountFormatted = DataFormat.formatdouble(amount);
 
-        if (DataFormat.isMAX(DataFormat.formatDouble(bal).add(amountFormatted))) {
+        if (DataFormat.isMAX(DataFormat.formatdouble(bal).add(amountFormatted))) {
             return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Max balance!");
         }
 
@@ -222,7 +222,7 @@ public class Vault extends AbstractEconomy {
         }
 
         double bal = getBalance(name);
-        BigDecimal amountFormatted = DataFormat.formatDouble(amount);
+        BigDecimal amountFormatted = DataFormat.formatdouble(amount);
 
         if (bal < amount) {
             return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Insufficient balance!");

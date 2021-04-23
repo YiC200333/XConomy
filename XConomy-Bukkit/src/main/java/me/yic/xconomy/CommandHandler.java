@@ -54,7 +54,7 @@ public class CommandHandler {
                 }
                 if (args.length == 2 && args[0].equalsIgnoreCase("help")) {
                     if (isDouble(args[1])) {
-                        if (Integer.valueOf(args[1]) > 0) {
+                        if (Integer.parseInt(args[1]) > 0) {
                             sendHelpMessage(sender, Integer.valueOf(args[1]));
                         } else {
                             sendHelpMessage(sender, 1);
@@ -85,7 +85,7 @@ public class CommandHandler {
                         sendRankingMessage(sender, 1);
                     } else {
                         if (isDouble(args[0])) {
-                            if (Integer.valueOf(args[0]) > 0) {
+                            if (Integer.parseInt(args[0]) > 0) {
                                 sendRankingMessage(sender, Integer.valueOf(args[0]));
                             } else {
                                 sendRankingMessage(sender, 1);

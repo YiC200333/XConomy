@@ -43,7 +43,7 @@ public class DataFormat {
         }
     }
 
-    public static BigDecimal formatDouble(Double am) {
+    public static BigDecimal formatdouble(double am) {
         BigDecimal bigDecimal = BigDecimal.valueOf(am);
         if (isint) {
             return bigDecimal.setScale(0, BigDecimal.ROUND_DOWN);
@@ -65,7 +65,7 @@ public class DataFormat {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static String shownd(Double am) {
+    public static String shownd(double am) {
         if (am > 1) {
             return ChatColor.translateAlternateColorCodes('&', displayformat
                     .replace("%balance%", decimalFormat.format(am))

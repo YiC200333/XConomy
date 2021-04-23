@@ -190,7 +190,7 @@ public class SQL {
         database.closeHikariConnection(connection);
     }
 
-    public static void saveall(String targettype, String type, List<UUID> players, BigDecimal amount, boolean isAdd,
+    public static void saveall(String targettype, String type, List<UUID> players, BigDecimal amount, Boolean isAdd,
                                String reason) {
         Connection connection = database.getConnectionAndCheck();
         try {
@@ -237,7 +237,7 @@ public class SQL {
     }
 
     public static void saveNonPlayer(String type, String account, BigDecimal amount,
-                                     BigDecimal newbalance, boolean isAdd) {
+                                     BigDecimal newbalance, Boolean isAdd) {
         Connection connection = database.getConnectionAndCheck();
         try {
             String query;

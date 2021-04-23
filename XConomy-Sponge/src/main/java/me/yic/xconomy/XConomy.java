@@ -34,6 +34,7 @@ import me.yic.xconomy.listeners.ConnectionListeners;
 import me.yic.xconomy.listeners.SPsync;
 import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
+import me.yic.xconomy.utils.DataBaseINFO;
 import me.yic.xconomy.utils.PluginINFO;
 import me.yic.xconomy.utils.ServerINFO;
 import me.yic.xconomy.utils.UpdateConfig;
@@ -95,28 +96,37 @@ public class XConomy {
     public static ConfigurationNode config;
 
 
-    @SuppressWarnings(value = {"unused","ConstantConditions"})
+    @SuppressWarnings(value = {"unused", "ConstantConditions"})
     @Listener
     public void onEnable(GamePreInitializationEvent event) {
         loadconfig();
+        DataBaseINFO.load();
         readserverinfo();
-        //metrics.addCustomChart(new Metrics2.SimplePie("serverSoftware", () -> "Sponge"));
-        if (checkup()) {
-            Sponge.getScheduler().createAsyncExecutor(this).execute(new Updater());
-        }
-        // 检查更新
+
         messageManager = new MessagesManager(this);
         messageManager.load();
 
         Sponge.getServiceManager().setProvider(this, EconomyService.class, new XCService());
 
         //if (Sponge.getPluginManager().getPlugin("DatabaseDrivers").isPresent()) {
-            //logger("发现 DatabaseDrivers", null);
+        //logger("发现 DatabaseDrivers", null);
         //}
 
+        allowHikariConnectionPooling();
+        if (!DataCon.create()) {
+            logger("XConomy已成功卸载", null);
+            return;
+        }
+
+        Cache.baltop();
+
+        if (checkup()) {
+            Sponge.getScheduler().createAsyncExecutor(this).execute(new Updater());
+        }
+        // 检查更新
+
+
         Sponge.getEventManager().registerListeners(this, new ConnectionListeners());
-
-
 
         CommandSpec balcmd = CommandSpec.builder()
                 .executor(new CommandBalance())
@@ -143,35 +153,28 @@ public class XConomy {
                         GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg2")))))
                 .build();
 
-        if (config.getNode("Settings","eco-command").getBoolean()) {
+        if (config.getNode("Settings", "eco-command").getBoolean()) {
             Sponge.getCommandManager().register(this, balcmd,
                     "balance", "bal", "money", "economy", "eeconomy", "eco");
             Sponge.getCommandManager().register(this, baltopcmd,
                     "balancetop", "baltop", "ebalancetop", "ebaltop");
-        }else{
+        } else {
             Sponge.getCommandManager().register(this, balcmd, "balance", "bal", "money");
             Sponge.getCommandManager().register(this, baltopcmd, "balancetop", "baltop");
         }
         Sponge.getCommandManager().register(this, paycmd, "pay");
         Sponge.getCommandManager().register(this, xccmd, "xconomy", "xc");
 
-        allowHikariConnectionPooling();
-        if (!DataCon.create()) {
-          // onDisable();
-            return;
-        }
 
-        Cache.baltop();
-
-        if (config.getNode("BungeeCord","enable").getBoolean()) {
+        if (config.getNode("BungeeCord", "enable").getBoolean()) {
             if (isBungeecord()) {
                 channel = Sponge.getChannelRegistrar().createRawChannel(this, "xconomy:aca");
                 channellistener = new SPsync();
                 channel.addListener(Platform.Type.SERVER, channellistener);
                 Sponge.getChannelRegistrar().createRawChannel(this, "xconomy:acb");
                 logger("已开启BungeeCord同步", null);
-            } else if (!config.getNode("Settings","mysql").getBoolean()) {
-                if (config.getNode("SQLite","path").getString().equalsIgnoreCase("Default")) {
+            } else if (!config.getNode("Settings", "mysql").getBoolean()) {
+                if (config.getNode("SQLite", "path").getString().equalsIgnoreCase("Default")) {
                     logger("SQLite文件路径设置错误", null);
                     logger("BungeeCord同步未开启", null);
                 }
@@ -180,7 +183,7 @@ public class XConomy {
 
         DataFormat.load();
 
-        int time = config.getNode("Settings","refresh-time").getInt();
+        int time = config.getNode("Settings", "refresh-time").getInt();
         if (time < 30) {
             time = 30;
         }
@@ -188,7 +191,8 @@ public class XConomy {
         refresherTask = Sponge.getScheduler().createAsyncExecutor(this);
         refresherTask.schedule(() -> {
             Task.builder().execute(new Baltop() {
-        }); }, time, TimeUnit.SECONDS);
+            });
+        }, time, TimeUnit.SECONDS);
 
         logger(null, "===== YiC =====");
 
@@ -216,7 +220,7 @@ public class XConomy {
     }
 
     private void loadconfig() {
-        if(!Files.exists(configDir)) {
+        if (!Files.exists(configDir)) {
             try {
                 Files.createDirectories(configDir);
 
@@ -224,16 +228,16 @@ public class XConomy {
                 io.printStackTrace();
             }
         }
-        Path configpath =  Paths.get(configDir + "/config.yml");
+        Path configpath = Paths.get(configDir + System.getProperty("file.separator") + "config.yml");
 
         jarPath = "jar:" + this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
         int i = jarPath.indexOf(".jar!/");
-        jarPath = jarPath.substring(0,i+4);
-        if(!Files.exists(configpath)){
-            try{
+        jarPath = jarPath.substring(0, i + 4);
+        if (!Files.exists(configpath)) {
+            try {
                 URL configurl = new URL(jarPath + "!/config.yml");
                 Files.copy(configurl.openStream(), configpath);
-            }catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -244,7 +248,7 @@ public class XConomy {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (UpdateConfig.update(config)){
+        if (UpdateConfig.update(config)) {
             try {
                 loader.save(config);
             } catch (IOException e) {
@@ -255,33 +259,36 @@ public class XConomy {
     }
 
     public void readserverinfo() {
-        ServerINFO.Lang = config.getNode("Settings","language").getString();
+        ServerINFO.Lang = config.getNode("Settings", "language").getString();
         ServerINFO.IsBungeeCordMode = isBungeecord();
-        ServerINFO.Sign = config.getNode("BungeeCord","sign").getString();
+        ServerINFO.Sign = config.getNode("BungeeCord", "sign").getString();
         ServerINFO.InitialAmount = config.getNode("Settings.initial-bal").getDouble();
-        ServerINFO.RequireAsyncRun = config.getNode("Settings","mysql").getBoolean();
-        ServerINFO.IgnoreCase = config.getNode("Settings","username-ignore-case").getBoolean();
+        ServerINFO.IgnoreCase = config.getNode("Settings", "username-ignore-case").getBoolean();
+
+        ServerINFO.RankingSize = config.getNode("Settings", "ranking-size").getInt();
+        if (ServerINFO.RankingSize > 100) {
+            ServerINFO.RankingSize = 100;
+        }
     }
 
     public static void allowHikariConnectionPooling() {
-        if (!config.getNode("Settings","mysql").getBoolean()) {
+        if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
             return;
         }
-        ServerINFO.EnableConnectionPool = config.getNode("Pool-Settings","usepool").getBoolean();
+        ServerINFO.EnableConnectionPool = DataBaseINFO.DataBaseINFO.getNode("Settings", "usepool").getBoolean();
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static boolean isBungeecord() {
-        if (!config.getNode("BungeeCord","enable").getBoolean()) {
+        if (!config.getNode("BungeeCord", "enable").getBoolean()) {
             return false;
         }
 
-        if (config.getNode("Settings","mysql").getBoolean()) {
-            return true;
+
+        if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
+            return !DataBaseINFO.gethost().equalsIgnoreCase("Default");
         }
 
-        return !config.getNode("Settings","mysql").getBoolean() & !config.getNode("SQLite","path").getString().equalsIgnoreCase("Default");
-
+        return true;
     }
 
     public void logger(String tag, String message) {
@@ -301,7 +308,7 @@ public class XConomy {
     }
 
     public static String getSign() {
-        return config.getNode("BungeeCord","sign").getString();
+        return config.getNode("BungeeCord", "sign").getString();
     }
 
     public static boolean checkup() {

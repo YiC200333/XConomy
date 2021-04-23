@@ -21,6 +21,7 @@ package me.yic.xconomy.data;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.sql.SQLCreateNewAccount;
+import me.yic.xconomy.utils.DataBaseINFO;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 
@@ -30,41 +31,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class DataCon {
+public class DataCon extends DataBaseINFO {
 
     public static boolean create() {
-        if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
-            XConomy.getInstance().logger("数据保存方式", " - MySQL");
-            setupMySqlTable();
+        switch (getStorageType()) {
+            case 1:
+                XConomy.getInstance().logger("数据保存方式", " - SQLite");
+                setupSqLiteAddress();
 
-            if (SQL.con()) {
-                SQL.getwaittimeout();
-                SQL.createTable();
-                XConomy.getInstance().logger("MySQL连接正常", null);
-            } else {
-                XConomy.getInstance().logger("MySQL连接异常", null);
-                return false;
-            }
+                File dataFolder = new File(XConomy.getInstance().configDir.toFile(), "playerdata");
+                if (!dataFolder.exists() && !dataFolder.mkdirs()) {
+                    XConomy.getInstance().logger("文件夹创建异常", null);
+                    return false;
+                }
+                break;
 
-        } else {
-            XConomy.getInstance().logger("数据保存方式", " - SQLite");
-            setupSqLiteAddress();
-
-            File dataFolder = new File(XConomy.getInstance().configDir.toFile(), "playerdata");
-            if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-                XConomy.getInstance().logger("文件夹创建异常", null);
-                return false;
-            }
-            if (SQL.con()) {
-                SQL.createTable();
-                XConomy.getInstance().logger("SQLite连接正常", null);
-            } else {
-                XConomy.getInstance().logger("SQLite连接异常", null);
-                return false;
-            }
+            case 2:
+                XConomy.getInstance().logger("数据保存方式", " - MySQL");
+                setupMySqlTable();
+                break;
 
         }
 
+        if (SQL.con()) {
+            if (getStorageType() == 2) {
+                SQL.getwaittimeout();
+            }
+            SQL.createTable();
+            loggersysmess("连接正常");
+        } else {
+            loggersysmess("连接异常");
+            return false;
+        }
 
         XConomy.getInstance().logger("XConomy加载成功", null);
         return true;
@@ -90,7 +88,7 @@ public class DataCon {
         SQL.getBaltop();
     }
 
-    public static void setTopBalHide(UUID u, Integer type) {
+    public static void setTopBalHide(UUID u, int type) {
         SQL.hidetop(u, type);
     }
 
@@ -127,22 +125,20 @@ public class DataCon {
         SQL.saveNonPlayer(type, account, amount, newbalance, isAdd);
     }
 
-    @SuppressWarnings("ConstantConditions")
     private static void setupMySqlTable() {
-        if (XConomy.config.getNode("MySQL", "table-suffix").getString() != null & !XConomy.config.getNode("MySQL", "table-suffix").getString().equals("")) {
-            SQL.tableName = "xconomy_" + XConomy.config.getNode("MySQL", "table-suffix").getString().replace("%sign%", XConomy.getSign());
-            SQL.tableNonPlayerName = "xconomynon_" + XConomy.config.getNode("MySQL", "table-suffix").getString().replace("%sign%", XConomy.getSign());
-            SQL.tableRecordName = "xconomyrecord_" + XConomy.config.getNode("MySQL", "table-suffix").getString().replace("%sign%", XConomy.getSign());
+        if (gettablesuffix() != null & !gettablesuffix().equals("")) {
+            SQL.tableName = "xconomy_" + gettablesuffix().replace("%sign%", XConomy.getSign());
+            SQL.tableNonPlayerName = "xconomynon_" + gettablesuffix().replace("%sign%", XConomy.getSign());
+            SQL.tableRecordName = "xconomyrecord_" + gettablesuffix().replace("%sign%", XConomy.getSign());
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     private static void setupSqLiteAddress() {
-        if (XConomy.config.getNode("SQLite", "path").getString().equalsIgnoreCase("Default")) {
+        if (gethost().equalsIgnoreCase("Default")) {
             return;
         }
 
-        File folder = new File(XConomy.config.getNode("SQLite", "path").getString());
+        File folder = new File(gethost());
         if (folder.exists()) {
             SQL.database.userdata = new File(folder, "data.db");
         } else {

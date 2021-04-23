@@ -32,7 +32,7 @@ public class ServerINFO {
 
     public static boolean DDrivers = false;
 
-    public static Double InitialAmount = 0.0;
+    public static double InitialAmount = 0.0;
 
     public static int RankingSize = 10;
 

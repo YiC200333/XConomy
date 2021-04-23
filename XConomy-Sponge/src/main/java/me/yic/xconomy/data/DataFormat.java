@@ -26,16 +26,16 @@ import java.text.DecimalFormatSymbols;
 
 public class DataFormat {
 
-    public static boolean isInteger = false;
+    public static boolean isint = false;
     public static DecimalFormat decimalFormat;
     public static BigDecimal maxNumber;
-    final static String displayformat = XConomy.config.getNode("Currency","display-format").getString();
-    final static String pluralname = XConomy.config.getNode("Currency","plural-name").getString();
-    final static String singularname = XConomy.config.getNode("Currency","singular-name").getString();
+    final static String displayformat = XConomy.config.getNode("Currency", "display-format").getString();
+    final static String pluralname = XConomy.config.getNode("Currency", "plural-name").getString();
+    final static String singularname = XConomy.config.getNode("Currency", "singular-name").getString();
 
     public static BigDecimal formatString(String am) {
         BigDecimal bigDecimal = new BigDecimal(am);
-        if (isInteger) {
+        if (isint) {
             return bigDecimal.setScale(0, BigDecimal.ROUND_DOWN);
         } else {
             return bigDecimal.setScale(2, BigDecimal.ROUND_DOWN);
@@ -43,7 +43,7 @@ public class DataFormat {
     }
 
     public static BigDecimal formatBigDecimal(BigDecimal am) {
-        if (isInteger) {
+        if (isint) {
             return am.setScale(0, BigDecimal.ROUND_DOWN);
         } else {
             return am.setScale(2, BigDecimal.ROUND_DOWN);
@@ -61,8 +61,8 @@ public class DataFormat {
                 .replace("%currencyname%", singularname);
     }
 
-    @SuppressWarnings("ConstantConditions")
-    public static String shownd(Double am) {
+    @SuppressWarnings(value = {"unused", "ConstantConditions"})
+    public static String shownd(double am) {
         if (am > 1) {
             return displayformat.replace("%balance%", decimalFormat.format(am))
                     .replace("%currencyname%", pluralname);
@@ -77,11 +77,11 @@ public class DataFormat {
 
     public static void load() {
         maxNumber = setmaxnumber();
-        isInteger = XConomy.config.getNode("Currency","integer-bal").getBoolean();
+        isint = XConomy.config.getNode("Currency", "int-bal").getBoolean();
         String gpoint = XConomy.config.getString("Currency.thousands-separator");
         decimalFormat = new DecimalFormat();
 
-        if (!isInteger) {
+        if (!isint) {
             decimalFormat.setMinimumFractionDigits(2);
             decimalFormat.setMaximumFractionDigits(2);
         }

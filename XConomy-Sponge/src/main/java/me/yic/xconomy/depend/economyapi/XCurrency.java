@@ -53,7 +53,7 @@ public class XCurrency implements Currency {
 
     @Override
     public int getDefaultFractionDigits() {
-        if (DataFormat.isInteger) {
+        if (DataFormat.isint) {
             return 0;
         }
         return 2;

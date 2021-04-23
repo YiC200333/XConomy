@@ -52,7 +52,7 @@ public class DataBaseINFO {
     public static String gethost() {
         if (getStorageType() == 1) {
             return DataBaseINFO.getString("SQLite.path");
-        }else if (getStorageType() == 2) {
+        } else if (getStorageType() == 2) {
             return DataBaseINFO.getString("MySQL.host");
         }
         return "";
@@ -83,7 +83,7 @@ public class DataBaseINFO {
     @SuppressWarnings("ConstantConditions")
     public static String geturl() {
         if (getStorageType() == 2) {
-            String url =  "jdbc:mysql://" + DataBaseINFO.getString("MySQL.host")
+            String url = "jdbc:mysql://" + DataBaseINFO.getString("MySQL.host")
                     + ":" + DataBaseINFO.getString("MySQL.port") + "/"
                     + DataBaseINFO.getString("MySQL.database") + "?characterEncoding="
                     + DataBaseINFO.getString("MySQL.property.encoding") + "&useSSL="

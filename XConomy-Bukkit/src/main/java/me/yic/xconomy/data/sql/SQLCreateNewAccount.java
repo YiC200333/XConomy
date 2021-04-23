@@ -91,7 +91,7 @@ public class SQLCreateNewAccount extends SQL{
     }
 
 
-    private static void createAccount(String UID, String user, Double amount, Connection co_a) {
+    private static void createAccount(String UID, String user, double amount, Connection co_a) {
         try {
             String query;
             if (DataBaseINFO.isMySQL()) {
@@ -119,7 +119,7 @@ public class SQLCreateNewAccount extends SQL{
 
     }
 
-    public static void createNonPlayerAccount(String account, Double bal, Connection co) {
+    public static void createNonPlayerAccount(String account, double bal, Connection co) {
         try {
             String query;
             if (DataBaseINFO.isMySQL()) {
@@ -182,13 +182,4 @@ public class SQLCreateNewAccount extends SQL{
         }
     }
 
-    public static void convertData(String UID, String name, Double amount) {
-        Connection co = database.getConnectionAndCheck();
-        createAccount(UID, name, amount, co);
-    }
-
-    public static void convertNonPlayerData(String acc, Double amount) {
-        Connection co = database.getConnectionAndCheck();
-        createNonPlayerAccount(acc, amount, co);
-    }
 }

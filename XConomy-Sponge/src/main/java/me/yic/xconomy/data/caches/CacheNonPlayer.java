@@ -41,6 +41,7 @@ public class CacheNonPlayer {
 
     }
 
+
     public static void change(String u, BigDecimal amount, Boolean isAdd, String type) {
         BigDecimal newvalue = amount;
         BigDecimal balance = getBalanceFromCacheOrDB(u);

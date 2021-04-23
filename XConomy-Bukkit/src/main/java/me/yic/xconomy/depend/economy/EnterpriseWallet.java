@@ -67,7 +67,7 @@ public class EnterpriseWallet extends PlayerWallet {
             }
         }
 
-        return DataFormat.formatDouble(XConomy.config.getDouble("Settings.initial-bal"));
+        return DataFormat.formatdouble(XConomy.config.getDouble("Settings.initial-bal"));
     }
 
     @Override

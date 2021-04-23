@@ -57,7 +57,15 @@ public class CommandCore {
                     return CommandResult.success();
                 }
                 if (args.length == 2 && args[0].equalsIgnoreCase("help")) {
-                    sendHelpMessage(sender, Integer.valueOf(args[1]));
+                    if (isDouble(args[1])) {
+                        if (Integer.parseInt(args[1]) > 0) {
+                            sendHelpMessage(sender, Integer.valueOf(args[1]));
+                        } else {
+                            sendHelpMessage(sender, 1);
+                        }
+                    } else {
+                        sendHelpMessage(sender, 1);
+                    }
                     return CommandResult.success();
                 }
                 showVersion(sender);
@@ -65,7 +73,7 @@ public class CommandCore {
             }
 
             case "balancetop": {
-                if (args.length == 0) {
+                if (args.length == 0 || args.length == 1) {
 
                     if (!(isOp(sender) || sender.hasPermission("xconomy.user.balancetop"))) {
                         sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("no_permission")));
@@ -77,22 +85,19 @@ public class CommandCore {
                         return CommandResult.success();
                     }
 
-                    sender.sendMessage(Text.of(sendMessage("top_title")));
-                    sender.sendMessage(Text.of(sendMessage("sum_text")
-                            .replace("%balance%", DataFormat.shown((Cache.sumbalance)))));
-
-                    List<String> topNames = Cache.baltop_papi;
-                    int placement = 0;
-                    for (String topName : topNames) {
-                        placement++;
-                        sender.sendMessage(Text.of(sendMessage("top_text")
-                                .replace("%index%", String.valueOf(placement))
-                                .replace("%player%", topName)
-                                .replace("%balance%", DataFormat.shown((Cache.baltop.get(topName))))));
+                    if (args.length == 0) {
+                        sendRankingMessage(sender, 1);
+                    } else {
+                        if (isDouble(args[0])) {
+                            if (Integer.parseInt(args[0]) > 0) {
+                                sendRankingMessage(sender, Integer.valueOf(args[0]));
+                            } else {
+                                sendRankingMessage(sender, 1);
+                            }
+                        } else {
+                            sendRankingMessage(sender, 1);
+                        }
                     }
-
-                    if (checkMessage("top_subtitle"))
-                        sender.sendMessage(Text.of(sendMessage("top_subtitle")));
 
                     break;
                 } else if (args.length == 2) {
@@ -184,7 +189,7 @@ public class CommandCore {
                     return CommandResult.success();
                 }
 
-                String com = commandName + " " + args[0] + " " + amount.toString();
+                String com = commandName + " " + args[0] + " " + amount;
                 Cache.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), sender.getName(), amount, false, com);
                 sender.sendMessage(Text.of(sendMessage("prefix") + sendMessage("pay")
                         .replace("%player%", realname)
@@ -285,7 +290,7 @@ public class CommandCore {
 
                         String realname = Cache.getrealname(args[1]);
 
-                        String com = commandName + " " + args[0] + " " + args[1] + " " + amount.toString();
+                        String com = commandName + " " + args[0] + " " + args[1] + " " + amount;
                         String reason = null;
                         if (args.length == 4) {
                             reason = args[3];
@@ -461,7 +466,7 @@ public class CommandCore {
 
                         String amountFormatted = DataFormat.shown(amount);
 
-                        String com = commandName + " " + args[0] + " " + args[1] + " " + args[2] + " " + amount.toString() + " " + args[4];
+                        String com = commandName + " " + args[0] + " " + args[1] + " " + args[2] + " " + amount + " " + args[4];
 
                         switch (args[0].toLowerCase()) {
                             case "give": {
@@ -529,11 +534,11 @@ public class CommandCore {
     }
 
 
-    public static Boolean isOp(CommandSource p) {
+    public static boolean isOp(CommandSource p) {
         return p.hasPermission("xconomy.op");
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    @SuppressWarnings("booleanMethodIsAlwaysInverted")
     public static boolean isDouble(String s) {
         try {
             Double.parseDouble(s);
@@ -601,7 +606,7 @@ public class CommandCore {
         if (num > maxipages) {
             num = maxipages;
         }
-        sender.sendMessage(Text.of(sendMessage("help_title_full").replace("%page%", num.toString() + "/" + maxipages.toString())));
+        sender.sendMessage(Text.of(sendMessage("help_title_full").replace("%page%", num + "/" + maxipages)));
         int indexpage = 0;
         while (indexpage < 5) {
             if (helplist.size() > indexpage + (num - 1) * 5) {
@@ -609,6 +614,40 @@ public class CommandCore {
             }
             indexpage += 1;
         }
+    }
+
+    private static void sendRankingMessage(CommandSource sender, Integer num) {
+        Integer maxipages;
+        int listsize = Cache.baltop_papi.size();
+        if (listsize % 5 == 0) {
+            maxipages = listsize / 5;
+        } else {
+            maxipages = listsize / 5 + 1;
+        }
+        if (num > maxipages) {
+            num = maxipages;
+        }
+        int endindex = num * 5;
+        if (endindex >= listsize) {
+            endindex = listsize;
+        }
+        List<String> topNames = Cache.baltop_papi.subList(num * 5 - 5, endindex);
+
+        sender.sendMessage(Text.of(sendMessage("top_title").replace("%page%", num + "/" + maxipages)));
+        sender.sendMessage(Text.of(sendMessage("sum_text")
+                .replace("%balance%", DataFormat.shown((Cache.sumbalance)))));
+        int placement = 0;
+        for (String topName : topNames) {
+            placement++;
+            sender.sendMessage(Text.of(sendMessage("top_text")
+                    .replace("%index%", String.valueOf(num * 5 - 5 + placement))
+                    .replace("%player%", topName)
+                    .replace("%balance%", DataFormat.shown((Cache.baltop.get(topName))))));
+        }
+
+        if (checkMessage("top_subtitle"))
+            sender.sendMessage(Text.of(sendMessage("top_subtitle")));
+
     }
 
     @SuppressWarnings("UnstableApiUsage")

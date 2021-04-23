@@ -28,9 +28,9 @@ public class UpdateConfig {
     public static boolean update(FileConfiguration config, File cc) {
         boolean update = false;
         FileConfiguration ck = YamlConfiguration.loadConfiguration(cc);
-        if (!ck.contains("Settings.username-ignore-case")) {
-            config.createSection("Settings.username-ignore-case");
-            config.set("Settings.username-ignore-case", false);
+        if (!ck.contains("Settings.ranking-size")) {
+            config.createSection("Settings.ranking-size");
+            config.set("Settings.ranking-size", 10);
             update = true;
         }
         return update;

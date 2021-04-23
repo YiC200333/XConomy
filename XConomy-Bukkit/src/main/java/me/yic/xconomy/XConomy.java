@@ -214,7 +214,7 @@ public class XConomy extends JavaPlugin {
         if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
             return;
         }
-        ServerINFO.EnableConnectionPool = XConomy.config.getBoolean("Pool-Settings.usepool");
+        ServerINFO.EnableConnectionPool = DataBaseINFO.DataBaseINFO.getBoolean("Settings.usepool");
     }
 
     public static String getSign() {

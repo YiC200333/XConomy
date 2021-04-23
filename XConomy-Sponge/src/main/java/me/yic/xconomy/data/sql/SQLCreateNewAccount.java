@@ -20,6 +20,7 @@ package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.utils.DataBaseINFO;
 import me.yic.xconomy.utils.ServerINFO;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -47,13 +48,13 @@ public class SQLCreateNewAccount extends SQL {
             String query;
 
             if (ServerINFO.IgnoreCase) {
-                if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
+                if (DataBaseINFO.isMySQL()) {
                     query = "select * from " + tableName + " where player = ?";
                 } else {
                     query = "select * from " + tableName + " where player = ? COLLATE NOCASE";
                 }
             } else {
-                if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
+                if (DataBaseINFO.isMySQL()) {
                     query = "select * from " + tableName + " where binary player = ?";
                 } else {
                     query = "select * from " + tableName + " where player = ?";
@@ -82,10 +83,10 @@ public class SQLCreateNewAccount extends SQL {
         return doubledata;
     }
 
-    private static void createAccount(String UID, String user, Double amount, Connection co_a) {
+    private static void createAccount(String UID, String user, double amount, Connection co_a) {
         try {
             String query;
-            if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
+            if (DataBaseINFO.isMySQL()) {
                 query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
                         + "ON DUPLICATE KEY UPDATE UID = ?";
             } else {
@@ -98,7 +99,7 @@ public class SQLCreateNewAccount extends SQL {
             statement.setDouble(3, amount);
             statement.setInt(4, 0);
 
-            if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
+            if (DataBaseINFO.isMySQL()) {
                 statement.setString(5, UID);
             }
 
@@ -110,10 +111,10 @@ public class SQLCreateNewAccount extends SQL {
 
     }
 
-    public static void createNonPlayerAccount(String account, Double bal, Connection co) {
+    public static void createNonPlayerAccount(String account, double bal, Connection co) {
         try {
             String query;
-            if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
+            if (DataBaseINFO.isMySQL()) {
                 query = "INSERT INTO " + tableNonPlayerName + "(account,balance) values(?,?) "
                         + "ON DUPLICATE KEY UPDATE account = ?";
             } else {
@@ -124,7 +125,7 @@ public class SQLCreateNewAccount extends SQL {
             statement.setString(1, account);
             statement.setDouble(2, bal);
 
-            if (XConomy.config.getNode("Settings", "mysql").getBoolean()) {
+            if (DataBaseINFO.isMySQL()) {
                 statement.setString(3, account);
             }
 
