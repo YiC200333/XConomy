@@ -19,21 +19,14 @@
 package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.utils.DataBaseINFO;
-import me.yic.xconomy.utils.DatabaseConnection;
 import me.yic.xconomy.utils.ServerINFO;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.math.BigDecimal;
 import java.sql.*;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 public class SQLCreateNewAccount extends SQL{
 

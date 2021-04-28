@@ -18,6 +18,7 @@
  */
 package me.yic.xconomy.depend.economyapi;
 
+import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.service.context.ContextCalculator;
@@ -32,16 +33,16 @@ import java.util.*;
 @SuppressWarnings("NullableProblems")
 public class XCService implements EconomyService {
 
-    public final XCurrency xc = new XCurrency();
+    private final Set<Currency> currencies = new HashSet<>();
 
     @Override
     public Currency getDefaultCurrency() {
-        return xc;
+        return XConomy.xc;
     }
 
     @Override
     public Set<Currency> getCurrencies() {
-        return null;
+        return currencies;
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")

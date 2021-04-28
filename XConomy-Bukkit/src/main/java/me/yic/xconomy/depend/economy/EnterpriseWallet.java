@@ -37,13 +37,29 @@ public class EnterpriseWallet extends PlayerWallet {
     }
 
     @Override
-    public void setBalance(BigDecimal bigDecimal) {
+    public EconomyAction setBalance(BigDecimal amount) {
+        if (ServerINFO.IsBungeeCordMode & Bukkit.getOnlinePlayers().isEmpty()) {
+            return new EconomyAction(getHolder(), false,
+                    "[BungeeCord] No player in server");
+        }
 
+        BigDecimal bal = getBalance();
+
+        if (DataFormat.isMAX(amount)) {
+            return new EconomyAction(getHolder(), false,  "Max balance!");
+        }
+
+        UUID playerUUID = Cache.translateUUID(getPlayer().getName(), null);
+        if (playerUUID == null) {
+            return new EconomyAction(getHolder(), false,  "No Account!");
+        }
+        Cache.change("PLUGIN", playerUUID, getPlayer().getName(), amount, null, "N/A");
+        return new EconomyAction(getHolder(), true,  "");
     }
 
     @Override
-    public void setBalance(BigDecimal bigDecimal, String s) {
-
+    public EconomyAction setBalance(BigDecimal amount, String s) {
+        return setBalance(amount);
     }
 
     @Override

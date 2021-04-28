@@ -417,7 +417,7 @@ public class Languages {
         mess.put("pay", "&cDu hast %amount% an %player% gezahlt");
         mess.put("pay_receive", "&aDu hast %amount% von %player% bekommen");
         mess.put("pay_fail", "&cDein Kontostand ist weniger als %amount%");
-        mess.put("pay_self", "cDu kannst dir selbst nichts zahlen");
+        mess.put("pay_self", "&cDu kannst dir selbst nichts zahlen");
         mess.put("no_account", "&cDer Spieler existiert nicht");
         mess.put("invalid_amount", "&cFalsche Zahleneingabe");
         mess.put("over_maxnumber", "&cDer Zielkontobetrag liegt über dem Maximalbetrag");
@@ -441,6 +441,47 @@ public class Languages {
         mess.put("help8", "&6balance/money give * <all/online> <Betrag> <Grund>  -  gebe <Alle/Online Spieler> <Betrag>");
         mess.put("help9", "&6balance/money take * <all/online> <Betrag> <Grund>  -  nimmt <Betrag> von <Alle/Online Spieler>");
         mess.put("help10", "&6balancetop hide/display <Spieler>  -  Verstecke oder Zeige den Kontostand von <Spieler> in den TOP10");
+    }
+
+    public static void indonesia(HashMap<String, String> mess) {
+        mess.put("prefix", "&b&lUANG &8&l» &7");
+        mess.put("balance", "&aDompet anda: %balance%");
+        mess.put("balance_other", "&aDompet %player%: %balance%");
+        mess.put("top_title", "&3========= TOP10 <Page %page%> =========");
+        mess.put("sum_text", "&fTotal Server - %balance%");
+        mess.put("top_text", "&3%index%: %player% - %balance%");
+        mess.put("top_subtitle", "&7TOP10 diperbarui setiap 5 menit");
+        mess.put("top_nodata", "&cTidak ada data TOP10");
+        mess.put("top_out", "&cKeluar dari TOP10");
+        mess.put("top_hidden", "&a%player% tersembunyi");
+        mess.put("top_displayed", "&a%player% ditampilkan");
+        mess.put("pay", "&cAnda membayar %player% sebanyak %amount%");
+        mess.put("pay_receive", "&aAnda menerima %amount% dari %player%");
+        mess.put("pay_fail", "&cSaldo Anda kurang dari %amount%");
+        mess.put("pay_self", "&cAnda tidak dapat membayar diri Anda sendiri");
+        mess.put("no_account", "&cAkun target tidak ada");
+        mess.put("invalid_amount", "&cJumlah tidak valid");
+        mess.put("over_maxnumber", "&cJumlah akun target melebihi jumlah maksimum");
+        mess.put("money_give", "&cAnda memberikan %player% %amount%");
+        mess.put("money_give_receive", "&aAdministrator memberi Anda %amount%");
+        mess.put("money_take", "&cAnda mengambil %amount% dari %player%");
+        mess.put("money_take_fail", "&cDompet %player% kurang dari %amount%");
+        mess.put("money_take_receive", "&cAdministrator mengambil %amount% dari dompet Anda");
+        mess.put("money_set", "&cAnda mengatur Dompet %player% sejumlah %amount%");
+        mess.put("money_set_receive", "&cAdministrator menyetel saldo Anda menjadi %amount%");
+        mess.put("no_receive_permission", "&cPengguna target tidak dapat menerima pembayaran Anda!");
+        mess.put("no_permission", "&cAnda tidak memiliki izin untuk menggunakan perintah ini");
+        mess.put("help_title_full", "&b=============== BANTUAN [XConomy] <Halaman %page%> ===============");
+        mess.put("help1", "&6balance/money  -  Menampilkan saldo Anda");
+        mess.put("help2", "&6balance/money <pemain>  -  Menampilkan saldo <pemain>");
+        mess.put("help3", "&6pay <pemain> <jumlah>  -  Membayar <pemain> <jumlah>");
+        mess.put("help4", "&6balancetop  -  Menampilkan TOP10");
+        mess.put("help5", "&6balance/money give <pemain> <jumlah>  -  memberikan <pemain> <jumlah>");
+        mess.put("help6", "&6balance/money take <pemain> <jumlah>  -  mengambil <jumlah> dari <pemain>");
+        mess.put("help7", "&6balance/money set <pemain> <jumlah>  -  setel <pemain> dompet menjadi <jumlah>");
+        mess.put("help8", "&6balance/money give * <all/online> <jumlah> <alasan>  -  memberikan <all/online player> <jumlah>");
+        mess.put("help9", "&6balance/money take * <all/online> <jumlah> <alasan>  -  mengambil <jumlah> dari <all/online player>");
+        mess.put("help10", "&6balancetop hide/display <pemain>  -  Sembunyikan atau tampilkan data <pemain> dari TOP10");
     }
 
     public static void translateFile(String string, File file) {
@@ -467,6 +508,8 @@ public class Languages {
             translateFile("#============================== Translator - シロカミ ==============================", file);
         } else if (lang.equalsIgnoreCase("German")) {
             translateFile("#============================== Translator - Thund3rst0rm89 ==============================", file);
+        } else if (lang.equalsIgnoreCase("Indonesia")) {
+            translateFile("#============================== Translator - 72_TUI ==============================", file);
         }
     }
 }

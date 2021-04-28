@@ -26,9 +26,10 @@ import me.yic.xconomy.command.CommandPay;
 import me.yic.xconomy.command.CommandSystem;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.depend.economyapi.XCService;
+import me.yic.xconomy.depend.economyapi.XCurrency;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.listeners.ConnectionListeners;
 import me.yic.xconomy.listeners.SPsync;
@@ -54,6 +55,7 @@ import org.spongepowered.api.network.RawDataListener;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.text.Text;
 
@@ -62,6 +64,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Plugin(id = "xconomy", name = "XConomy", version = PluginINFO.VERSION, authors = {"YiC"})
@@ -77,6 +80,8 @@ public class XConomy {
     private final Metrics2 metrics;
     private ChannelBinding.RawDataChannel channel;
     private RawDataListener channellistener;
+
+    public static final XCurrency xc = new XCurrency();
 
     @Inject
     private final Logger inforation;
@@ -107,6 +112,15 @@ public class XConomy {
         messageManager.load();
 
         Sponge.getServiceManager().setProvider(this, EconomyService.class, new XCService());
+
+
+        Optional<EconomyService> serviceOpt = Sponge.getServiceManager().provide(EconomyService.class);
+        if (!serviceOpt.isPresent()) {
+            logger(null, "EconomyService is null");
+            logger("XConomy已成功卸载", null);
+            return;
+        }
+        serviceOpt.get().getCurrencies().add(xc);
 
         //if (Sponge.getPluginManager().getPlugin("DatabaseDrivers").isPresent()) {
         //logger("发现 DatabaseDrivers", null);
@@ -197,7 +211,6 @@ public class XConomy {
         logger(null, "===== YiC =====");
 
     }
-
 
     @SuppressWarnings("unused")
     @Listener

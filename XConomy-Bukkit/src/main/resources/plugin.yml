@@ -3,7 +3,7 @@ version: ${project.version}
 main: me.yic.xconomy.XConomy
 author: YiC
 load: STARTUP
-softdepend: [ Vault, Enterprise, DatabaseDrivers, PlaceholderAPI ]
+softdepend: [ Vault, Enterprise, DatabaseDrivers, MPoints, PlaceholderAPI ]
 api-version: "1.13"
 
 commands:

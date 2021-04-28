@@ -18,10 +18,7 @@
  */
 package me.yic.xconomy.data.caches;
 
-import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
-import me.yic.xconomy.utils.ServerINFO;
-import org.bukkit.Bukkit;
 
 import java.math.BigDecimal;
 import java.util.Map;
