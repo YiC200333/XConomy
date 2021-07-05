@@ -25,6 +25,7 @@ import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.CompletableFutureTask;
+import me.yic.xconomy.utils.PermissionINFO;
 import me.yic.xconomy.utils.ServerINFO;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -63,6 +64,50 @@ public class CommandHandler {
                         sendHelpMessage(sender, 1);
                     }
                     return true;
+                }
+
+                if (sender.isOp() || sender.hasPermission("xconomy.admin.permission")) {
+                    if (args.length >= 4 && args[0].equalsIgnoreCase("permission")) {
+                        if (args.length == 5 && args[1].equalsIgnoreCase("set")) {
+                            if (args[2].equalsIgnoreCase("pay")) {
+                                if (args[4].equalsIgnoreCase("true") || args[4].equalsIgnoreCase("false")) {
+                                    boolean vv = !args[4].equalsIgnoreCase("false");
+                                    if (args[3].equalsIgnoreCase("*")) {
+                                        PermissionINFO.globalpayment = vv;
+                                        sender.sendMessage(sendMessage("global_permissions_change").replace("%permission%", "pay")
+                                                .replace("%value%", args[4]));
+                                    } else {
+                                        UUID targetUUID = Cache.translateUUID(args[3], null);
+                                        if (targetUUID == null) {
+                                            sender.sendMessage(sendMessage("prefix") + sendMessage("no_account"));
+                                        } else {
+                                            String realname = Cache.getrealname(args[3]);
+                                            PermissionINFO.setPaymentPermission(targetUUID, vv);
+                                            sender.sendMessage(sendMessage("personal_permissions_change").replace("%permission%", "pay")
+                                                    .replace("%player%", realname).replace("%value%", args[4]));
+                                        }
+                                    }
+                                    return true;
+                                }
+
+                            }
+                        } else if (args.length == 4 && args[1].equalsIgnoreCase("remove")) {
+                            if (args[2].equalsIgnoreCase("pay")) {
+                                UUID targetUUID = Cache.translateUUID(args[3], null);
+                                if (targetUUID == null) {
+                                    sender.sendMessage(sendMessage("prefix") + sendMessage("no_account"));
+                                } else {
+                                    String realname = Cache.getrealname(args[3]);
+                                    PermissionINFO.setPaymentPermission(targetUUID, null);
+                                    sender.sendMessage(sendMessage("personal_permissions_change").replace("%permission%", "pay")
+                                            .replace("%player%", realname).replace("%value%", "Default"));
+                                }
+                                return true;
+                            }
+                        }
+                        sendHelpMessage(sender, 1);
+                        return true;
+                    }
                 }
                 showVersion(sender);
                 break;
@@ -130,9 +175,21 @@ public class CommandHandler {
                     return true;
                 }
 
-                if (!(sender.isOp() || sender.hasPermission("xconomy.user.pay"))) {
-                    sender.sendMessage(sendMessage("prefix") + sendMessage("no_permission"));
-                    return true;
+                if (!sender.isOp()) {
+                    if (!PermissionINFO.getGlobalPayment()) {
+                        sender.sendMessage(sendMessage("prefix") + sendMessage("no_permission"));
+                        return true;
+                    }
+
+                    if (PermissionINFO.getPaymentPermission(((Player) sender).getUniqueId()) == null) {
+                        if (!(sender.hasPermission("xconomy.user.pay"))) {
+                            sender.sendMessage(sendMessage("prefix") + sendMessage("no_permission"));
+                            return true;
+                        }
+                    } else if (!PermissionINFO.getPaymentPermission(((Player) sender).getUniqueId())) {
+                        sender.sendMessage(sendMessage("prefix") + sendMessage("no_permission"));
+                        return true;
+                    }
                 }
 
                 if (args.length != 2) {
@@ -626,19 +683,19 @@ public class CommandHandler {
             helplist.add(sendMessage("help10"));
         }
         Integer maxipages;
-        if (helplist.size() % 5 == 0) {
-            maxipages = helplist.size() / 5;
+        if (helplist.size() % ServerINFO.LinesNumber == 0) {
+            maxipages = helplist.size() / ServerINFO.LinesNumber;
         } else {
-            maxipages = helplist.size() / 5 + 1;
+            maxipages = helplist.size() / ServerINFO.LinesNumber + 1;
         }
         if (num > maxipages) {
             num = maxipages;
         }
         sender.sendMessage(sendMessage("help_title_full").replace("%page%", num + "/" + maxipages));
         int indexpage = 0;
-        while (indexpage < 5) {
-            if (helplist.size() > indexpage + (num - 1) * 5) {
-                sender.sendMessage(helplist.get(indexpage + (num - 1) * 5));
+        while (indexpage < ServerINFO.LinesNumber) {
+            if (helplist.size() > indexpage + (num - 1) * ServerINFO.LinesNumber) {
+                sender.sendMessage(helplist.get(indexpage + (num - 1) * ServerINFO.LinesNumber));
             }
             indexpage += 1;
         }
@@ -647,19 +704,19 @@ public class CommandHandler {
     private static void sendRankingMessage(CommandSender sender, Integer num) {
         Integer maxipages;
         int listsize = Cache.baltop_papi.size();
-        if (listsize % 5 == 0) {
-            maxipages = listsize / 5;
+        if (listsize % ServerINFO.LinesNumber == 0) {
+            maxipages = listsize / ServerINFO.LinesNumber;
         } else {
-            maxipages = listsize / 5 + 1;
+            maxipages = listsize / ServerINFO.LinesNumber + 1;
         }
         if (num > maxipages) {
             num = maxipages;
         }
-        int endindex = num * 5;
+        int endindex = num * ServerINFO.LinesNumber;
         if (endindex >= listsize) {
             endindex = listsize;
         }
-        List<String> topNames = Cache.baltop_papi.subList(num * 5 - 5, endindex);
+        List<String> topNames = Cache.baltop_papi.subList(num * ServerINFO.LinesNumber - ServerINFO.LinesNumber, endindex);
 
         sender.sendMessage(sendMessage("top_title").replace("%page%", num + "/" + maxipages));
         sender.sendMessage(sendMessage("sum_text")
@@ -668,7 +725,7 @@ public class CommandHandler {
         for (String topName : topNames) {
             placement++;
             sender.sendMessage(sendMessage("top_text")
-                    .replace("%index%", String.valueOf(num * 5 - 5 + placement))
+                    .replace("%index%", String.valueOf(num * ServerINFO.LinesNumber - ServerINFO.LinesNumber + placement))
                     .replace("%player%", topName)
                     .replace("%balance%", DataFormat.shown((Cache.baltop.get(topName)))));
         }

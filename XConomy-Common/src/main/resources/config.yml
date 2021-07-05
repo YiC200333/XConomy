@@ -21,6 +21,8 @@ Settings:
   initial-bal: 0
   #Ranking size (Max value 100)
   ranking-size: 10
+  #Rows per page of list (Ranking and help menu)
+  lines-per-page: 5
   #Whether to enable non-player accounts.
   #It can solve the problem that some plugins need to create non-player accounts, such as Factions,Towny
   #Non-player account data is not synced with BC

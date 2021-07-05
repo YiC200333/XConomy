@@ -41,12 +41,37 @@ public class TabList implements TabCompleter {
             case "xconomy":
             case "xc": {
                 if (args.length == 1) {
-                    List<String> COMMANDS_xc = new ArrayList<>();
-                    COMMANDS_xc.add("help");
+                    List<String> COMMANDS_xc_a = new ArrayList<>();
+                    COMMANDS_xc_a.add("help");
                     if (commandSender.isOp()) {
-                        COMMANDS_xc.add("reload");
+                        COMMANDS_xc_a.add("reload");
                     }
-                    StringUtil.copyPartialMatches(args[0], COMMANDS_xc, completions);
+                    if (commandSender.isOp() || commandSender.hasPermission("xconomy.admin.permission")) {
+                        COMMANDS_xc_a.add("permission");
+                    }
+                    StringUtil.copyPartialMatches(args[0], COMMANDS_xc_a, completions);
+                } else {
+                    if (commandSender.isOp() || commandSender.hasPermission("xconomy.admin.permission")) {
+                        List<String> COMMANDS_xc_b = new ArrayList<>();
+                        if (args[0].equalsIgnoreCase("permission")) {
+                            if (args.length == 2) {
+                                COMMANDS_xc_b.add("set");
+                                COMMANDS_xc_b.add("remove");
+                                StringUtil.copyPartialMatches(args[1], COMMANDS_xc_b, completions);
+                            } else if (args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("remove")) {
+                                if (args.length == 3) {
+                                    COMMANDS_xc_b.add("pay");
+                                    StringUtil.copyPartialMatches(args[2], COMMANDS_xc_b, completions);
+                                }else if (args.length == 4) {
+                                    StringUtil.copyPartialMatches(args[3], PlayerList, completions);
+                                }else if (args.length == 5 && args[1].equalsIgnoreCase("set")) {
+                                    COMMANDS_xc_b.add("true");
+                                    COMMANDS_xc_b.add("false");
+                                    StringUtil.copyPartialMatches(args[4], COMMANDS_xc_b, completions);
+                                }
+                            }
+                        }
+                    }
                 }
                 Collections.sort(completions);
                 break;

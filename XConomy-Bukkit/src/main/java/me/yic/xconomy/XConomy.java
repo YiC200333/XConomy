@@ -202,6 +202,7 @@ public class XConomy extends JavaPlugin {
         ServerINFO.IgnoreCase = config.getBoolean("Settings.username-ignore-case");
 
         ServerINFO.RankingSize = config.getInt("Settings.ranking-size");
+        ServerINFO.LinesNumber = config.getInt("Settings.lines-per-page");
         if (ServerINFO.RankingSize > 100){
             ServerINFO.RankingSize = 100;
         }

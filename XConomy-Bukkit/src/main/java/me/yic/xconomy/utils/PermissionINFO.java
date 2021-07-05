@@ -1,5 +1,5 @@
 /*
- *  This file (PlayerINFO.java) is a part of project XConomy
+ *  This file (PermissionINFO.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -18,23 +18,28 @@
  */
 package me.yic.xconomy.utils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
-public class PlayerINFO{
-    private final UUID u;
-    private final String name;
+public class PermissionINFO {
+    public static boolean globalpayment = true;
 
-    public PlayerINFO(UUID u, String name) {
-        this.u = u;
-        this.name = name;
+    private static final Map<UUID, Boolean> payment = new HashMap<>();
+
+    public static boolean getGlobalPayment() {
+        return globalpayment;
     }
 
-    public UUID getUniqueId() {
-        return u;
+    public static Boolean getPaymentPermission(UUID u) {
+        return payment.getOrDefault(u, null);
     }
 
-    public String getName() {
-        return name;
+    public static void setPaymentPermission(UUID u, Boolean b) {
+        if (b == null){
+            payment.remove(u);
+        }else {
+            payment.put(u, b);
+        }
     }
-
 }

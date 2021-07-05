@@ -43,5 +43,7 @@ permissions:
     default: op
   xconomy.admin.set:
     default: op
+  xconomy.admin.permission:
+    default: op
   xconomy.admin.balancetop:
     default: op

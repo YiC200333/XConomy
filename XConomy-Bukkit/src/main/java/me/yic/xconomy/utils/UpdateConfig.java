@@ -33,6 +33,11 @@ public class UpdateConfig {
             config.set("Settings.ranking-size", 10);
             update = true;
         }
+        if (!ck.contains("Settings.lines-per-page")) {
+            config.createSection("Settings.lines-per-page");
+            config.set("Settings.lines-per-page", 5);
+            update = true;
+        }
         return update;
     }
 }

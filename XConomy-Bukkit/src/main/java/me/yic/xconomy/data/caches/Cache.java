@@ -111,6 +111,7 @@ public class Cache {
     }
 
     public static void change(String type, UUID u, String playername, BigDecimal amount, Boolean isAdd, String reason) {
+
         BigDecimal newvalue = amount;
         BigDecimal bal = getBalanceFromCacheOrDB(u);
         if (isAdd != null) {

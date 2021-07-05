@@ -36,5 +36,7 @@ public class ServerINFO {
 
     public static int RankingSize = 10;
 
+    public static int LinesNumber = 5;
+
     public static boolean IgnoreCase = false;
 }
