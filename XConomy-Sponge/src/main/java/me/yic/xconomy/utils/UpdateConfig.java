@@ -28,6 +28,10 @@ public class UpdateConfig {
             config.getNode("Settings","ranking-size").setValue(10);
             update = true;
         }
+        if (config.getNode("Settings","lines-per-page").isVirtual()) {
+            config.getNode("Settings","lines-per-page").setValue(5);
+            update = true;
+        }
         return update;
     }
 }

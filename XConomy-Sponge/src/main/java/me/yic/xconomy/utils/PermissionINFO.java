@@ -1,5 +1,5 @@
-package me.yic.xconomy.utils;/*
- *  This file (ServerINFO.java) is a part of project XConomy
+/*
+ *  This file (PermissionINFO.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -16,24 +16,30 @@ package me.yic.xconomy.utils;/*
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package me.yic.xconomy.utils;
 
-public class ServerINFO {
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-    public static boolean IsBungeeCordMode = false;
+public class PermissionINFO {
+    public static boolean globalpayment = true;
 
-    public static String Lang;
+    private static final Map<UUID, Boolean> payment = new HashMap<>();
 
-    public static boolean EnableConnectionPool = false;
+    public static boolean getGlobalPayment() {
+        return globalpayment;
+    }
 
-    public static String Sign;
+    public static Boolean getPaymentPermission(UUID u) {
+        return payment.getOrDefault(u, null);
+    }
 
-    //public static boolean DDrivers = false;
-
-    public static Double InitialAmount = 0.0;
-
-    public static int RankingSize = 10;
-
-    public static int LinesNumber = 5;
-
-    public static boolean IgnoreCase = false;
+    public static void setPaymentPermission(UUID u, Boolean b) {
+        if (b == null){
+            payment.remove(u);
+        }else {
+            payment.put(u, b);
+        }
+    }
 }

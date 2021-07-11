@@ -31,9 +31,33 @@ public class CommandSystem extends CommandCore implements CommandExecutor {
     public CommandResult execute(CommandSource sender, CommandContext args) {
         if (args.hasAny(Text.of("arg1"))) {
             if (args.hasAny(Text.of("arg2"))) {
+                if (args.hasAny(Text.of("arg3"))) {
+                    if (args.hasAny(Text.of("arg4"))) {
+                        if (args.hasAny(Text.of("arg5"))) {
+                                String[] cmd = {args.<String>getOne("arg1").get().trim(),
+                                        args.<String>getOne("arg2").get().trim(),
+                                        args.<String>getOne("arg3").get().trim(),
+                                        args.<String>getOne("arg4").get().trim(),
+                                        args.<String>getOne("arg5").get().trim()};
+                                return onCommand(sender, "xconomy", cmd);
+                        } else {
+                            String[] cmd = {args.<String>getOne("arg1").get().trim(),
+                                    args.<String>getOne("arg2").get().trim(),
+                                    args.<String>getOne("arg3").get().trim(),
+                                    args.<String>getOne("arg4").get().trim()};
+                            return onCommand(sender, "xconomy", cmd);
+                        }
+                    } else {
+                        String[] cmd = {args.<String>getOne("arg1").get().trim(),
+                                args.<String>getOne("arg2").get().trim(),
+                                args.<String>getOne("arg3").get().trim()};
+                        return onCommand(sender, "xconomy", cmd);
+                    }
+                } else {
                     String[] cmd = {args.<String>getOne("arg1").get().trim(),
                             args.<String>getOne("arg2").get().trim()};
                     return onCommand(sender, "xconomy", cmd);
+                }
             } else {
                 String[] cmd = {args.<String>getOne("arg1").get().trim()};
                 return onCommand(sender, "xconomy", cmd);

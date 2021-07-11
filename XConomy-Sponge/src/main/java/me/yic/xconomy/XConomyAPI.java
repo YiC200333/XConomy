@@ -20,6 +20,7 @@ package me.yic.xconomy;
 
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.utils.PermissionINFO;
 import me.yic.xconomy.utils.PluginINFO;
 import me.yic.xconomy.utils.ServerINFO;
 import org.spongepowered.api.Sponge;
@@ -84,5 +85,24 @@ public class XConomyAPI {
 
     public BigDecimal getsumbalance() {
         return Cache.sumbalance;
+    }
+
+    public boolean getglobalpermission(String permission) {
+        if(permission.equalsIgnoreCase("pay")){
+            return PermissionINFO.getGlobalPayment();
+        }
+        return true;
+    }
+
+    public void setglobalpermission(String permission, boolean vaule) {
+        PermissionINFO.globalpayment = vaule;
+    }
+
+    public Boolean getpaymentpermission(UUID uid) {
+        return PermissionINFO.getPaymentPermission(uid);
+    }
+
+    public void setpaymentpermission(UUID uid, Boolean vaule) {
+        PermissionINFO.setPaymentPermission(uid, vaule);
     }
 }

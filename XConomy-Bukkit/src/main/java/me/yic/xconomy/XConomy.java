@@ -70,6 +70,9 @@ public class XConomy extends JavaPlugin {
         messageManager = new MessagesManager(this);
         messageManager.load();
 
+        ServerINFO.ServerType = Bukkit.getVersion().toLowerCase();
+        ServerINFO.MCVersion = Bukkit.getBukkitVersion().toLowerCase();
+
         if (!LoadEconomy.load()) {
             getLogger().info("No supported dependent plugins were found");
             getLogger().info("[ Vault ][ Enterprise ]");
@@ -150,6 +153,7 @@ public class XConomy extends JavaPlugin {
                 }
             }
         }
+
 
         DataFormat.load();
 

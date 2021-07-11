@@ -86,7 +86,13 @@ public class DatabaseConnection {
                     driver = ("org.sqlite.JDBC");
                     break;
                 case 2:
-                    driver = ("com.mysql.jdbc.Driver");
+                    if (ServerINFO.ServerType.contains("paper")&&
+                            (ServerINFO.MCVersion.contains("1.16.5")||ServerINFO.MCVersion.contains("1.17"))){
+                        XConomy.getInstance().logger(null,"aaaa");
+                        driver = ("com.mysql.cj.jdbc.Driver");
+                    }else {
+                        driver = ("com.mysql.jdbc.Driver");
+                    }
                     break;
             }
         }

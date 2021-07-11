@@ -164,7 +164,10 @@ public class XConomy {
         CommandSpec xccmd = CommandSpec.builder()
                 .executor(new CommandSystem())
                 .arguments(GenericArguments.seq(GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg1"))),
-                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg2")))))
+                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg2"))),
+                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg3"))),
+                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg4"))),
+                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg5")))))
                 .build();
 
         if (config.getNode("Settings", "eco-command").getBoolean()) {
@@ -279,6 +282,7 @@ public class XConomy {
         ServerINFO.IgnoreCase = config.getNode("Settings", "username-ignore-case").getBoolean();
 
         ServerINFO.RankingSize = config.getNode("Settings", "ranking-size").getInt();
+        ServerINFO.LinesNumber = config.getNode("Settings", "lines-per-page").getInt();
         if (ServerINFO.RankingSize > 100) {
             ServerINFO.RankingSize = 100;
         }

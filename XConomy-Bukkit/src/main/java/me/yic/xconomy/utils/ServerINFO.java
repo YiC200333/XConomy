@@ -19,6 +19,10 @@
 package me.yic.xconomy.utils;
 
 public class ServerINFO {
+    //============================================================
+    public static String MCVersion = "0.0.0";
+    public static String ServerType = "Spigot";
+    //============================================================
 
     public static boolean IsBungeeCordMode = false;
 
