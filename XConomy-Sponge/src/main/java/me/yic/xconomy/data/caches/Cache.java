@@ -63,8 +63,10 @@ public class Cache {
     }
 
     public static void refreshFromCache(final UUID uuid) {
-        if (uuid != null) {
-            DataCon.getBal(uuid);
+        if (XConomy.config.getNode("Settings", "cache-correction").getBoolean()) {
+            if (uuid != null) {
+                DataCon.getBal(uuid);
+            }
         }
     }
 

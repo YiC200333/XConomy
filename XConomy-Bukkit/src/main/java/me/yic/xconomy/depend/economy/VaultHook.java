@@ -18,7 +18,6 @@ package me.yic.xconomy.depend.economy;/*
  */
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.depend.LoadEconomy;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -35,7 +34,9 @@ public class VaultHook extends XConomy {
     public static void load() {
         econ = new Vault();
         RegisteredServiceProvider<Permission> rsp = getInstance().getServer().getServicesManager().getRegistration(Permission.class);
-        vaultPerm = rsp.getProvider();
+        if (rsp != null) {
+            vaultPerm = rsp.getProvider();
+        }
         getInstance().getServer().getServicesManager().register(Economy.class, econ, getInstance(), ServicePriority.Normal);
 
         if (config.getBoolean("Settings.disable-essentials")) {

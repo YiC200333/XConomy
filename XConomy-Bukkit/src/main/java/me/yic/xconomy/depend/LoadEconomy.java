@@ -26,7 +26,6 @@ public class LoadEconomy{
     public static boolean vault = false;
     public static boolean enterprise = false;
 
-    @SuppressWarnings("ConstantConditions")
     public static boolean load() {
         if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
             vault = true;

@@ -314,7 +314,7 @@ public class XConomy extends JavaPlugin {
     @SuppressWarnings("all")
     private boolean checkVaultOfflinePermManager() {
         // Check if vault is linked to a permission system that supports offline player checks.
-        if (LoadEconomy.vault) {
+        if (LoadEconomy.vault && VaultHook.vaultPerm != null) {
             switch (VaultHook.vaultPerm.getName()) {
                 // Add other plugins that also have an offline player permissions manager.
                 case "LuckPerms":

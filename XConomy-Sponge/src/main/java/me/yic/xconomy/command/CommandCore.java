@@ -284,10 +284,7 @@ public class CommandCore {
 
                         Player player = (Player) sender;
 
-
-                        if (XConomy.config.getNode("Settings", "cache-correction").getBoolean()) {
-                            Cache.refreshFromCache(player.getUniqueId());
-                        }
+                        Cache.refreshFromCache(player.getUniqueId());
 
                         BigDecimal a = Cache.getBalanceFromCacheOrDB(player.getUniqueId());
                         sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("balance")

@@ -19,6 +19,7 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import me.yic.xconomy.utils.DataBaseINFO;
@@ -70,6 +71,7 @@ public class DataCon extends DataBaseINFO {
 
     public static void newPlayer(Player a) {
         SQLCreateNewAccount.newPlayer(a);
+        Cache.refreshFromCache(a.getUniqueId());
     }
 
     public static void getBal(UUID u) {
