@@ -109,8 +109,8 @@ public class DataCon extends DataBaseINFO {
     }
 
     public static void save(String type, UUID UID, String player, Boolean isAdd,
-                            BigDecimal amount, BigDecimal newbalance, String command) {
-        SQL.save(type, UID, player, isAdd, amount, newbalance, command);
+                            BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
+        SQL.save(type, UID, player, isAdd, balance, amount, newbalance, command);
     }
 
 
