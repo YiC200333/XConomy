@@ -44,6 +44,8 @@ public class LanguagesManager extends Languages {
             german(mess);
         } else if (lang.equalsIgnoreCase("Indonesia")) {
             indonesia(mess);
+        } else if (lang.equalsIgnoreCase("Portuguese")) {
+            portuguese(mess);
         } else {
             chinese(mess);
         }

@@ -61,8 +61,10 @@ public class Cache {
     }
 
     public static void refreshFromCache(final UUID uuid) {
-        if (uuid != null) {
-            DataCon.getBal(uuid);
+        if (XConomy.config.getBoolean("Settings.cache-correction")) {
+            if (uuid != null) {
+                DataCon.getBal(uuid);
+            }
         }
     }
 
@@ -88,28 +90,6 @@ public class Cache {
         return amount;
     }
 
-    @SuppressWarnings("UnstableApiUsage")
-    public static BigDecimal cachecorrection(UUID u, BigDecimal amount, Boolean isAdd) {
-        BigDecimal newvalue;
-        BigDecimal bal = getBalanceFromCacheOrDB(u);
-        if (isAdd) {
-            newvalue = bal.add(amount);
-        } else {
-            newvalue = bal.subtract(amount);
-        }
-        insertIntoCache(u, newvalue);
-
-        if (ServerINFO.IsBungeeCordMode) {
-            ByteArrayDataOutput output = ByteStreams.newDataOutput();
-            output.writeUTF("balance");
-            output.writeUTF(XConomy.getSign());
-            output.writeUTF(u.toString());
-            output.writeUTF(amount.toString());
-            Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", output.toByteArray());
-        }
-        return newvalue;
-    }
-
     public static void change(String type, UUID u, String playername, BigDecimal amount, Boolean isAdd, String reason) {
 
         BigDecimal newvalue = amount;
@@ -125,7 +105,7 @@ public class Cache {
         if (ServerINFO.IsBungeeCordMode) {
             sendmessave(type, u, playername, isAdd, bal, amount, newvalue, reason);
         } else {
-            DataCon.save(type, u, playername, isAdd, bal, amount, newvalue, reason);
+            DataCon.save(type, u, playername, isAdd, amount, newvalue, reason);
         }
     }
 
@@ -237,7 +217,7 @@ public class Cache {
                                     BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
             Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
             if (u != null) {
-                DataCon.save(type, u, player, isAdd, balance, amount, newbalance, command);
+                DataCon.save(type, u, player, isAdd, amount, newbalance, command);
             }
     }
 }

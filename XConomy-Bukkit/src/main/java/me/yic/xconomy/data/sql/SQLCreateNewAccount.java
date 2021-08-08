@@ -67,7 +67,7 @@ public class SQLCreateNewAccount extends SQL{
                     if (!ServerINFO.IsSemiOnlineMode) {
                         if (player.isOnline()) {
                             Bukkit.getScheduler().runTask(XConomy.getInstance(), () ->
-                                    player.kickPlayer("[XConomy] The player with the same username data exists on the server"));
+                                    player.kickPlayer("[XConomy] The same data exists in the server without different UUID"));
                         }
                     } else {
                         CacheSemiOnline.CacheSubUUID_checkUser(rs.getString(1), player);

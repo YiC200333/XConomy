@@ -70,7 +70,7 @@ public class SQLCreateNewAccount extends SQL {
                     doubledata = true;
                     if (player.isOnline()) {
                         Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() ->
-                                player.kick(Text.of("[XConomy] The player with the same name exists on the server")));
+                                player.kick(Text.of("[XConomy] The same data exists in the server without different UUID")));
                     }
                 }
             }

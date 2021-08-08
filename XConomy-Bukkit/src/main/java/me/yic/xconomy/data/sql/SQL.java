@@ -152,38 +152,19 @@ public class SQL {
 
 
     public static void save(String type, UUID u, String player, Boolean isAdd,
-                            BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
+                            BigDecimal amount, BigDecimal newbalance, String command) {
         Connection connection = database.getConnectionAndCheck();
         try {
             String query;
             query = " set balance = " + newbalance.doubleValue() + " where UID = ?";
-            boolean requirefresh = false;
-            if (XConomy.config.getBoolean("Settings.cache-correction") && isAdd != null) {
-                requirefresh = true;
-                query = query + "AND balance = " + balance.toString();
-            }
+
             PreparedStatement statement1 = connection.prepareStatement("update " + tableName + query);
             statement1.setString(1, u.toString());
-            int rs = statement1.executeUpdate();
+            statement1.executeUpdate();
             statement1.close();
-            if (requirefresh && rs == 0) {
-                command += "(Cache Correction)";
-            }
+
             record(connection, type, u.toString(), player, isAdd, amount, newbalance, command);
-            if (requirefresh && rs == 0) {
-                Cache.refreshFromCache(u);
-                BigDecimal newv = Cache.cachecorrection(u, amount, isAdd);
-                if (isAdd) {
-                    query = " set balance = balance + " + amount.doubleValue() + " where UID = ?";
-                } else {
-                    query = " set balance = balance - " + amount.doubleValue() + " where UID = ?";
-                }
-                PreparedStatement statement2 = connection.prepareStatement("update " + tableName + query);
-                statement2.setString(1, u.toString());
-                statement2.executeUpdate();
-                statement2.close();
-                record(connection, type, u.toString(), player, isAdd, amount, newv, "Cache Correction Detail");
-            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

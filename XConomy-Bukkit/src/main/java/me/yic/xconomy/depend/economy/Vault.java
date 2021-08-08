@@ -96,7 +96,7 @@ public class Vault extends AbstractEconomy {
                     "[BungeeCord] No player in server");
         }
 
-        double bal = getBalance(name);
+        double bal = getBalanceModified(name);
         BigDecimal amountFormatted = DataFormat.formatdouble(amount);
 
         if (DataFormat.isMAX(DataFormat.formatdouble(bal).add(amountFormatted))) {
@@ -143,6 +143,24 @@ public class Vault extends AbstractEconomy {
         UUID uuid = Cache.translateUUID(name, null);
         if (uuid != null) {
             if (Cache.getBalanceFromCacheOrDB(uuid) != null) {
+                return Cache.getBalanceFromCacheOrDB(uuid).doubleValue();
+            } else {
+                return 0.0;
+            }
+        }
+
+        return XConomy.config.getDouble("Settings.initial-bal");
+    }
+
+    public double getBalanceModified(String name) {
+        if (isNonPlayerAccount(name)) {
+            return CacheNonPlayer.getBalanceFromCacheOrDB(name).doubleValue();
+        }
+
+        UUID uuid = Cache.translateUUID(name, null);
+        if (uuid != null) {
+            if (Cache.getBalanceFromCacheOrDB(uuid) != null) {
+                Cache.refreshFromCache(uuid);
                 return Cache.getBalanceFromCacheOrDB(uuid).doubleValue();
             } else {
                 return 0.0;
@@ -221,7 +239,7 @@ public class Vault extends AbstractEconomy {
                     "[BungeeCord] No player in server");
         }
 
-        double bal = getBalance(name);
+        double bal = getBalanceModified(name);
         BigDecimal amountFormatted = DataFormat.formatdouble(amount);
 
         if (bal < amount) {

@@ -214,6 +214,8 @@ public class CommandHandler {
                     return true;
                 }
 
+                Cache.refreshFromCache(((Player) sender).getUniqueId());
+
                 String amountFormatted = DataFormat.shown(amount);
                 BigDecimal bal_sender = Cache.getBalanceFromCacheOrDB(((Player) sender).getUniqueId());
 
@@ -237,6 +239,8 @@ public class CommandHandler {
                         return true;
                     }
                 }
+
+                Cache.refreshFromCache(targetUUID);
 
                 BigDecimal bal_target = Cache.getBalanceFromCacheOrDB(targetUUID);
                 if (DataFormat.isMAX(bal_target.add(amount))) {
@@ -315,11 +319,6 @@ public class CommandHandler {
 
                         Player player = (Player) sender;
 
-
-                        if (XConomy.config.getBoolean("Settings.cache-correction")) {
-                            Cache.refreshFromCache(player.getUniqueId());
-                        }
-
                         BigDecimal a = Cache.getBalanceFromCacheOrDB(player.getUniqueId());
                         sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("balance")
                                 .replace("%balance%", DataFormat.shown((a))));
@@ -394,6 +393,8 @@ public class CommandHandler {
                                     return true;
                                 }
 
+                                Cache.refreshFromCache(targetUUID);
+
                                 BigDecimal bal = Cache.getBalanceFromCacheOrDB(targetUUID);
                                 if (DataFormat.isMAX(bal.add(amount))) {
                                     sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("over_maxnumber"));
@@ -437,6 +438,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
+                                Cache.refreshFromCache(targetUUID);
                                 BigDecimal bal = Cache.getBalanceFromCacheOrDB(targetUUID);
                                 if (bal.compareTo(amount) < 0) {
                                     sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("money_take_fail")

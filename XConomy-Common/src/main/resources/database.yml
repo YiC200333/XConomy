@@ -29,7 +29,6 @@ MySQL:
 
 #Connection pool settings
 Pool-Settings:
-  usepool: false
   maximum-pool-size: 10
   minimum-idle: 10
   maximum-lifetime: 180000

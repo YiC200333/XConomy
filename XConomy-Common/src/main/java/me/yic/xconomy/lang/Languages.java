@@ -464,7 +464,7 @@ public class Languages {
     }
 
     public static void indonesia(HashMap<String, String> mess) {
-        mess.put("prefix", "&b&lUANG &8&l» &7");
+        mess.put("prefix", "&6[XConomy]");
         mess.put("balance", "&aDompet anda: %balance%");
         mess.put("balance_other", "&aDompet %player%: %balance%");
         mess.put("top_title", "&3========= TOP10 <Page %page%> =========");
@@ -504,6 +504,49 @@ public class Languages {
         mess.put("help8", "&6balance/money give * <all/online> <jumlah> <alasan>  -  memberikan <all/online player> <jumlah>");
         mess.put("help9", "&6balance/money take * <all/online> <jumlah> <alasan>  -  mengambil <jumlah> dari <all/online player>");
         mess.put("help10", "&6balancetop hide/display <pemain>  -  Sembunyikan atau tampilkan data <pemain> dari TOP10");
+    }
+
+    public static void portuguese(HashMap<String, String> mess) {
+        mess.put("prefix", "&6[XConomy]");
+        mess.put("balance", "&aSaldo: %balance%");
+        mess.put("balance_other", "&aSaldo de %player%: %balance%");
+        mess.put("top_title", "&e========= TOP10 <Página %page%> =========");
+        mess.put("sum_text", "&fTotal do servidor - %balance%%");
+        mess.put("top_text", "&e%index%: %player% - %balance%");
+        mess.put("top_subtitle", "&7TOP10 recarregado á cada 5 minutos");
+        mess.put("top_nodata", "&cSem dados do TOP10");
+        mess.put("top_out", "&cFora do TOP10");
+        mess.put("top_hidden", "&a%player% está escondido");
+        mess.put("top_displayed", "&a%player% está exibido");
+        mess.put("pay", "&cVocê pagou para %player% %amount%");
+        mess.put("pay_receive", "&aVocê recebeu %amount% de %player%");
+        mess.put("pay_fail", "&cSeu saldo é menor que %amount%");
+        mess.put("pay_self", "&cVocê não pode pagar para você mesmo");
+        mess.put("no_account", "&cA conta de destino não existe");
+        mess.put("invalid_amount", "&cQuantidade inválida");
+        mess.put("over_maxnumber", "&cO saldo da conta de destino está acima do saldo máxim");
+        mess.put("money_give", "&cVocê deu para %player% %amount%");
+        mess.put("money_give_receive", "&aO administrador te deu %amount%");
+        mess.put("money_take", "&cVocê pegou %amount% de %player%");
+        mess.put("money_take_fail", "&cO saldo de %player% é menor que %amount%");
+        mess.put("money_take_receive", "&cO administrador pegou %amount% de sua conta");
+        mess.put("money_set", "&cVocê setou o saldo de %player% para %amount%");
+        mess.put("money_set_receive", "&cO administrador setou o seu saldo para %amount%");
+        mess.put("no_receive_permission", "&cO usuário não pode receber o seu pagamento!");
+        mess.put("no_permission", "&cVocê não tem permissão para executar esse comando!");
+        mess.put("global_permissions_change", "&aThe global %permission% permissions has been set to %value%");
+        mess.put("personal_permissions_change", "&aThe %permission% permission of %player% has been set to %value%");
+        mess.put("help_title_full", "&6=============== [XConomy] Ajuda <Página %page%> ===============");
+        mess.put("help1", "&6balance/money  -  Mostra o seu saldo");
+        mess.put("help2", "&6balance/money <player>  -  Mostra o saldo de <player>");
+        mess.put("help3", "&6pay <player> <amount>  -  Paga para <player> <amount>");
+        mess.put("help4", "&6balancetop  -  Mostra o TOP10");
+        mess.put("help5", "&6balance/money give <player> <amount>  -  dê para <player> <amount>");
+        mess.put("help6", "&6balance/money take <player> <amount>  -  tire <amount> de <player>");
+        mess.put("help7", "&6balance/money set <player> <amount>  -  define o saldo de <player> para <amount>");
+        mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  dê para <all/online player> <amount>");
+        mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  tire <amount> de <all/online player>");
+        mess.put("help10", "&6balancetop hide/display <player>  -  Esconder ou mostrar a data de <player> do TOP10");
     }
 
     public static void translateFile(String string, File file) {
