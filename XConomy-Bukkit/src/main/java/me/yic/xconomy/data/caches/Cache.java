@@ -170,6 +170,10 @@ public class Cache {
     }
 
     public static UUID translateUUID(String name, Player pp) {
+        if (name == null){
+            return null;
+        }
+
         String namep = name;
         if (ServerINFO.IgnoreCase) {
             namep = name.toLowerCase();

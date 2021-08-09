@@ -29,6 +29,7 @@ Settings:
   non-player-account: false
   #Whether to enable cache correction
   #If you need to modify the data in the database directly, it is recommended to enable it
+  #If the server has a large number of players, it is recommended to enable it
   #You need to note that cache-correction will not double verify the value of the amount in the process of deposit and withdraw
   #This function is not supported for non player account data
   cache-correction: false
