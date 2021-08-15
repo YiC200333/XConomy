@@ -75,6 +75,10 @@ public class BCsync implements Listener {
             output.writeUTF("broadcast");
             output.writeUTF(input.readUTF());
             output.writeUTF(input.readUTF());
+        } else if (type.equalsIgnoreCase("updateplayer")) {
+            output.writeUTF("updateplayer");
+            output.writeUTF(input.readUTF());
+            output.writeUTF(input.readUTF());
         }
 
         for (ServerInfo s : ProxyServer.getInstance().getServers().values()) {

@@ -58,6 +58,9 @@ public class Cache {
         if (uid.containsKey(up)) {
             uid.remove(up);
         }
+        if (ServerINFO.IsBungeeCordMode) {
+            sendmessremoveCache(u);
+        }
     }
 
     public static void refreshFromCache(final UUID uuid) {
@@ -236,6 +239,15 @@ public class Cache {
         }
         SendMessTask(output, null, null, null, isAdd, null, null, null, null);
 
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public static void sendmessremoveCache(String player) {
+        ByteArrayDataOutput output = ByteStreams.newDataOutput();
+        output.writeUTF("updateplayer");
+        output.writeUTF(XConomy.getSign());
+        output.writeUTF(player);
+        SendMessTask(output, null, null, null, null, null, null, null, null);
     }
 
 

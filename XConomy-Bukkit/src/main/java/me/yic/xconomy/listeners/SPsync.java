@@ -33,7 +33,7 @@ import java.util.UUID;
 
 public class SPsync implements PluginMessageListener {
 
-    @SuppressWarnings(value = {"UnstableApiUsage", "ConstantConditions"})
+    @SuppressWarnings(value = {"UnstableApiUsage"})
     @Override
     public void onPluginMessageReceived(String channel, @NotNull Player arg1, byte[] message) {
         if (!channel.equals("xconomy:aca")) {
@@ -76,6 +76,12 @@ public class SPsync implements PluginMessageListener {
         } else if (type.equalsIgnoreCase("broadcast")) {
             String mess = input.readUTF();
             Bukkit.broadcastMessage(mess);
+        } else if (type.equalsIgnoreCase("updateplayer")) {
+            String u = input.readUTF();
+            if (!Cache.uid.containsKey(u)) {
+                return;
+            }
+            Cache.uid.remove(u);
         }
     }
 
