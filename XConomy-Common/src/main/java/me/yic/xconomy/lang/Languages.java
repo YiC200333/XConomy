@@ -575,6 +575,8 @@ public class Languages {
             translateFile("#============================== Translator - Thund3rst0rm89 ==============================", file);
         } else if (lang.equalsIgnoreCase("Indonesia")) {
             translateFile("#============================== Translator - 72_TUI ==============================", file);
+        } else if (lang.equalsIgnoreCase("Portuguese")) {
+            translateFile("#============================== Translator - richaard5 ==============================", file);
         }
     }
 }
