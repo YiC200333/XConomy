@@ -44,9 +44,6 @@ public class DataBaseINFO {
                 e.printStackTrace();
             }
 
-            if (getStorageType() != 1){
-                isasync = DataBaseINFO.getNode("Settings","async").getBoolean();
-            }
         }
 
         YAMLConfigurationLoader loader = YAMLConfigurationLoader.builder().setPath(configpath).build();
@@ -54,6 +51,10 @@ public class DataBaseINFO {
             DataBaseINFO = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        if (getStorageType() != 1){
+            isasync = DataBaseINFO.getNode("Settings","async").getBoolean();
         }
     }
 
@@ -112,9 +113,9 @@ public class DataBaseINFO {
                     !DataBaseINFO.getNode("MySQL","property","timezone").getString().equals("")) {
                 url = url + "&serverTimezone=" + DataBaseINFO.getNode("MySQL","property","timezone").getString();
             }
-            //if (ServerINFO.DDrivers) {
-            //    url = url + "&allowPublicKeyRetrieval=true";
-            //}
+            if (DataBaseINFO.getNode("MySQL","property","allowPublicKeyRetrieval").getBoolean()) {
+                url = url + "&allowPublicKeyRetrieval=true";
+            }
             return url;
         }
         return "";

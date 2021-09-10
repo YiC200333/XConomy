@@ -97,7 +97,7 @@ public class DataBaseINFO {
                     !DataBaseINFO.getString("MySQL.property.timezone").equals("")) {
                 url = url + "&serverTimezone=" + DataBaseINFO.getString("MySQL.property.timezone");
             }
-            if (ServerINFO.DDrivers) {
+            if (DataBaseINFO.getBoolean("MySQL.property.allowPublicKeyRetrieval")) {
                 url = url + "&allowPublicKeyRetrieval=true";
             }
             return url;

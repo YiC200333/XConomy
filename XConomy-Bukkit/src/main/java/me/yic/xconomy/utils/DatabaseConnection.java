@@ -49,7 +49,7 @@ public class DatabaseConnection {
 
     private void createNewHikariConfiguration() {
         hikari = new HikariDataSource();
-        hikari.setPoolName("XConomy");
+        hikari.setPoolName("[XConomy]");
         hikari.setJdbcUrl(url);
         hikari.setUsername(DataBaseINFO.getuser());
         hikari.setPassword(DataBaseINFO.getpass());

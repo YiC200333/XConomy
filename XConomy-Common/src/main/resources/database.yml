@@ -24,10 +24,10 @@ MySQL:
   #auto add "_", can use %sign% to indicate Server ID (BungeeCord settings)
   table-suffix: ''
   property:
-    #If the DatabaseDrivers plugin is installed, ‘allowpublickeyretrieval=true’ will be added automatically
     usessl: false
     encoding: utf8
     timezone: ''
+    allowPublicKeyRetrieval: false
 
 
 #Connection pool settings
