@@ -18,6 +18,8 @@
  */
 package me.yic.xconomy.utils;
 
+import java.math.BigDecimal;
+
 public class ServerINFO {
     //============================================================
     public static String MCVersion = "0.0.0";
@@ -37,6 +39,8 @@ public class ServerINFO {
     public static boolean DDrivers = false;
 
     public static double InitialAmount = 0.0;
+
+    public static BigDecimal PaymentTax = BigDecimal.ONE;
 
     public static int RankingSize = 10;
 

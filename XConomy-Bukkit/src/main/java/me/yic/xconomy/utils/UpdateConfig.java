@@ -38,6 +38,11 @@ public class UpdateConfig {
             config.set("Settings.lines-per-page", 5);
             update = true;
         }
+        if (!ck.contains("Settings.payment-tax")) {
+            config.createSection("Settings.payment-tax");
+            config.set("Settings.payment-tax", 0);
+            update = true;
+        }
         return update;
     }
 }

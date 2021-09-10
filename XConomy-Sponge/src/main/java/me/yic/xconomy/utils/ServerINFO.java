@@ -17,6 +17,8 @@ package me.yic.xconomy.utils;/*
  *
  */
 
+import java.math.BigDecimal;
+
 public class ServerINFO {
 
     public static boolean IsBungeeCordMode = false;
@@ -30,6 +32,8 @@ public class ServerINFO {
     //public static boolean DDrivers = false;
 
     public static Double InitialAmount = 0.0;
+
+    public static BigDecimal PaymentTax = BigDecimal.ONE;
 
     public static int RankingSize = 10;
 

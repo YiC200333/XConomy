@@ -19,6 +19,7 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.utils.ServerINFO;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -91,11 +92,13 @@ public class DataFormat {
             spoint.setGroupingSeparator(gpoint.charAt(0));
             decimalFormat.setDecimalFormatSymbols(spoint);
         }
+
+        ServerINFO.PaymentTax = setpaymenttax();
     }
 
 
     private static BigDecimal setmaxnumber() {
-        String maxn = XConomy.config.getString("Currency.max-number");
+        String maxn = XConomy.config.getNode("Currency", "max-number").getString();
         BigDecimal defaultmaxnumber = new BigDecimal("10000000000000000");
         if (maxn == null) {
             return defaultmaxnumber;
@@ -109,5 +112,13 @@ public class DataFormat {
         } else {
             return mnumber;
         }
+    }
+
+    private static BigDecimal setpaymenttax() {
+        Double pt = XConomy.config.getNode("Settings", "payment-tax").getDouble();
+        if (pt < 0.0) {
+            pt = 0.0;
+        }
+        return formatString(pt.toString()).add(BigDecimal.ONE);
     }
 }

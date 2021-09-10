@@ -214,14 +214,17 @@ public class CommandHandler {
                     return true;
                 }
 
+                BigDecimal taxamount = amount.multiply(ServerINFO.PaymentTax);
+
                 //Cache.refreshFromCache(((Player) sender).getUniqueId());
 
                 String amountFormatted = DataFormat.shown(amount);
+                String taxamountFormatted = DataFormat.shown(taxamount);
                 BigDecimal bal_sender = Cache.getBalanceFromCacheOrDB(((Player) sender).getUniqueId());
 
-                if (bal_sender.compareTo(amount) < 0) {
+                if (bal_sender.compareTo(taxamount) < 0) {
                     sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("pay_fail")
-                            .replace("%amount%", amountFormatted));
+                            .replace("%amount%", taxamountFormatted));
                     return true;
                 }
 
@@ -249,7 +252,7 @@ public class CommandHandler {
                 }
 
                 String com = commandName + " " + args[0] + " " + amount;
-                Cache.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), sender.getName(), amount, false, com);
+                Cache.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), sender.getName(), taxamount, false, com);
                 sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("pay")
                         .replace("%player%", realname)
                         .replace("%amount%", amountFormatted));

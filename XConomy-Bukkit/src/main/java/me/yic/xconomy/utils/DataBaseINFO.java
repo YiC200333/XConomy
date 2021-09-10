@@ -28,6 +28,7 @@ import java.io.File;
 public class DataBaseINFO {
 
     public static FileConfiguration DataBaseINFO;
+    public static boolean isasync = false;
 
     public static void load() {
         File file = new File(XConomy.getInstance().getDataFolder(), "database.yml");
@@ -35,6 +36,10 @@ public class DataBaseINFO {
             XConomy.getInstance().saveResource("database.yml", false);
         }
         DataBaseINFO = YamlConfiguration.loadConfiguration(file);
+
+        if (getStorageType() != 1){
+            isasync = DataBaseINFO.getBoolean("Settings.async");
+        }
     }
 
     @SuppressWarnings("ConstantConditions")

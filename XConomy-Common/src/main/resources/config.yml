@@ -1,3 +1,4 @@
+#Settings
 Settings:
   #Chinese ChineseTW English French Spanish Russian Turkish Japanese German Indonesia Portuguese
   language: English
@@ -19,6 +20,8 @@ Settings:
   disable-essentials: true
   #Initial balance
   initial-bal: 0
+  #Tax to be paid for pay command (0.5 means 50%, 1 means 100%)
+  payment-tax: 0
   #Ranking size (Max value 100)
   ranking-size: 10
   #Rows per page of list (Ranking and help menu)
@@ -29,7 +32,6 @@ Settings:
   non-player-account: false
   #Whether to enable cache correction
   #If you need to modify the data in the database directly, it is recommended to enable it
-  #If the server has a large number of players, it is recommended to enable it
   #You need to note that cache-correction will not double verify the value of the amount in the process of deposit and withdraw
   #This function is not supported for non player account data
   cache-correction: false

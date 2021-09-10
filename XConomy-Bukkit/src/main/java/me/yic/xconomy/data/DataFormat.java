@@ -19,6 +19,7 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.utils.ServerINFO;
 import org.bukkit.ChatColor;
 
 import java.math.BigDecimal;
@@ -96,6 +97,8 @@ public class DataFormat {
             spoint.setGroupingSeparator(gpoint.charAt(0));
             decimalFormat.setDecimalFormatSymbols(spoint);
         }
+
+        ServerINFO.PaymentTax = setpaymenttax();
     }
 
 
@@ -114,5 +117,14 @@ public class DataFormat {
         } else {
             return mnumber;
         }
+    }
+
+
+    private static BigDecimal setpaymenttax() {
+        double pt = XConomy.config.getDouble("Settings.payment-tax");
+        if (pt < 0.0){
+            pt = 0.0;
+        }
+        return formatdouble(pt).add(BigDecimal.ONE);
     }
 }

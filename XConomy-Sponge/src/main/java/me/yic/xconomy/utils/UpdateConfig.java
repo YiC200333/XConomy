@@ -32,6 +32,10 @@ public class UpdateConfig {
             config.getNode("Settings","lines-per-page").setValue(5);
             update = true;
         }
+        if (config.getNode("Settings","payment-tax").isVirtual()) {
+            config.getNode("Settings","payment-tax").setValue(0);
+            update = true;
+        }
         return update;
     }
 }

@@ -23,6 +23,7 @@ import com.google.common.io.ByteStreams;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.utils.DataBaseINFO;
 import me.yic.xconomy.utils.PlayerINFO;
 import me.yic.xconomy.utils.ServerINFO;
 import org.bukkit.Bukkit;
@@ -127,16 +128,31 @@ public class Cache {
             }
         }
         insertIntoCache(u, newvalue);
-        if (ServerINFO.IsBungeeCordMode) {
-            sendmessave(type, u, playername, isAdd, bal, amount, newvalue, reason);
-        } else {
-            DataCon.save(type, u, playername, isAdd, bal, amount, newvalue, reason);
+        if (DataBaseINFO.isasync) {
+            final BigDecimal fnewvalue = newvalue;
+            if (ServerINFO.IsBungeeCordMode) {
+                Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> sendmessave(type, u, playername, isAdd, bal, amount, fnewvalue, reason));
+            } else {
+                Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataCon.save(type, u, playername, isAdd, bal, amount, fnewvalue, reason));
+            }
+        }else{
+            if (ServerINFO.IsBungeeCordMode) {
+                sendmessave(type, u, playername, isAdd, bal, amount, newvalue, reason);
+            } else {
+                DataCon.save(type, u, playername, isAdd, bal, amount, newvalue, reason);
+            }
         }
     }
 
     public static void changeall(String targettype, String type, BigDecimal amount, Boolean isAdd, String reason) {
         bal.clear();
-        DataCon.saveall(targettype, type, amount, isAdd, reason);
+
+        if (DataBaseINFO.isasync) {
+            Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataCon.saveall(targettype, type, amount, isAdd, reason));
+        }else{
+            DataCon.saveall(targettype, type, amount, isAdd, reason);
+        }
+
         if (ServerINFO.IsBungeeCordMode) {
             sendmessaveall(targettype, amount, isAdd);
         }

@@ -414,6 +414,8 @@ public class SQL {
                 } else {
                     operation = "WITHDRAW";
                 }
+            }else if (isAdd == null) {
+                operation = "SET";
             }
             try {
                 String query;
