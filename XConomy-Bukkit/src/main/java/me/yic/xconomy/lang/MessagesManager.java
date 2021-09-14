@@ -90,7 +90,7 @@ public class MessagesManager {
     }
 
     public static String systemMessage(String message) {
-        return langFile.getString(Messages.gettag(message));
+        return langFile.getString(Messages.Companion.gettag(message));
     }
 
     public static String getAuthor() {

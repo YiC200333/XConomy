@@ -96,7 +96,7 @@ public class MessagesManager {
     }
 
     public static String systemMessage(String message) {
-        return langFile.getNode(Messages.gettag(message)).getString();
+        return langFile.getNode(Messages.Companion.gettag(message)).getString();
     }
 
     @SuppressWarnings("ConstantConditions")
