@@ -16,7 +16,7 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.utils;
+package me.yic.xconomy.info;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.lang.MessagesManager;

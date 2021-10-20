@@ -16,31 +16,24 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.utils;
+package me.yic.xconomy.info;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.File;
+import ninja.leaping.configurate.ConfigurationNode;
 
 public class UpdateConfig {
 
-    public static boolean update(FileConfiguration config, File cc) {
+    public static boolean update(ConfigurationNode config) {
         boolean update = false;
-        FileConfiguration ck = YamlConfiguration.loadConfiguration(cc);
-        if (!ck.contains("Settings.ranking-size")) {
-            config.createSection("Settings.ranking-size");
-            config.set("Settings.ranking-size", 10);
+        if (config.getNode("Settings","ranking-size").isVirtual()) {
+            config.getNode("Settings","ranking-size").setValue(10);
             update = true;
         }
-        if (!ck.contains("Settings.lines-per-page")) {
-            config.createSection("Settings.lines-per-page");
-            config.set("Settings.lines-per-page", 5);
+        if (config.getNode("Settings","lines-per-page").isVirtual()) {
+            config.getNode("Settings","lines-per-page").setValue(5);
             update = true;
         }
-        if (!ck.contains("Settings.payment-tax")) {
-            config.createSection("Settings.payment-tax");
-            config.set("Settings.payment-tax", 0);
+        if (config.getNode("Settings","payment-tax").isVirtual()) {
+            config.getNode("Settings","payment-tax").setValue(0);
             update = true;
         }
         return update;

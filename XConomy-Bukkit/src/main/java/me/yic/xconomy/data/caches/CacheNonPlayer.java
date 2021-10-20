@@ -19,6 +19,8 @@
 package me.yic.xconomy.data.caches;
 
 import me.yic.xconomy.data.DataCon;
+import me.yic.xconomy.api.event.NonPlayerAccountEvent;
+import org.bukkit.Bukkit;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -44,6 +46,7 @@ public class CacheNonPlayer {
     public static void change(String u, BigDecimal amount, Boolean isAdd, String type) {
         BigDecimal newvalue = amount;
         BigDecimal balance = getBalanceFromCacheOrDB(u);
+        Bukkit.getPluginManager().callEvent(new NonPlayerAccountEvent(u, balance, amount, isAdd, type));
         if (isAdd != null) {
             if (isAdd) {
                 newvalue = balance.add(amount);

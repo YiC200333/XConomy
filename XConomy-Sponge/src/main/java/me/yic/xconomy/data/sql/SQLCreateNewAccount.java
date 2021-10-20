@@ -20,8 +20,8 @@ package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.utils.DataBaseINFO;
-import me.yic.xconomy.utils.ServerINFO;
+import me.yic.xconomy.info.DataBaseINFO;
+import me.yic.xconomy.info.ServerINFO;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;

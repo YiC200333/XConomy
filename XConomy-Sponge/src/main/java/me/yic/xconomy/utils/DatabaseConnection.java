@@ -19,6 +19,8 @@ package me.yic.xconomy.utils;/*
 
 import com.zaxxer.hikari.HikariDataSource;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.info.DataBaseINFO;
+import me.yic.xconomy.info.ServerINFO;
 
 import java.io.File;
 import java.sql.Connection;

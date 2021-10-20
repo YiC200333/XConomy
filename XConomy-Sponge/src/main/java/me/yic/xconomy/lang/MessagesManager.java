@@ -19,7 +19,7 @@
 package me.yic.xconomy.lang;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.utils.ServerINFO;
+import me.yic.xconomy.info.ServerINFO;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;

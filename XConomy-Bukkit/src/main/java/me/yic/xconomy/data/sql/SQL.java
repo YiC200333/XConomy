@@ -22,10 +22,10 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
-import me.yic.xconomy.utils.DataBaseINFO;
+import me.yic.xconomy.info.DataBaseINFO;
 import me.yic.xconomy.utils.DatabaseConnection;
 import me.yic.xconomy.utils.PlayerINFO;
-import me.yic.xconomy.utils.ServerINFO;
+import me.yic.xconomy.info.ServerINFO;
 
 import java.math.BigDecimal;
 import java.sql.*;

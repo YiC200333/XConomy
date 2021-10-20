@@ -19,7 +19,7 @@
 package me.yic.xconomy.lang;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.utils.ServerINFO;
+import me.yic.xconomy.info.ServerINFO;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 

@@ -1,5 +1,5 @@
-/*
- *  This file (PermissionINFO.java) is a part of project XConomy
+package me.yic.xconomy.utils;/*
+ *  This file (RGBColor.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -16,30 +16,25 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.utils;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import me.yic.xconomy.info.MCVersion;
+import net.md_5.bungee.api.ChatColor;
 
-public class PermissionINFO {
-    public static boolean globalpayment = true;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-    private static final Map<UUID, Boolean> payment = new HashMap<>();
+public class RGBColor {
+    private static final Pattern pattern = Pattern.compile("#([a-f0-9]{6})");
 
-    public static boolean getGlobalPayment() {
-        return globalpayment;
-    }
+    public static String translateHexColorCodes(String message) {
+        if (MCVersion.hexsupport) {
+            Matcher matcher = pattern.matcher(message);
 
-    public static Boolean getPaymentPermission(UUID u) {
-        return payment.getOrDefault(u, null);
-    }
-
-    public static void setPaymentPermission(UUID u, Boolean b) {
-        if (b == null){
-            payment.remove(u);
-        }else {
-            payment.put(u, b);
+            while (matcher.find()) {
+                String color = message.substring(matcher.start(), matcher.end());
+                message = message.replace(color, "" + ChatColor.of(color));
+            }
         }
+        return message;
     }
 }

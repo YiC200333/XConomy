@@ -16,12 +16,13 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy;
+package me.yic.xconomy.api;
 
+import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.utils.PermissionINFO;
-import me.yic.xconomy.utils.ServerINFO;
+import me.yic.xconomy.info.PermissionINFO;
+import me.yic.xconomy.info.ServerINFO;
 import org.bukkit.Bukkit;
 
 import java.math.BigDecimal;

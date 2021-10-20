@@ -21,8 +21,8 @@ package me.yic.xconomy.data.sql;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
-import me.yic.xconomy.utils.DataBaseINFO;
-import me.yic.xconomy.utils.ServerINFO;
+import me.yic.xconomy.info.DataBaseINFO;
+import me.yic.xconomy.info.ServerINFO;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

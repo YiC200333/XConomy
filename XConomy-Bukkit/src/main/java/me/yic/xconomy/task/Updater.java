@@ -19,7 +19,7 @@
 package me.yic.xconomy.task;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.utils.ServerINFO;
+import me.yic.xconomy.info.ServerINFO;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.BufferedReader;

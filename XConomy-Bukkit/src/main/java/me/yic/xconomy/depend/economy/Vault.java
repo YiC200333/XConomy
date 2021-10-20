@@ -22,7 +22,7 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.utils.ServerINFO;
+import me.yic.xconomy.info.ServerINFO;
 import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;

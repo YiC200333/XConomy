@@ -20,9 +20,9 @@ package me.yic.xconomy;
 
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.utils.PermissionINFO;
+import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.utils.PluginINFO;
-import me.yic.xconomy.utils.ServerINFO;
+import me.yic.xconomy.info.ServerINFO;
 import org.spongepowered.api.Sponge;
 
 import java.math.BigDecimal;

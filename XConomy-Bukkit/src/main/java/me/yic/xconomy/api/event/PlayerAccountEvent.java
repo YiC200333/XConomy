@@ -1,5 +1,5 @@
-/*
- *  This file (PermissionINFO.java) is a part of project XConomy
+package me.yic.xconomy.api.event;/*
+ *  This file (PlayerAccountEvent.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -16,30 +16,28 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.utils;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.bukkit.event.HandlerList;
+
+import java.math.BigDecimal;
 import java.util.UUID;
 
-public class PermissionINFO {
-    public static boolean globalpayment = true;
+public class PlayerAccountEvent extends AccountEvent {
+    private static final HandlerList HANDLERS = new HandlerList();
+    private UUID u;
+    private String reason;
 
-    private static final Map<UUID, Boolean> payment = new HashMap<>();
-
-    public static boolean getGlobalPayment() {
-        return globalpayment;
+    public PlayerAccountEvent(UUID u, String account, BigDecimal balance, BigDecimal amount, Boolean isadd, String reason, String method) {
+        super(account, balance, amount, isadd, method);
+        this.u = u;
+        this.reason = reason;
     }
 
-    public static Boolean getPaymentPermission(UUID u) {
-        return payment.getOrDefault(u, null);
+    public UUID getUniqueId() {
+        return this.u;
     }
 
-    public static void setPaymentPermission(UUID u, Boolean b) {
-        if (b == null){
-            payment.remove(u);
-        }else {
-            payment.put(u, b);
-        }
+    public String getreason() {
+        return this.reason;
     }
 }

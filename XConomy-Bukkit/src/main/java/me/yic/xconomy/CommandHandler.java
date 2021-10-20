@@ -25,8 +25,9 @@ import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.CompletableFutureTask;
-import me.yic.xconomy.utils.PermissionINFO;
-import me.yic.xconomy.utils.ServerINFO;
+import me.yic.xconomy.info.PermissionINFO;
+import me.yic.xconomy.info.ServerINFO;
+import me.yic.xconomy.utils.RGBColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -666,7 +667,7 @@ public class CommandHandler {
 
     @SuppressWarnings("ConstantConditions")
     public static String translateColorCodes(String message) {
-        return ChatColor.translateAlternateColorCodes('&', MessagesManager.messageFile.getString(message));
+        return ChatColor.translateAlternateColorCodes('&', RGBColor.translateHexColorCodes(MessagesManager.messageFile.getString(message)));
     }
 
     public static void showVersion(CommandSender sender) {

@@ -20,7 +20,7 @@ package me.yic.xconomy.task;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.utils.PluginINFO;
-import me.yic.xconomy.utils.ServerINFO;
+import me.yic.xconomy.info.ServerINFO;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;

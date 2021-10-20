@@ -16,15 +16,11 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.utils;
+package me.yic.xconomy.info;
 
 import java.math.BigDecimal;
 
 public class ServerINFO {
-    //============================================================
-    public static String MCVersion = "0.0.0";
-    public static String ServerType = "Spigot";
-    //============================================================
 
     public static boolean IsBungeeCordMode = false;
 

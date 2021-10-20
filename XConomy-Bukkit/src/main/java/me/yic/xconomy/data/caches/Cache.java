@@ -23,9 +23,10 @@ import com.google.common.io.ByteStreams;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.utils.DataBaseINFO;
+import me.yic.xconomy.api.event.PlayerAccountEvent;
+import me.yic.xconomy.info.DataBaseINFO;
 import me.yic.xconomy.utils.PlayerINFO;
-import me.yic.xconomy.utils.ServerINFO;
+import me.yic.xconomy.info.ServerINFO;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -117,9 +118,11 @@ public class Cache {
     }
 
     public static void change(String type, UUID u, String playername, BigDecimal amount, Boolean isAdd, String reason) {
-
         BigDecimal newvalue = amount;
         BigDecimal bal = getBalanceFromCacheOrDB(u);
+
+        Bukkit.getPluginManager().callEvent(new PlayerAccountEvent(u, playername, bal, amount, isAdd, reason, type));
+
         if (isAdd != null) {
             if (isAdd) {
                 newvalue = bal.add(amount);

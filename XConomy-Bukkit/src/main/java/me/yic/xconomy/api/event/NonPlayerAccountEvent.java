@@ -1,5 +1,5 @@
-package me.yic.xconomy.utils;/*
- *  This file (ServerINFO.java) is a part of project XConomy
+package me.yic.xconomy.api.event;/*
+ *  This file (NonPlayerAccountEvent.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -19,25 +19,10 @@ package me.yic.xconomy.utils;/*
 
 import java.math.BigDecimal;
 
-public class ServerINFO {
+public class NonPlayerAccountEvent extends AccountEvent {
 
-    public static boolean IsBungeeCordMode = false;
+    public NonPlayerAccountEvent(String account, BigDecimal balance, BigDecimal amount, Boolean isadd, String method) {
+        super(account, balance, amount, isadd, method);
+    }
 
-    public static String Lang;
-
-    public static boolean EnableConnectionPool = false;
-
-    public static String Sign;
-
-    //public static boolean DDrivers = false;
-
-    public static Double InitialAmount = 0.0;
-
-    public static BigDecimal PaymentTax = BigDecimal.ONE;
-
-    public static int RankingSize = 10;
-
-    public static int LinesNumber = 5;
-
-    public static boolean IgnoreCase = false;
 }
