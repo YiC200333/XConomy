@@ -55,7 +55,7 @@ public class DataFormat {
 
     @SuppressWarnings("ConstantConditions")
     public static String shown(BigDecimal am) {
-        if (am.compareTo(BigDecimal.ONE) > 0) {
+        if (am.compareTo(BigDecimal.ONE) > 0 || am.compareTo(BigDecimal.ONE) < 0) {
             return ChatColor.translateAlternateColorCodes('&', displayformat
                     .replace("%balance%", decimalFormat.format(am))
                     .replace("%currencyname%", pluralname));
