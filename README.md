@@ -5,4 +5,4 @@ Spigot: https://www.spigotmc.org/resources/xconomy.75669/
 
 Sponge: https://ore.spongepowered.org/YiC/XConomy
 
-About [XConomyAPI](https://github.com/YiC200333/XConomy/blob/master/XConomyAPI.md)
+About [XConomyAPI](https://github.com/YiC200333/XConomyAPI)

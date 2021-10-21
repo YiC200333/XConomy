@@ -78,7 +78,6 @@ public class DataCon extends DataBaseINFO {
 
     public static void newPlayer(Player a) {
         SQLCreateNewAccount.newPlayer(a);
-        Cache.refreshFromCache(a.getUniqueId());
     }
 
     public static void getBal(UUID u) {

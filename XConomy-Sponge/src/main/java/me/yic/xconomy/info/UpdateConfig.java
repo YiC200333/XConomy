@@ -36,6 +36,14 @@ public class UpdateConfig {
             config.getNode("Settings","payment-tax").setValue(0);
             update = true;
         }
+        if (config.getNode("Settings","payment-tax").isVirtual()) {
+            config.getNode("Settings","payment-tax").setValue(0);
+            update = true;
+        }
+        if (config.getNode("Settings","disable-cache").isVirtual()) {
+            config.getNode("Settings","disable-cache").setValue(false);
+            update = true;
+        }
         return update;
     }
 }

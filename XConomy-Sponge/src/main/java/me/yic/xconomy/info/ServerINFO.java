@@ -40,4 +40,6 @@ public class ServerINFO {
     public static int LinesNumber = 5;
 
     public static boolean IgnoreCase = false;
+
+    public static boolean disablecache = false;
 }

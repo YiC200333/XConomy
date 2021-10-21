@@ -158,7 +158,7 @@ public class SQL {
             String query;
             query = " set balance = " + newbalance.doubleValue() + " where UID = ?";
             boolean requirefresh = false;
-            if (XConomy.config.getBoolean("Settings.cache-correction") && isAdd != null) {
+            if (isAdd != null) {
                 requirefresh = true;
                 query = query + "AND balance = " + balance.toString();
             }

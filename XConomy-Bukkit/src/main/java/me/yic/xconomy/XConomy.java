@@ -204,6 +204,7 @@ public class XConomy extends JavaPlugin {
         ServerINFO.IsSemiOnlineMode = config.getBoolean("Settings.semi-online-mode");
         ServerINFO.Sign = config.getString("BungeeCord.sign");
         ServerINFO.InitialAmount = config.getDouble("Settings.initial-bal");
+        ServerINFO.disablecache = config.getBoolean("Settings.disable-cache");
         ServerINFO.IgnoreCase = config.getBoolean("Settings.username-ignore-case");
 
         ServerINFO.RankingSize = config.getInt("Settings.ranking-size");

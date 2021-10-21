@@ -30,11 +30,9 @@ Settings:
   #It can solve the problem that some plugins need to create non-player accounts, such as Factions,Towny
   #Non-player account data is not synced with BC
   non-player-account: false
-  #Whether to enable cache correction
   #If you need to modify the data in the database directly, it is recommended to enable it
-  #You need to note that cache-correction will not double verify the value of the amount in the process of deposit and withdraw
-  #This function is not supported for non player account data
-  cache-correction: false
+  #Disabling caching will increase the pressure on the database
+  disable-cache: false
   #Dose save transaction record
   #Only MySQL is supported
   transaction-record: true

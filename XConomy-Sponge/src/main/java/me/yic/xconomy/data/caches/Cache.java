@@ -67,10 +67,8 @@ public class Cache {
     }
 
     public static void refreshFromCache(final UUID uuid) {
-        if (XConomy.config.getNode("Settings", "cache-correction").getBoolean()) {
-            if (uuid != null) {
-                DataCon.getBal(uuid);
-            }
+        if (uuid != null) {
+            DataCon.getBal(uuid);
         }
     }
 
@@ -82,6 +80,11 @@ public class Cache {
 
     public static BigDecimal getBalanceFromCacheOrDB(UUID u) {
         BigDecimal amount = BigDecimal.ZERO;
+
+        if (ServerINFO.disablecache){
+            DataCon.getBal(u);
+        }
+
         if (bal.containsKey(u)) {
             amount = bal.get(u);
         } else {
@@ -137,7 +140,7 @@ public class Cache {
             } else {
                 Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataCon.save(type, u, playername, isAdd, bal, amount, fnewvalue, reason));
             }
-        }else{
+        } else {
             if (ServerINFO.IsBungeeCordMode) {
                 sendmessave(type, u, playername, isAdd, bal, amount, newvalue, reason);
             } else {
@@ -151,7 +154,7 @@ public class Cache {
 
         if (DataBaseINFO.isasync) {
             Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataCon.saveall(targettype, type, amount, isAdd, reason));
-        }else{
+        } else {
             DataCon.saveall(targettype, type, amount, isAdd, reason);
         }
 
@@ -184,7 +187,7 @@ public class Cache {
 
 
     public static UUID translateUUID(String name, Player pp) {
-        if (name == null){
+        if (name == null) {
             return null;
         }
 

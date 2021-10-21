@@ -16,7 +16,7 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy;
+package me.yic.api;
 
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;

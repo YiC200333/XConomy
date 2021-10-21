@@ -323,7 +323,7 @@ public class CommandHandler {
 
                         Player player = (Player) sender;
 
-                        Cache.refreshFromCache(player.getUniqueId());
+                        //Cache.refreshFromCache(player.getUniqueId());
 
                         BigDecimal a = Cache.getBalanceFromCacheOrDB(player.getUniqueId());
                         sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("balance")

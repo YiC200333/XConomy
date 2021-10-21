@@ -277,7 +277,8 @@ public class XConomy {
         ServerINFO.Lang = config.getNode("Settings", "language").getString();
         ServerINFO.IsBungeeCordMode = isBungeecord();
         ServerINFO.Sign = config.getNode("BungeeCord", "sign").getString();
-        ServerINFO.InitialAmount = config.getNode("Settings.initial-bal").getDouble();
+        ServerINFO.InitialAmount = config.getNode("Settings", "initial-bal").getDouble();
+        ServerINFO.disablecache = config.getNode("Settings", "disable-cache").getBoolean();
         ServerINFO.IgnoreCase = config.getNode("Settings", "username-ignore-case").getBoolean();
 
         ServerINFO.RankingSize = config.getNode("Settings", "ranking-size").getInt();

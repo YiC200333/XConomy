@@ -55,14 +55,14 @@ public class DataFormat {
 
     @SuppressWarnings("ConstantConditions")
     public static String shown(BigDecimal am) {
-        if (am.compareTo(BigDecimal.ONE) > 0 || am.compareTo(BigDecimal.ONE) < 0) {
+        if (am.compareTo(BigDecimal.ONE) == 0) {
             return ChatColor.translateAlternateColorCodes('&', displayformat
                     .replace("%balance%", decimalFormat.format(am))
-                    .replace("%currencyname%", pluralname));
+                    .replace("%currencyname%", singularname));
         }
         return ChatColor.translateAlternateColorCodes('&', displayformat
                 .replace("%balance%", decimalFormat.format(am))
-                .replace("%currencyname%", singularname));
+                .replace("%currencyname%", pluralname));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -122,7 +122,7 @@ public class DataFormat {
 
     private static BigDecimal setpaymenttax() {
         double pt = XConomy.config.getDouble("Settings.payment-tax");
-        if (pt < 0.0){
+        if (pt < 0.0) {
             pt = 0.0;
         }
         return formatdouble(pt).add(BigDecimal.ONE);

@@ -43,6 +43,11 @@ public class UpdateConfig {
             config.set("Settings.payment-tax", 0);
             update = true;
         }
+        if (!ck.contains("Settings.disable-cache")) {
+            config.createSection("Settings.disable-cache");
+            config.set("Settings.disable-cache", false);
+            update = true;
+        }
         return update;
     }
 }

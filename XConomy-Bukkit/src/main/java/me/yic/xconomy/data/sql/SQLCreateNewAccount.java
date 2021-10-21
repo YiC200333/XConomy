@@ -19,6 +19,7 @@
 package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.info.DataBaseINFO;
@@ -26,7 +27,9 @@ import me.yic.xconomy.info.ServerINFO;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
 import java.sql.*;
+import java.util.UUID;
 
 public class SQLCreateNewAccount extends SQL{
 
@@ -34,7 +37,7 @@ public class SQLCreateNewAccount extends SQL{
         Connection connection = database.getConnectionAndCheck();
         boolean doubledata = checkUser(player, connection);
         if (!doubledata) {
-            selectUser(player.getUniqueId().toString(), player.getName(), connection);
+            selectUser(player.getUniqueId(), player.getName(), connection);
         }
         database.closeHikariConnection(connection);
     }
@@ -150,18 +153,20 @@ public class SQLCreateNewAccount extends SQL{
     }
 
 
-    private static void selectUser(String UID, String name, Connection connection) {
+    private static void selectUser(UUID UID, String name, Connection connection) {
         String user = "#";
 
         try {
             PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
-            statement.setString(1, UID);
+            statement.setString(1, UID.toString());
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 user = rs.getString(2);
+                BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
+                Cache.insertIntoCache(UID, cacheThisAmt);
             } else {
                 user = name;
-                createAccount(UID, user, ServerINFO.InitialAmount, connection);
+                createAccount(UID.toString(), user, ServerINFO.InitialAmount, connection);
             }
             rs.close();
             statement.close();
@@ -170,7 +175,7 @@ public class SQLCreateNewAccount extends SQL{
         }
         if (!user.equals(name) && !user.equals("#")) {
             Cache.removeFromUUIDCache(name);
-            updateUser(UID, name, connection);
+            updateUser(UID.toString(), name, connection);
             XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
         }
     }
