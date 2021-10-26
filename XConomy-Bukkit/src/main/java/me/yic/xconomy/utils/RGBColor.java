@@ -31,8 +31,9 @@ public class RGBColor {
             Matcher matcher = pattern.matcher(message);
 
             while (matcher.find()) {
-                String color = message.substring(matcher.start(), matcher.end());
+                String color = message.substring(matcher.start(), matcher.start() + 7);
                 message = message.replace(color, "" + ChatColor.of(color));
+                matcher = pattern.matcher(message);
             }
         }
         return message;

@@ -265,7 +265,7 @@ public class SQL {
                 CacheNonPlayer.insertIntoCache(playerName, DataFormat.formatString(rs.getString(2)));
             } else {
                 SQLCreateNewAccount.createNonPlayerAccount(playerName, 0.0, connection);
-                CacheNonPlayer.insertIntoCache(playerName, DataFormat.formatString("0.0"));
+                CacheNonPlayer.insertIntoCache(playerName, BigDecimal.ZERO);
             }
 
             rs.close();

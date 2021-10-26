@@ -87,7 +87,7 @@ public class XCVirtualAccount implements VirtualAccount {
 
     @Override
     public TransactionResult setBalance(Currency currency, BigDecimal amount, Cause cause, Set<Context> contexts) {
-        if (ServerINFO.IsBungeeCordMode & Sponge.getServer().getOnlinePlayers().isEmpty()) {
+        if (ServerINFO.IsBungeeCordMode && Sponge.getServer().getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED,
                     DummyObjectProvider.createFor(TransactionType.class, "SET"));
@@ -122,7 +122,7 @@ public class XCVirtualAccount implements VirtualAccount {
 
     @Override
     public TransactionResult resetBalance(Currency currency, Cause cause, Set<Context> contexts) {
-        if (ServerINFO.IsBungeeCordMode & Sponge.getServer().getOnlinePlayers().isEmpty()) {
+        if (ServerINFO.IsBungeeCordMode && Sponge.getServer().getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED,
                     DummyObjectProvider.createFor(TransactionType.class, "RESET"));
@@ -148,7 +148,7 @@ public class XCVirtualAccount implements VirtualAccount {
     @Override
     public TransactionResult deposit(Currency currency, BigDecimal amount, Cause cause, Set<Context> contexts) {
 
-        if (ServerINFO.IsBungeeCordMode & Sponge.getServer().getOnlinePlayers().isEmpty()) {
+        if (ServerINFO.IsBungeeCordMode && Sponge.getServer().getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.DEPOSIT);
         }
@@ -179,7 +179,7 @@ public class XCVirtualAccount implements VirtualAccount {
 
     @Override
     public TransactionResult withdraw(Currency currency, BigDecimal amount, Cause cause, Set<Context> contexts) {
-        if (ServerINFO.IsBungeeCordMode & Sponge.getServer().getOnlinePlayers().isEmpty()) {
+        if (ServerINFO.IsBungeeCordMode && Sponge.getServer().getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
         }
@@ -208,7 +208,7 @@ public class XCVirtualAccount implements VirtualAccount {
 
     @Override
     public TransferResult transfer(Account to, Currency currency, BigDecimal amount, Cause cause, Set<Context> contexts) {
-        if (ServerINFO.IsBungeeCordMode & Sponge.getServer().getOnlinePlayers().isEmpty()) {
+        if (ServerINFO.IsBungeeCordMode && Sponge.getServer().getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
             return new XCTransferResult(to,this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.TRANSFER);
         }

@@ -124,7 +124,7 @@ public class Cache {
         BigDecimal newvalue = amount;
         BigDecimal bal = getBalanceFromCacheOrDB(u);
 
-        Bukkit.getPluginManager().callEvent(new PlayerAccountEvent(u, playername, bal, amount, isAdd, reason, type));
+        Bukkit.getScheduler().runTask(XConomy.getInstance(), () -> Bukkit.getPluginManager().callEvent(new PlayerAccountEvent(u, playername, bal, amount, isAdd, reason, type)));
 
         if (isAdd != null) {
             if (isAdd) {
@@ -275,7 +275,10 @@ public class Cache {
 
     private static void SendMessTask(ByteArrayDataOutput stream, String type, UUID u, String player, Boolean isAdd,
                                      BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
-        Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
+
+        if (!Bukkit.getOnlinePlayers().isEmpty()) {
+            Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
+        }
         if (u != null) {
             DataCon.save(type, u, player, isAdd, balance, amount, newbalance, command);
         }

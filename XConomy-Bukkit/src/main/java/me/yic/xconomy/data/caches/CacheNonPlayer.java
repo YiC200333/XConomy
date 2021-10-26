@@ -18,6 +18,7 @@
  */
 package me.yic.xconomy.data.caches;
 
+import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.api.event.NonPlayerAccountEvent;
 import me.yic.xconomy.info.ServerINFO;
@@ -50,7 +51,7 @@ public class CacheNonPlayer {
     public static void change(String u, BigDecimal amount, Boolean isAdd, String type) {
         BigDecimal newvalue = amount;
         BigDecimal balance = getBalanceFromCacheOrDB(u);
-        Bukkit.getPluginManager().callEvent(new NonPlayerAccountEvent(u, balance, amount, isAdd, type));
+        Bukkit.getScheduler().runTask(XConomy.getInstance(), () -> Bukkit.getPluginManager().callEvent(new NonPlayerAccountEvent(u, balance, amount, isAdd, type)));
         if (isAdd != null) {
             if (isAdd) {
                 newvalue = balance.add(amount);

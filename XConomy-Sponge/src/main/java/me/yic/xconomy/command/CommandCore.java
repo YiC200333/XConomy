@@ -612,7 +612,7 @@ public class CommandCore {
     }
 
     public static boolean check() {
-        return Sponge.getServer().getOnlinePlayers().isEmpty() & ServerINFO.IsBungeeCordMode;
+        return Sponge.getServer().getOnlinePlayers().isEmpty() && ServerINFO.IsBungeeCordMode && !ServerINFO.disablecache;
     }
 
     public static boolean checkMessage(String message) {
@@ -711,6 +711,11 @@ public class CommandCore {
         if (!ServerINFO.IsBungeeCordMode) {
             return;
         }
+
+        if (Sponge.getServer().getOnlinePlayers().isEmpty()) {
+            return;
+        }
+
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         if (!ispublic) {
             output.writeUTF("message");

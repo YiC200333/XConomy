@@ -648,7 +648,7 @@ public class CommandHandler {
     }
 
     public static boolean check() {
-        return Bukkit.getOnlinePlayers().isEmpty() & ServerINFO.IsBungeeCordMode;
+        return Bukkit.getOnlinePlayers().isEmpty() && ServerINFO.IsBungeeCordMode && !ServerINFO.disablecache;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -757,6 +757,11 @@ public class CommandHandler {
         if (!ServerINFO.IsBungeeCordMode) {
             return;
         }
+
+        if (Bukkit.getOnlinePlayers().isEmpty()) {
+            return;
+        }
+
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         if (!ispublic) {
             output.writeUTF("message");

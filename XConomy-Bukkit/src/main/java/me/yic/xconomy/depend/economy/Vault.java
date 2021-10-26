@@ -91,7 +91,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse depositPlayer(String name, double amount) {
-        if (ServerINFO.IsBungeeCordMode & Bukkit.getOnlinePlayers().isEmpty()) {
+        if (ServerINFO.IsBungeeCordMode && Bukkit.getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
                     "[BungeeCord] No player in server");
         }
@@ -216,7 +216,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse withdrawPlayer(String name, double amount) {
-        if (ServerINFO.IsBungeeCordMode & Bukkit.getOnlinePlayers().isEmpty()) {
+        if (ServerINFO.IsBungeeCordMode && Bukkit.getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
                     "[BungeeCord] No player in server");
         }
