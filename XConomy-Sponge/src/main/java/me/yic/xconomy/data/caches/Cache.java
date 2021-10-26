@@ -268,7 +268,7 @@ public class Cache {
 
     private static void SendMessTask(ByteArrayDataOutput stream, String type, UUID u, String player, Boolean isAdd,
                                      BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
-        if (Sponge.getServer().getOnlinePlayers().isEmpty()) {
+        if (!Sponge.getServer().getOnlinePlayers().isEmpty()) {
             Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), "xconomy:acb").sendTo(
                     Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> buf.writeBytes(stream.toByteArray()));
         }
