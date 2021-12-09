@@ -49,8 +49,8 @@ public class SPsync implements PluginMessageListener {
 
         if (type.equalsIgnoreCase("balance")) {
             UUID u = UUID.fromString(input.readUTF());
-            String bal = input.readUTF();
-            Cache.insertIntoCache(u, DataFormat.formatString(bal));
+            //String bal = input.readUTF();
+            Cache.removefromCache(u);
         } else if (type.equalsIgnoreCase("message")) {
             Player p = Bukkit.getPlayer(UUID.fromString(input.readUTF()));
             String mess = input.readUTF();
@@ -62,9 +62,9 @@ public class SPsync implements PluginMessageListener {
             String amount = input.readUTF();
             String isadds = input.readUTF();
             if (targettype.equalsIgnoreCase("all")) {
-                Cache.bal.clear();
+                Cache.pds.clear();
             } else if (targettype.equalsIgnoreCase("online")) {
-                Cache.bal.clear();
+                Cache.pds.clear();
                 Boolean isadd = null;
                 if (isadds.equalsIgnoreCase("add")) {
                     isadd = true;

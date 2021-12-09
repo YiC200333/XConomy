@@ -24,6 +24,7 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.info.DataBaseINFO;
+import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.PlayerINFO;
 import me.yic.xconomy.info.ServerINFO;
 import org.spongepowered.api.Sponge;
@@ -36,15 +37,25 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Cache {
-    public static Map<UUID, BigDecimal> bal = new ConcurrentHashMap<>();
+    public static Map<UUID, PlayerData> pds = new ConcurrentHashMap<>();
+    public static Map<String, PlayerINFO> uid = new ConcurrentHashMap<>();
     public static Map<String, BigDecimal> baltop = new HashMap<>();
     public static List<String> baltop_papi = new ArrayList<>();
-    public static Map<String, PlayerINFO> uid = new ConcurrentHashMap<>();
     public static BigDecimal sumbalance = BigDecimal.ZERO;
 
-    public static void insertIntoCache(final UUID uuid, BigDecimal value) {
-        if (value != null) {
-            bal.put(uuid, value);
+    public static void insertIntoCache(final UUID uuid, PlayerData pd) {
+        pds.put(uuid, pd);
+    }
+
+    public static void updateIntoCache(final UUID uuid, PlayerData pd, BigDecimal newbalance) {
+        pd.setbalance(newbalance);
+        pds.put(uuid, pd);
+    }
+
+    @SuppressWarnings("all")
+    public static void removefromCache(final UUID uuid) {
+        if (pds.containsKey(uuid)) {
+            pds.remove(uuid);
         }
     }
 
@@ -74,41 +85,41 @@ public class Cache {
 
 
     public static void clearCache() {
-        bal.clear();
+        pds.clear();
         uid.clear();
     }
 
-    public static BigDecimal getBalanceFromCacheOrDB(UUID u) {
-        BigDecimal amount = BigDecimal.ZERO;
+    public static PlayerData getBalanceFromCacheOrDB(UUID u) {
+        PlayerData pd = null;
 
         if (ServerINFO.disablecache){
             DataCon.getBal(u);
         }
 
-        if (bal.containsKey(u)) {
-            amount = bal.get(u);
+        if (pds.containsKey(u)) {
+            pd = pds.get(u);
         } else {
             DataCon.getBal(u);
-            if (bal.containsKey(u)) {
-                amount = bal.get(u);
+            if (pds.containsKey(u)) {
+                pd = pds.get(u);
             }
         }
         if (Sponge.getServer().getOnlinePlayers().size() == 0) {
             clearCache();
         }
-        return amount;
+        return pd;
     }
 
     @SuppressWarnings({"ResultOfMethodCallIgnored", "UnstableApiUsage"})
-    public static BigDecimal cachecorrection(UUID u, BigDecimal amount, Boolean isAdd) {
+    public static PlayerData cachecorrection(UUID u, BigDecimal amount, Boolean isAdd) {
         BigDecimal newvalue;
-        BigDecimal bal = getBalanceFromCacheOrDB(u);
+        PlayerData npd = getBalanceFromCacheOrDB(u);
         if (isAdd) {
-            newvalue = bal.add(amount);
+            newvalue = npd.getbalance().add(amount);
         } else {
-            newvalue = bal.subtract(amount);
+            newvalue = npd.getbalance().subtract(amount);
         }
-        insertIntoCache(u, newvalue);
+        updateIntoCache(u, npd, newvalue);
 
         if (ServerINFO.IsBungeeCordMode) {
             ByteArrayDataOutput output = ByteStreams.newDataOutput();
@@ -119,12 +130,14 @@ public class Cache {
             Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), "xconomy:acb").sendTo(
                     Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> output.toByteArray());
         }
-        return newvalue;
+        return npd;
     }
 
-    public static void change(String type, UUID u, String playername, BigDecimal amount, Boolean isAdd, String reason) {
+    public static void change(String type, UUID u, BigDecimal amount, Boolean isAdd, String reason) {
+        PlayerData pd = getBalanceFromCacheOrDB(u);
         BigDecimal newvalue = amount;
-        BigDecimal bal = getBalanceFromCacheOrDB(u);
+        BigDecimal bal = pd.getbalance();
+
         if (isAdd != null) {
             if (isAdd) {
                 newvalue = bal.add(amount);
@@ -132,27 +145,27 @@ public class Cache {
                 newvalue = bal.subtract(amount);
             }
         }
-        insertIntoCache(u, newvalue);
-        if (DataBaseINFO.isasync) {
-            final BigDecimal fnewvalue = newvalue;
+
+        updateIntoCache(u, pd, newvalue);
+        if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
             if (ServerINFO.IsBungeeCordMode) {
-                Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> sendmessave(type, u, playername, isAdd, bal, amount, fnewvalue, reason));
+                Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> sendmessave(type, pd, isAdd, bal, amount, reason));
             } else {
-                Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataCon.save(type, u, playername, isAdd, bal, amount, fnewvalue, reason));
+                Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataCon.save(type, pd, isAdd, bal, amount, reason));
             }
         } else {
             if (ServerINFO.IsBungeeCordMode) {
-                sendmessave(type, u, playername, isAdd, bal, amount, newvalue, reason);
+                sendmessave(type, pd, isAdd, bal, amount, reason);
             } else {
-                DataCon.save(type, u, playername, isAdd, bal, amount, newvalue, reason);
+                DataCon.save(type, pd, isAdd, bal, amount, reason);
             }
         }
     }
 
     public static void changeall(String targettype, String type, BigDecimal amount, Boolean isAdd, String reason) {
-        bal.clear();
+        pds.clear();
 
-        if (DataBaseINFO.isasync) {
+        if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
             Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataCon.saveall(targettype, type, amount, isAdd, reason));
         } else {
             DataCon.saveall(targettype, type, amount, isAdd, reason);
@@ -225,14 +238,14 @@ public class Cache {
     }
 
     @SuppressWarnings("UnstableApiUsage")
-    public static void sendmessave(String type, UUID u, String player, Boolean isAdd,
-                                   BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
+    public static void sendmessave(String type, PlayerData pd, Boolean isAdd,
+                                   BigDecimal oldbalance, BigDecimal amount, String command) {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF("balance");
         output.writeUTF(XConomy.getSign());
-        output.writeUTF(u.toString());
-        output.writeUTF(newbalance.toString());
-        SendMessTask(output, type, u, player, isAdd, balance, amount, newbalance, command);
+        output.writeUTF(pd.getUniqueId().toString());
+        //output.writeUTF(newbalance.toString());
+        SendMessTask(output, type, pd, isAdd, oldbalance, amount, command);
 
     }
 
@@ -252,7 +265,7 @@ public class Cache {
         } else {
             output.writeUTF("subtract");
         }
-        SendMessTask(output, null, null, null, isAdd, null, null, null, null);
+        SendMessTask(output, null, null, isAdd, null, null, null);
 
     }
 
@@ -262,18 +275,18 @@ public class Cache {
         output.writeUTF("updateplayer");
         output.writeUTF(XConomy.getSign());
         output.writeUTF(player);
-        SendMessTask(output, null, null, null, null, null, null, null, null);
+        SendMessTask(output, null, null, null, null, null, null);
     }
 
 
-    private static void SendMessTask(ByteArrayDataOutput stream, String type, UUID u, String player, Boolean isAdd,
-                                     BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
+    private static void SendMessTask(ByteArrayDataOutput stream, String type, PlayerData pd, Boolean isAdd,
+                                     BigDecimal oldbalance, BigDecimal amount, String command) {
         if (!Sponge.getServer().getOnlinePlayers().isEmpty()) {
             Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), "xconomy:acb").sendTo(
                     Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> buf.writeBytes(stream.toByteArray()));
         }
-        if (u != null) {
-            DataCon.save(type, u, player, isAdd, balance, amount, newbalance, command);
+        if (pd != null) {
+            DataCon.save(type, pd, isAdd, oldbalance, amount, command);
         }
     }
 

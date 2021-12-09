@@ -23,6 +23,7 @@ import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.DataBaseINFO;
 import me.yic.xconomy.info.ServerINFO;
+import me.yic.xconomy.utils.PlayerData;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -162,7 +163,10 @@ public class SQLCreateNewAccount extends SQL {
             if (rs.next()) {
                 user = rs.getString(2);
                 BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
-                Cache.insertIntoCache(UID, cacheThisAmt);
+                if (cacheThisAmt != null) {
+                    PlayerData bd = new PlayerData(UID, user, cacheThisAmt);
+                    Cache.insertIntoCache(UID, bd);
+                }
             } else {
                 user = name;
                 createAccount(UID.toString(), user, ServerINFO.InitialAmount, connection);

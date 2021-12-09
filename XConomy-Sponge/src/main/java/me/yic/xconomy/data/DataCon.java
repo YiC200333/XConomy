@@ -23,6 +23,7 @@ import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import me.yic.xconomy.info.DataBaseINFO;
+import me.yic.xconomy.utils.PlayerData;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 
@@ -100,9 +101,9 @@ public class DataCon extends DataBaseINFO {
         return SQL.sumBal();
     }
 
-    public static void save(String type, UUID UID, String player, Boolean isAdd,
-                            BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
-        SQL.save(type, UID, player, isAdd, balance, amount, newbalance, command);
+    public static void save(String type, PlayerData pd, Boolean isAdd,
+                            BigDecimal oldbalance, BigDecimal amount, String command) {
+        SQL.save(type, pd, isAdd, oldbalance, amount, command);
     }
 
 

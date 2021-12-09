@@ -24,6 +24,7 @@ import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.info.DataBaseINFO;
 import me.yic.xconomy.utils.DatabaseConnection;
+import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.PlayerINFO;
 import me.yic.xconomy.info.ServerINFO;
 
@@ -123,17 +124,120 @@ public class SQL {
         }
     }
 
+    public static void select(UUID uuid) {
+        try {
+            Connection connection = database.getConnectionAndCheck();
+            PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
+            statement.setString(1, uuid.toString());
 
-    public static void save(String type, UUID u, String player, Boolean isAdd,
-                            BigDecimal balance, BigDecimal amount, BigDecimal newbalance, String command) {
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
+                if (cacheThisAmt != null) {
+                    PlayerData bd = new PlayerData(uuid, rs.getString(2), cacheThisAmt);
+                    Cache.insertIntoCache(uuid, bd);
+                }
+            }
+
+            rs.close();
+            statement.close();
+            database.closeHikariConnection(connection);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void selectUID(String name) {
+        try {
+            Connection connection = database.getConnectionAndCheck();
+            String query;
+
+            if (ServerINFO.IgnoreCase) {
+                if (DataBaseINFO.isMySQL()) {
+                    query = "select * from " + tableName + " where player = ?";
+                } else {
+                    query = "select * from " + tableName + " where player = ? COLLATE NOCASE";
+                }
+            }else {
+                if (DataBaseINFO.isMySQL()) {
+                    query = "select * from " + tableName + " where binary player = ?";
+                } else {
+                    query = "select * from " + tableName + " where player = ?";
+                }
+            }
+
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, name);
+
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                UUID id = UUID.fromString(rs.getString(1));
+                String username = rs.getString(2);
+                PlayerINFO pi = new PlayerINFO(id, username);
+                String usernamep = name;
+                if (ServerINFO.IgnoreCase) {
+                    usernamep = name.toLowerCase();
+                }
+                Cache.insertIntoUUIDCache(usernamep, pi);
+                BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
+                if (cacheThisAmt != null) {
+                    PlayerData bd = new PlayerData(id, rs.getString(2), cacheThisAmt);
+                    Cache.insertIntoCache(id, bd);
+                }
+            }
+
+            rs.close();
+            statement.close();
+            database.closeHikariConnection(connection);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void selectNonPlayer(String playerName) {
+        try {
+            Connection connection = database.getConnectionAndCheck();
+            String query;
+
+            if (DataBaseINFO.isMySQL()) {
+                query = "select * from " + tableNonPlayerName + " where binary account = ?";
+            } else {
+                query = "select * from " + tableNonPlayerName + " where account = ?";
+            }
+
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, playerName);
+
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                CacheNonPlayer.insertIntoCache(playerName, DataFormat.formatString(rs.getString(2)));
+            } else {
+                SQLCreateNewAccount.createNonPlayerAccount(playerName, 0.0, connection);
+                CacheNonPlayer.insertIntoCache(playerName, BigDecimal.ZERO);
+            }
+
+            rs.close();
+            statement.close();
+            database.closeHikariConnection(connection);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void save(String type, PlayerData pd, Boolean isAdd,
+                            BigDecimal oldbalance, BigDecimal amount, String command) {
         Connection connection = database.getConnectionAndCheck();
+        UUID u = pd.getUniqueId();
         try {
             String query;
-            query = " set balance = " + newbalance.doubleValue() + " where UID = ?";
+            query = " set balance = " + pd.getbalance().doubleValue() + " where UID = ?";
             boolean requirefresh = false;
             if (isAdd != null) {
                 requirefresh = true;
-                query = query + "AND balance = " + balance.toString();
+                query = query + "AND balance = " + oldbalance.toString();
             }
             PreparedStatement statement1 = connection.prepareStatement("update " + tableName + query);
             statement1.setString(1, u.toString());
@@ -142,10 +246,10 @@ public class SQL {
             if (requirefresh && rs == 0) {
                 command += "(Cache Correction)";
             }
-            record(connection, type, u.toString(), player, isAdd, amount, newbalance, command);
+            record(connection, type, pd, isAdd, amount, pd.getbalance(), command);
             if (requirefresh && rs == 0) {
                 Cache.refreshFromCache(u);
-                BigDecimal newv = Cache.cachecorrection(u, amount, isAdd);
+                PlayerData npd = Cache.cachecorrection(u, amount, isAdd);
                 if (isAdd) {
                     query = " set balance = balance + " + amount.doubleValue() + " where UID = ?";
                 } else {
@@ -155,7 +259,7 @@ public class SQL {
                 statement2.setString(1, u.toString());
                 statement2.executeUpdate();
                 statement2.close();
-                record(connection, type, u.toString(), player, isAdd, amount, newv, "Cache Correction Detail");
+                record(connection, type, npd, isAdd, amount, npd.getbalance(), "Cache Correction Detail");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -203,8 +307,7 @@ public class SQL {
             e.printStackTrace();
         }
         if (type != null) {
-            record(connection, type, "N/A", "N/A", isAdd, amount, BigDecimal.ZERO,
-                    reason);
+            record(connection, type, null, isAdd, amount, BigDecimal.ZERO, reason);
         }
         database.closeHikariConnection(connection);
     }
@@ -222,101 +325,8 @@ public class SQL {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        record(connection, type, "N/A", account, isAdd, amount, newbalance, "N/A");
+        record(connection, type, new PlayerData(null, account, null), isAdd, amount, newbalance, "N/A");
         database.closeHikariConnection(connection);
-    }
-
-    public static void select(UUID uuid) {
-        try {
-            Connection connection = database.getConnectionAndCheck();
-            PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
-            statement.setString(1, uuid.toString());
-
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
-                Cache.insertIntoCache(uuid, cacheThisAmt);
-            }
-
-            rs.close();
-            statement.close();
-            database.closeHikariConnection(connection);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void selectNonPlayer(String playerName) {
-        try {
-            Connection connection = database.getConnectionAndCheck();
-            String query;
-
-            if (DataBaseINFO.isMySQL()) {
-                query = "select * from " + tableNonPlayerName + " where binary account = ?";
-            } else {
-                query = "select * from " + tableNonPlayerName + " where account = ?";
-            }
-
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, playerName);
-
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                CacheNonPlayer.insertIntoCache(playerName, DataFormat.formatString(rs.getString(2)));
-            } else {
-                SQLCreateNewAccount.createNonPlayerAccount(playerName, 0.0, connection);
-                CacheNonPlayer.insertIntoCache(playerName, BigDecimal.ZERO);
-            }
-
-            rs.close();
-            statement.close();
-            database.closeHikariConnection(connection);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void selectUID(String name) {
-        try {
-            Connection connection = database.getConnectionAndCheck();
-            String query;
-
-            if (ServerINFO.IgnoreCase) {
-                if (DataBaseINFO.isMySQL()) {
-                    query = "select * from " + tableName + " where player = ?";
-                } else {
-                    query = "select * from " + tableName + " where player = ? COLLATE NOCASE";
-                }
-            } else {
-                if (DataBaseINFO.isMySQL()) {
-                    query = "select * from " + tableName + " where binary player = ?";
-                } else {
-                    query = "select * from " + tableName + " where player = ?";
-                }
-            }
-
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, name);
-
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                UUID id = UUID.fromString(rs.getString(1));
-                String username = rs.getString(2);
-                PlayerINFO pi = new PlayerINFO(id, username);
-                String usernamep = name;
-                if (ServerINFO.IgnoreCase) {
-                    usernamep = name.toLowerCase();
-                }
-                Cache.insertIntoUUIDCache(usernamep, pi);
-                Cache.insertIntoCache(id, DataFormat.formatString(rs.getString(3)));
-            }
-
-            rs.close();
-            statement.close();
-            database.closeHikariConnection(connection);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     public static void getBaltop() {
@@ -377,17 +387,25 @@ public class SQL {
         database.closeHikariConnection(connection);
     }
 
-    public static void record(Connection co, String type, String UID, String player, Boolean isAdd,
+    public static void record(Connection co, String type, PlayerData pd, Boolean isAdd,
                               BigDecimal amount, BigDecimal newbalance, String command) {
         if (DataBaseINFO.isMySQL() && XConomy.config.getNode("Settings", "transaction-record").getBoolean()) {
-            String operation = "Error";
+            String uid = "N/A";
+            String name = "N/A";
+            String operation;
+            if (pd != null){
+                if (pd.getUniqueId() != null) {
+                    uid = pd.getUniqueId().toString();
+                }
+                name = pd.getName();
+            }
             if (isAdd != null) {
                 if (isAdd) {
                     operation = "DEPOSIT";
                 } else {
                     operation = "WITHDRAW";
                 }
-            }else if (isAdd == null) {
+            }else {
                 operation = "SET";
             }
             try {
@@ -395,8 +413,8 @@ public class SQL {
                 query = "INSERT INTO " + tableRecordName + "(type,uid,player,balance,amount,operation,date,command) values(?,?,?,?,?,?,?,?)";
                 PreparedStatement statement = co.prepareStatement(query);
                 statement.setString(1, type);
-                statement.setString(2, UID);
-                statement.setString(3, player);
+                statement.setString(2, uid);
+                statement.setString(3, name);
                 statement.setDouble(4, newbalance.doubleValue());
                 statement.setDouble(5, amount.doubleValue());
                 statement.setString(6, operation);

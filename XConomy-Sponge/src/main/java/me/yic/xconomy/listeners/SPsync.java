@@ -46,8 +46,8 @@ public class SPsync implements RawDataListener {
 
         if (type.equalsIgnoreCase("balance")) {
             UUID u = UUID.fromString(data.readUTF());
-            String bal = data.readUTF();
-            Cache.bal.put(u, DataFormat.formatString(bal));
+            //String bal = data.readUTF();
+            Cache.removefromCache(u);
         } else if (type.equalsIgnoreCase("message")) {
             User p = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(
                     provide -> provide.get(UUID.fromString(data.readUTF()))).get();
@@ -61,9 +61,9 @@ public class SPsync implements RawDataListener {
             String amount = data.readUTF();
             String isadds = data.readUTF();
             if (targettype.equalsIgnoreCase("all")) {
-                Cache.bal.clear();
+                Cache.pds.clear();
             } else if (targettype.equalsIgnoreCase("online")) {
-                Cache.bal.clear();
+                Cache.pds.clear();
                 Boolean isadd = null;
                 if (isadds.equalsIgnoreCase("add")) {
                     isadd = true;

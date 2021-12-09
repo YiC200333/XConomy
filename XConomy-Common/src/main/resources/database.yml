@@ -1,10 +1,6 @@
 Settings:
   #SQLite MySQL
   storage-type: SQLite
-  #Whether to save data asynchronously(SQLite does not support)
-  #Query data, creating data has nothing to do with this option
-  #After enabling, the compatibility of plugins will be reduced. If thread related errors are reported, please disable it
-  async: false
   #use connection pool or not
   usepool: false
 

@@ -53,7 +53,7 @@ public class BCsync implements Listener {
             output.writeUTF("balance");
             output.writeUTF(input.readUTF());
             output.writeUTF(input.readUTF());
-            output.writeUTF(input.readUTF());
+            //output.writeUTF(input.readUTF());
         } else if (type.equalsIgnoreCase("message")) {
             output.writeUTF("message");
             output.writeUTF(input.readUTF());

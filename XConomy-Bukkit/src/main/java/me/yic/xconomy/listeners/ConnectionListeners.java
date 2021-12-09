@@ -49,6 +49,7 @@ public class ConnectionListeners implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player a = event.getPlayer();
+        Cache.removefromCache(a.getUniqueId());
         if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
             DataCon.newPlayer(a);
         } else {

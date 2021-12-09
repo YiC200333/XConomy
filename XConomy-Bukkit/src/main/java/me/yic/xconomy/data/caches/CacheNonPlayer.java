@@ -21,6 +21,7 @@ package me.yic.xconomy.data.caches;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.api.event.NonPlayerAccountEvent;
+import me.yic.xconomy.info.DataBaseINFO;
 import me.yic.xconomy.info.ServerINFO;
 import org.bukkit.Bukkit;
 
@@ -60,7 +61,13 @@ public class CacheNonPlayer {
             }
         }
         insertIntoCache(u, newvalue);
-        DataCon.saveNonPlayer(type, u, amount, newvalue, isAdd);
+
+        if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+            final BigDecimal fnewvalue = newvalue;
+            Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataCon.saveNonPlayer(type, u, amount, fnewvalue, isAdd));
+        }else {
+            DataCon.saveNonPlayer(type, u, amount, newvalue, isAdd);
+        }
     }
 
 }

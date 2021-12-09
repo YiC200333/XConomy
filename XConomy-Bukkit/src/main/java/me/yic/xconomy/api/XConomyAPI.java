@@ -54,14 +54,14 @@ public class XConomyAPI {
     }
 
     public BigDecimal getbalance(UUID uid) {
-        return Cache.getBalanceFromCacheOrDB(uid);
+        return Cache.getBalanceFromCacheOrDB(uid).getbalance();
     }
 
     public boolean ismaxnumber(BigDecimal amount) {
         return DataFormat.isMAX(amount);
     }
 
-    public int changebalance(UUID u, String playername, BigDecimal amount, boolean isadd) {
+    public int changebalance(UUID u, String playername, BigDecimal amount, Boolean isadd) {
         if (ServerINFO.IsBungeeCordMode & Bukkit.getOnlinePlayers().isEmpty()) {
             return 1;
         }
@@ -75,7 +75,7 @@ public class XConomyAPI {
                 return 2;
             }
         }
-        Cache.change("PLUGIN_API", u, playername, amount, isadd, "N/A");
+        Cache.change("PLUGIN_API", u, amount, isadd, "N/A");
         return 0;
     }
 

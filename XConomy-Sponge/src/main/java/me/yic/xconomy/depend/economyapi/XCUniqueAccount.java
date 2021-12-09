@@ -67,7 +67,7 @@ public class XCUniqueAccount implements UniqueAccount {
     @Override
     public BigDecimal getBalance(Currency currency, Set<Context> contexts) {
         if (Cache.getBalanceFromCacheOrDB(uuid) != null) {
-            return Cache.getBalanceFromCacheOrDB(uuid);
+            return Cache.getBalanceFromCacheOrDB(uuid).getbalance();
         } else {
             return BigDecimal.ZERO;
         }
@@ -92,7 +92,7 @@ public class XCUniqueAccount implements UniqueAccount {
                     currency, amount, contexts, ResultType.FAILED,
                     DummyObjectProvider.createFor(TransactionType.class, "SET"));
         }
-        Cache.change("PLUGIN", uuid, name, amount, null, "SETBALANCE");
+        Cache.change("PLUGIN", uuid, amount, null, "SETBALANCE");
         return new XCTransactionResult(this,
                 currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS,
                 DummyObjectProvider.createFor(TransactionType.class, "SET"));
@@ -111,7 +111,7 @@ public class XCUniqueAccount implements UniqueAccount {
                     DummyObjectProvider.createFor(TransactionType.class, "RESET"));
         }
 
-        Cache.change("PLUGIN", uuid, name, getDefaultBalance(currency), null, "RESETBALANCE");
+        Cache.change("PLUGIN", uuid, getDefaultBalance(currency), null, "RESETBALANCE");
         return new XCTransactionResult(this,
                 currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS,
                 DummyObjectProvider.createFor(TransactionType.class, "RESET"));
@@ -132,7 +132,7 @@ public class XCUniqueAccount implements UniqueAccount {
                     currency, amount, contexts, ResultType.FAILED, TransactionTypes.DEPOSIT);
         }
 
-        Cache.change("PLUGIN", uuid, name, amountFormatted, true, "N/A");
+        Cache.change("PLUGIN", uuid, amountFormatted, true, "N/A");
         return new XCTransactionResult(this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.DEPOSIT);
 
@@ -153,7 +153,7 @@ public class XCUniqueAccount implements UniqueAccount {
                     currency, amount, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
         }
 
-        Cache.change("PLUGIN", uuid, name, amountFormatted, false, "N/A");
+        Cache.change("PLUGIN", uuid, amountFormatted, false, "N/A");
         return new XCTransactionResult(this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.WITHDRAW);
     }

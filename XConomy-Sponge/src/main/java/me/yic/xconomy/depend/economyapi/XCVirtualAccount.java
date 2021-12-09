@@ -71,7 +71,7 @@ public class XCVirtualAccount implements VirtualAccount {
         UUID uuid = Cache.translateUUID(account, null);
         if (uuid != null) {
             if (Cache.getBalanceFromCacheOrDB(uuid) != null) {
-                return Cache.getBalanceFromCacheOrDB(uuid);
+                return Cache.getBalanceFromCacheOrDB(uuid).getbalance();
             } else {
                 return BigDecimal.ZERO;
             }
@@ -109,7 +109,7 @@ public class XCVirtualAccount implements VirtualAccount {
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED,
                     DummyObjectProvider.createFor(TransactionType.class, "SET"));
         }
-        Cache.change("PLUGIN", playeruuid, account, amount, null, "SETBALANCE");
+        Cache.change("PLUGIN", playeruuid, amount, null, "SETBALANCE");
         return new XCTransactionResult(this,
                 currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS,
                 DummyObjectProvider.createFor(TransactionType.class, "SET"));
@@ -139,7 +139,7 @@ public class XCVirtualAccount implements VirtualAccount {
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED,
                     DummyObjectProvider.createFor(TransactionType.class, "RESET"));
         }
-        Cache.change("PLUGIN", playeruuid, account, getDefaultBalance(currency), null, "RESETBALANCE");
+        Cache.change("PLUGIN", playeruuid, getDefaultBalance(currency), null, "RESETBALANCE");
         return new XCTransactionResult(this,
                 currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS,
                 DummyObjectProvider.createFor(TransactionType.class, "RESET"));
@@ -171,7 +171,7 @@ public class XCVirtualAccount implements VirtualAccount {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.DEPOSIT);
         }
-        Cache.change("PLUGIN", playeruuid, account, amountFormatted, true, "N/A");
+        Cache.change("PLUGIN", playeruuid, amountFormatted, true, "N/A");
         return new XCTransactionResult(this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.DEPOSIT);
 
@@ -201,7 +201,7 @@ public class XCVirtualAccount implements VirtualAccount {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
         }
-        Cache.change("PLUGIN", playeruuid, account, amountFormatted, false, "N/A");
+        Cache.change("PLUGIN", playeruuid, amountFormatted, false, "N/A");
         return new XCTransactionResult(this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.WITHDRAW);
     }

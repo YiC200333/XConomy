@@ -221,7 +221,7 @@ public class CommandHandler {
 
                 String amountFormatted = DataFormat.shown(amount);
                 String taxamountFormatted = DataFormat.shown(taxamount);
-                BigDecimal bal_sender = Cache.getBalanceFromCacheOrDB(((Player) sender).getUniqueId());
+                BigDecimal bal_sender = Cache.getBalanceFromCacheOrDB(((Player) sender).getUniqueId()).getbalance();
 
                 if (bal_sender.compareTo(taxamount) < 0) {
                     sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("pay_fail")
@@ -246,19 +246,19 @@ public class CommandHandler {
 
                 //Cache.refreshFromCache(targetUUID);
 
-                BigDecimal bal_target = Cache.getBalanceFromCacheOrDB(targetUUID);
+                BigDecimal bal_target = Cache.getBalanceFromCacheOrDB(targetUUID).getbalance();
                 if (DataFormat.isMAX(bal_target.add(amount))) {
                     sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("over_maxnumber"));
                     return true;
                 }
 
                 String com = commandName + " " + args[0] + " " + amount;
-                Cache.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), sender.getName(), taxamount, false, com);
+                Cache.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), taxamount, false, com);
                 sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("pay")
                         .replace("%player%", realname)
                         .replace("%amount%", amountFormatted));
 
-                Cache.change("PLAYER_COMMAND", targetUUID, realname, amount, true, com);
+                Cache.change("PLAYER_COMMAND", targetUUID, amount, true, com);
                 String mess = translateColorCodes("prefix") + translateColorCodes("pay_receive")
                         .replace("%player%", sender.getName())
                         .replace("%amount%", amountFormatted);
@@ -325,7 +325,7 @@ public class CommandHandler {
 
                         //Cache.refreshFromCache(player.getUniqueId());
 
-                        BigDecimal a = Cache.getBalanceFromCacheOrDB(player.getUniqueId());
+                        BigDecimal a = Cache.getBalanceFromCacheOrDB(player.getUniqueId()).getbalance();
                         sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("balance")
                                 .replace("%balance%", DataFormat.shown((a))));
 
@@ -345,7 +345,7 @@ public class CommandHandler {
                         }
                         String realname = Cache.getrealname(args[0]);
 
-                        BigDecimal targetBalance = Cache.getBalanceFromCacheOrDB(targetUUID);
+                        BigDecimal targetBalance = Cache.getBalanceFromCacheOrDB(targetUUID).getbalance();
                         sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("balance_other")
                                 .replace("%player%", realname)
                                 .replace("%balance%", DataFormat.shown((targetBalance))));
@@ -401,13 +401,13 @@ public class CommandHandler {
 
                                 //Cache.refreshFromCache(targetUUID);
 
-                                BigDecimal bal = Cache.getBalanceFromCacheOrDB(targetUUID);
+                                BigDecimal bal = Cache.getBalanceFromCacheOrDB(targetUUID).getbalance();
                                 if (DataFormat.isMAX(bal.add(amount))) {
                                     sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("over_maxnumber"));
                                     return true;
                                 }
 
-                                Cache.change("ADMIN_COMMAND", targetUUID, realname, amount, true, com);
+                                Cache.change("ADMIN_COMMAND", targetUUID, amount, true, com);
                                 sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("money_give")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
@@ -445,7 +445,7 @@ public class CommandHandler {
                                 }
 
                                 //Cache.refreshFromCache(targetUUID);
-                                BigDecimal bal = Cache.getBalanceFromCacheOrDB(targetUUID);
+                                BigDecimal bal = Cache.getBalanceFromCacheOrDB(targetUUID).getbalance();
                                 if (bal.compareTo(amount) < 0) {
                                     sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("money_take_fail")
                                             .replace("%player%", realname)
@@ -454,7 +454,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                Cache.change("ADMIN_COMMAND", targetUUID, realname, amount, false, com);
+                                Cache.change("ADMIN_COMMAND", targetUUID, amount, false, com);
                                 sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("money_take")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
@@ -484,7 +484,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                Cache.change("ADMIN_COMMAND", targetUUID, realname, amount, null, com);
+                                Cache.change("ADMIN_COMMAND", targetUUID, amount, null, com);
                                 sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("money_set")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
@@ -632,6 +632,9 @@ public class CommandHandler {
     }
 
     private static boolean isDouble(String s) {
+        if (s.matches(".*[a-zA-Z].*")){
+            return false;
+        }
         try {
             Double.parseDouble(s);
             BigDecimal value = new BigDecimal(s);
@@ -665,7 +668,6 @@ public class CommandHandler {
        }
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static String translateColorCodes(String message) {
         return ChatColor.translateAlternateColorCodes('&', RGBColor.translateHexColorCodes(MessagesManager.messageFile.getString(message)));
     }

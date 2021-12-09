@@ -32,7 +32,7 @@ import java.nio.file.Paths;
 public class DataBaseINFO {
 
     public static ConfigurationNode DataBaseINFO;
-    public static boolean isasync = false;
+    public static boolean canasync = false;
 
     public static void load() {
         Path configpath =  Paths.get(XConomy.getInstance().configDir + System.getProperty("file.separator") + "database.yml");
@@ -54,7 +54,7 @@ public class DataBaseINFO {
         }
 
         if (getStorageType() != 1){
-            isasync = DataBaseINFO.getNode("Settings","async").getBoolean();
+            canasync = true;
         }
     }
 

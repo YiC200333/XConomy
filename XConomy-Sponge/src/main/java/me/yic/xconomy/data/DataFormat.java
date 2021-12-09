@@ -115,10 +115,10 @@ public class DataFormat {
     }
 
     private static BigDecimal setpaymenttax() {
-        Double pt = XConomy.config.getNode("Settings", "payment-tax").getDouble();
+        double pt = XConomy.config.getNode("Settings", "payment-tax").getDouble();
         if (pt < 0.0) {
             pt = 0.0;
         }
-        return formatString(pt.toString()).add(BigDecimal.ONE);
+        return formatString(Double.toString(pt)).add(BigDecimal.ONE);
     }
 }

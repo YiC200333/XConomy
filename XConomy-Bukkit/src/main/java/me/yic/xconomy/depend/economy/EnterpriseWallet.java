@@ -43,17 +43,11 @@ public class EnterpriseWallet extends PlayerWallet {
                     "[BungeeCord] No player in server");
         }
 
-        BigDecimal bal = getBalance();
-
         if (DataFormat.isMAX(amount)) {
             return new EconomyAction(getHolder(), false,  "Max balance!");
         }
 
-        UUID playerUUID = Cache.translateUUID(getPlayer().getName(), null);
-        if (playerUUID == null) {
-            return new EconomyAction(getHolder(), false,  "No Account!");
-        }
-        Cache.change("PLUGIN", playerUUID, getPlayer().getName(), amount, null, "N/A");
+        Cache.change("PLUGIN", getPlayer().getUniqueId(), amount, null, "N/A");
         return new EconomyAction(getHolder(), true,  "");
     }
 
@@ -74,13 +68,10 @@ public class EnterpriseWallet extends PlayerWallet {
 
     @Override
     public @Nullable BigDecimal getBalance() {
-        UUID uuid = Cache.translateUUID(getPlayer().getName(), null);
-        if (uuid != null) {
-            if (Cache.getBalanceFromCacheOrDB(uuid) != null) {
-                return Cache.getBalanceFromCacheOrDB(uuid);
-            } else {
-                return BigDecimal.ZERO;
-            }
+        UUID uuid = getPlayer().getUniqueId();
+
+        if (Cache.getBalanceFromCacheOrDB(uuid) != null) {
+            return Cache.getBalanceFromCacheOrDB(uuid).getbalance();
         }
 
         return DataFormat.formatdouble(XConomy.config.getDouble("Settings.initial-bal"));
@@ -114,11 +105,8 @@ public class EnterpriseWallet extends PlayerWallet {
             return new EconomyAction(getHolder(), false, "Insufficient balance!");
         }
 
-        UUID playeruuid = Cache.translateUUID(getPlayer().getName(), null);
-        if (playeruuid == null) {
-            return new EconomyAction(getHolder(), false, "No Account!");
-        }
-        Cache.change("PLUGIN", playeruuid, getPlayer().getName(), amount, false, "N/A");
+        UUID playeruuid = getPlayer().getUniqueId();
+        Cache.change("PLUGIN", playeruuid, amount, false, "N/A");
         return new EconomyAction(getHolder(), true, "");
     }
 
@@ -141,11 +129,8 @@ public class EnterpriseWallet extends PlayerWallet {
             return new EconomyAction(getHolder(), false,  "Max balance!");
         }
 
-        UUID playerUUID = Cache.translateUUID(getPlayer().getName(), null);
-        if (playerUUID == null) {
-            return new EconomyAction(getHolder(), false,  "No Account!");
-        }
-        Cache.change("PLUGIN", playerUUID, getPlayer().getName(), amount, true, "N/A");
+        UUID playerUUID = getPlayer().getUniqueId();
+        Cache.change("PLUGIN", playerUUID, amount, true, "N/A");
         return new EconomyAction(getHolder(), true,  "");
     }
 

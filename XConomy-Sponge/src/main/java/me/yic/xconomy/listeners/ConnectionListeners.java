@@ -45,6 +45,7 @@ public class ConnectionListeners {
     @Listener
     public void onJoin(ClientConnectionEvent.Join event) {
         Player a = event.getTargetEntity();
+        Cache.removefromCache(a.getUniqueId());
         if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
             Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataCon.newPlayer(a));
         } else {
