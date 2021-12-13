@@ -22,7 +22,6 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import me.yic.xconomy.info.ServerINFO;
 import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -120,8 +119,6 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer pp, double amount) {
-        XConomy.getInstance().logger(null,"dddddddddddddd");
-        XConomy.getInstance().logger(null,Double.toString(amount));
         if (ServerINFO.IsBungeeCordMode && Bukkit.getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
                     "[BungeeCord] No player in server");
@@ -239,12 +236,6 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public boolean hasAccount(OfflinePlayer pp) {
-        if (Cache.getBalanceFromCacheOrDB(pp.getUniqueId()) != null){
-            XConomy.getInstance().logger(null,"aaaaaaaaaaaaaaaa");
-        }else{
-            XConomy.getInstance().logger(null,"bbbbbbbbbbbbbbbbbbbbb");
-        }
-        XConomy.getInstance().logger(null,pp.getUniqueId().toString());
         return Cache.getBalanceFromCacheOrDB(pp.getUniqueId()) != null;
     }
 
@@ -305,8 +296,6 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer pp, double amount) {
-        XConomy.getInstance().logger(null,"ccccccccccccccccc");
-        XConomy.getInstance().logger(null,Double.toString(amount));
         if (ServerINFO.IsBungeeCordMode && Bukkit.getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
                     "[BungeeCord] No player in server");
