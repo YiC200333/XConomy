@@ -38,7 +38,7 @@ public class DataBaseINFO {
         DataBaseINFO = YamlConfiguration.loadConfiguration(file);
 
         if (getStorageType() != 1){
-            canasync = true;
+            canasync = !DataBaseINFO.getBoolean("Settings.disable-async");
         }
     }
 

@@ -3,6 +3,8 @@ Settings:
   storage-type: SQLite
   #use connection pool or not
   usepool: false
+  #Whether to disable saving data asynchronously(SQLite no such setting)
+  disable-async: false
 
 
 #SQLite settings

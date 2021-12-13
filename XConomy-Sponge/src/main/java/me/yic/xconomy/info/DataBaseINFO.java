@@ -54,7 +54,7 @@ public class DataBaseINFO {
         }
 
         if (getStorageType() != 1){
-            canasync = true;
+            canasync = !DataBaseINFO.getNode("Settings","disable-async").getBoolean();
         }
     }
 
