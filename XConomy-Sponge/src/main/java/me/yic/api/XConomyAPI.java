@@ -61,7 +61,7 @@ public class XConomyAPI {
         return DataFormat.isMAX(amount);
     }
 
-    public int changebalance(UUID u, String playername, BigDecimal amount, boolean isadd) {
+    public int changebalance(UUID u, String playername, BigDecimal amount, Boolean isadd) {
         if (ServerINFO.IsBungeeCordMode & Sponge.getServer().getOnlinePlayers().isEmpty()) {
             return 1;
         }
