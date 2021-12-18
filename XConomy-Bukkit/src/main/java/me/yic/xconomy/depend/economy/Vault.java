@@ -174,12 +174,7 @@ public class Vault extends AbstractEconomy {
     @Override
     public double getBalance(OfflinePlayer aa) {
         UUID uuid = aa.getUniqueId();
-
-        if (Cache.getBalanceFromCacheOrDB(uuid) != null) {
-            return Cache.getBalanceFromCacheOrDB(uuid).getbalance().doubleValue();
-        }
-
-        return 0.0;
+        return Cache.getBalanceFromCacheOrDB(uuid).getbalance().doubleValue();
     }
 
     @Override
@@ -236,7 +231,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public boolean hasAccount(OfflinePlayer pp) {
-        return Cache.getBalanceFromCacheOrDB(pp.getUniqueId()) != null;
+        return !Cache.getBalanceFromCacheOrDB(pp.getUniqueId()).getName().equalsIgnoreCase("*");
     }
 
     @Override

@@ -44,7 +44,9 @@ public class Cache {
     public static BigDecimal sumbalance = BigDecimal.ZERO;
 
     public static void insertIntoCache(final UUID uuid, PlayerData pd) {
-        pds.put(uuid, pd);
+        if (pd != null) {
+            pds.put(uuid, pd);
+        }
     }
 
     public static void updateIntoCache(final UUID uuid, PlayerData pd, BigDecimal newbalance) {
@@ -106,6 +108,9 @@ public class Cache {
         }
         if (Sponge.getServer().getOnlinePlayers().size() == 0) {
             clearCache();
+        }
+        if (pd == null){
+            return new PlayerData(u, "*", BigDecimal.ZERO);
         }
         return pd;
     }

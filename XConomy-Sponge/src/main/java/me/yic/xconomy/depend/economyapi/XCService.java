@@ -48,7 +48,7 @@ public class XCService implements EconomyService {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
     public boolean hasAccount(UUID uuid) {
-        return hasAccount(Sponge.getServiceManager().provide(UserStorageService.class).get().get(uuid).get().getName());
+        return !Cache.getBalanceFromCacheOrDB(uuid).getName().equalsIgnoreCase("*");
     }
 
     @Override
