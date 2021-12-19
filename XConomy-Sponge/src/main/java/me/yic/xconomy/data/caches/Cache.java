@@ -45,7 +45,9 @@ public class Cache {
 
     public static void insertIntoCache(final UUID uuid, PlayerData pd) {
         if (pd != null) {
-            pds.put(uuid, pd);
+            if (pd.getName() != null && pd.getbalance() != null) {
+                pds.put(uuid, pd);
+            }
         }
     }
 
