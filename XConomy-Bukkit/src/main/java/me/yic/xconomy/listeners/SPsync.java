@@ -20,10 +20,10 @@ package me.yic.xconomy.listeners;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
-import me.yic.xconomy.data.DataCon;
-import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.DataLink;
+import me.yic.xconomy.data.caches.Cache;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -41,15 +41,15 @@ public class SPsync implements PluginMessageListener {
         }
 
         ByteArrayDataInput input = ByteStreams.newDataInput(message);
-        String type = input.readUTF();
+
         String sign = input.readUTF();
         if (!sign.equals(XConomy.getSign())) {
             return;
         }
 
-        if (type.equalsIgnoreCase("balance")) {
+        String type = input.readUTF();
+        if (type.equalsIgnoreCase("updateplayer")) {
             UUID u = UUID.fromString(input.readUTF());
-            //String bal = input.readUTF();
             Cache.removefromCache(u);
         } else if (type.equalsIgnoreCase("message")) {
             Player p = Bukkit.getPlayer(UUID.fromString(input.readUTF()));
@@ -62,26 +62,20 @@ public class SPsync implements PluginMessageListener {
             String amount = input.readUTF();
             String isadds = input.readUTF();
             if (targettype.equalsIgnoreCase("all")) {
-                Cache.pds.clear();
+                Cache.clearCache();
             } else if (targettype.equalsIgnoreCase("online")) {
-                Cache.pds.clear();
+                Cache.clearCache();
                 Boolean isadd = null;
                 if (isadds.equalsIgnoreCase("add")) {
                     isadd = true;
                 } else if (isadds.equalsIgnoreCase("subtract")) {
                     isadd = false;
                 }
-                DataCon.saveall("online", null, DataFormat.formatString(amount), isadd, null);
+                DataLink.saveall("online", null, DataFormat.formatString(amount), isadd, null);
             }
         } else if (type.equalsIgnoreCase("broadcast")) {
             String mess = input.readUTF();
             Bukkit.broadcastMessage(mess);
-        } else if (type.equalsIgnoreCase("updateplayer")) {
-            String u = input.readUTF();
-            if (!Cache.uid.containsKey(u)) {
-                return;
-            }
-            Cache.uid.remove(u);
         }
     }
 

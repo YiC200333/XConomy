@@ -19,6 +19,7 @@
 package me.yic.xconomy.api;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.PermissionINFO;
@@ -42,7 +43,7 @@ public class XConomyAPI {
     }
 
     public UUID translateUUID(String playername) {
-        return Cache.translateUUID(playername, null);
+        return DataCon.getPlayerData(playername).getUniqueId();
     }
 
     public BigDecimal formatdouble(String amount) {
@@ -54,7 +55,7 @@ public class XConomyAPI {
     }
 
     public BigDecimal getbalance(UUID uid) {
-        return Cache.getBalanceFromCacheOrDB(uid).getbalance();
+        return DataCon.getPlayerData(uid).getbalance();
     }
 
     public boolean ismaxnumber(BigDecimal amount) {
@@ -75,7 +76,7 @@ public class XConomyAPI {
                 return 2;
             }
         }
-        Cache.change("PLUGIN_API", u, amount, isadd, "N/A");
+        DataCon.change("PLUGIN_API", u, amount, isadd, "N/A");
         return 0;
     }
 

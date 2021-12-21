@@ -19,6 +19,7 @@
 package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
@@ -26,7 +27,6 @@ import me.yic.xconomy.info.DataBaseINFO;
 import me.yic.xconomy.utils.DatabaseConnection;
 import me.yic.xconomy.info.ServerINFO;
 import me.yic.xconomy.utils.PlayerData;
-import me.yic.xconomy.utils.PlayerINFO;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -40,7 +40,7 @@ public class SQL {
     public static String tableNonPlayerName = "xconomynon";
     public static String tableRecordName = "xconomyrecord";
     public final static DatabaseConnection database = new DatabaseConnection();
-    private static final String encoding = DataBaseINFO.DataBaseINFO.getString("MySQL.property.encoding");
+    static final String encoding = DataBaseINFO.DataBaseINFO.getString("MySQL.property.encoding");
 
     public static boolean con() {
         return database.setGlobalConnection();
@@ -152,7 +152,7 @@ public class SQL {
     }
 
 
-    public static void select(UUID uuid) {
+    public static void getPlayerData(UUID uuid) {
         try {
             Connection connection = database.getConnectionAndCheck();
             PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
@@ -176,7 +176,7 @@ public class SQL {
         }
     }
 
-    public static void selectUID(String name) {
+    public static void getPlayerData(String name) {
         try {
             Connection connection = database.getConnectionAndCheck();
             String query;
@@ -200,18 +200,12 @@ public class SQL {
 
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                UUID id = UUID.fromString(rs.getString(1));
+                UUID uuid = UUID.fromString(rs.getString(1));
                 String username = rs.getString(2);
-                PlayerINFO pi = new PlayerINFO(id, username);
-                String usernamep = name;
-                if (ServerINFO.IgnoreCase) {
-                    usernamep = name.toLowerCase();
-                }
-                Cache.insertIntoUUIDCache(usernamep, pi);
                 BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
                 if (cacheThisAmt != null) {
-                    PlayerData bd = new PlayerData(id, rs.getString(2), cacheThisAmt);
-                    Cache.insertIntoCache(id, bd);
+                    PlayerData bd = new PlayerData(uuid, username, cacheThisAmt);
+                    Cache.insertIntoCache(uuid, bd);
                 }
             }
 
@@ -224,7 +218,7 @@ public class SQL {
     }
 
 
-    public static void selectNonPlayer(String playerName) {
+    public static void getNonPlayerData(String playerName) {
         try {
             Connection connection = database.getConnectionAndCheck();
             String query;
@@ -276,8 +270,8 @@ public class SQL {
             }
             record(connection, type, pd, isAdd, amount, pd.getbalance(), command);
             if (requirefresh && rs == 0) {
-                Cache.refreshFromCache(u);
-                PlayerData npd = Cache.cachecorrection(u, amount, isAdd);
+                DataCon.refreshFromCache(u);
+                PlayerData npd = DataCon.cachecorrection(u, amount, isAdd);
                 if (isAdd) {
                     query = " set balance = balance + " + amount.doubleValue() + " where UID = ?";
                 } else {

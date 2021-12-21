@@ -19,12 +19,12 @@
 package me.yic.xconomy.listeners;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.DataCon;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.lang.MessagesManager;
-import me.yic.xconomy.task.Updater;
 import me.yic.xconomy.info.DataBaseINFO;
 import me.yic.xconomy.info.ServerINFO;
+import me.yic.xconomy.lang.MessagesManager;
+import me.yic.xconomy.task.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,15 +49,15 @@ public class ConnectionListeners implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player a = event.getPlayer();
-        Cache.removefromCache(a.getUniqueId());
-        if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
-            DataCon.newPlayer(a);
-        } else {
-            Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataCon.newPlayer(a));
+
+        if (!ServerINFO.IsSemiOnlineMode) {
+            Cache.removefromCache(a.getUniqueId());
         }
 
-        if (!XConomy.config.getBoolean("Settings.semi-online-mode")) {
-            Cache.translateUUID(a.getName(), a);
+        if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
+            DataLink.newPlayer(a);
+        } else {
+            Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.newPlayer(a));
         }
 
         if (!TabList.PlayerList.contains(a.getName())) {

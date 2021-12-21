@@ -25,8 +25,9 @@ import com.github.sanctum.economy.construct.account.permissive.AccountType;
 import com.github.sanctum.economy.construct.currency.normal.EconomyCurrency;
 import com.github.sanctum.economy.construct.implement.AdvancedEconomy;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.utils.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
@@ -146,9 +147,9 @@ public class Enterprise implements AdvancedEconomy {
 
     @Override
     public Wallet getWallet(String name) {
-        UUID u = Cache.translateUUID(name, null);
-        if (u != null) {
-            return getWallet(u);
+        PlayerData pd = DataCon.getPlayerData(name);
+        if (pd.getUniqueId() != null) {
+            return getWallet(pd.getUniqueId());
         }
         return null;
     }

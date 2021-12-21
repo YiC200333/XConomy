@@ -22,11 +22,13 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.CompletableFutureTask;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.info.ServerINFO;
+import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.RGBColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -78,11 +80,12 @@ public class CommandHandler {
                                         sendMessages(sender, translateColorCodes("global_permissions_change").replace("%permission%", "pay")
                                                 .replace("%value%", args[4]));
                                     } else {
-                                        UUID targetUUID = Cache.translateUUID(args[3], null);
+                                        PlayerData pd = DataCon.getPlayerData(args[3]);
+                                        UUID targetUUID = pd.getUniqueId();
                                         if (targetUUID == null) {
                                             sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("no_account"));
                                         } else {
-                                            String realname = Cache.getrealname(args[3]);
+                                            String realname = pd.getName();
                                             PermissionINFO.setPaymentPermission(targetUUID, vv);
                                             sendMessages(sender, translateColorCodes("personal_permissions_change").replace("%permission%", "pay")
                                                     .replace("%player%", realname).replace("%value%", args[4]));
@@ -94,11 +97,12 @@ public class CommandHandler {
                             }
                         } else if (args.length == 4 && args[1].equalsIgnoreCase("remove")) {
                             if (args[2].equalsIgnoreCase("pay")) {
-                                UUID targetUUID = Cache.translateUUID(args[3], null);
+                                PlayerData pd = DataCon.getPlayerData(args[3]);
+                                UUID targetUUID = pd.getUniqueId();
                                 if (targetUUID == null) {
                                     sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("no_account"));
                                 } else {
-                                    String realname = Cache.getrealname(args[3]);
+                                    String realname = pd.getName();
                                     PermissionINFO.setPaymentPermission(targetUUID, null);
                                     sendMessages(sender, translateColorCodes("personal_permissions_change").replace("%permission%", "pay")
                                             .replace("%player%", realname).replace("%value%", "Default"));
@@ -150,7 +154,8 @@ public class CommandHandler {
                             return true;
                         }
 
-                        UUID targetUUID = Cache.translateUUID(args[1], null);
+                        PlayerData pd = DataCon.getPlayerData(args[1]);
+                        UUID targetUUID = pd.getUniqueId();
 
                         if (targetUUID == null) {
                             sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("no_account"));
@@ -158,10 +163,10 @@ public class CommandHandler {
                         }
 
                         if (args[0].equalsIgnoreCase("hide")) {
-                            DataCon.setTopBalHide(targetUUID, 1);
+                            DataLink.setTopBalHide(targetUUID, 1);
                             sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("top_hidden").replace("%player%", args[1]));
                         } else if (args[0].equalsIgnoreCase("display")) {
-                            DataCon.setTopBalHide(targetUUID, 0);
+                            DataLink.setTopBalHide(targetUUID, 0);
                             sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("top_displayed").replace("%player%", args[1]));
                         }
 
@@ -221,7 +226,7 @@ public class CommandHandler {
 
                 String amountFormatted = DataFormat.shown(amount);
                 String taxamountFormatted = DataFormat.shown(taxamount);
-                BigDecimal bal_sender = Cache.getBalanceFromCacheOrDB(((Player) sender).getUniqueId()).getbalance();
+                BigDecimal bal_sender = DataCon.getPlayerData(((Player) sender).getUniqueId()).getbalance();
 
                 if (bal_sender.compareTo(taxamount) < 0) {
                     sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("pay_fail")
@@ -229,14 +234,15 @@ public class CommandHandler {
                     return true;
                 }
 
-                Player target = Cache.getplayer(args[0]);
-                UUID targetUUID = Cache.translateUUID(args[0], null);
+                Player target = DataCon.getplayer(args[0]);
+                PlayerData pd = DataCon.getPlayerData(args[0]);
+                UUID targetUUID = pd.getUniqueId();
                 if (targetUUID == null) {
                     sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("no_account"));
                     return true;
                 }
 
-                String realname = Cache.getrealname(args[0]);
+                String realname = pd.getName();
                 if (XConomy.foundvaultOfflinePermManager) {
                     if (!CompletableFutureTask.hasreceivepermission(target, targetUUID)) {
                         sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("no_receive_permission"));
@@ -246,19 +252,19 @@ public class CommandHandler {
 
                 //Cache.refreshFromCache(targetUUID);
 
-                BigDecimal bal_target = Cache.getBalanceFromCacheOrDB(targetUUID).getbalance();
+                BigDecimal bal_target = DataCon.getPlayerData(targetUUID).getbalance();
                 if (DataFormat.isMAX(bal_target.add(amount))) {
                     sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("over_maxnumber"));
                     return true;
                 }
 
                 String com = commandName + " " + args[0] + " " + amount;
-                Cache.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), taxamount, false, com);
+                DataCon.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), taxamount, false, com);
                 sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("pay")
                         .replace("%player%", realname)
                         .replace("%amount%", amountFormatted));
 
-                Cache.change("PLAYER_COMMAND", targetUUID, amount, true, com);
+                DataCon.change("PLAYER_COMMAND", targetUUID, amount, true, com);
                 String mess = translateColorCodes("prefix") + translateColorCodes("pay_receive")
                         .replace("%player%", sender.getName())
                         .replace("%amount%", amountFormatted);
@@ -325,7 +331,7 @@ public class CommandHandler {
 
                         //Cache.refreshFromCache(player.getUniqueId());
 
-                        BigDecimal a = Cache.getBalanceFromCacheOrDB(player.getUniqueId()).getbalance();
+                        BigDecimal a = DataCon.getPlayerData(player.getUniqueId()).getbalance();
                         sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("balance")
                                 .replace("%balance%", DataFormat.shown((a))));
 
@@ -338,14 +344,15 @@ public class CommandHandler {
                             return true;
                         }
 
-                        UUID targetUUID = Cache.translateUUID(args[0], null);
+                        PlayerData pd = DataCon.getPlayerData(args[0]);
+                        UUID targetUUID = pd.getUniqueId();
                         if (targetUUID == null) {
                             sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("no_account"));
                             return true;
                         }
-                        String realname = Cache.getrealname(args[0]);
+                        String realname = pd.getName();
 
-                        BigDecimal targetBalance = Cache.getBalanceFromCacheOrDB(targetUUID).getbalance();
+                        BigDecimal targetBalance = DataCon.getPlayerData(targetUUID).getbalance();
                         sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("balance_other")
                                 .replace("%player%", realname)
                                 .replace("%balance%", DataFormat.shown((targetBalance))));
@@ -373,15 +380,16 @@ public class CommandHandler {
 
                         BigDecimal amount = DataFormat.formatString(args[2]);
                         String amountFormatted = DataFormat.shown(amount);
-                        Player target = Cache.getplayer(args[1]);
-                        UUID targetUUID = Cache.translateUUID(args[1], null);
+                        Player target = DataCon.getplayer(args[1]);
+                        PlayerData pd = DataCon.getPlayerData(args[1]);
+                        UUID targetUUID = pd.getUniqueId();
 
                         if (targetUUID == null) {
                             sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("no_account"));
                             return true;
                         }
 
-                        String realname = Cache.getrealname(args[1]);
+                        String realname = pd.getName();
 
                         String com = commandName + " " + args[0] + " " + args[1] + " " + amount;
                         if (commndlength == 4) {
@@ -401,13 +409,13 @@ public class CommandHandler {
 
                                 //Cache.refreshFromCache(targetUUID);
 
-                                BigDecimal bal = Cache.getBalanceFromCacheOrDB(targetUUID).getbalance();
+                                BigDecimal bal = DataCon.getPlayerData(targetUUID).getbalance();
                                 if (DataFormat.isMAX(bal.add(amount))) {
                                     sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("over_maxnumber"));
                                     return true;
                                 }
 
-                                Cache.change("ADMIN_COMMAND", targetUUID, amount, true, com);
+                                DataCon.change("ADMIN_COMMAND", targetUUID, amount, true, com);
                                 sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("money_give")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
@@ -445,7 +453,7 @@ public class CommandHandler {
                                 }
 
                                 //Cache.refreshFromCache(targetUUID);
-                                BigDecimal bal = Cache.getBalanceFromCacheOrDB(targetUUID).getbalance();
+                                BigDecimal bal = DataCon.getPlayerData(targetUUID).getbalance();
                                 if (bal.compareTo(amount) < 0) {
                                     sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("money_take_fail")
                                             .replace("%player%", realname)
@@ -454,7 +462,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                Cache.change("ADMIN_COMMAND", targetUUID, amount, false, com);
+                                DataCon.change("ADMIN_COMMAND", targetUUID, amount, false, com);
                                 sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("money_take")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
@@ -484,7 +492,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                Cache.change("ADMIN_COMMAND", targetUUID, amount, null, com);
+                                DataCon.change("ADMIN_COMMAND", targetUUID, amount, null, com);
                                 sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("money_set")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
@@ -573,7 +581,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                Cache.changeall(args[2], "ADMIN_COMMAND", amount, true, com);
+                                DataCon.changeall(args[2], "ADMIN_COMMAND", amount, true, com);
                                 sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("money_give")
                                         .replace("%player%", target)
                                         .replace("%amount%", amountFormatted));
@@ -590,7 +598,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                Cache.changeall(args[2], "ADMIN_COMMAND", amount, false, com);
+                                DataCon.changeall(args[2], "ADMIN_COMMAND", amount, false, com);
                                 sendMessages(sender, translateColorCodes("prefix") + translateColorCodes("money_take")
                                         .replace("%player%", target)
                                         .replace("%amount%", amountFormatted));
@@ -765,14 +773,13 @@ public class CommandHandler {
         }
 
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
+        output.writeUTF(XConomy.getSign());
         if (!ispublic) {
             output.writeUTF("message");
-            output.writeUTF(XConomy.getSign());
             output.writeUTF(u.toString());
             output.writeUTF(message);
         } else {
             output.writeUTF("broadcast");
-            output.writeUTF(XConomy.getSign());
             output.writeUTF(message);
         }
         Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(),

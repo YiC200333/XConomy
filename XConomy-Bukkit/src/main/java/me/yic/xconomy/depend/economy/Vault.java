@@ -19,10 +19,11 @@
 package me.yic.xconomy.depend.economy;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.data.caches.CacheNonPlayer;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.info.ServerINFO;
+import me.yic.xconomy.utils.PlayerData;
 import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
@@ -109,11 +110,12 @@ public class Vault extends AbstractEconomy {
             return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
         }
 
-        UUID playerUUID = Cache.translateUUID(name, null);
-        if (playerUUID == null) {
-            return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "No Account!");
+        PlayerData pd = DataCon.getPlayerData(name);
+        if (pd.getUniqueId() == null) {
+            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
         }
-        Cache.change("PLUGIN", playerUUID, amountFormatted, true, "N/A");
+
+        DataCon.change("PLUGIN", pd.getUniqueId(), amountFormatted, true, "N/A");
         return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
     }
 
@@ -124,6 +126,10 @@ public class Vault extends AbstractEconomy {
                     "[BungeeCord] No player in server");
         }
 
+        if (DataCon.getPlayerData(pp.getUniqueId()).getUniqueId() == null) {
+            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
+        }
+
         double bal = getBalance(pp);
         BigDecimal amountFormatted = DataFormat.formatdouble(amount);
 
@@ -131,7 +137,7 @@ public class Vault extends AbstractEconomy {
             return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Max balance!");
         }
 
-        Cache.change("PLUGIN", pp.getUniqueId(), amountFormatted, true, "N/A");
+        DataCon.change("PLUGIN", pp.getUniqueId(), amountFormatted, true, "N/A");
         return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
     }
 
@@ -163,18 +169,13 @@ public class Vault extends AbstractEconomy {
         if (isNonPlayerAccount(name)) {
             return CacheNonPlayer.getBalanceFromCacheOrDB(name).doubleValue();
         }
-
-        UUID uuid = Cache.translateUUID(name, null);
-        if (uuid != null) {
-            return getBalance(Bukkit.getOfflinePlayer(uuid));
-        }
-        return XConomy.config.getDouble("Settings.initial-bal");
+        return DataCon.getPlayerData(name).getbalance().doubleValue();
     }
 
     @Override
     public double getBalance(OfflinePlayer aa) {
         UUID uuid = aa.getUniqueId();
-        return Cache.getBalanceFromCacheOrDB(uuid).getbalance().doubleValue();
+        return DataCon.getPlayerData(uuid).getbalance().doubleValue();
     }
 
     @Override
@@ -221,7 +222,10 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public boolean hasAccount(String name) {
-        return true;
+        if (isNonPlayerAccount(name)) {
+            return true;
+        }
+        return DataCon.getPlayerData(name).getUniqueId() != null;
     }
 
     @Override
@@ -231,7 +235,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public boolean hasAccount(OfflinePlayer pp) {
-        return !Cache.getBalanceFromCacheOrDB(pp.getUniqueId()).getName().equalsIgnoreCase("*");
+        return DataCon.getPlayerData(pp.getUniqueId()).getUniqueId() != null;
     }
 
     @Override
@@ -281,11 +285,12 @@ public class Vault extends AbstractEconomy {
             return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
         }
 
-        UUID playeruuid = Cache.translateUUID(name, null);
-        if (playeruuid == null) {
-            return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "No Account!");
+        PlayerData pd = DataCon.getPlayerData(name);
+        if (pd.getUniqueId() == null) {
+            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
         }
-        Cache.change("PLUGIN", playeruuid, amountFormatted, false, "N/A");
+
+        DataCon.change("PLUGIN", pd.getUniqueId(), amountFormatted, false, "N/A");
         return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
     }
 
@@ -296,6 +301,10 @@ public class Vault extends AbstractEconomy {
                     "[BungeeCord] No player in server");
         }
 
+        if (DataCon.getPlayerData(pp.getUniqueId()).getUniqueId() == null) {
+            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
+        }
+
         double bal = getBalance(pp);
         BigDecimal amountFormatted = DataFormat.formatdouble(amount);
 
@@ -303,7 +312,7 @@ public class Vault extends AbstractEconomy {
             return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Insufficient balance!");
         }
 
-        Cache.change("PLUGIN", pp.getUniqueId(), amountFormatted, false, "N/A");
+        DataCon.change("PLUGIN", pp.getUniqueId(), amountFormatted, false, "N/A");
         return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
     }
 
@@ -330,7 +339,7 @@ public class Vault extends AbstractEconomy {
             return true;
         }
 
-        return Cache.translateUUID(name, null) == null;
+        return DataCon.getPlayerData(name).getUniqueId() == null;
     }
 
 }

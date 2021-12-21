@@ -19,9 +19,8 @@ package me.yic.xconomy.depend.economy;/*
 
 import com.github.sanctum.economy.construct.EconomyAction;
 import com.github.sanctum.economy.construct.account.PlayerWallet;
-import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.ServerINFO;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -47,7 +46,7 @@ public class EnterpriseWallet extends PlayerWallet {
             return new EconomyAction(getHolder(), false,  "Max balance!");
         }
 
-        Cache.change("PLUGIN", getPlayer().getUniqueId(), amount, null, "N/A");
+        DataCon.change("PLUGIN", getPlayer().getUniqueId(), amount, null, "N/A");
         return new EconomyAction(getHolder(), true,  "");
     }
 
@@ -70,11 +69,7 @@ public class EnterpriseWallet extends PlayerWallet {
     public @Nullable BigDecimal getBalance() {
         UUID uuid = getPlayer().getUniqueId();
 
-        if (Cache.getBalanceFromCacheOrDB(uuid) != null) {
-            return Cache.getBalanceFromCacheOrDB(uuid).getbalance();
-        }
-
-        return DataFormat.formatdouble(XConomy.config.getDouble("Settings.initial-bal"));
+        return DataCon.getPlayerData(uuid).getbalance();
     }
 
     @Override
@@ -84,7 +79,11 @@ public class EnterpriseWallet extends PlayerWallet {
 
     @Override
     public boolean has(BigDecimal bigDecimal) {
-        return Cache.translateUUID(getPlayer().getName(), null) != null;
+        BigDecimal bal = getBalance();
+        if (bal == null){
+            return false;
+        }
+        return getBalance().compareTo(bigDecimal) > 0;
     }
 
     @Override
@@ -106,7 +105,7 @@ public class EnterpriseWallet extends PlayerWallet {
         }
 
         UUID playeruuid = getPlayer().getUniqueId();
-        Cache.change("PLUGIN", playeruuid, amount, false, "N/A");
+        DataCon.change("PLUGIN", playeruuid, amount, false, "N/A");
         return new EconomyAction(getHolder(), true, "");
     }
 
@@ -130,7 +129,7 @@ public class EnterpriseWallet extends PlayerWallet {
         }
 
         UUID playerUUID = getPlayer().getUniqueId();
-        Cache.change("PLUGIN", playerUUID, amount, true, "N/A");
+        DataCon.change("PLUGIN", playerUUID, amount, true, "N/A");
         return new EconomyAction(getHolder(), true,  "");
     }
 

@@ -18,6 +18,7 @@
  */
 package me.yic.xconomy.task;
 
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.sql.SQL;
 import org.bukkit.Bukkit;
@@ -30,7 +31,7 @@ public class Baltop extends BukkitRunnable {
         Cache.baltop_papi.clear();
         Cache.baltop.clear();
         SQL.getBaltop();
-        Cache.sumbal();
+        DataCon.sumbal();
         if (Bukkit.getOnlinePlayers().size() == 0) {
             Cache.clearCache();
         }

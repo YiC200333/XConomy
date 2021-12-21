@@ -1,5 +1,5 @@
 /*
- *  This file (DataCon.java) is a part of project XConomy
+ *  This file (DataLink.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -18,142 +18,205 @@
  */
 package me.yic.xconomy.data;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.api.event.PlayerAccountEvent;
+import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
-import me.yic.xconomy.data.sql.SQL;
-import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import me.yic.xconomy.info.DataBaseINFO;
+import me.yic.xconomy.info.ServerINFO;
 import me.yic.xconomy.utils.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.File;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-public class DataCon extends DataBaseINFO {
+public class DataCon{
+    public static PlayerData getPlayerData(UUID uuid) {
+        return getPlayerDatai(Cache.getSubUUID(uuid));
+    }
 
-    public static boolean create() {
-        switch (getStorageType()) {
-            case 1:
-                XConomy.getInstance().logger("数据保存方式", " - SQLite");
-                setupSqLiteAddress();
+    public static PlayerData getPlayerData(String username) {
+        return getPlayerDatai(username);
+    }
 
-                File dataFolder = new File(XConomy.getInstance().getDataFolder(), "playerdata");
-                if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-                    XConomy.getInstance().logger("文件夹创建异常", null);
-                    return false;
-                }
-                break;
+    private static <T> PlayerData getPlayerDatai(T u) {
+        PlayerData pd = null;
 
-            case 2:
-                XConomy.getInstance().logger("数据保存方式", " - MySQL");
-                setupMySqlTable();
-                break;
-
+        if (ServerINFO.disablecache) {
+            DataLink.getPlayerData(u);
         }
 
-        if (SQL.con()) {
-            if (getStorageType() == 2) {
-                SQL.getwaittimeout();
-            }
-            SQL.createTable();
-            SQL.updataTable();
-            loggersysmess("连接正常");
+        if (Cache.CacheContainsKey(u)) {
+            pd = Cache.getDataFromCache(u);
         } else {
-            loggersysmess("连接异常");
-            return false;
+            DataLink.getPlayerData(u);
+            if (Cache.CacheContainsKey(u)) {
+                pd = Cache.getDataFromCache(u);
+            }
+        }
+        if (Bukkit.getOnlinePlayers().size() == 0) {
+            Cache.clearCache();
+        }
+        if (pd == null) {
+            return new PlayerData(null, "*", BigDecimal.ZERO);
+        }
+        return pd;
+    }
+
+
+    public static void refreshFromCache(UUID uuid) {
+        if (uuid != null) {
+            DataLink.getPlayerData(uuid);
+        }
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public static PlayerData cachecorrection(UUID u, BigDecimal amount, Boolean isAdd) {
+        BigDecimal newvalue;
+        PlayerData npd = getPlayerData(u);
+        if (isAdd) {
+            newvalue = npd.getbalance().add(amount);
+        } else {
+            newvalue = npd.getbalance().subtract(amount);
+        }
+        Cache.updateIntoCache(u, npd, newvalue);
+
+        if (ServerINFO.IsBungeeCordMode) {
+            ByteArrayDataOutput output = ByteStreams.newDataOutput();
+            output.writeUTF("balance");
+            output.writeUTF(XConomy.getSign());
+            output.writeUTF(u.toString());
+            output.writeUTF(amount.toString());
+            Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", output.toByteArray());
+        }
+        return npd;
+    }
+
+    public static void change(String type, UUID uid, BigDecimal amount, Boolean isAdd, String reason) {
+        UUID u = Cache.getSubUUID(uid);
+        PlayerData pd = getPlayerData(u);
+        BigDecimal newvalue = amount;
+        BigDecimal bal = pd.getbalance();
+
+        Bukkit.getScheduler().runTask(XConomy.getInstance(), () -> Bukkit.getPluginManager().callEvent(new PlayerAccountEvent(u, pd.getName(), bal, amount, isAdd, reason, type)));
+
+        if (isAdd != null) {
+            if (isAdd) {
+                newvalue = bal.add(amount);
+            } else {
+                newvalue = bal.subtract(amount);
+            }
         }
 
-        if (!CacheSemiOnline.createfile()) {
-            return false;
+        Cache.updateIntoCache(u, pd, newvalue);
+        if (ServerINFO.IsBungeeCordMode) {
+            prepareudpmessage(type, u, pd, isAdd, bal, amount, reason);
+        } else {
+            if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+                Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.save(type, pd, isAdd, bal, amount, reason));
+            } else {
+                DataLink.save(type, pd, isAdd, bal, amount, reason);
+            }
+        }
+    }
+
+    public static void changeall(String targettype, String type, BigDecimal amount, Boolean isAdd, String reason) {
+        Cache.clearCache();
+
+        if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+            Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.saveall(targettype, type, amount, isAdd, reason));
+        } else {
+            DataLink.saveall(targettype, type, amount, isAdd, reason);
         }
 
-        XConomy.getInstance().logger("XConomy加载成功", null);
-        return true;
-    }
-
-    public static void newPlayer(Player a) {
-        SQLCreateNewAccount.newPlayer(a);
-    }
-
-    public static void getBal(UUID u) {
-        SQL.select(u);
-    }
-
-    public static void getUid(String name) {
-        SQL.selectUID(name);
-    }
-
-    public static void getBalNonPlayer(String u) {
-        SQL.selectNonPlayer(u);
-    }
-
-    public static void getTopBal() {
-        SQL.getBaltop();
-    }
-
-    public static void setTopBalHide(UUID u, int type) {
-        SQL.hidetop(u, type);
-    }
-
-    public static String getBalSum() {
-        if (SQL.sumBal() == null) {
-            return "0.0";
+        if (ServerINFO.IsBungeeCordMode) {
+            sendallpdmessage(targettype, amount, isAdd);
         }
-        return SQL.sumBal();
     }
 
-    public static void save(String type, PlayerData pd, Boolean isAdd,
-                            BigDecimal oldbalance, BigDecimal amount, String command) {
-        SQL.save(type, pd, isAdd, oldbalance, amount, command);
+    public static void baltop() {
+        Cache.baltop.clear();
+        Cache.baltop_papi.clear();
+        sumbal();
+        DataLink.getTopBal();
+    }
+
+    public static void sumbal() {
+        Cache.sumbalance = DataFormat.formatString(DataLink.getBalSum());
     }
 
 
-    public static void saveall(String targettype, String type, BigDecimal amount, Boolean isAdd, String reason) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (targettype.equalsIgnoreCase("all")) {
-                    SQL.saveall(targettype, type, null, amount, isAdd, reason);
-                } else if (targettype.equalsIgnoreCase("online")) {
-                    List<UUID> ol = new ArrayList<>();
-                    for (Player pp : Bukkit.getOnlinePlayers()) {
-                        ol.add(pp.getUniqueId());
+    public static Player getplayer(String name) {
+        PlayerData pd = getPlayerData(name);
+        UUID u = pd.getUniqueId();
+        Player mainp = null;
+        if (u != null) {
+            mainp = Bukkit.getPlayer(u);
+            if (mainp == null && ServerINFO.IsSemiOnlineMode) {
+                UUID subu = CacheSemiOnline.CacheSubUUID_getsubuuid(u.toString());
+                if (subu != null) {
+                    Player subp = Bukkit.getPlayer(subu);
+                    if (subp != null) {
+                        return subp;
                     }
-                    SQL.saveall(targettype, type, ol, amount, isAdd, reason);
                 }
             }
-        }.runTaskAsynchronously(XConomy.getInstance());
-    }
-
-    public static void saveNonPlayer(String type, String account, BigDecimal amount,
-                                     BigDecimal newbalance, Boolean isAdd) {
-        SQL.saveNonPlayer(type, account, amount, newbalance, isAdd);
-    }
-
-    private static void setupMySqlTable() {
-        if (gettablesuffix() != null & !gettablesuffix().equals("")) {
-            SQL.tableName = "xconomy_" + gettablesuffix().replace("%sign%", XConomy.getSign());
-            SQL.tableNonPlayerName = "xconomynon_" + gettablesuffix().replace("%sign%", XConomy.getSign());
-            SQL.tableRecordName = "xconomyrecord_" + gettablesuffix().replace("%sign%", XConomy.getSign());
         }
+        return mainp;
     }
 
-    private static void setupSqLiteAddress() {
-        if (gethost().equalsIgnoreCase("Default")) {
-            return;
-        }
+    public static void prepareudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd,
+                                         BigDecimal oldbalance, BigDecimal amount, String reason) {
 
-        File folder = new File(gethost());
-        if (folder.exists()) {
-            SQL.database.userdata = new File(folder, "data.db");
+        if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+            Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> sendudpmessage(type, u, pd, isAdd, oldbalance, amount, reason));
         } else {
-            XConomy.getInstance().logger("自定义文件夹路径不存在", null);
+            sendudpmessage(type, u, pd, isAdd, oldbalance, amount, reason);
         }
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public static void sendudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd,
+                                      BigDecimal oldbalance, BigDecimal amount, String command) {
+        ByteArrayDataOutput output = ByteStreams.newDataOutput();
+        output.writeUTF(XConomy.getSign());
+        output.writeUTF("updateplayer");
+        output.writeUTF(u.toString());
+        SendMessTask(output, type, pd, isAdd, oldbalance, amount, command);
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public static void sendallpdmessage(String targettype, BigDecimal amount, Boolean isAdd) {
+        ByteArrayDataOutput output = ByteStreams.newDataOutput();
+        output.writeUTF(XConomy.getSign());
+        output.writeUTF("balanceall");
+        if (targettype.equals("all")) {
+            output.writeUTF("all");
+        } else if (targettype.equals("online")) {
+            output.writeUTF("online");
+        }
+        output.writeUTF(amount.toString());
+        if (isAdd) {
+            output.writeUTF("add");
+        } else {
+            output.writeUTF("subtract");
+        }
+        SendMessTask(output, null, null, isAdd, null, null, null);
 
     }
+
+    private static void SendMessTask(ByteArrayDataOutput stream, String type, PlayerData pd, Boolean isAdd,
+                                     BigDecimal oldbalance, BigDecimal amount, String command) {
+
+        if (!Bukkit.getOnlinePlayers().isEmpty()) {
+            Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
+        }
+        if (pd != null) {
+            DataLink.save(type, pd, isAdd, oldbalance, amount, command);
+        }
+    }
+
 }

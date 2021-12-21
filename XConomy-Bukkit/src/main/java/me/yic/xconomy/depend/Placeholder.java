@@ -19,6 +19,7 @@
 package me.yic.xconomy.depend;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.DataFormat;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -54,13 +55,13 @@ public class Placeholder extends PlaceholderExpansion {
             if (player == null) {
                 return "0.0";
             }
-            BigDecimal a = Cache.getBalanceFromCacheOrDB(player.getUniqueId()).getbalance();
+            BigDecimal a = DataCon.getPlayerData(player.getUniqueId()).getbalance();
             return DataFormat.shown(a);
         } else if (identifier.equals("balance_value")) {
             if (player == null) {
                 return "0.0";
             }
-            BigDecimal bal = Cache.getBalanceFromCacheOrDB(player.getUniqueId()).getbalance();
+            BigDecimal bal = DataCon.getPlayerData(player.getUniqueId()).getbalance();
             return bal.toString();
         } else if (identifier.contains("top_player_")) {
             String index = identifier.substring(identifier.indexOf("top_player_") + 11);

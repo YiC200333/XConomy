@@ -47,16 +47,16 @@ public class BCsync implements Listener {
 
         ByteArrayDataInput input = ByteStreams.newDataInput(event.getData());
         Server senderServer = (Server) event.getSender();
+
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
+        output.writeUTF(input.readUTF());
+
         String type = input.readUTF();
-        if (type.equalsIgnoreCase("balance")) {
-            output.writeUTF("balance");
+        if (type.equalsIgnoreCase("updateplayer")) {
+            output.writeUTF("updateplayer");
             output.writeUTF(input.readUTF());
-            output.writeUTF(input.readUTF());
-            //output.writeUTF(input.readUTF());
         } else if (type.equalsIgnoreCase("message")) {
             output.writeUTF("message");
-            output.writeUTF(input.readUTF());
             String uid = input.readUTF();
             ProxiedPlayer p = ProxyServer.getInstance().getPlayer(UUID.fromString(uid));
             if (p != null) {
@@ -70,14 +70,8 @@ public class BCsync implements Listener {
             output.writeUTF(input.readUTF());
             output.writeUTF(input.readUTF());
             output.writeUTF(input.readUTF());
-            output.writeUTF(input.readUTF());
         } else if (type.equalsIgnoreCase("broadcast")) {
             output.writeUTF("broadcast");
-            output.writeUTF(input.readUTF());
-            output.writeUTF(input.readUTF());
-        } else if (type.equalsIgnoreCase("updateplayer")) {
-            output.writeUTF("updateplayer");
-            output.writeUTF(input.readUTF());
             output.writeUTF(input.readUTF());
         }
 

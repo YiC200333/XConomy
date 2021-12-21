@@ -64,17 +64,22 @@ public class CacheSemiOnline {
                     Bukkit.getScheduler().runTask(XConomy.getInstance(), () ->
                             pp.kickPlayer("[XConomy] The player with the same name exists on the server (Three times)"));
                 }
+            }else{
+                Cache.removefromCache(Cache.getSubUUID(UUID.fromString(mainu)));
+                Cache.insertIntoSUUIDCache(UUID.fromString(mainu), pp.getUniqueId());
             }
         } else {
             CacheSubUUID.createSection(mainu + ".SubUUID");
             CacheSubUUID.set(mainu + ".SubUUID", pp.getUniqueId().toString());
+            Cache.removefromCache(Cache.getSubUUID(UUID.fromString(mainu)));
+            Cache.insertIntoSUUIDCache(UUID.fromString(mainu), pp.getUniqueId());
         }
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static UUID CacheSubUUID_getsubuuid(String name) {
-        if (CacheSubUUID.contains(name)) {
-            return UUID.fromString(CacheSubUUID.getString(name + ".SubUUID"));
+    public static UUID CacheSubUUID_getsubuuid(String uuid) {
+        if (CacheSubUUID.contains(uuid)) {
+            return UUID.fromString(CacheSubUUID.getString(uuid + ".SubUUID"));
         } else {
             return null;
         }

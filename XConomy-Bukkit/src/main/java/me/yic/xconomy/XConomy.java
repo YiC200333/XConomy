@@ -20,13 +20,16 @@ package me.yic.xconomy;
 
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.depend.LoadEconomy;
 import me.yic.xconomy.depend.Placeholder;
 import me.yic.xconomy.depend.economy.VaultHook;
+import me.yic.xconomy.info.DataBaseINFO;
 import me.yic.xconomy.info.MCVersion;
+import me.yic.xconomy.info.ServerINFO;
+import me.yic.xconomy.info.UpdateConfig;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.listeners.ConnectionListeners;
 import me.yic.xconomy.listeners.SPPsync;
@@ -34,10 +37,7 @@ import me.yic.xconomy.listeners.SPsync;
 import me.yic.xconomy.listeners.TabList;
 import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
-import me.yic.xconomy.info.DataBaseINFO;
 import me.yic.xconomy.utils.EconomyCommand;
-import me.yic.xconomy.info.ServerINFO;
-import me.yic.xconomy.info.UpdateConfig;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -89,12 +89,12 @@ public class XConomy extends JavaPlugin {
         }
 
         allowHikariConnectionPooling();
-        if (!DataCon.create()) {
+        if (!DataLink.create()) {
             logger("XConomy已成功卸载", null);
             return;
         }
 
-        Cache.baltop();
+        DataCon.baltop();
 
         if (checkup()) {
             new Updater().runTaskAsynchronously(this);
