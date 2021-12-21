@@ -181,7 +181,7 @@ public class SQLCreateNewAccount extends SQL{
         }
         if (!user.equals(name) && !user.equals("#")) {
             Cache.removefromCache(UID);
-            DataCon.prepareudpmessage(null, UID, null, null, null, null, null);
+            DataCon.prepareudpmessage(null, UID, null, null, null, null);
             updateUser(UID.toString(), name, connection);
             XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
         }

@@ -1,5 +1,5 @@
 /*
- *  This file (DataCon.java) is a part of project XConomy
+ *  This file (DataLink.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -100,9 +100,8 @@ public class DataLink extends DataBaseINFO {
         return SQL.sumBal();
     }
 
-    public static void save(String type, PlayerData pd, Boolean isAdd,
-                            BigDecimal oldbalance, BigDecimal amount, String command) {
-        SQL.save(type, pd, isAdd, oldbalance, amount, command);
+    public static void save(String type, PlayerData pd, Boolean isAdd, BigDecimal amount, String command) {
+        SQL.save(type, pd, isAdd, amount, command);
     }
 
 

@@ -19,13 +19,12 @@
 package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.info.DataBaseINFO;
-import me.yic.xconomy.utils.DatabaseConnection;
 import me.yic.xconomy.info.ServerINFO;
+import me.yic.xconomy.utils.DatabaseConnection;
 import me.yic.xconomy.utils.PlayerData;
 
 import java.math.BigDecimal;
@@ -248,46 +247,69 @@ public class SQL {
         }
     }
 
-
-    public static void save(String type, PlayerData pd, Boolean isAdd,
-                            BigDecimal oldbalance, BigDecimal amount, String command) {
+    public static void save(String type, PlayerData pd, Boolean isAdd, BigDecimal amount, String command) {
         Connection connection = database.getConnectionAndCheck();
-        UUID u = pd.getUniqueId();
         try {
             String query;
-            query = " set balance = " + pd.getbalance().doubleValue() + " where UID = ?";
-            boolean requirefresh = false;
-            if (isAdd != null) {
-                requirefresh = true;
-                query = query + "AND balance = " + oldbalance.toString();
+
+            if (isAdd == null) {
+                query = " set balance = " + amount + " where UID = ?";
+            } else if (isAdd) {
+                query = " set balance = balance + " + amount + " where UID = ?";
+            } else {
+                query = " set balance = balance - " + amount + " where UID = ?";
             }
-            PreparedStatement statement1 = connection.prepareStatement("update " + tableName + query);
-            statement1.setString(1, u.toString());
-            int rs = statement1.executeUpdate();
-            statement1.close();
-            if (requirefresh && rs == 0) {
-                command += "(Cache Correction)";
-            }
-            record(connection, type, pd, isAdd, amount, pd.getbalance(), command);
-            if (requirefresh && rs == 0) {
-                DataCon.refreshFromCache(u);
-                PlayerData npd = DataCon.cachecorrection(u, amount, isAdd);
-                if (isAdd) {
-                    query = " set balance = balance + " + amount.doubleValue() + " where UID = ?";
-                } else {
-                    query = " set balance = balance - " + amount.doubleValue() + " where UID = ?";
-                }
-                PreparedStatement statement2 = connection.prepareStatement("update " + tableName + query);
-                statement2.setString(1, u.toString());
-                statement2.executeUpdate();
-                statement2.close();
-                record(connection, type, npd, isAdd, amount, npd.getbalance(), "Cache Correction Detail");
-            }
+
+            PreparedStatement statement = connection.prepareStatement("update " + tableName + query);
+            statement.setString(1, pd.getUniqueId().toString());
+            statement.executeUpdate();
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        record(connection, type, pd, isAdd, amount, pd.getbalance(), command);
         database.closeHikariConnection(connection);
     }
+
+    //public static void save(String type, PlayerData pd, Boolean isAdd,
+    //                        BigDecimal oldbalance, BigDecimal amount, String command) {
+    //    Connection connection = database.getConnectionAndCheck();
+    //    UUID u = pd.getUniqueId();
+    //    try {
+    //        String query;
+    //        query = " set balance = " + pd.getbalance().doubleValue() + " where UID = ?";
+    //        boolean requirefresh = false;
+    //        if (isAdd != null) {
+    //            requirefresh = true;
+    //            query = query + "AND balance = " + oldbalance.toString();
+    //        }
+    //        PreparedStatement statement1 = connection.prepareStatement("update " + tableName + query);
+    //        statement1.setString(1, u.toString());
+    //        int rs = statement1.executeUpdate();
+    //        statement1.close();
+    //        if (requirefresh && rs == 0) {
+    //            command += "(Cache Correction)";
+    //        }
+    //        record(connection, type, pd, isAdd, amount, pd.getbalance(), command);
+    //        if (requirefresh && rs == 0) {
+    //            DataCon.refreshFromCache(u);
+    //            PlayerData npd = DataCon.cachecorrection(u, amount, isAdd);
+    //            if (isAdd) {
+    //               query = " set balance = balance + " + amount.doubleValue() + " where UID = ?";
+    //            } else {
+    //                query = " set balance = balance - " + amount.doubleValue() + " where UID = ?";
+    //            }
+    //            PreparedStatement statement2 = connection.prepareStatement("update " + tableName + query);
+    //            statement2.setString(1, u.toString());
+    //            statement2.executeUpdate();
+    //            statement2.close();
+    //            record(connection, type, npd, isAdd, amount, npd.getbalance(), "Cache Correction Detail");
+    //        }
+    //    } catch (SQLException e) {
+    //        e.printStackTrace();
+    //    }
+    //    database.closeHikariConnection(connection);
+    //}
 
     public static void saveall(String targettype, String type, List<UUID> players, BigDecimal amount, Boolean isAdd,
                                String reason) {

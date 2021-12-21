@@ -1,5 +1,5 @@
 /*
- *  This file (DataLink.java) is a part of project XConomy
+ *  This file (DataCon.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -67,33 +67,33 @@ public class DataCon{
     }
 
 
-    public static void refreshFromCache(UUID uuid) {
-        if (uuid != null) {
-            DataLink.getPlayerData(uuid);
-        }
-    }
+    //public static void refreshFromCache(UUID uuid) {
+    //    if (uuid != null) {
+    //        DataLink.getPlayerData(uuid);
+    //    }
+    //}
 
-    @SuppressWarnings("UnstableApiUsage")
-    public static PlayerData cachecorrection(UUID u, BigDecimal amount, Boolean isAdd) {
-        BigDecimal newvalue;
-        PlayerData npd = getPlayerData(u);
-        if (isAdd) {
-            newvalue = npd.getbalance().add(amount);
-        } else {
-            newvalue = npd.getbalance().subtract(amount);
-        }
-        Cache.updateIntoCache(u, npd, newvalue);
+    //@SuppressWarnings("UnstableApiUsage")
+    //public static PlayerData cachecorrection(UUID u, BigDecimal amount, Boolean isAdd) {
+    //    BigDecimal newvalue;
+    //    PlayerData npd = getPlayerData(u);
+    //    if (isAdd) {
+    //        newvalue = npd.getbalance().add(amount);
+    //    } else {
+    //        newvalue = npd.getbalance().subtract(amount);
+    //    }
+    //    Cache.updateIntoCache(u, npd, newvalue);
 
-        if (ServerINFO.IsBungeeCordMode) {
-            ByteArrayDataOutput output = ByteStreams.newDataOutput();
-            output.writeUTF("balance");
-            output.writeUTF(XConomy.getSign());
-            output.writeUTF(u.toString());
-            output.writeUTF(amount.toString());
-            Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", output.toByteArray());
-        }
-        return npd;
-    }
+    //    if (ServerINFO.IsBungeeCordMode) {
+    //        ByteArrayDataOutput output = ByteStreams.newDataOutput();
+    //        output.writeUTF("balance");
+    //        output.writeUTF(XConomy.getSign());
+    //        output.writeUTF(u.toString());
+    //        output.writeUTF(amount.toString());
+    //        Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", output.toByteArray());
+    //    }
+    //    return npd;
+    //}
 
     public static void change(String type, UUID uid, BigDecimal amount, Boolean isAdd, String reason) {
         UUID u = Cache.getSubUUID(uid);
@@ -113,12 +113,12 @@ public class DataCon{
 
         Cache.updateIntoCache(u, pd, newvalue);
         if (ServerINFO.IsBungeeCordMode) {
-            prepareudpmessage(type, u, pd, isAdd, bal, amount, reason);
+            prepareudpmessage(type, u, pd, isAdd, amount, reason);
         } else {
             if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
-                Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.save(type, pd, isAdd, bal, amount, reason));
+                Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.save(type, pd, isAdd, amount, reason));
             } else {
-                DataLink.save(type, pd, isAdd, bal, amount, reason);
+                DataLink.save(type, pd, isAdd, amount, reason);
             }
         }
     }
@@ -168,24 +168,22 @@ public class DataCon{
         return mainp;
     }
 
-    public static void prepareudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd,
-                                         BigDecimal oldbalance, BigDecimal amount, String reason) {
+    public static void prepareudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd, BigDecimal amount, String reason) {
 
         if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
-            Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> sendudpmessage(type, u, pd, isAdd, oldbalance, amount, reason));
+            Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> sendudpmessage(type, u, pd, isAdd, amount, reason));
         } else {
-            sendudpmessage(type, u, pd, isAdd, oldbalance, amount, reason);
+            sendudpmessage(type, u, pd, isAdd, amount, reason);
         }
     }
 
     @SuppressWarnings("UnstableApiUsage")
-    public static void sendudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd,
-                                      BigDecimal oldbalance, BigDecimal amount, String command) {
+    public static void sendudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd, BigDecimal amount, String command) {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF(XConomy.getSign());
         output.writeUTF("updateplayer");
         output.writeUTF(u.toString());
-        SendMessTask(output, type, pd, isAdd, oldbalance, amount, command);
+        SendMessTask(output, type, pd, isAdd, amount, command);
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -204,18 +202,17 @@ public class DataCon{
         } else {
             output.writeUTF("subtract");
         }
-        SendMessTask(output, null, null, isAdd, null, null, null);
+        SendMessTask(output, null, null, isAdd, null, null);
 
     }
 
-    private static void SendMessTask(ByteArrayDataOutput stream, String type, PlayerData pd, Boolean isAdd,
-                                     BigDecimal oldbalance, BigDecimal amount, String command) {
+    private static void SendMessTask(ByteArrayDataOutput stream, String type, PlayerData pd, Boolean isAdd, BigDecimal amount, String command) {
 
         if (!Bukkit.getOnlinePlayers().isEmpty()) {
             Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
         }
         if (pd != null) {
-            DataLink.save(type, pd, isAdd, oldbalance, amount, command);
+            DataLink.save(type, pd, isAdd, amount, command);
         }
     }
 
