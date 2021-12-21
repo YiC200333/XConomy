@@ -26,19 +26,19 @@ import me.yic.xconomy.command.CommandPay;
 import me.yic.xconomy.command.CommandSystem;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.depend.economyapi.XCService;
 import me.yic.xconomy.depend.economyapi.XCurrency;
+import me.yic.xconomy.info.DataBaseINFO;
+import me.yic.xconomy.info.ServerINFO;
+import me.yic.xconomy.info.UpdateConfig;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.listeners.ConnectionListeners;
 import me.yic.xconomy.listeners.SPsync;
 import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
-import me.yic.xconomy.info.DataBaseINFO;
 import me.yic.xconomy.utils.PluginINFO;
-import me.yic.xconomy.info.ServerINFO;
-import me.yic.xconomy.info.UpdateConfig;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.slf4j.Logger;
@@ -126,12 +126,12 @@ public class XConomy {
         //}
 
         allowHikariConnectionPooling();
-        if (!DataCon.create()) {
+        if (!DataLink.create()) {
             logger("XConomy已成功卸载", null);
             return;
         }
 
-        Cache.baltop();
+        DataCon.baltop();
 
         if (checkup()) {
             Sponge.getScheduler().createAsyncExecutor(this).execute(new Updater());

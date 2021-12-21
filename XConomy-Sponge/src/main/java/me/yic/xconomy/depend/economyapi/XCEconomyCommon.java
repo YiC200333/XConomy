@@ -19,7 +19,7 @@
 package me.yic.xconomy.depend.economyapi;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 
 public class XCEconomyCommon {
@@ -37,6 +37,6 @@ public class XCEconomyCommon {
             return true;
         }
 
-        return Cache.translateUUID(name, null) == null;
+        return DataCon.getPlayerData(name).getUniqueId() == null;
     }
 }

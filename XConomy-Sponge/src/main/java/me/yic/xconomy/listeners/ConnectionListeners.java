@@ -20,6 +20,7 @@ package me.yic.xconomy.listeners;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.Updater;
@@ -47,14 +48,11 @@ public class ConnectionListeners {
         Player a = event.getTargetEntity();
         Cache.removefromCache(a.getUniqueId());
         if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
-            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataCon.newPlayer(a));
+            DataLink.newPlayer(a);
         } else {
-            DataCon.newPlayer(a);
+            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataLink.newPlayer(a));
         }
 
-        if (!XConomy.config.getNode("Settings", "semi-online-mode").getBoolean()) {
-            Cache.translateUUID(a.getName(), a);
-        }
         if (a.hasPermission("xconomy.admin.op")) {
             notifyUpdate(a);
         }

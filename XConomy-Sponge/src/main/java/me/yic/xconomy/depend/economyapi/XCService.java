@@ -19,7 +19,7 @@
 package me.yic.xconomy.depend.economyapi;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.DataCon;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.service.context.ContextCalculator;
 import org.spongepowered.api.service.economy.Currency;
@@ -28,7 +28,10 @@ import org.spongepowered.api.service.economy.account.Account;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.api.service.user.UserStorageService;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 @SuppressWarnings("NullableProblems")
 public class XCService implements EconomyService {
@@ -45,10 +48,9 @@ public class XCService implements EconomyService {
         return currencies;
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
     public boolean hasAccount(UUID uuid) {
-        return !Cache.getBalanceFromCacheOrDB(uuid).getName().equalsIgnoreCase("*");
+        return DataCon.getPlayerData(uuid).getUniqueId() != null;
     }
 
     @Override
@@ -56,7 +58,7 @@ public class XCService implements EconomyService {
         if (XCEconomyCommon.isNonPlayerAccount(identifier)) {
             return true;
         }
-        return Cache.translateUUID(identifier, null) != null;
+        return DataCon.getPlayerData(identifier).getUniqueId() != null;
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")

@@ -19,6 +19,7 @@
 package me.yic.xconomy.data.caches;
 
 import me.yic.xconomy.data.DataCon;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.info.ServerINFO;
 
 import java.math.BigDecimal;
@@ -36,10 +37,10 @@ public class CacheNonPlayer {
 
     public static BigDecimal getBalanceFromCacheOrDB(String u) {
         if (ServerINFO.disablecache){
-            DataCon.getBalNonPlayer(u);
+            DataLink.getBalNonPlayer(u);
         }
         if (!bal.containsKey(u)) {
-            DataCon.getBalNonPlayer(u);
+            DataLink.getBalNonPlayer(u);
         }
         return bal.get(u);
 
@@ -57,7 +58,7 @@ public class CacheNonPlayer {
             }
         }
         insertIntoCache(u, newvalue);
-        DataCon.saveNonPlayer(type, u, amount, newvalue, isAdd);
+        DataLink.saveNonPlayer(type, u, amount, newvalue, isAdd);
     }
 
 }

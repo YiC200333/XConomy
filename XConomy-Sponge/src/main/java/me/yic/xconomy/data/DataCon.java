@@ -18,134 +18,187 @@
  */
 package me.yic.xconomy.data;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.data.sql.SQL;
-import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import me.yic.xconomy.info.DataBaseINFO;
+import me.yic.xconomy.info.ServerINFO;
 import me.yic.xconomy.utils.PlayerData;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.service.user.UserStorageService;
 
-import java.io.File;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-public class DataCon extends DataBaseINFO {
+public class DataCon{
 
-    public static boolean create() {
-        switch (getStorageType()) {
-            case 1:
-                XConomy.getInstance().logger("数据保存方式", " - SQLite");
-                setupSqLiteAddress();
+    public static <T> PlayerData getPlayerData(T u) {
+        PlayerData pd = null;
 
-                File dataFolder = new File(XConomy.getInstance().configDir.toFile(), "playerdata");
-                if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-                    XConomy.getInstance().logger("文件夹创建异常", null);
-                    return false;
-                }
-                break;
-
-            case 2:
-                XConomy.getInstance().logger("数据保存方式", " - MySQL");
-                setupMySqlTable();
-                break;
-
+        if (ServerINFO.disablecache) {
+            DataLink.getPlayerData(u);
         }
 
-        if (SQL.con()) {
-            if (getStorageType() == 2) {
-                SQL.getwaittimeout();
+        if (Cache.CacheContainsKey(u)) {
+            pd = Cache.getDataFromCache(u);
+        } else {
+            DataLink.getPlayerData(u);
+            if (Cache.CacheContainsKey(u)) {
+                pd = Cache.getDataFromCache(u);
             }
-            SQL.createTable();
-            loggersysmess("连接正常");
+        }
+        if (Sponge.getServer().getOnlinePlayers().size() == 0) {
+            Cache.clearCache();
+        }
+        if (pd == null) {
+            return new PlayerData(null, "*", BigDecimal.ZERO);
+        }
+        return pd;
+    }
+
+
+    public static void refreshFromCache(UUID uuid) {
+        if (uuid != null) {
+            DataLink.getPlayerData(uuid);
+        }
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public static PlayerData cachecorrection(UUID u, BigDecimal amount, Boolean isAdd) {
+        BigDecimal newvalue;
+        PlayerData npd = getPlayerData(u);
+        if (isAdd) {
+            newvalue = npd.getbalance().add(amount);
         } else {
-            loggersysmess("连接异常");
-            return false;
+            newvalue = npd.getbalance().subtract(amount);
+        }
+        Cache.updateIntoCache(u, npd, newvalue);
+
+        if (ServerINFO.IsBungeeCordMode) {
+            ByteArrayDataOutput output = ByteStreams.newDataOutput();
+            output.writeUTF("balance");
+            output.writeUTF(XConomy.getSign());
+            output.writeUTF(u.toString());
+            output.writeUTF(amount.toString());
+            Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), "xconomy:acb").sendTo(
+                    Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> output.toByteArray());
+        }
+        return npd;
+    }
+
+    public static void change(String type, UUID u, BigDecimal amount, Boolean isAdd, String reason) {
+        PlayerData pd = getPlayerData(u);
+        BigDecimal newvalue = amount;
+        BigDecimal bal = pd.getbalance();
+
+        if (isAdd != null) {
+            if (isAdd) {
+                newvalue = bal.add(amount);
+            } else {
+                newvalue = bal.subtract(amount);
+            }
         }
 
-        XConomy.getInstance().logger("XConomy加载成功", null);
-        return true;
-    }
-
-    public static void newPlayer(Player a) {
-        SQLCreateNewAccount.newPlayer(a);
-    }
-
-    public static void getBal(UUID u) {
-        SQL.select(u);
-    }
-
-    public static void getUid(String name) {
-        SQL.selectUID(name);
-    }
-
-    public static void getBalNonPlayer(String u) {
-        SQL.selectNonPlayer(u);
-    }
-
-    public static void getTopBal() {
-        SQL.getBaltop();
-    }
-
-    public static void setTopBalHide(UUID u, int type) {
-        SQL.hidetop(u, type);
-    }
-
-    public static String getBalSum() {
-        if (SQL.sumBal() == null) {
-            return "0.0";
-        }
-        return SQL.sumBal();
-    }
-
-    public static void save(String type, PlayerData pd, Boolean isAdd,
-                            BigDecimal oldbalance, BigDecimal amount, String command) {
-        SQL.save(type, pd, isAdd, oldbalance, amount, command);
-    }
-
-
-    public static void saveall(String targettype, String type, BigDecimal amount, Boolean isAdd, String reason) {
-        Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> {
-                    if (targettype.equalsIgnoreCase("all")) {
-                        SQL.saveall(targettype, type, null, amount, isAdd, reason);
-                    } else if (targettype.equalsIgnoreCase("online")) {
-                        List<UUID> ol = new ArrayList<>();
-                        for (Player pp : Sponge.getServer().getOnlinePlayers()) {
-                            ol.add(pp.getUniqueId());
-                        }
-                        SQL.saveall(targettype, type, ol, amount, isAdd, reason);
-                    }
-                }
-        );
-    }
-
-    public static void saveNonPlayer(String type, String account, BigDecimal amount,
-                                     BigDecimal newbalance, Boolean isAdd) {
-        SQL.saveNonPlayer(type, account, amount, newbalance, isAdd);
-    }
-
-    private static void setupMySqlTable() {
-        if (gettablesuffix() != null & !gettablesuffix().equals("")) {
-            SQL.tableName = "xconomy_" + gettablesuffix().replace("%sign%", XConomy.getSign());
-            SQL.tableNonPlayerName = "xconomynon_" + gettablesuffix().replace("%sign%", XConomy.getSign());
-            SQL.tableRecordName = "xconomyrecord_" + gettablesuffix().replace("%sign%", XConomy.getSign());
-        }
-    }
-
-    private static void setupSqLiteAddress() {
-        if (gethost().equalsIgnoreCase("Default")) {
-            return;
-        }
-
-        File folder = new File(gethost());
-        if (folder.exists()) {
-            SQL.database.userdata = new File(folder, "data.db");
+        Cache.updateIntoCache(u, pd, newvalue);
+        if (ServerINFO.IsBungeeCordMode) {
+            prepareudpmessage(type, u, pd, isAdd, bal, amount, reason);
         } else {
-            XConomy.getInstance().logger("自定义文件夹路径不存在", null);
+            if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+                Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataLink.save(type, pd, isAdd, bal, amount, reason));
+            } else {
+                DataLink.save(type, pd, isAdd, bal, amount, reason);
+            }
+        }
+    }
+
+    public static void changeall(String targettype, String type, BigDecimal amount, Boolean isAdd, String reason) {
+        Cache.clearCache();
+
+        if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataLink.saveall(targettype, type, amount, isAdd, reason));
+        } else {
+            DataLink.saveall(targettype, type, amount, isAdd, reason);
         }
 
+        if (ServerINFO.IsBungeeCordMode) {
+            sendallpdmessage(targettype, amount, isAdd);
+        }
+    }
+
+    public static void baltop() {
+        Cache.baltop.clear();
+        Cache.baltop_papi.clear();
+        sumbal();
+        DataLink.getTopBal();
+    }
+
+    public static void sumbal() {
+        Cache.sumbalance = DataFormat.formatString(DataLink.getBalSum());
+    }
+
+
+    public static User getplayer(String name) {
+        PlayerData pd = getPlayerData(name);
+        UUID u = pd.getUniqueId();
+        User mainp = null;
+        if (u != null) {
+            mainp = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(u)).get();
+        }
+        return mainp;
+    }
+
+
+    public static void prepareudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd,
+                                         BigDecimal oldbalance, BigDecimal amount, String reason) {
+
+        if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> sendudpmessage(type, u, pd, isAdd, oldbalance, amount, reason));
+        } else {
+            sendudpmessage(type, u, pd, isAdd, oldbalance, amount, reason);
+        }
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public static void sendudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd,
+                                      BigDecimal oldbalance, BigDecimal amount, String command) {
+        ByteArrayDataOutput output = ByteStreams.newDataOutput();
+        output.writeUTF(XConomy.getSign());
+        output.writeUTF("updateplayer");
+        output.writeUTF(u.toString());
+        SendMessTask(output, type, pd, isAdd, oldbalance, amount, command);
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public static void sendallpdmessage(String targettype, BigDecimal amount, Boolean isAdd) {
+        ByteArrayDataOutput output = ByteStreams.newDataOutput();
+        output.writeUTF(XConomy.getSign());
+        output.writeUTF("balanceall");
+        if (targettype.equals("all")) {
+            output.writeUTF("all");
+        } else if (targettype.equals("online")) {
+            output.writeUTF("online");
+        }
+        output.writeUTF(amount.toString());
+        if (isAdd) {
+            output.writeUTF("add");
+        } else {
+            output.writeUTF("subtract");
+        }
+        SendMessTask(output, null, null, isAdd, null, null, null);
+
+    }
+
+    private static void SendMessTask(ByteArrayDataOutput stream, String type, PlayerData pd, Boolean isAdd,
+                                     BigDecimal oldbalance, BigDecimal amount, String command) {
+
+        if (!Sponge.getServer().getOnlinePlayers().isEmpty()) {
+            Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), "xconomy:acb").sendTo(
+                    Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> buf.writeBytes(stream.toByteArray()));
+        }
+        if (pd != null) {
+            DataLink.save(type, pd, isAdd, oldbalance, amount, command);
+        }
     }
 }

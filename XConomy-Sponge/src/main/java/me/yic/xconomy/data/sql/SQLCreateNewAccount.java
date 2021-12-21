@@ -19,6 +19,7 @@
 package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.DataBaseINFO;
@@ -161,10 +162,11 @@ public class SQLCreateNewAccount extends SQL {
             statement.setString(1, UID.toString());
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
+                String u = rs.getString(1);
                 user = rs.getString(2);
                 BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
                 if (cacheThisAmt != null) {
-                    PlayerData bd = new PlayerData(UID, user, cacheThisAmt);
+                    PlayerData bd = new PlayerData(UUID.fromString(u), user, cacheThisAmt);
                     Cache.insertIntoCache(UID, bd);
                 }
             } else {
@@ -177,7 +179,8 @@ public class SQLCreateNewAccount extends SQL {
             e.printStackTrace();
         }
         if (!user.equals(name) && !user.equals("#")) {
-            Cache.removeFromUUIDCache(name);
+            Cache.removefromCache(UID);
+            DataCon.prepareudpmessage(null, UID, null, null, null, null, null);
             updateUser(UID.toString(), name, connection);
             XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
         }

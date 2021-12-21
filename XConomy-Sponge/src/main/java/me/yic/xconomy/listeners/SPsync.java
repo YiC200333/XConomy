@@ -19,8 +19,8 @@
 package me.yic.xconomy.listeners;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import org.spongepowered.api.Platform;
 import org.spongepowered.api.Sponge;
@@ -38,15 +38,14 @@ public class SPsync implements RawDataListener {
     @SuppressWarnings({"OptionalGetWithoutIsPresent", "NullableProblems"})
     @Override
     public void handlePayload(ChannelBuf data, RemoteConnection connection, Platform.Type side) {
-        String type = data.readUTF();
         String sign = data.readUTF();
         if (!sign.equals(XConomy.getSign())) {
             return;
         }
 
-        if (type.equalsIgnoreCase("balance")) {
+        String type = data.readUTF();
+        if (type.equalsIgnoreCase("updateplayer")) {
             UUID u = UUID.fromString(data.readUTF());
-            //String bal = data.readUTF();
             Cache.removefromCache(u);
         } else if (type.equalsIgnoreCase("message")) {
             User p = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(
@@ -61,26 +60,20 @@ public class SPsync implements RawDataListener {
             String amount = data.readUTF();
             String isadds = data.readUTF();
             if (targettype.equalsIgnoreCase("all")) {
-                Cache.pds.clear();
+                Cache.clearCache();
             } else if (targettype.equalsIgnoreCase("online")) {
-                Cache.pds.clear();
+                Cache.clearCache();
                 Boolean isadd = null;
                 if (isadds.equalsIgnoreCase("add")) {
                     isadd = true;
                 } else if (isadds.equalsIgnoreCase("subtract")) {
                     isadd = false;
                 }
-                DataCon.saveall("online", null, DataFormat.formatString(amount), isadd, null);
+                DataLink.saveall("online", null, DataFormat.formatString(amount), isadd, null);
             }
         } else if (type.equalsIgnoreCase("broadcast")) {
             String mess = data.readUTF();
             Sponge.getServer().getBroadcastChannel().send(Text.of(mess));
-        } else if (type.equalsIgnoreCase("updateplayer")) {
-            String u = data.readUTF();
-            if (!Cache.uid.containsKey(u)) {
-                return;
-            }
-            Cache.uid.remove(u);
         }
     }
 }

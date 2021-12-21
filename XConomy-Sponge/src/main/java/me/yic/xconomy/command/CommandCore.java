@@ -23,9 +23,11 @@ import com.google.common.io.ByteStreams;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.info.PermissionINFO;
+import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.PluginINFO;
 import me.yic.xconomy.info.ServerINFO;
 import org.spongepowered.api.Sponge;
@@ -81,11 +83,12 @@ public class CommandCore {
                                         sender.sendMessage(Text.of(translateColorCodes("global_permissions_change").replace("%permission%", "pay")
                                                 .replace("%value%", args[4])));
                                     } else {
-                                        UUID targetUUID = Cache.translateUUID(args[3], null);
+                                        PlayerData pd = DataCon.getPlayerData(args[3]);
+                                        UUID targetUUID = pd.getUniqueId();
                                         if (targetUUID == null) {
                                             sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_account")));
                                         } else {
-                                            String realname = Cache.getrealname(args[3]);
+                                            String realname = pd.getName();
                                             PermissionINFO.setPaymentPermission(targetUUID, vv);
                                             sender.sendMessage(Text.of(translateColorCodes("personal_permissions_change").replace("%permission%", "pay")
                                                     .replace("%player%", realname).replace("%value%", args[4])));
@@ -97,11 +100,12 @@ public class CommandCore {
                             }
                         } else if (args.length == 4 && args[1].equalsIgnoreCase("remove")) {
                             if (args[2].equalsIgnoreCase("pay")) {
-                                UUID targetUUID = Cache.translateUUID(args[3], null);
+                                PlayerData pd = DataCon.getPlayerData(args[3]);
+                                UUID targetUUID = pd.getUniqueId();
                                 if (targetUUID == null) {
                                     sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_account")));
                                 } else {
-                                    String realname = Cache.getrealname(args[3]);
+                                    String realname = pd.getName();
                                     PermissionINFO.setPaymentPermission(targetUUID, null);
                                     sender.sendMessage(Text.of(translateColorCodes("personal_permissions_change").replace("%permission%", "pay")
                                             .replace("%player%", realname).replace("%value%", "Default")));
@@ -153,7 +157,8 @@ public class CommandCore {
                             return CommandResult.success();
                         }
 
-                        UUID targetUUID = Cache.translateUUID(args[1], null);
+                        PlayerData pd = DataCon.getPlayerData(args[1]);
+                        UUID targetUUID = pd.getUniqueId();
 
                         if (targetUUID == null) {
                             sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_account")));
@@ -161,10 +166,10 @@ public class CommandCore {
                         }
 
                         if (args[0].equalsIgnoreCase("hide")) {
-                            DataCon.setTopBalHide(targetUUID, 1);
+                            DataLink.setTopBalHide(targetUUID, 1);
                             sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("top_hidden").replace("%player%", args[1])));
                         } else if (args[0].equalsIgnoreCase("display")) {
-                            DataCon.setTopBalHide(targetUUID, 0);
+                            DataLink.setTopBalHide(targetUUID, 0);
                             sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("top_displayed").replace("%player%", args[1])));
                         }
 
@@ -221,7 +226,7 @@ public class CommandCore {
 
                 String amountFormatted = DataFormat.shown(amount);
                 String taxamountFormatted = DataFormat.shown(taxamount);
-                BigDecimal bal_sender = Cache.getBalanceFromCacheOrDB(((Player) sender).getUniqueId()).getbalance();
+                BigDecimal bal_sender = DataCon.getPlayerData(((Player) sender).getUniqueId()).getbalance();
 
                 if (bal_sender.compareTo(taxamount) < 0) {
                     sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("pay_fail")
@@ -229,32 +234,33 @@ public class CommandCore {
                     return CommandResult.success();
                 }
 
-                User target = Cache.getplayer(args[0]);
-                UUID targetUUID = Cache.translateUUID(args[0], null);
+                User target = DataCon.getplayer(args[0]);
+                PlayerData pd = DataCon.getPlayerData(args[0]);
+                UUID targetUUID = pd.getUniqueId();
                 if (targetUUID == null) {
                     sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_account")));
                     return CommandResult.success();
                 }
-                String realname = Cache.getrealname(args[0]);
+                String realname = pd.getName();
 
                 if (!target.hasPermission("xconomy.user.pay.receive")) {
                     sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_receive_permission")));
                     return CommandResult.success();
                 }
 
-                BigDecimal bal_target = Cache.getBalanceFromCacheOrDB(targetUUID).getbalance();
+                BigDecimal bal_target = DataCon.getPlayerData(targetUUID).getbalance();
                 if (DataFormat.isMAX(bal_target.add(amount))) {
                     sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("over_maxnumber")));
                     return CommandResult.success();
                 }
 
                 String com = commandName + " " + args[0] + " " + amount;
-                Cache.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), taxamount, false, com);
+                DataCon.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), taxamount, false, com);
                 sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("pay")
                         .replace("%player%", realname)
                         .replace("%amount%", amountFormatted)));
 
-                Cache.change("PLAYER_COMMAND", targetUUID, amount, true, com);
+                DataCon.change("PLAYER_COMMAND", targetUUID, amount, true, com);
                 String mess = translateColorCodes("prefix") + translateColorCodes("pay_receive")
                         .replace("%player%", sender.getName())
                         .replace("%amount%", amountFormatted);
@@ -289,7 +295,7 @@ public class CommandCore {
 
                         //Cache.refreshFromCache(player.getUniqueId());
 
-                        BigDecimal a = Cache.getBalanceFromCacheOrDB(player.getUniqueId()).getbalance();
+                        BigDecimal a = DataCon.getPlayerData(player.getUniqueId()).getbalance();
                         sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("balance")
                                 .replace("%balance%", DataFormat.shown((a)))));
 
@@ -302,14 +308,15 @@ public class CommandCore {
                             return CommandResult.success();
                         }
 
-                        UUID targetUUID = Cache.translateUUID(args[0], null);
+                        PlayerData pd = DataCon.getPlayerData(args[0]);
+                        UUID targetUUID = pd.getUniqueId();
                         if (targetUUID == null) {
                             sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_account")));
                             return CommandResult.success();
                         }
-                        String realname = Cache.getrealname(args[0]);
+                        String realname = pd.getName();
 
-                        BigDecimal targetBalance = Cache.getBalanceFromCacheOrDB(targetUUID).getbalance();
+                        BigDecimal targetBalance = DataCon.getPlayerData(targetUUID).getbalance();
                         sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("balance_other")
                                 .replace("%player%", realname)
                                 .replace("%balance%", DataFormat.shown((targetBalance)))));
@@ -337,14 +344,15 @@ public class CommandCore {
 
                         BigDecimal amount = DataFormat.formatString(args[2]);
                         String amountFormatted = DataFormat.shown(amount);
-                        User target = Cache.getplayer(args[1]);
-                        UUID targetUUID = Cache.translateUUID(args[1], null);
+                        User target = DataCon.getplayer(args[1]);
+                        PlayerData pd = DataCon.getPlayerData(args[1]);
+                        UUID targetUUID = pd.getUniqueId();
                         if (targetUUID == null) {
                             sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_account")));
                             return CommandResult.success();
                         }
 
-                        String realname = Cache.getrealname(args[1]);
+                        String realname = pd.getName();
 
                         String com = commandName + " " + args[0] + " " + args[1] + " " + amount;
                         String reason = null;
@@ -365,13 +373,13 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                BigDecimal bal = Cache.getBalanceFromCacheOrDB(targetUUID).getbalance();
+                                BigDecimal bal = DataCon.getPlayerData(targetUUID).getbalance();
                                 if (DataFormat.isMAX(bal.add(amount))) {
                                     sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("over_maxnumber")));
                                     return CommandResult.success();
                                 }
 
-                                Cache.change("ADMIN_COMMAND", targetUUID, amount, true, com);
+                                DataCon.change("ADMIN_COMMAND", targetUUID, amount, true, com);
                                 sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("money_give")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
@@ -408,7 +416,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                BigDecimal bal = Cache.getBalanceFromCacheOrDB(targetUUID).getbalance();
+                                BigDecimal bal = DataCon.getPlayerData(targetUUID).getbalance();
                                 if (bal.compareTo(amount) < 0) {
                                     sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("money_take_fail")
                                             .replace("%player%", realname)
@@ -417,7 +425,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                Cache.change("ADMIN_COMMAND", targetUUID, amount, false, com);
+                                DataCon.change("ADMIN_COMMAND", targetUUID, amount, false, com);
                                 sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("money_take")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
@@ -447,7 +455,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                Cache.change("ADMIN_COMMAND", targetUUID, amount, null, com);
+                                DataCon.change("ADMIN_COMMAND", targetUUID, amount, null, com);
                                 sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("money_set")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
@@ -531,7 +539,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                Cache.changeall(args[2], "ADMIN_COMMAND", amount, true, com);
+                                DataCon.changeall(args[2], "ADMIN_COMMAND", amount, true, com);
                                 sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("money_give")
                                         .replace("%player%", target)
                                         .replace("%amount%", amountFormatted)));
@@ -548,7 +556,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                Cache.changeall(args[2], "ADMIN_COMMAND", amount, false, com);
+                                DataCon.changeall(args[2], "ADMIN_COMMAND", amount, false, com);
                                 sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("money_take")
                                         .replace("%player%", target)
                                         .replace("%amount%", amountFormatted)));
