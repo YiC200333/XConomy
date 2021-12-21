@@ -222,18 +222,10 @@ public class SQL {
     public static void save(String type, PlayerData pd, Boolean isAdd, BigDecimal amount, String command) {
         Connection connection = database.getConnectionAndCheck();
         try {
-            String query;
-
-            if (isAdd == null) {
-                query = " set balance = " + amount + " where UID = ?";
-            } else if (isAdd) {
-                query = " set balance = balance + " + amount + " where UID = ?";
-            } else {
-                query = " set balance = balance - " + amount + " where UID = ?";
-            }
-
+            String query = " set balance = ? where UID = ?";
             PreparedStatement statement = connection.prepareStatement("update " + tableName + query);
-            statement.setString(1, pd.getUniqueId().toString());
+            statement.setDouble(1, pd.getbalance().doubleValue());
+            statement.setString(2, pd.getUniqueId().toString());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
@@ -332,10 +324,10 @@ public class SQL {
                                      BigDecimal newbalance, boolean isAdd) {
         Connection connection = database.getConnectionAndCheck();
         try {
-            String query;
-            query = " set balance = " + newbalance + " where account = ?";
+            String query = " set balance = ? where account = ?";
             PreparedStatement statement = connection.prepareStatement("update " + tableNonPlayerName + query);
-            statement.setString(1, account);
+            statement.setDouble(1, newbalance.doubleValue());
+            statement.setString(2, account);
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
