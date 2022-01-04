@@ -53,6 +53,8 @@ class Messages {
                 "§cBC模式开启的情况下,无法在无人的服务器中使用OP命令" -> tag = "no-player-tips"
                 "§c该指令不支持在半正版模式中使用" -> tag = "semi-mode-ban-commands"
                 "§6控制台无法使用该指令" -> tag = "console-ban-commands"
+                "连接池未启用" -> tag = "pool-disable"
+                "未找到 'org.slf4j.Logger'" -> tag = "slf4j-unfound"
             }
             return tag
         }

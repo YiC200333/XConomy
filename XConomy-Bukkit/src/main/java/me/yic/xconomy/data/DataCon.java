@@ -169,11 +169,12 @@ public class DataCon{
     }
 
     public static void prepareudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd, BigDecimal amount, String reason) {
-
-        if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
-            Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> sendudpmessage(type, u, pd, isAdd, amount, reason));
-        } else {
-            sendudpmessage(type, u, pd, isAdd, amount, reason);
+        if (ServerINFO.IsBungeeCordMode) {
+            if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+                Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> sendudpmessage(type, u, pd, isAdd, amount, reason));
+            } else {
+                sendudpmessage(type, u, pd, isAdd, amount, reason);
+            }
         }
     }
 

@@ -88,7 +88,12 @@ public class XConomy extends JavaPlugin {
             ServerINFO.DDrivers = true;
         }
 
-        allowHikariConnectionPooling();
+        if (allowHikariConnectionPooling()){
+            ServerINFO.EnableConnectionPool = true;
+        }else{
+            logger("连接池未启用", null);
+        }
+
         if (!DataLink.create()) {
             logger("XConomy已成功卸载", null);
             return;
@@ -214,14 +219,20 @@ public class XConomy extends JavaPlugin {
         }
     }
 
-    public static void allowHikariConnectionPooling() {
-        if (foundvaultpe) {
-            return;
+    public static boolean allowHikariConnectionPooling() {
+        if (DataBaseINFO.DataBaseINFO.getBoolean("Settings.usepool")) {
+            try {
+                Class.forName("org.slf4j.Logger");
+            } catch (ClassNotFoundException e) {
+                getInstance().logger("未找到 'org.slf4j.Logger'", null);
+                return false;
+            }
+            if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
+                return false;
+            }
+            return !foundvaultpe;
         }
-        if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
-            return;
-        }
-        ServerINFO.EnableConnectionPool = DataBaseINFO.DataBaseINFO.getBoolean("Settings.usepool");
+        return false;
     }
 
     public static String getSign() {
