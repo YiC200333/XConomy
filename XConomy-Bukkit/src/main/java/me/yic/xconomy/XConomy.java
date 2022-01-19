@@ -203,6 +203,7 @@ public class XConomy extends JavaPlugin {
         messageManager.load();
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void readserverinfo() {
         ServerINFO.Lang = config.getString("Settings.language");
         ServerINFO.IsBungeeCordMode = isBungeecord();
@@ -216,6 +217,12 @@ public class XConomy extends JavaPlugin {
         ServerINFO.LinesNumber = config.getInt("Settings.lines-per-page");
         if (ServerINFO.RankingSize > 100){
             ServerINFO.RankingSize = 100;
+        }
+
+        if (config.getString("Server.mode").equalsIgnoreCase("Online")){
+            ServerINFO.IsOnlineMode = true;
+        }else if (config.getString("Server.mode").equalsIgnoreCase("SemiOnline")){
+            ServerINFO.IsSemiOnlineMode = true;
         }
     }
 

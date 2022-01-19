@@ -21,16 +21,16 @@ import com.github.sanctum.economy.construct.implement.AdvancedEconomy;
 import me.yic.xconomy.XConomy;
 import org.bukkit.plugin.ServicePriority;
 
-public class EnterpriseHook extends XConomy {
+public class EnterpriseHook{
 
     private static AdvancedEconomy provider;
 
     public static void load() {
         provider = new Enterprise();
-        getInstance().getServer().getServicesManager().register(AdvancedEconomy.class, provider, getInstance(), ServicePriority.Normal);
+        XConomy.getInstance().getServer().getServicesManager().register(AdvancedEconomy.class, provider, XConomy.getInstance(), ServicePriority.Normal);
     }
 
     public static void unload() {
-        getInstance().getServer().getServicesManager().unregister(AdvancedEconomy.class, provider);
+        XConomy.getInstance().getServer().getServicesManager().unregister(AdvancedEconomy.class, provider);
     }
 }

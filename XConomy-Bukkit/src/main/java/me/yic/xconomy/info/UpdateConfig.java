@@ -48,6 +48,15 @@ public class UpdateConfig {
             config.set("Settings.disable-cache", false);
             update = true;
         }
+        if (!ck.contains("Server.mode")) {
+            config.createSection("Server.mode");
+            if (ck.getBoolean("Settings.semi-online-mode")) {
+                config.set("Server.mode", "SemiOnline");
+            }else{
+                config.set("Server.mode", "Offline");
+            }
+            update = true;
+        }
         return update;
     }
 }

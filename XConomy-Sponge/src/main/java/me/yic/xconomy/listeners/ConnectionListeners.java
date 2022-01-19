@@ -19,13 +19,12 @@
 package me.yic.xconomy.listeners;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.lang.MessagesManager;
-import me.yic.xconomy.task.Updater;
 import me.yic.xconomy.info.DataBaseINFO;
 import me.yic.xconomy.info.ServerINFO;
+import me.yic.xconomy.lang.MessagesManager;
+import me.yic.xconomy.task.Updater;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -46,7 +45,7 @@ public class ConnectionListeners {
     @Listener
     public void onJoin(ClientConnectionEvent.Join event) {
         Player a = event.getTargetEntity();
-        Cache.removefromCache(a.getUniqueId());
+
         if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
             DataLink.newPlayer(a);
         } else {

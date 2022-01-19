@@ -44,6 +44,14 @@ public class UpdateConfig {
             config.getNode("Settings","disable-cache").setValue(false);
             update = true;
         }
+        if (config.getNode("Server","mode").isVirtual()) {
+            if (config.getNode("Settings","semi-online-mode").getBoolean()) {
+                config.getNode("Server", "mode").setValue("SemiOnline");
+            }else{
+                config.getNode("Server", "mode").setValue("Offline");
+            }
+            update = true;
+        }
         return update;
     }
 }

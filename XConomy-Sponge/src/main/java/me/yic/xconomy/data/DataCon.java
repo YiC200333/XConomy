@@ -30,6 +30,7 @@ import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.user.UserStorageService;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class DataCon{
@@ -58,6 +59,10 @@ public class DataCon{
         return pd;
     }
 
+
+    public static UUID getOfflineUUID(String name) {
+        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(StandardCharsets.UTF_8));
+    }
 
     //public static void refreshFromCache(UUID uuid) {
     //    if (uuid != null) {

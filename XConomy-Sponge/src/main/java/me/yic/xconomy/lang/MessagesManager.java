@@ -27,7 +27,6 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,15 +45,11 @@ public class MessagesManager {
     public void load(){
         try {
             URL url = new URL(XConomy.jarPath + "!/lang/" + ServerINFO.Lang.toLowerCase() + ".yml");
-            InputStream is = url.openStream();
-            is.close();
             YAMLConfigurationLoader sysloader = YAMLConfigurationLoader.builder().setURL(url).build();
             langFile = sysloader.load();
         } catch (IOException e) {
             try {
                 URL url = new URL(XConomy.jarPath + "!/lang/english.yml");
-                InputStream is = url.openStream();
-                is.close();
                 YAMLConfigurationLoader sysloader = YAMLConfigurationLoader.builder().setURL(url).build();
                 langFile = sysloader.load();
             } catch (IOException ioException) {
@@ -95,6 +90,7 @@ public class MessagesManager {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static String systemMessage(String message) {
         return langFile.getNode(Messages.Companion.gettag(message)).getString();
     }

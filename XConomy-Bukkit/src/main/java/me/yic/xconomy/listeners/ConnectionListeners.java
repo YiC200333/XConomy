@@ -50,10 +50,6 @@ public class ConnectionListeners implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player a = event.getPlayer();
 
-        if (!ServerINFO.IsSemiOnlineMode) {
-            Cache.removefromCache(a.getUniqueId());
-        }
-
         if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
             DataLink.newPlayer(a);
         } else {

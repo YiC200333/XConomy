@@ -36,13 +36,16 @@ Settings:
   #Dose save transaction record
   #Only MySQL is supported
   transaction-record: true
-  #If your server is semi online mode, please set to true
-  #semi online mode is not online mode, nor offline mode
-  #semi online mode is not perfectly compatible with the function of sending transfer notification between BungeeCord
-  #This function do not support Sponge servers
-  semi-online-mode: false
   #Ignore the case of player names
   username-ignore-case: false
+
+
+#Server info
+Server:
+  #Online Offline SemiOnline
+  #Online mode support Yggdrasil
+  #SemiOnline mode do not support Sponge servers
+  mode: Offline
 
 
 #The display of the currency
