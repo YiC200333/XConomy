@@ -41,9 +41,6 @@ public class SQLCreateNewAccount extends SQL {
         String uid = DataCon.getOfflineUUID(player.getName()).toString();
         if (ServerINFO.IsOnlineMode) {
             uid = OnlineUUID.doGetUUID(player);
-            XConomy.getInstance().logger(null, uid);
-
-            XConomy.getInstance().logger(null, player.getUniqueId().toString());
             if (!uid.equalsIgnoreCase(player.getUniqueId().toString())) {
                 kickplayer(player);
                 database.closeHikariConnection(connection);
