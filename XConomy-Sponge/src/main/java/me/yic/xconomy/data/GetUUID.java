@@ -73,7 +73,6 @@ public class GetUUID {
         }
         UUID u = null;
 
-        XConomy.getInstance().logger(null, "dfafdaffdffddfadffafddsf");
         try {
             if (ServerINFO.IsOnlineMode) {
                 u = UUID.fromString(doGetUUID(pp, name));
