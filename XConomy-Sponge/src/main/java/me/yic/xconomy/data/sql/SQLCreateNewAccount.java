@@ -76,12 +76,10 @@ public class SQLCreateNewAccount extends SQL {
                     Cache.removefromCache(UUID.fromString(uid));
                     DataCon.prepareudpmessage(null, UUID.fromString(uid), null, null, null, null);
                     updateUser(uid, name, connection);
-                    updateUserS(uid, name, connection);
                     XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
                 }
             } else {
                 createAccount(uid, name, ServerINFO.InitialAmount, connection);
-                updateUserS(uid, name, connection);
             }
 
             rs.close();
@@ -149,19 +147,6 @@ public class SQLCreateNewAccount extends SQL {
             PreparedStatement statement = co_a.prepareStatement("update " + tableName + " set player = ? where UID = ?");
             statement.setString(1, user);
             statement.setString(2, UID);
-            statement.executeUpdate();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void updateUserS(String UID, String user, Connection co_a) {
-        try {
-            PreparedStatement statement = co_a.prepareStatement("update " + tableName + " set player = ? where player = ? and UID <> ?");
-            statement.setString(1, "*" + user + "********************");
-            statement.setString(2, user);
-            statement.setString(3, UID);
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
