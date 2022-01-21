@@ -23,6 +23,7 @@ import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.DataFormat;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.lang.MessagesManager;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -112,6 +113,25 @@ public class Placeholder extends PlaceholderExpansion {
             } else {
                 return "[XConomy]Invalid index";
             }
+        } else if (identifier.contains("permission_")) {
+            if (identifier.contains("permission_pay")) {
+                if (identifier.contains("global_permission")) {
+                    if (PermissionINFO.globalpayment) {
+                        return "1";
+                    }
+                    return "0";
+                }
+                if (player == null) {
+                    return "Error";
+                }
+                if (PermissionINFO.getPaymentPermission(player.getUniqueId()) == null){
+                    return "DEFAULT";
+                }else if (PermissionINFO.getPaymentPermission(player.getUniqueId())){
+                    return "1";
+                }
+                return "0";
+            }
+            return "Error";
         } else if (identifier.contains("sum_balance")) {
             if (Cache.sumbalance == null) {
                 return "0.0";
