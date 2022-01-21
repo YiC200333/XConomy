@@ -1,5 +1,5 @@
 /*
- *  This file (OnlineUUID.java) is a part of project XConomy
+ *  This file (GetUUID.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -16,9 +16,10 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.utils;
+package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.info.ServerINFO;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -30,10 +31,15 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class OnlineUUID {
-    public static String doGetUUID(Player pp) {
-        String URL = "https://api.mojang.com/users/profiles/minecraft/" + pp.getName();
+public class GetUUID {
+    private static final Map<String, UUID> cache = new ConcurrentHashMap<>();
+
+    private static String doGetUUID(Player pp, String name) {
+        String URL = "https://api.mojang.com/users/profiles/minecraft/" + name;
         HttpURLConnection conn = null;
         InputStream is = null;
         Reader br = null;
@@ -84,9 +90,62 @@ public class OnlineUUID {
         return uuid.toString();
     }
 
-    private static void kickplayer(Player pp){
-        if (pp != null){
+    private static void kickplayer(Player pp) {
+        if (pp != null) {
             pp.kickPlayer("Failed to Get profile");
+        }
+    }
+
+    private static UUID getOfflineUUID(String name) {
+        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static UUID getUUID(Player pp, String name) {
+        if (CacheContainsKey(name)) {
+            return getUUIDFromCache(name);
+        }
+        UUID u = null;
+
+        XConomy.getInstance().logger(null, "dfafdaffdffddfadffafddsf");
+        try {
+            if (ServerINFO.IsOnlineMode) {
+                u = UUID.fromString(doGetUUID(pp, name));
+            } else {
+                u = getOfflineUUID(name);
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+
+        if (u != null) {
+            insertIntoCache(name, u);
+        }
+
+        return u;
+    }
+
+
+    private static void insertIntoCache(final String name, final UUID uuid) {
+        if (ServerINFO.IgnoreCase) {
+            cache.put(name.toLowerCase(), uuid);
+        } else {
+            cache.put(name, uuid);
+        }
+    }
+
+    private static boolean CacheContainsKey(final String name) {
+        if (ServerINFO.IgnoreCase) {
+            return cache.containsKey(name.toLowerCase());
+        }
+        return cache.containsKey(name);
+    }
+
+
+    private static UUID getUUIDFromCache(final String name) {
+        if (ServerINFO.IgnoreCase) {
+            return cache.get(name.toLowerCase());
+        } else {
+            return cache.get(name);
         }
     }
 }

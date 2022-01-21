@@ -20,10 +20,10 @@ package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
+import me.yic.xconomy.data.GetUUID;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.DataBaseINFO;
 import me.yic.xconomy.info.ServerINFO;
-import me.yic.xconomy.utils.OnlineUUID;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -38,34 +38,31 @@ public class SQLCreateNewAccount extends SQL {
 
     public static void newPlayer(Player player) {
         Connection connection = database.getConnectionAndCheck();
-        String uid = DataCon.getOfflineUUID(player.getName()).toString();
-        if (ServerINFO.IsOnlineMode) {
-            uid = OnlineUUID.doGetUUID(player);
-            if (!uid.equalsIgnoreCase(player.getUniqueId().toString())) {
-                kickplayer(player);
-                database.closeHikariConnection(connection);
-                return;
-            }
-        } else {
-            if (!uid.equalsIgnoreCase(player.getUniqueId().toString())) {
-                kickplayer(player);
-                database.closeHikariConnection(connection);
-                return;
-            }
+        String uid = GetUUID.getUUID(player, player.getName()).toString();
+
+        if (!uid.equalsIgnoreCase(player.getUniqueId().toString())) {
+            kickplayer(player, 0);
+            database.closeHikariConnection(connection);
+            return;
         }
 
-        checkUser(uid, player.getName(), connection);
+        checkUser(player, uid, player.getName(), connection);
         database.closeHikariConnection(connection);
     }
 
-    private static void kickplayer(Player player) {
+    private static void kickplayer(Player player, int x) {
+        String reason = "[XConomy] UUID mismatch";
+        if (x == 1) {
+            reason = "[XConomy] The same data exists in the server without different UUID";
+        }
+        final String freason = reason;
         if (player.isOnline()) {
             Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() ->
-                    player.kick(Text.of("[XConomy] UUID mismatch")));
+                    player.kick(Text.of(freason)));
         }
     }
 
-    private static void checkUser(String uid, String name, Connection connection) {
+    private static void checkUser(Player player, String uid, String name, Connection connection) {
         try {
             PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
             statement.setString(1, uid);
@@ -79,6 +76,14 @@ public class SQLCreateNewAccount extends SQL {
                     XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
                 }
             } else {
+                if (!ServerINFO.IsOnlineMode) {
+                    if (checkUUID(name, connection)) {
+                        kickplayer(player, 1);
+                        rs.close();
+                        statement.close();
+                        return;
+                    }
+                }
                 createAccount(uid, name, ServerINFO.InitialAmount, connection);
             }
 
@@ -154,4 +159,19 @@ public class SQLCreateNewAccount extends SQL {
         }
     }
 
+    private static boolean checkUUID(String user, Connection co_a) {
+        boolean x = false;
+        try {
+            PreparedStatement statement = co_a.prepareStatement("select * from " + tableName + " where player = ?");
+            statement.setString(1, user);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                x = true;
+            }
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return x;
+    }
 }
