@@ -20,85 +20,53 @@ package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
+import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.GetUUID;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.info.DataBaseINFO;
 import me.yic.xconomy.info.ServerINFO;
-import me.yic.xconomy.data.GetUUID;
+import me.yic.xconomy.utils.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.math.BigDecimal;
+import java.sql.*;
 import java.util.UUID;
 
-public class SQLCreateNewAccount extends SQL {
+public class SQLCreateNewAccount extends SQL{
 
     public static void newPlayer(Player player) {
         Connection connection = database.getConnectionAndCheck();
-        String uid = GetUUID.getUUID(player, player.getName()).toString();
 
-        if (!uid.equalsIgnoreCase(player.getUniqueId().toString())) {
-            if (ServerINFO.IsSemiOnlineMode) {
-                CacheSemiOnline.CacheSubUUID_checkUser(uid, player);
-            } else {
-                kickplayer(player, 0);
+        if (ServerINFO.IsOnlineMode) {
+            String uid = GetUUID.getUUID(player, player.getName()).toString();
+            if (uid.equalsIgnoreCase(player.getUniqueId().toString())) {
+                checkUserOnline(uid, player.getName(), connection);
+            }else{
+                kickplayer(player, 1);
                 database.closeHikariConnection(connection);
                 return;
             }
-        }
 
-        checkUser(player, uid, player.getName(), connection);
+        }else{
+            boolean doubledata = checkUser(player, connection);
+            if (!doubledata) {
+                selectUser(player.getUniqueId(), player.getName(), connection);
+            }
+        }
         database.closeHikariConnection(connection);
     }
 
     private static void kickplayer(Player player, int x) {
-        String reason = "[XConomy] UUID mismatch";
+        String reason = "[XConomy] The same data exists in the server without different UUID";
         if (x == 1){
-            reason = "[XConomy] The same data exists in the server without different UUID";
+            reason = "[XConomy] UUID mismatch";
         }
         final String freason = reason;
         if (player.isOnline()) {
             Bukkit.getScheduler().runTask(XConomy.getInstance(), () ->
                     player.kickPlayer(freason));
-        }
-    }
-
-    private static void checkUser(Player player, String uid, String name, Connection connection) {
-        try {
-            PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
-            statement.setString(1, uid);
-
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                if (!name.equals(rs.getString(2))) {
-                    Cache.removefromCache(UUID.fromString(uid));
-                    DataCon.prepareudpmessage(null, UUID.fromString(uid), null, null, null, null);
-                    updateUser(uid, name, connection);
-                    XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
-                }
-            } else {
-                if (!ServerINFO.IsOnlineMode) {
-                    if (checkUUID(name, connection)) {
-                        if (ServerINFO.IsSemiOnlineMode) {
-                            updateUUID(uid, name, connection);
-                        } else {
-                            kickplayer(player, 1);
-                            rs.close();
-                            statement.close();
-                            return;
-                        }
-                    }
-                }
-                createAccount(uid, name, ServerINFO.InitialAmount, connection);
-            }
-
-            rs.close();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -128,6 +96,71 @@ public class SQLCreateNewAccount extends SQL {
             e.printStackTrace();
         }
 
+    }
+
+    private static boolean checkUser(Player player, Connection connection) {
+        boolean doubledata = false;
+        try {
+            String query;
+            if (ServerINFO.IgnoreCase) {
+                if (DataBaseINFO.isMySQL()) {
+                    query = "select * from " + tableName + " where player = ?";
+                } else {
+                    query = "select * from " + tableName + " where player = ? COLLATE NOCASE";
+                }
+            }else {
+                if (DataBaseINFO.isMySQL()) {
+                    query = "select * from " + tableName + " where binary player = ?";
+                } else {
+                    query = "select * from " + tableName + " where player = ?";
+                }
+            }
+
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, player.getName());
+
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                if (!player.getUniqueId().toString().equals(rs.getString(1))) {
+                    doubledata = true;
+                    if (!ServerINFO.IsSemiOnlineMode) {
+                        kickplayer(player, 0);
+                    } else {
+                        CacheSemiOnline.CacheSubUUID_checkUser(rs.getString(1), player);
+                    }
+                }
+            }
+
+            rs.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return doubledata;
+    }
+
+    private static void checkUserOnline(String uid, String name, Connection connection) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
+            statement.setString(1, uid);
+
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                if (!name.equals(rs.getString(2))) {
+                    Cache.removefromCache(UUID.fromString(uid));
+                    DataCon.prepareudpmessage(null, UUID.fromString(uid), null, null, null, null);
+                    updateUser(uid, name, connection);
+                    XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
+                }
+            } else {
+                createAccount(uid, name, ServerINFO.InitialAmount, connection);
+            }
+
+            rs.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void createNonPlayerAccount(String account, double bal, Connection co) {
@@ -167,32 +200,35 @@ public class SQLCreateNewAccount extends SQL {
         }
     }
 
-    private static boolean checkUUID(String user, Connection co_a) {
-        boolean x = false;
+    private static void selectUser(UUID UID, String name, Connection connection) {
+        String user = "#";
+
         try {
-            PreparedStatement statement = co_a.prepareStatement("select * from " + tableName + " where player = ?");
-            statement.setString(1, user);
+            PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
+            statement.setString(1, UID.toString());
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                x = true;
+                String u = rs.getString(1);
+                user = rs.getString(2);
+                BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
+                if (cacheThisAmt != null) {
+                    PlayerData bd = new PlayerData(UUID.fromString(u), user, cacheThisAmt);
+                    Cache.insertIntoCache(UID, bd);
+                }
+            } else {
+                user = name;
+                createAccount(UID.toString(), user, ServerINFO.InitialAmount, connection);
             }
+            rs.close();
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return x;
-    }
-
-
-    private static void updateUUID(String UID, String user, Connection co_a) {
-        try {
-            PreparedStatement statement = co_a.prepareStatement("update " + tableName + " set UID = ? where player = ?");
-            statement.setString(1, UID);
-            statement.setString(2, user);
-            statement.executeUpdate();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (!user.equals(name) && !user.equals("#")) {
+            Cache.removefromCache(UID);
+            DataCon.prepareudpmessage(null, UID, null, null, null, null);
+            updateUser(UID.toString(), name, connection);
+            XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
         }
     }
 

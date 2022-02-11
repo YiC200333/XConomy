@@ -22,11 +22,11 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.info.ServerINFO;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,26 +59,20 @@ public class GetUUID {
 
     private static void kickplayer(Player pp) {
         if (pp != null) {
-            pp.kick(Text.of("Failed to Get profile"));
+            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() ->
+                    pp.kick(Text.of("Failed to Get profile")));
         }
     }
 
-    private static UUID getOfflineUUID(String name) {
-        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(StandardCharsets.UTF_8));
-    }
 
     public static UUID getUUID(Player pp, String name) {
         if (CacheContainsKey(name)) {
             return getUUIDFromCache(name);
         }
-        UUID u = null;
 
+        UUID u = null;
         try {
-            if (ServerINFO.IsOnlineMode) {
-                u = UUID.fromString(doGetUUID(pp, name));
-            } else {
-                u = getOfflineUUID(name);
-            }
+            u = UUID.fromString(doGetUUID(pp, name));
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }

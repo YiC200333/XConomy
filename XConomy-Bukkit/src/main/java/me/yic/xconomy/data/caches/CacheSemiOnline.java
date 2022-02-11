@@ -40,7 +40,7 @@ public class CacheSemiOnline {
                 XConomy.getInstance().logger("文件夹创建异常", null);
                 return false;
             }
-            cachesubuuid = new File(dataFolder, "cache_subuuid_n.yml");
+            cachesubuuid = new File(dataFolder, "cache_subuuid.yml");
             CacheSubUUID = YamlConfiguration.loadConfiguration(cachesubuuid);
             if (!cachesubuuid.exists()) {
                 try {

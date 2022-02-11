@@ -20,6 +20,7 @@ package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.info.ServerINFO;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -92,26 +93,19 @@ public class GetUUID {
 
     private static void kickplayer(Player pp) {
         if (pp != null) {
-            pp.kickPlayer("Failed to Get profile");
+            Bukkit.getScheduler().runTask(XConomy.getInstance(), () ->
+                    pp.kickPlayer("Failed to Get profile"));
         }
-    }
-
-    private static UUID getOfflineUUID(String name) {
-        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(StandardCharsets.UTF_8));
     }
 
     public static UUID getUUID(Player pp, String name) {
         if (CacheContainsKey(name)) {
             return getUUIDFromCache(name);
         }
-        UUID u = null;
 
+        UUID u = null;
         try {
-            if (ServerINFO.IsOnlineMode) {
-                u = UUID.fromString(doGetUUID(pp, name));
-            } else {
-                u = getOfflineUUID(name);
-            }
+            u = UUID.fromString(doGetUUID(pp, name));
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }

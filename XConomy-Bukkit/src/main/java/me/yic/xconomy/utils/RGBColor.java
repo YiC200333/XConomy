@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RGBColor {
-    private static final Pattern pattern = Pattern.compile("#([a-f0-9]{6})");
+    private static final Pattern pattern = Pattern.compile("#([a-fA-F0-9]{6})");
 
     public static String translateHexColorCodes(String message) {
         if (MCVersion.hexsupport) {

@@ -48,12 +48,12 @@ public class UpdateConfig {
             config.set("Settings.disable-cache", false);
             update = true;
         }
-        if (!ck.contains("Server.mode")) {
-            config.createSection("Server.mode");
+        if (!ck.contains("Settings.UUID-mode")) {
+            config.createSection("Settings.UUID-mode");
             if (ck.getBoolean("Settings.semi-online-mode")) {
-                config.set("Server.mode", "SemiOnline");
+                config.set("Settings.UUID-mode", "SemiOnline");
             }else{
-                config.set("Server.mode", "Offline");
+                config.set("Settings.UUID-mode", "Default");
             }
             update = true;
         }

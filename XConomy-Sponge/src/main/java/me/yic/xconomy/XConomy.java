@@ -288,7 +288,7 @@ public class XConomy {
             ServerINFO.RankingSize = 100;
         }
 
-        if (config.getNode("Server", "mode").getString().equalsIgnoreCase("Online")) {
+        if (config.getNode("Settings", "UUID-mode").getString().equalsIgnoreCase("Online")) {
             ServerINFO.IsOnlineMode = true;
         }
     }

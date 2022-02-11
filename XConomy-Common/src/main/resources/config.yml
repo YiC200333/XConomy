@@ -38,14 +38,11 @@ Settings:
   transaction-record: true
   #Ignore the case of player names
   username-ignore-case: false
-
-
-#Server info
-Server:
-  #Online Offline SemiOnline
-  #Online mode support Yggdrasil
+  #Default Online SemiOnline
+  #Default mode will automatically detect the player's UUID
+  #Online mode is better for servers that enable online-mode(support Yggdrasil)
   #SemiOnline mode do not support Sponge servers
-  mode: Offline
+  UUID-mode: Default
 
 
 #The display of the currency

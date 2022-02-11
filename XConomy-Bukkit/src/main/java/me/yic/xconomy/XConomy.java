@@ -219,9 +219,9 @@ public class XConomy extends JavaPlugin {
             ServerINFO.RankingSize = 100;
         }
 
-        if (config.getString("Server.mode").equalsIgnoreCase("Online")){
+        if (config.getString("Settings.UUID-mode").equalsIgnoreCase("Online")){
             ServerINFO.IsOnlineMode = true;
-        }else if (config.getString("Server.mode").equalsIgnoreCase("SemiOnline")){
+        }else if (config.getString("Settings.UUID-mode").equalsIgnoreCase("SemiOnline")){
             ServerINFO.IsSemiOnlineMode = true;
         }
     }
