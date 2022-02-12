@@ -65,8 +65,6 @@ public class XCService implements EconomyService {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
     public Optional<UniqueAccount> getOrCreateAccount(UUID uuid) {
-        XConomy.getInstance().logger(null,"33333333333333333");
-        XConomy.getInstance().logger(null,uuid.toString());
         if (!hasAccount(uuid)) {
             SQLCreateNewAccount.newPlayer(Sponge.getServer().getPlayer(uuid).get());
         }
