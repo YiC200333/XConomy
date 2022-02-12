@@ -286,6 +286,9 @@ public class XConomy {
         if (ServerINFO.RankingSize > 100) {
             ServerINFO.RankingSize = 100;
         }
+        if (config.getNode("Settings", "UUID-mode").getString().equalsIgnoreCase("Online")) {
+            ServerINFO.IsOnlineMode = true;
+        }
     }
 
     public static void allowHikariConnectionPooling() {

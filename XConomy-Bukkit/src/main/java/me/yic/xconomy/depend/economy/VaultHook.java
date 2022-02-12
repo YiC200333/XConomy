@@ -26,30 +26,30 @@ import org.bukkit.plugin.ServicePriority;
 
 import java.util.Collection;
 
-public class VaultHook extends XConomy {
+public class VaultHook{
     public static Economy econ = null;
     public static Permission vaultPerm = null;
 
     @SuppressWarnings("ConstantConditions")
     public static void load() {
         econ = new Vault();
-        RegisteredServiceProvider<Permission> rsp = getInstance().getServer().getServicesManager().getRegistration(Permission.class);
+        RegisteredServiceProvider<Permission> rsp = XConomy.getInstance().getServer().getServicesManager().getRegistration(Permission.class);
         if (rsp != null) {
             vaultPerm = rsp.getProvider();
         }
-        getInstance().getServer().getServicesManager().register(Economy.class, econ, getInstance(), ServicePriority.Normal);
+        XConomy.getInstance().getServer().getServicesManager().register(Economy.class, econ, XConomy.getInstance(), ServicePriority.Normal);
 
-        if (config.getBoolean("Settings.disable-essentials")) {
+        if (XConomy.config.getBoolean("Settings.disable-essentials")) {
             Collection<RegisteredServiceProvider<Economy>> econs = Bukkit.getPluginManager().getPlugin("Vault").getServer().getServicesManager().getRegistrations(Economy.class);
             for (RegisteredServiceProvider<Economy> econ : econs) {
                 if (econ.getProvider().getName().equalsIgnoreCase("Essentials Economy")) {
-                    getInstance().getServer().getServicesManager().unregister(econ.getProvider());
+                    XConomy.getInstance().getServer().getServicesManager().unregister(econ.getProvider());
                 }
             }
         }
     }
 
     public static void unload() {
-        getInstance().getServer().getServicesManager().unregister(econ);
+        XConomy.getInstance().getServer().getServicesManager().unregister(econ);
     }
 }
