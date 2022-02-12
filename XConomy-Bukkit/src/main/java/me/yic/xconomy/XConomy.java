@@ -203,7 +203,6 @@ public class XConomy extends JavaPlugin {
         messageManager.load();
     }
 
-    @SuppressWarnings("ConstantConditions")
     public void readserverinfo() {
         ServerINFO.Lang = config.getString("Settings.language");
         ServerINFO.IsBungeeCordMode = isBungeecord();

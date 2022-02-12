@@ -44,14 +44,6 @@ public class UpdateConfig {
             config.getNode("Settings","disable-cache").setValue(false);
             update = true;
         }
-        if (config.getNode("Settings","UUID-mode").isVirtual()) {
-            if (config.getNode("Settings","semi-online-mode").getBoolean()) {
-                config.getNode("Settings", "UUID-mode").setValue("SemiOnline");
-            }else{
-                config.getNode("Settings", "UUID-mode").setValue("Default");
-            }
-            update = true;
-        }
         return update;
     }
 }

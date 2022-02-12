@@ -23,8 +23,6 @@ public class ServerINFO {
 
     public static boolean IsBungeeCordMode = false;
 
-    public static boolean IsOnlineMode = false;
-
     public static String Lang;
 
     public static boolean EnableConnectionPool = false;

@@ -70,32 +70,28 @@ public class SQLCreateNewAccount extends SQL{
         }
     }
 
-    private static void createAccount(String UID, String user, double amount, Connection co_a) {
+    private static void checkUserOnline(String uid, String name, Connection connection) {
         try {
-            String query;
-            if (DataBaseINFO.isMySQL()) {
-                query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
-                        + "ON DUPLICATE KEY UPDATE UID = ?";
+            PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
+            statement.setString(1, uid);
+
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                if (!name.equals(rs.getString(2))) {
+                    Cache.removefromCache(UUID.fromString(uid));
+                    DataCon.prepareudpmessage(null, UUID.fromString(uid), null, null, null, null);
+                    updateUser(uid, name, connection);
+                    XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
+                }
             } else {
-                query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) ";
+                createAccount(uid, name, ServerINFO.InitialAmount, connection);
             }
 
-            PreparedStatement statement = co_a.prepareStatement(query);
-            statement.setString(1, UID);
-            statement.setString(2, user);
-            statement.setDouble(3, amount);
-            statement.setInt(4, 0);
-
-            if (DataBaseINFO.isMySQL()) {
-                statement.setString(5, UID);
-            }
-
-            statement.executeUpdate();
+            rs.close();
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     private static boolean checkUser(Player player, Connection connection) {
@@ -139,28 +135,33 @@ public class SQLCreateNewAccount extends SQL{
         return doubledata;
     }
 
-    private static void checkUserOnline(String uid, String name, Connection connection) {
-        try {
-            PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
-            statement.setString(1, uid);
 
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                if (!name.equals(rs.getString(2))) {
-                    Cache.removefromCache(UUID.fromString(uid));
-                    DataCon.prepareudpmessage(null, UUID.fromString(uid), null, null, null, null);
-                    updateUser(uid, name, connection);
-                    XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
-                }
+    private static void createAccount(String UID, String user, double amount, Connection co_a) {
+        try {
+            String query;
+            if (DataBaseINFO.isMySQL()) {
+                query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
+                        + "ON DUPLICATE KEY UPDATE UID = ?";
             } else {
-                createAccount(uid, name, ServerINFO.InitialAmount, connection);
+                query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) ";
             }
 
-            rs.close();
+            PreparedStatement statement = co_a.prepareStatement(query);
+            statement.setString(1, UID);
+            statement.setString(2, user);
+            statement.setDouble(3, amount);
+            statement.setInt(4, 0);
+
+            if (DataBaseINFO.isMySQL()) {
+                statement.setString(5, UID);
+            }
+
+            statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     public static void createNonPlayerAccount(String account, double bal, Connection co) {
@@ -199,6 +200,7 @@ public class SQLCreateNewAccount extends SQL{
             e.printStackTrace();
         }
     }
+
 
     private static void selectUser(UUID UID, String name, Connection connection) {
         String user = "#";

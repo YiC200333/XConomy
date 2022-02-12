@@ -20,7 +20,6 @@ package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.GetUUID;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.info.DataBaseINFO;
@@ -159,7 +158,7 @@ public class SQL {
                 } else {
                     query = "select * from " + tableName + " where player = ? COLLATE NOCASE";
                 }
-            } else {
+            }else {
                 if (DataBaseINFO.isMySQL()) {
                     query = "select * from " + tableName + " where binary player = ?";
                 } else {
@@ -169,21 +168,15 @@ public class SQL {
 
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, name);
+
             ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 UUID uuid = UUID.fromString(rs.getString(1));
-                UUID puuid = null ;
-                if (ServerINFO.IsOnlineMode) {
-                    puuid = GetUUID.getUUID(null, name);
-                }
-                if (!ServerINFO.IsOnlineMode || (puuid !=null && uuid.toString().equalsIgnoreCase(puuid.toString()))) {
-                    String username = rs.getString(2);
-                    BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
-                    if (cacheThisAmt != null) {
-                        PlayerData bd = new PlayerData(uuid, username, cacheThisAmt);
-                        Cache.insertIntoCache(uuid, bd);
-                    }
-                    break;
+                String username = rs.getString(2);
+                BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
+                if (cacheThisAmt != null) {
+                    PlayerData bd = new PlayerData(uuid, username, cacheThisAmt);
+                    Cache.insertIntoCache(uuid, bd);
                 }
             }
 

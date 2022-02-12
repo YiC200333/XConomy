@@ -273,7 +273,6 @@ public class XConomy {
 
     }
 
-    @SuppressWarnings("ConstantConditions")
     public void readserverinfo() {
         ServerINFO.Lang = config.getNode("Settings", "language").getString();
         ServerINFO.IsBungeeCordMode = isBungeecord();
@@ -286,10 +285,6 @@ public class XConomy {
         ServerINFO.LinesNumber = config.getNode("Settings", "lines-per-page").getInt();
         if (ServerINFO.RankingSize > 100) {
             ServerINFO.RankingSize = 100;
-        }
-
-        if (config.getNode("Settings", "UUID-mode").getString().equalsIgnoreCase("Online")) {
-            ServerINFO.IsOnlineMode = true;
         }
     }
 

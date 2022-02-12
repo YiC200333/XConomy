@@ -21,7 +21,6 @@ package me.yic.xconomy.data.sql;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.GetUUID;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.DataBaseINFO;
 import me.yic.xconomy.info.ServerINFO;
@@ -41,64 +40,11 @@ public class SQLCreateNewAccount extends SQL {
 
     public static void newPlayer(Player player) {
         Connection connection = database.getConnectionAndCheck();
-
-        if (ServerINFO.IsOnlineMode) {
-            String uid = GetUUID.getUUID(player, player.getName()).toString();
-            if (uid.equalsIgnoreCase(player.getUniqueId().toString())) {
-                checkUserOnline(uid, player.getName(), connection);
-            }else{
-                kickplayer(player, 1);
-                database.closeHikariConnection(connection);
-                return;
-            }
-        }else {
-            boolean doubledata = checkUser(player, connection);
-            if (!doubledata) {
-                selectUser(player.getUniqueId(), player.getName(), connection);
-            }
+        boolean doubledata = checkUser(player, connection);
+        if (!doubledata) {
+            selectUser(player.getUniqueId(), player.getName(), connection);
         }
         database.closeHikariConnection(connection);
-    }
-
-    private static void kickplayer(Player player, int x) {
-        String reason = "[XConomy] UUID mismatch";
-        if (x == 1) {
-            reason = "[XConomy] The same data exists in the server without different UUID";
-        }
-        final String freason = reason;
-        if (player.isOnline()) {
-            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() ->
-                    player.kick(Text.of(freason)));
-        }
-    }
-
-
-    private static void createAccount(String UID, String user, double amount, Connection co_a) {
-        try {
-            String query;
-            if (DataBaseINFO.isMySQL()) {
-                query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
-                        + "ON DUPLICATE KEY UPDATE UID = ?";
-            } else {
-                query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) ";
-            }
-
-            PreparedStatement statement = co_a.prepareStatement(query);
-            statement.setString(1, UID);
-            statement.setString(2, user);
-            statement.setDouble(3, amount);
-            statement.setInt(4, 0);
-
-            if (DataBaseINFO.isMySQL()) {
-                statement.setString(5, UID);
-            }
-
-            statement.executeUpdate();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
     }
 
     private static boolean checkUser(Player player, Connection connection) {
@@ -127,7 +73,10 @@ public class SQLCreateNewAccount extends SQL {
             if (rs.next()) {
                 if (!player.getUniqueId().toString().equals(rs.getString(1))) {
                     doubledata = true;
-                    kickplayer(player,0);
+                    if (player.isOnline()) {
+                        Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() ->
+                                player.kick(Text.of("[XConomy] The same data exists in the server without different UUID")));
+                    }
                 }
             }
 
@@ -139,28 +88,32 @@ public class SQLCreateNewAccount extends SQL {
         return doubledata;
     }
 
-    private static void checkUserOnline(String uid, String name, Connection connection) {
+    private static void createAccount(String UID, String user, double amount, Connection co_a) {
         try {
-            PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
-            statement.setString(1, uid);
-
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                if (!name.equals(rs.getString(2))) {
-                    Cache.removefromCache(UUID.fromString(uid));
-                    DataCon.prepareudpmessage(null, UUID.fromString(uid), null, null, null, null);
-                    updateUser(uid, name, connection);
-                    XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
-                }
+            String query;
+            if (DataBaseINFO.isMySQL()) {
+                query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
+                        + "ON DUPLICATE KEY UPDATE UID = ?";
             } else {
-                createAccount(uid, name, ServerINFO.InitialAmount, connection);
+                query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) ";
             }
 
-            rs.close();
+            PreparedStatement statement = co_a.prepareStatement(query);
+            statement.setString(1, UID);
+            statement.setString(2, user);
+            statement.setDouble(3, amount);
+            statement.setInt(4, 0);
+
+            if (DataBaseINFO.isMySQL()) {
+                statement.setString(5, UID);
+            }
+
+            statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     public static void createNonPlayerAccount(String account, double bal, Connection co) {

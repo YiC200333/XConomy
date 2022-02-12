@@ -24,9 +24,9 @@ public class ServerINFO {
 
     public static boolean IsBungeeCordMode = false;
 
-    public static boolean IsSemiOnlineMode = false;
-
     public static boolean IsOnlineMode = false;
+
+    public static boolean IsSemiOnlineMode = false;
 
     public static String Lang;
 

@@ -1,4 +1,4 @@
-/*
+package me.yic.xconomy.depend.economy;/*
  *  This file (LoadEconomy.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License along
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */package me.yic.xconomy.depend.economy;
+ */
 
 import me.yic.xconomy.XConomy;
 import net.milkbowl.vault.economy.Economy;
@@ -26,30 +26,30 @@ import org.bukkit.plugin.ServicePriority;
 
 import java.util.Collection;
 
-public class VaultHook{
+public class VaultHook extends XConomy {
     public static Economy econ = null;
     public static Permission vaultPerm = null;
 
     @SuppressWarnings("ConstantConditions")
     public static void load() {
         econ = new Vault();
-        RegisteredServiceProvider<Permission> rsp = XConomy.getInstance().getServer().getServicesManager().getRegistration(Permission.class);
+        RegisteredServiceProvider<Permission> rsp = getInstance().getServer().getServicesManager().getRegistration(Permission.class);
         if (rsp != null) {
             vaultPerm = rsp.getProvider();
         }
-        XConomy.getInstance().getServer().getServicesManager().register(Economy.class, econ, XConomy.getInstance(), ServicePriority.Normal);
+        getInstance().getServer().getServicesManager().register(Economy.class, econ, getInstance(), ServicePriority.Normal);
 
-        if (XConomy.config.getBoolean("Settings.disable-essentials")) {
+        if (config.getBoolean("Settings.disable-essentials")) {
             Collection<RegisteredServiceProvider<Economy>> econs = Bukkit.getPluginManager().getPlugin("Vault").getServer().getServicesManager().getRegistrations(Economy.class);
             for (RegisteredServiceProvider<Economy> econ : econs) {
                 if (econ.getProvider().getName().equalsIgnoreCase("Essentials Economy")) {
-                    XConomy.getInstance().getServer().getServicesManager().unregister(econ.getProvider());
+                    getInstance().getServer().getServicesManager().unregister(econ.getProvider());
                 }
             }
         }
     }
 
     public static void unload() {
-        XConomy.getInstance().getServer().getServicesManager().unregister(econ);
+        getInstance().getServer().getServicesManager().unregister(econ);
     }
 }
