@@ -73,7 +73,7 @@ public class SQL {
                 database.closeHikariConnection(connection);
 
             } catch (SQLException ignored) {
-                XConomy.getInstance().logger("Get 'wait_timeout' error", null);
+                XConomy.getInstance().logger("Get 'wait_timeout' error", 1, null);
             }
         }
     }
@@ -137,7 +137,7 @@ public class SQL {
 
         } catch (SQLException e) {
             try {
-                XConomy.getInstance().logger("升级数据库表格。。。", null);
+                XConomy.getInstance().logger("升级数据库表格。。。", 0, null);
 
                 PreparedStatement statementb = connection.prepareStatement("alter table " + tableName + " add column hidden int(5) not null default '0'");
 
@@ -200,11 +200,11 @@ public class SQL {
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 UUID uuid = UUID.fromString(rs.getString(1));
-                UUID puuid = null ;
+                UUID puuid = null;
                 if (ServerINFO.IsOnlineMode) {
                     puuid = GetUUID.getUUID(null, name);
                 }
-                if (!ServerINFO.IsOnlineMode || (puuid !=null && uuid.toString().equalsIgnoreCase(puuid.toString()))) {
+                if (!ServerINFO.IsOnlineMode || (puuid != null && uuid.toString().equalsIgnoreCase(puuid.toString()))) {
                     String username = rs.getString(2);
                     BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
                     if (cacheThisAmt != null) {
@@ -437,7 +437,7 @@ public class SQL {
             String uid = "N/A";
             String name = "N/A";
             String operation;
-            if (pd != null){
+            if (pd != null) {
                 if (pd.getUniqueId() != null) {
                     uid = pd.getUniqueId().toString();
                 }
@@ -449,7 +449,7 @@ public class SQL {
                 } else {
                     operation = "WITHDRAW";
                 }
-            }else {
+            } else {
                 operation = "SET";
             }
             try {

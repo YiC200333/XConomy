@@ -48,21 +48,21 @@ public class Updater extends BukkitRunnable {
             List<String> newVersionList = Arrays.asList(XConomy.getInstance().getDescription().getVersion().split("\\."));
 
             if (!compare(versionList, newVersionList)) {
-                XConomy.getInstance().logger("已是最新版本", null);
+                XConomy.getInstance().logger("已是最新版本", 0, null);
                 return;
             }
 
-            XConomy.getInstance().logger("发现新版本 ", newVersion);
-            XConomy.getInstance().logger(null, "https://www.spigotmc.org/resources/xconomy.75669/");
+            XConomy.getInstance().logger("发现新版本 ", 0, newVersion);
+            XConomy.getInstance().logger(null, 0, "https://www.spigotmc.org/resources/xconomy.75669/");
 
             if (ServerINFO.Lang.equalsIgnoreCase("Chinese")
                     | ServerINFO.Lang.equalsIgnoreCase("ChineseTW")) {
-                XConomy.getInstance().logger(null, "https://www.mcbbs.net/thread-962904-1-1.html");
+                XConomy.getInstance().logger(null, 0, "https://www.mcbbs.net/thread-962904-1-1.html");
             }
 
 
         } catch (Exception exception) {
-            XConomy.getInstance().logger("检查更新失败", null);
+            XConomy.getInstance().logger("检查更新失败", 0, null);
         }
     }
 

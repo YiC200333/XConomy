@@ -32,6 +32,7 @@ import me.yic.xconomy.depend.economyapi.XCService;
 import me.yic.xconomy.depend.economyapi.XCurrency;
 import me.yic.xconomy.info.DataBaseINFO;
 import me.yic.xconomy.info.ServerINFO;
+import me.yic.xconomy.info.SyncInfo;
 import me.yic.xconomy.info.UpdateConfig;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.listeners.ConnectionListeners;
@@ -72,6 +73,7 @@ public class XConomy {
 
     private static XConomy instance;
 
+    public static String syncversion = SyncInfo.syncversion;
     private MessagesManager messageManager;
 
     private SpongeExecutorService refresherTask;
@@ -115,8 +117,8 @@ public class XConomy {
 
         Optional<EconomyService> serviceOpt = Sponge.getServiceManager().provide(EconomyService.class);
         if (!serviceOpt.isPresent()) {
-            logger(null, "EconomyService is null");
-            logger("XConomy已成功卸载", null);
+            logger(null, 1, "EconomyService is null");
+            logger("XConomy已成功卸载", 0, null);
             return;
         }
         serviceOpt.get().getCurrencies().add(xc);
@@ -127,7 +129,7 @@ public class XConomy {
 
         allowHikariConnectionPooling();
         if (!DataLink.create()) {
-            logger("XConomy已成功卸载", null);
+            logger("XConomy已成功卸载", 0, null);
             return;
         }
 
@@ -188,11 +190,11 @@ public class XConomy {
                 channellistener = new SPsync();
                 channel.addListener(Platform.Type.SERVER, channellistener);
                 Sponge.getChannelRegistrar().createRawChannel(this, "xconomy:acb");
-                logger("已开启BungeeCord同步", null);
+                logger("已开启BungeeCord同步", 0, null);
             } else if (!config.getNode("Settings", "mysql").getBoolean()) {
                 if (config.getNode("SQLite", "path").getString().equalsIgnoreCase("Default")) {
-                    logger("SQLite文件路径设置错误", null);
-                    logger("BungeeCord同步未开启", null);
+                    logger("SQLite文件路径设置错误", 1, null);
+                    logger("BungeeCord同步未开启", 1, null);
                 }
             }
         }
@@ -210,7 +212,7 @@ public class XConomy {
             });
         }, time, TimeUnit.SECONDS);
 
-        logger(null, "===== YiC =====");
+        logger(null, 0, "===== YiC =====");
 
     }
 
@@ -223,7 +225,7 @@ public class XConomy {
             channel.removeListener(channellistener);
         }
         SQL.close();
-        logger("XConomy已成功卸载", null);
+        logger("XConomy已成功卸载", 0, null);
     }
 
     public static XConomy getInstance() {
@@ -273,6 +275,7 @@ public class XConomy {
 
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void readserverinfo() {
         ServerINFO.Lang = config.getNode("Settings", "language").getString();
         ServerINFO.IsBungeeCordMode = isBungeecord();
@@ -311,19 +314,23 @@ public class XConomy {
         return true;
     }
 
-    public void logger(String tag, String message) {
-        if (tag == null) {
-            inforation.info(message);
-        } else {
+    public void logger(String tag, int type, String message) {
+        String mess = message;
+        if (tag != null) {
             if (message == null) {
-                inforation.info(MessagesManager.systemMessage(tag));
+                mess = MessagesManager.systemMessage(tag);
             } else {
                 if (message.startsWith("<#>")) {
-                    inforation.info(message.substring(3) + MessagesManager.systemMessage(tag));
+                    mess = message.substring(3) + MessagesManager.systemMessage(tag);
                 } else {
-                    inforation.info(MessagesManager.systemMessage(tag) + message);
+                    mess = MessagesManager.systemMessage(tag) + message;
                 }
             }
+        }
+        if (type == 1) {
+            inforation.warn(mess);
+        } else {
+            inforation.info(mess);
         }
     }
 

@@ -50,12 +50,12 @@ public class MessagesManager {
                 is = url.openStream();
                 reader = new InputStreamReader(is, StandardCharsets.UTF_8);
             } catch (IOException ioException) {
-                XConomy.getInstance().getLogger().info("System languages file read error");
+                XConomy.getInstance().getLogger().warning("System languages file read error");
                 ioException.printStackTrace();
             }
         }
         if (reader == null) {
-            XConomy.getInstance().getLogger().info("System languages file read error");
+            XConomy.getInstance().getLogger().warning("System languages file read error");
             return;
         }
         langFile = YamlConfiguration.loadConfiguration(reader);
@@ -72,13 +72,13 @@ public class MessagesManager {
         if (!mfile.exists()) {
             try {
                 if (!mfile.createNewFile()) {
-                    plugin.logger("create-language-file-fail", null);
+                    plugin.logger("create-language-file-fail", 1, null);
                 }
                 translate = true;
-                plugin.logger("create-language-file-success", null);
+                plugin.logger("create-language-file-success", 0, null);
             } catch (IOException e) {
                 e.printStackTrace();
-                plugin.logger("create-language-file-fail", null);
+                plugin.logger("create-language-file-fail", 1, null);
             }
         }
 
@@ -89,6 +89,7 @@ public class MessagesManager {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static String systemMessage(String message) {
         return langFile.getString(Messages.Companion.gettag(message));
     }

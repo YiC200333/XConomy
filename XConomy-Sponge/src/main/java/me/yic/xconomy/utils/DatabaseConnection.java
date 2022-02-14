@@ -96,13 +96,13 @@ public class DatabaseConnection {
             return true;
 
         } catch (SQLException e) {
-            XConomy.getInstance().logger("无法连接到数据库-----", null);
+            XConomy.getInstance().logger("无法连接到数据库-----", 1, null);
             e.printStackTrace();
             close();
             return false;
 
         } catch (ClassNotFoundException e) {
-            XConomy.getInstance().logger("JDBC驱动加载失败", null);
+            XConomy.getInstance().logger("JDBC驱动加载失败", 1, null);
         }
 
         return false;
@@ -121,7 +121,7 @@ public class DatabaseConnection {
                 return getConnectionAndCheck();
             } else {
                 isfirstry = true;
-                XConomy.getInstance().logger("无法连接到数据库-----", null);
+                XConomy.getInstance().logger("无法连接到数据库-----", 1, null);
                 close();
                 e1.printStackTrace();
                 return null;
@@ -165,7 +165,7 @@ public class DatabaseConnection {
                 }
             }
         } catch (SQLException e) {
-            Arrays.stream(e.getStackTrace()).forEach(d -> XConomy.getInstance().logger(null, d.toString()));
+            Arrays.stream(e.getStackTrace()).forEach(d -> XConomy.getInstance().logger(null, 1, d.toString()));
             return false;
         }
         return true;

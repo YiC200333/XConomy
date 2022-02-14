@@ -37,18 +37,18 @@ public class DataLink extends DataBaseINFO {
     public static boolean create() {
         switch (getStorageType()) {
             case 1:
-                XConomy.getInstance().logger("数据保存方式", " - SQLite");
+                XConomy.getInstance().logger("数据保存方式", 0, " - SQLite");
                 setupSqLiteAddress();
 
                 File dataFolder = new File(XConomy.getInstance().configDir.toFile(), "playerdata");
                 if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-                    XConomy.getInstance().logger("文件夹创建异常", null);
+                    XConomy.getInstance().logger("文件夹创建异常", 1, null);
                     return false;
                 }
                 break;
 
             case 2:
-                XConomy.getInstance().logger("数据保存方式", " - MySQL");
+                XConomy.getInstance().logger("数据保存方式", 0, " - MySQL");
                 setupMySqlTable();
                 break;
 
@@ -65,7 +65,7 @@ public class DataLink extends DataBaseINFO {
             return false;
         }
 
-        XConomy.getInstance().logger("XConomy加载成功", null);
+        XConomy.getInstance().logger("XConomy加载成功", 0, null);
         return true;
     }
 
@@ -73,10 +73,10 @@ public class DataLink extends DataBaseINFO {
         SQLCreateNewAccount.newPlayer(a);
     }
 
-    public static<T> void getPlayerData(T key) {
+    public static <T> void getPlayerData(T key) {
         if (key instanceof UUID) {
             SQL.getPlayerData((UUID) key);
-        }else if (key instanceof String) {
+        } else if (key instanceof String) {
             SQL.getPlayerData((String) key);
         }
     }
@@ -142,7 +142,7 @@ public class DataLink extends DataBaseINFO {
         if (folder.exists()) {
             SQL.database.userdata = new File(folder, "data.db");
         } else {
-            XConomy.getInstance().logger("自定义文件夹路径不存在", null);
+            XConomy.getInstance().logger("自定义文件夹路径不存在", 1, null);
         }
 
     }

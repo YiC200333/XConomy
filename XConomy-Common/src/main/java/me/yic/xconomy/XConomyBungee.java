@@ -18,12 +18,14 @@
  */
 package me.yic.xconomy;
 
+import me.yic.xconomy.info.SyncInfo;
 import me.yic.xconomy.listeners.BCPlayerEvent;
 import me.yic.xconomy.listeners.BCsync;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public class XConomyBungee extends Plugin {
     private static XConomyBungee instance;
+    public static String syncversion = SyncInfo.syncversion;
 
     @Override
     public void onEnable() {

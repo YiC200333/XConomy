@@ -774,6 +774,7 @@ public class CommandHandler {
 
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF(XConomy.getSign());
+        output.writeUTF(XConomy.syncversion);
         if (!ispublic) {
             output.writeUTF("message");
             output.writeUTF(u.toString());

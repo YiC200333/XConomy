@@ -34,7 +34,7 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.UUID;
 
-public class SQLCreateNewAccount extends SQL{
+public class SQLCreateNewAccount extends SQL {
 
     public static void newPlayer(Player player) {
         Connection connection = database.getConnectionAndCheck();
@@ -43,13 +43,13 @@ public class SQLCreateNewAccount extends SQL{
             String uid = GetUUID.getUUID(player, player.getName()).toString();
             if (uid.equalsIgnoreCase(player.getUniqueId().toString())) {
                 checkUserOnline(uid, player.getName(), connection);
-            }else{
+            } else {
                 kickplayer(player, 1);
                 database.closeHikariConnection(connection);
                 return;
             }
 
-        }else{
+        } else {
             boolean doubledata = checkUser(player, connection);
             if (!doubledata) {
                 selectUser(player.getUniqueId(), player.getName(), connection);
@@ -60,7 +60,7 @@ public class SQLCreateNewAccount extends SQL{
 
     private static void kickplayer(Player player, int x) {
         String reason = "[XConomy] The same data exists in the server without different UUID";
-        if (x == 1){
+        if (x == 1) {
             reason = "[XConomy] UUID mismatch";
         }
         final String freason = reason;
@@ -81,7 +81,7 @@ public class SQLCreateNewAccount extends SQL{
                     Cache.removefromCache(UUID.fromString(uid));
                     DataCon.prepareudpmessage(null, UUID.fromString(uid), null, null, null, null);
                     updateUser(uid, name, connection);
-                    XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
+                    XConomy.getInstance().logger(" 名称已更改!", 0, "<#>" + name);
                 }
             } else {
                 createAccount(uid, name, ServerINFO.InitialAmount, connection);
@@ -104,7 +104,7 @@ public class SQLCreateNewAccount extends SQL{
                 } else {
                     query = "select * from " + tableName + " where player = ? COLLATE NOCASE";
                 }
-            }else {
+            } else {
                 if (DataBaseINFO.isMySQL()) {
                     query = "select * from " + tableName + " where binary player = ?";
                 } else {
@@ -118,11 +118,15 @@ public class SQLCreateNewAccount extends SQL{
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 if (!player.getUniqueId().toString().equals(rs.getString(1))) {
-                    doubledata = true;
-                    if (!ServerINFO.IsSemiOnlineMode) {
-                        kickplayer(player, 0);
+                    if (player.getUniqueId().toString().contains("00000000-0000-")) {
+                        updateUUID(player.getUniqueId().toString(), player.getName(), connection);
                     } else {
-                        CacheSemiOnline.CacheSubUUID_checkUser(rs.getString(1), player);
+                        doubledata = true;
+                        if (!ServerINFO.IsSemiOnlineMode) {
+                            kickplayer(player, 0);
+                        } else {
+                            CacheSemiOnline.CacheSubUUID_checkUser(rs.getString(1), player);
+                        }
                     }
                 }
             }
@@ -230,7 +234,19 @@ public class SQLCreateNewAccount extends SQL{
             Cache.removefromCache(UID);
             DataCon.prepareudpmessage(null, UID, null, null, null, null);
             updateUser(UID.toString(), name, connection);
-            XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
+            XConomy.getInstance().logger(" 名称已更改!", 0, "<#>" + name);
+        }
+    }
+
+    private static void updateUUID(String UID, String user, Connection co_a) {
+        try {
+            PreparedStatement statement = co_a.prepareStatement("update " + tableName + " set UID = ? where player = ?");
+            statement.setString(1, UID);
+            statement.setString(2, user);
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

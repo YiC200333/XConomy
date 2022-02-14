@@ -46,12 +46,12 @@ public class SQLCreateNewAccount extends SQL {
             String uid = GetUUID.getUUID(player, player.getName()).toString();
             if (uid.equalsIgnoreCase(player.getUniqueId().toString())) {
                 checkUserOnline(uid, player.getName(), connection);
-            }else{
+            } else {
                 kickplayer(player, 1);
                 database.closeHikariConnection(connection);
                 return;
             }
-        }else {
+        } else {
             boolean doubledata = checkUser(player, connection);
             if (!doubledata) {
                 selectUser(player.getUniqueId(), player.getName(), connection);
@@ -121,7 +121,7 @@ public class SQLCreateNewAccount extends SQL {
                     Cache.removefromCache(UUID.fromString(uid));
                     DataCon.prepareudpmessage(null, UUID.fromString(uid), null, null, null, null);
                     updateUser(uid, name, connection);
-                    XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
+                    XConomy.getInstance().logger(" 名称已更改!", 0, "<#>" + name);
                 }
             } else {
                 createAccount(uid, name, ServerINFO.InitialAmount, connection);
@@ -228,7 +228,7 @@ public class SQLCreateNewAccount extends SQL {
             Cache.removefromCache(UID);
             DataCon.prepareudpmessage(null, UID, null, null, null, null);
             updateUser(UID.toString(), name, connection);
-            XConomy.getInstance().logger(" 名称已更改!", "<#>" + name);
+            XConomy.getInstance().logger(" 名称已更改!", 0, "<#>" + name);
         }
     }
 

@@ -68,7 +68,7 @@ public class GetUUID {
                 }
             } else {
                 kickplayer(pp);
-                XConomy.getInstance().logger(null, "ResponseCode is an error code:" + conn.getResponseCode());
+                XConomy.getInstance().logger(null, 1, "ResponseCode is an error code:" + conn.getResponseCode());
             }
         } catch (Exception e) {
             kickplayer(pp);

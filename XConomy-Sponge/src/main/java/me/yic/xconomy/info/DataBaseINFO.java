@@ -35,12 +35,12 @@ public class DataBaseINFO {
     public static boolean canasync = false;
 
     public static void load() {
-        Path configpath =  Paths.get(XConomy.getInstance().configDir + System.getProperty("file.separator") + "database.yml");
-        if(!Files.exists(configpath)){
-            try{
+        Path configpath = Paths.get(XConomy.getInstance().configDir + System.getProperty("file.separator") + "database.yml");
+        if (!Files.exists(configpath)) {
+            try {
                 URL configurl = new URL(XConomy.jarPath + "!/database.yml");
                 Files.copy(configurl.openStream(), configpath);
-            }catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
@@ -53,14 +53,14 @@ public class DataBaseINFO {
             e.printStackTrace();
         }
 
-        if (getStorageType() != 1){
-            canasync = !DataBaseINFO.getNode("Settings","disable-async").getBoolean();
+        if (getStorageType() != 1) {
+            canasync = !DataBaseINFO.getNode("Settings", "disable-async").getBoolean();
         }
     }
 
     @SuppressWarnings("ConstantConditions")
     public static int getStorageType() {
-        if (DataBaseINFO.getNode("Settings","storage-type").getString().equalsIgnoreCase("MySQL")) {
+        if (DataBaseINFO.getNode("Settings", "storage-type").getString().equalsIgnoreCase("MySQL")) {
             return 2;
         }
         return 1;
@@ -72,30 +72,30 @@ public class DataBaseINFO {
 
     public static String gethost() {
         if (getStorageType() == 1) {
-            return DataBaseINFO.getNode("SQLite","path").getString();
-        }else if (getStorageType() == 2) {
-            return DataBaseINFO.getNode("MySQL","host").getString();
+            return DataBaseINFO.getNode("SQLite", "path").getString();
+        } else if (getStorageType() == 2) {
+            return DataBaseINFO.getNode("MySQL", "host").getString();
         }
         return "";
     }
 
     public static String getuser() {
         if (getStorageType() == 2) {
-            return DataBaseINFO.getNode("MySQL","user").getString();
+            return DataBaseINFO.getNode("MySQL", "user").getString();
         }
         return "";
     }
 
     public static String getpass() {
         if (getStorageType() == 2) {
-            return DataBaseINFO.getNode("MySQL","pass").getString();
+            return DataBaseINFO.getNode("MySQL", "pass").getString();
         }
         return "";
     }
 
     public static String gettablesuffix() {
         if (getStorageType() == 2) {
-            return DataBaseINFO.getNode("MySQL","table-suffix").getString();
+            return DataBaseINFO.getNode("MySQL", "table-suffix").getString();
         }
         return "";
     }
@@ -104,16 +104,16 @@ public class DataBaseINFO {
     @SuppressWarnings("ConstantConditions")
     public static String geturl() {
         if (getStorageType() == 2) {
-            String url =  "jdbc:mysql://" + DataBaseINFO.getNode("MySQL","host").getString()
-                    + ":" + DataBaseINFO.getNode("MySQL","port").getString() + "/"
-                    + DataBaseINFO.getNode("MySQL","database").getString() + "?characterEncoding="
-                    + DataBaseINFO.getNode("MySQL","property","encoding").getString() + "&useSSL="
-                    + DataBaseINFO.getNode("MySQL","property","usessl").getString();
-            if (DataBaseINFO.getNode("MySQL","property","timezone").getString() != null &&
-                    !DataBaseINFO.getNode("MySQL","property","timezone").getString().equals("")) {
-                url = url + "&serverTimezone=" + DataBaseINFO.getNode("MySQL","property","timezone").getString();
+            String url = "jdbc:mysql://" + DataBaseINFO.getNode("MySQL", "host").getString()
+                    + ":" + DataBaseINFO.getNode("MySQL", "port").getString() + "/"
+                    + DataBaseINFO.getNode("MySQL", "database").getString() + "?characterEncoding="
+                    + DataBaseINFO.getNode("MySQL", "property", "encoding").getString() + "&useSSL="
+                    + DataBaseINFO.getNode("MySQL", "property", "usessl").getString();
+            if (DataBaseINFO.getNode("MySQL", "property", "timezone").getString() != null &&
+                    !DataBaseINFO.getNode("MySQL", "property", "timezone").getString().equals("")) {
+                url = url + "&serverTimezone=" + DataBaseINFO.getNode("MySQL", "property", "timezone").getString();
             }
-            if (DataBaseINFO.getNode("MySQL","property","allowPublicKeyRetrieval").getBoolean()) {
+            if (DataBaseINFO.getNode("MySQL", "property", "allowPublicKeyRetrieval").getBoolean()) {
                 url = url + "&allowPublicKeyRetrieval=true";
             }
             return url;
@@ -125,10 +125,10 @@ public class DataBaseINFO {
         String mess = MessagesManager.systemMessage(tag);
         switch (getStorageType()) {
             case 1:
-                XConomy.getInstance().logger(null, mess.replace("%type%", "SQLite"));
+                XConomy.getInstance().logger(null, 0, mess.replace("%type%", "SQLite"));
                 break;
             case 2:
-                XConomy.getInstance().logger(null, mess.replace("%type%", "MySQL"));
+                XConomy.getInstance().logger(null, 0, mess.replace("%type%", "MySQL"));
                 break;
         }
     }

@@ -182,6 +182,7 @@ public class DataCon{
     public static void sendudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd, BigDecimal amount, String command) {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF(XConomy.getSign());
+        output.writeUTF(XConomy.syncversion);
         output.writeUTF("updateplayer");
         output.writeUTF(u.toString());
         SendMessTask(output, type, pd, isAdd, amount, command);
@@ -191,6 +192,7 @@ public class DataCon{
     public static void sendallpdmessage(String targettype, BigDecimal amount, Boolean isAdd) {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF(XConomy.getSign());
+        output.writeUTF(XConomy.syncversion);
         output.writeUTF("balanceall");
         if (targettype.equals("all")) {
             output.writeUTF("all");

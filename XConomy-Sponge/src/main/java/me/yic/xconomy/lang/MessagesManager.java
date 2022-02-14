@@ -43,7 +43,7 @@ public class MessagesManager {
         this.plugin = plugin;
     }
 
-    public void load(){
+    public void load() {
         try {
             URL url = new URL(XConomy.jarPath + "!/lang/" + ServerINFO.Lang.toLowerCase() + ".yml");
             InputStream is = url.openStream();
@@ -58,20 +58,20 @@ public class MessagesManager {
                 YAMLConfigurationLoader sysloader = YAMLConfigurationLoader.builder().setURL(url).build();
                 langFile = sysloader.load();
             } catch (IOException ioException) {
-                XConomy.getInstance().logger(null,"System languages file read error");
+                XConomy.getInstance().logger(null, 1, "System languages file read error");
                 ioException.printStackTrace();
             }
         }
 
 
-        Path mfile =  Paths.get(XConomy.getInstance().configDir + "/message.json");
+        Path mfile = Paths.get(XConomy.getInstance().configDir + "/message.json");
         boolean translate = false;
         loader = HoconConfigurationLoader.builder().setPath(mfile).build();
 
         if (!Files.exists(mfile)) {
             loader.createEmptyNode();
-                translate = true;
-                plugin.logger("已创建一个新的语言文件", null);
+            translate = true;
+            plugin.logger("已创建一个新的语言文件", 0, null);
         }
 
         try {
@@ -95,6 +95,7 @@ public class MessagesManager {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static String systemMessage(String message) {
         return langFile.getNode(Messages.Companion.gettag(message)).getString();
     }

@@ -26,10 +26,7 @@ import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.depend.LoadEconomy;
 import me.yic.xconomy.depend.Placeholder;
 import me.yic.xconomy.depend.economy.VaultHook;
-import me.yic.xconomy.info.DataBaseINFO;
-import me.yic.xconomy.info.MCVersion;
-import me.yic.xconomy.info.ServerINFO;
-import me.yic.xconomy.info.UpdateConfig;
+import me.yic.xconomy.info.*;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.listeners.ConnectionListeners;
 import me.yic.xconomy.listeners.SPPsync;
@@ -54,6 +51,7 @@ import java.util.Collections;
 public class XConomy extends JavaPlugin {
 
     private static XConomy instance;
+    public static String syncversion = SyncInfo.syncversion;
     public static FileConfiguration config;
     private MessagesManager messageManager;
     private static boolean foundvaultpe = false;
@@ -75,27 +73,27 @@ public class XConomy extends JavaPlugin {
         MCVersion.chatcolorcheck();
 
         if (!LoadEconomy.load()) {
-            getLogger().info("No supported dependent plugins were found");
-            getLogger().info("[ Vault ][ Enterprise ]");
-            logger("XConomy已成功卸载", null);
+            getLogger().warning("No supported dependent plugins were found");
+            getLogger().warning("[ Vault ][ Enterprise ]");
+            logger("XConomy已成功卸载", 0, null);
             return;
         }
 
         foundvaultOfflinePermManager = checkVaultOfflinePermManager();
 
         if (Bukkit.getPluginManager().getPlugin("DatabaseDrivers") != null) {
-            logger("发现 DatabaseDrivers", null);
+            logger("发现 DatabaseDrivers", 0, null);
             ServerINFO.DDrivers = true;
         }
 
-        if (allowHikariConnectionPooling()){
+        if (allowHikariConnectionPooling()) {
             ServerINFO.EnableConnectionPool = true;
-        }else{
-            logger("连接池未启用", null);
+        } else {
+            logger("连接池未启用", 0, null);
         }
 
         if (!DataLink.create()) {
-            logger("XConomy已成功卸载", null);
+            logger("XConomy已成功卸载", 0, null);
             return;
         }
 
@@ -107,12 +105,12 @@ public class XConomy extends JavaPlugin {
         // 检查更新
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            logger("发现 PlaceholderAPI", null);
+            logger("发现 PlaceholderAPI", 0, null);
             if (checkVaultPE()) {
-                logger(null, String.join("", Collections.nCopies(70, "=")));
-                logger("vault-baltop-tips-a", null);
-                logger("vault-baltop-tips-b", null);
-                logger(null, String.join("", Collections.nCopies(70, "=")));
+                logger(null, 0, String.join("", Collections.nCopies(70, "=")));
+                logger("vault-baltop-tips-a", 0, null);
+                logger("vault-baltop-tips-b", 0, null);
+                logger(null, 0, String.join("", Collections.nCopies(70, "=")));
                 foundvaultpe = true;
             }
             setupPlaceHolderAPI();
@@ -151,11 +149,11 @@ public class XConomy extends JavaPlugin {
                 getServer().getMessenger().registerIncomingPluginChannel(this, "xconomy:aca", new SPsync());
                 getServer().getMessenger().registerOutgoingPluginChannel(this, "xconomy:acb");
                 getServer().getMessenger().registerIncomingPluginChannel(this, "xconomy:global", new SPPsync());
-                logger("已开启BungeeCord同步", null);
+                logger("已开启BungeeCord同步", 0, null);
             } else if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
                 if (DataBaseINFO.gethost().equalsIgnoreCase("Default")) {
-                    logger("SQLite文件路径设置错误", null);
-                    logger("BungeeCord同步未开启", null);
+                    logger("SQLite文件路径设置错误", 1, null);
+                    logger("BungeeCord同步未开启", 1, null);
                 }
             }
         }
@@ -169,7 +167,7 @@ public class XConomy extends JavaPlugin {
         }
 
         refresherTask = new Baltop().runTaskTimerAsynchronously(this, time * 20L, time * 20L);
-        logger(null, "===== YiC =====");
+        logger(null, 0, "===== YiC =====");
 
     }
 
@@ -192,7 +190,7 @@ public class XConomy extends JavaPlugin {
         refresherTask.cancel();
         CacheSemiOnline.save();
         SQL.close();
-        logger("XConomy已成功卸载", null);
+        logger("XConomy已成功卸载", 0, null);
     }
 
     public static XConomy getInstance() {
@@ -203,10 +201,10 @@ public class XConomy extends JavaPlugin {
         messageManager.load();
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void readserverinfo() {
         ServerINFO.Lang = config.getString("Settings.language");
         ServerINFO.IsBungeeCordMode = isBungeecord();
-        ServerINFO.IsSemiOnlineMode = config.getBoolean("Settings.semi-online-mode");
         ServerINFO.Sign = config.getString("BungeeCord.sign");
         ServerINFO.InitialAmount = config.getDouble("Settings.initial-bal");
         ServerINFO.disablecache = config.getBoolean("Settings.disable-cache");
@@ -214,13 +212,13 @@ public class XConomy extends JavaPlugin {
 
         ServerINFO.RankingSize = config.getInt("Settings.ranking-size");
         ServerINFO.LinesNumber = config.getInt("Settings.lines-per-page");
-        if (ServerINFO.RankingSize > 100){
+        if (ServerINFO.RankingSize > 100) {
             ServerINFO.RankingSize = 100;
         }
 
-        if (config.getString("Settings.UUID-mode").equalsIgnoreCase("Online")){
+        if (config.getString("Settings.UUID-mode").equalsIgnoreCase("Online")) {
             ServerINFO.IsOnlineMode = true;
-        }else if (config.getString("Settings.UUID-mode").equalsIgnoreCase("SemiOnline")){
+        } else if (config.getString("Settings.UUID-mode").equalsIgnoreCase("SemiOnline")) {
             ServerINFO.IsSemiOnlineMode = true;
         }
     }
@@ -230,7 +228,7 @@ public class XConomy extends JavaPlugin {
             try {
                 Class.forName("org.slf4j.Logger");
             } catch (ClassNotFoundException e) {
-                getInstance().logger("未找到 'org.slf4j.Logger'", null);
+                getInstance().logger("未找到 'org.slf4j.Logger'", 1, null);
                 return false;
             }
             if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
@@ -250,23 +248,27 @@ public class XConomy extends JavaPlugin {
         if (papiExpansion.register()) {
             getLogger().info("PlaceholderAPI successfully hooked");
         } else {
-            getLogger().info("PlaceholderAPI unsuccessfully hooked");
+            getLogger().warning("PlaceholderAPI unsuccessfully hooked");
         }
     }
 
-    public void logger(String tag, String message) {
-        if (tag == null) {
-            getLogger().info(message);
-        } else {
+    public void logger(String tag, int type, String message) {
+        String mess = message;
+        if (tag != null) {
             if (message == null) {
-                getLogger().info(MessagesManager.systemMessage(tag));
+                mess = MessagesManager.systemMessage(tag);
             } else {
                 if (message.startsWith("<#>")) {
-                    getLogger().info(message.substring(3) + MessagesManager.systemMessage(tag));
+                    mess = message.substring(3) + MessagesManager.systemMessage(tag);
                 } else {
-                    getLogger().info(MessagesManager.systemMessage(tag) + message);
+                    mess = MessagesManager.systemMessage(tag) + message;
                 }
             }
+        }
+        if (type == 1) {
+            getLogger().warning(mess);
+        } else {
+            getLogger().info(mess);
         }
     }
 

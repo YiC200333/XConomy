@@ -725,14 +725,14 @@ public class CommandCore {
         }
 
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
+        output.writeUTF(XConomy.getSign());
+        output.writeUTF(XConomy.syncversion);
         if (!ispublic) {
             output.writeUTF("message");
-            output.writeUTF(XConomy.getSign());
             output.writeUTF(u.toString());
             output.writeUTF(message);
         } else {
             output.writeUTF("broadcast");
-            output.writeUTF(XConomy.getSign());
             output.writeUTF(message);
         }
         Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), "xconomy:acb").sendTo(

@@ -55,6 +55,7 @@ class Messages {
                 "§6控制台无法使用该指令" -> tag = "console-ban-commands"
                 "连接池未启用" -> tag = "pool-disable"
                 "未找到 'org.slf4j.Logger'" -> tag = "slf4j-unfound"
+                "收到不同版本插件的数据，无法同步，当前插件版本 " -> tag = "different-version"
             }
             return tag
         }

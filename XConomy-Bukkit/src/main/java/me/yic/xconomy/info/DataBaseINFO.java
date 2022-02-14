@@ -37,7 +37,7 @@ public class DataBaseINFO {
         }
         DataBaseINFO = YamlConfiguration.loadConfiguration(file);
 
-        if (getStorageType() != 1){
+        if (getStorageType() != 1) {
             canasync = !DataBaseINFO.getBoolean("Settings.disable-async");
         }
     }
@@ -109,10 +109,10 @@ public class DataBaseINFO {
         String mess = MessagesManager.systemMessage(tag);
         switch (getStorageType()) {
             case 1:
-                XConomy.getInstance().logger(null, mess.replace("%type%", "SQLite"));
+                XConomy.getInstance().logger(null, 0, mess.replace("%type%", "SQLite"));
                 break;
             case 2:
-                XConomy.getInstance().logger(null, mess.replace("%type%", "MySQL"));
+                XConomy.getInstance().logger(null, 0, mess.replace("%type%", "MySQL"));
                 break;
         }
     }

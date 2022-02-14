@@ -37,7 +37,7 @@ public class CacheSemiOnline {
         if (ServerINFO.IsSemiOnlineMode) {
             File dataFolder = new File(XConomy.getInstance().getDataFolder(), "cache");
             if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-                XConomy.getInstance().logger("文件夹创建异常", null);
+                XConomy.getInstance().logger("文件夹创建异常", 1, null);
                 return false;
             }
             cachesubuuid = new File(dataFolder, "cache_subuuid.yml");
@@ -47,7 +47,7 @@ public class CacheSemiOnline {
                     CacheSubUUID.save(cachesubuuid);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    XConomy.getInstance().logger("缓存文件创建异常", null);
+                    XConomy.getInstance().logger("缓存文件创建异常", 1, null);
                     return false;
                 }
             }
@@ -64,7 +64,7 @@ public class CacheSemiOnline {
                     Bukkit.getScheduler().runTask(XConomy.getInstance(), () ->
                             pp.kickPlayer("[XConomy] The player with the same name exists on the server (Three times)"));
                 }
-            }else{
+            } else {
                 Cache.removefromCache(Cache.getSubUUID(UUID.fromString(mainu)));
                 Cache.insertIntoSUUIDCache(UUID.fromString(mainu), pp.getUniqueId());
             }

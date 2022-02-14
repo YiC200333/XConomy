@@ -43,6 +43,12 @@ public class SPsync implements RawDataListener {
             return;
         }
 
+        String sv = data.readUTF();
+        if (!sv.equals(XConomy.syncversion)) {
+            XConomy.getInstance().logger("收到不同版本插件的数据，无法同步，当前插件版本 ", 1, XConomy.syncversion);
+            return;
+        }
+
         String type = data.readUTF();
         if (type.equalsIgnoreCase("updateplayer")) {
             UUID u = UUID.fromString(data.readUTF());
