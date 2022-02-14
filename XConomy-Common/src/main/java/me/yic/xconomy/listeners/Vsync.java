@@ -51,6 +51,19 @@ public class Vsync {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF(input.readUTF());
 
+        String sv = input.readUTF();
+        output.writeUTF(sv);
+        String svv = sv;
+        if (svv.contains(".")) {
+            svv = "versions §f" + svv;
+        } else {
+            svv = "§fold versions";
+        }
+        if (!sv.equals(XConomyVelocity.syncversion)) {
+            XConomyVelocity.getInstance().logger.warn("§cReceived data from " + svv + ", §cunable to synchronize, Current plugin version §f" + XConomyVelocity.syncversion);
+            return;
+        }
+
         String type = input.readUTF();
         if (type.equalsIgnoreCase("updateplayer")) {
             output.writeUTF("updateplayer");

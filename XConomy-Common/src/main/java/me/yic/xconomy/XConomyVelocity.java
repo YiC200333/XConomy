@@ -25,6 +25,7 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
+import me.yic.xconomy.info.SyncInfo;
 import me.yic.xconomy.listeners.VPlayerEvent;
 import me.yic.xconomy.listeners.Vsync;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ import org.slf4j.Logger;
 @Plugin(id = "xconomy", name = "XConomy", version = "velocity", authors = {"YiC"})
 public class XConomyVelocity{
     private static XConomyVelocity instance;
+    public static String syncversion = SyncInfo.syncversion;
     public ProxyServer server;
     public Logger logger;
 
