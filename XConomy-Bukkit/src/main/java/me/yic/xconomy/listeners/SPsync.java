@@ -24,6 +24,8 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.caches.CacheSemiOnline;
+import me.yic.xconomy.info.ServerINFO;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -58,10 +60,19 @@ public class SPsync implements PluginMessageListener {
             UUID u = UUID.fromString(input.readUTF());
             Cache.removefromCache(u);
         } else if (type.equalsIgnoreCase("message")) {
-            Player p = Bukkit.getPlayer(UUID.fromString(input.readUTF()));
+            String muid = input.readUTF();
+            Player p = Bukkit.getPlayer(UUID.fromString(muid));
             String mess = input.readUTF();
             if (p != null) {
                 p.sendMessage(mess);
+            }else if (ServerINFO.IsSemiOnlineMode){
+                UUID suid = CacheSemiOnline.CacheSubUUID_getsubuuid(muid);
+                if (suid != null) {
+                    Player sp = Bukkit.getPlayer(suid);
+                    if (sp != null) {
+                        sp.sendMessage(mess);
+                    }
+                }
             }
         } else if (type.equalsIgnoreCase("balanceall")) {
             String targettype = input.readUTF();

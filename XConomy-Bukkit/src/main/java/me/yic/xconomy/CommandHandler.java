@@ -776,9 +776,13 @@ public class CommandHandler {
         output.writeUTF(XConomy.getSign());
         output.writeUTF(XConomy.syncversion);
         if (!ispublic) {
-            output.writeUTF("message");
-            output.writeUTF(u.toString());
-            output.writeUTF(message);
+            if (ServerINFO.IsSemiOnlineMode){
+                output.writeUTF("message#semi");
+            }else {
+                output.writeUTF("message");
+            }
+                output.writeUTF(u.toString());
+                output.writeUTF(message);
         } else {
             output.writeUTF("broadcast");
             output.writeUTF(message);

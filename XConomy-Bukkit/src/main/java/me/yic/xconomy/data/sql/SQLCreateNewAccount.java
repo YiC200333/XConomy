@@ -117,7 +117,8 @@ public class SQLCreateNewAccount extends SQL {
 
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                if (!player.getUniqueId().toString().equals(rs.getString(1))) {
+                String uid = rs.getString(1);
+                if (!player.getUniqueId().toString().equals(uid)) {
                     if (player.getUniqueId().toString().contains("00000000-0000-")) {
                         updateUUID(player.getUniqueId().toString(), player.getName(), connection);
                     } else {
@@ -125,7 +126,7 @@ public class SQLCreateNewAccount extends SQL {
                         if (!ServerINFO.IsSemiOnlineMode) {
                             kickplayer(player, 0);
                         } else {
-                            CacheSemiOnline.CacheSubUUID_checkUser(rs.getString(1), player);
+                            CacheSemiOnline.CacheSubUUID_checkUser(uid, player);
                         }
                     }
                 }
@@ -217,7 +218,7 @@ public class SQLCreateNewAccount extends SQL {
                 String u = rs.getString(1);
                 user = rs.getString(2);
                 BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
-                if (cacheThisAmt != null) {
+                if (cacheThisAmt != null && !ServerINFO.IsSemiOnlineMode) {
                     PlayerData bd = new PlayerData(UUID.fromString(u), user, cacheThisAmt);
                     Cache.insertIntoCache(UID, bd);
                 }

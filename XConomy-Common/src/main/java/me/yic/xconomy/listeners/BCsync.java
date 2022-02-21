@@ -68,16 +68,15 @@ public class BCsync implements Listener {
         if (type.equalsIgnoreCase("updateplayer")) {
             output.writeUTF("updateplayer");
             output.writeUTF(input.readUTF());
-        } else if (type.equalsIgnoreCase("message")) {
+        } else if (type.equalsIgnoreCase("message") || type.equalsIgnoreCase("message#semi")) {
             output.writeUTF("message");
             String uid = input.readUTF();
             ProxiedPlayer p = ProxyServer.getInstance().getPlayer(UUID.fromString(uid));
-            if (p != null) {
-                output.writeUTF(uid);
-                output.writeUTF(input.readUTF());
-            } else {
+            if (type.equalsIgnoreCase("message") && p == null) {
                 return;
             }
+            output.writeUTF(uid);
+            output.writeUTF(input.readUTF());
         } else if (type.equalsIgnoreCase("balanceall")) {
             output.writeUTF("balanceall");
             output.writeUTF(input.readUTF());

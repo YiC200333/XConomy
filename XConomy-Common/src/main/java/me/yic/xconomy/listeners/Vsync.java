@@ -68,16 +68,15 @@ public class Vsync {
         if (type.equalsIgnoreCase("updateplayer")) {
             output.writeUTF("updateplayer");
             output.writeUTF(input.readUTF());
-        } else if (type.equalsIgnoreCase("message")) {
+        } else if (type.equalsIgnoreCase("message") || type.equalsIgnoreCase("message#semi")) {
             output.writeUTF("message");
             String uid = input.readUTF();
             Optional<Player> p = XConomyVelocity.getInstance().server.getPlayer(UUID.fromString(uid));
-            if (p.isPresent()) {
-                output.writeUTF(uid);
-                output.writeUTF(input.readUTF());
-            } else {
+            if (type.equalsIgnoreCase("message") && !p.isPresent()) {
                 return;
             }
+            output.writeUTF(uid);
+            output.writeUTF(input.readUTF());
         } else if (type.equalsIgnoreCase("balanceall")) {
             output.writeUTF("balanceall");
             output.writeUTF(input.readUTF());

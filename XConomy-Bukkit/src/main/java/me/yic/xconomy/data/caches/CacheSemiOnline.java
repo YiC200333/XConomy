@@ -85,9 +85,10 @@ public class CacheSemiOnline {
         }
     }
 
+
     public static void save() {
         try {
-            if (XConomy.config.getBoolean("Settings.semi-online-mode")) {
+            if (ServerINFO.IsSemiOnlineMode) {
                 CacheSubUUID.save(cachesubuuid);
             }
         } catch (IOException exception) {
