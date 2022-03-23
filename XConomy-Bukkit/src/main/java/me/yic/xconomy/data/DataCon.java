@@ -24,8 +24,6 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.api.event.PlayerAccountEvent;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
-import me.yic.xconomy.info.DataBaseINFO;
-import me.yic.xconomy.info.ServerINFO;
 import me.yic.xconomy.utils.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -45,7 +43,7 @@ public class DataCon{
     private static <T> PlayerData getPlayerDatai(T u) {
         PlayerData pd = null;
 
-        if (ServerINFO.disablecache) {
+        if (XConomy.Config.DISABLE_CACHE) {
             DataLink.getPlayerData(u);
         }
 
@@ -84,7 +82,7 @@ public class DataCon{
     //    }
     //    Cache.updateIntoCache(u, npd, newvalue);
 
-    //    if (ServerINFO.IsBungeeCordMode) {
+    //    if (XConomy.Config.BUNGEECORD_ENABLE) {
     //        ByteArrayDataOutput output = ByteStreams.newDataOutput();
     //        output.writeUTF("balance");
     //        output.writeUTF(XConomy.getSign());
@@ -112,10 +110,10 @@ public class DataCon{
         }
 
         Cache.updateIntoCache(u, pd, newvalue);
-        if (ServerINFO.IsBungeeCordMode) {
+        if (XConomy.Config.BUNGEECORD_ENABLE) {
             prepareudpmessage(type, u, pd, isAdd, amount, reason);
         } else {
-            if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+            if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
                 Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.save(type, pd, isAdd, amount, reason));
             } else {
                 DataLink.save(type, pd, isAdd, amount, reason);
@@ -126,13 +124,13 @@ public class DataCon{
     public static void changeall(String targettype, String type, BigDecimal amount, Boolean isAdd, String reason) {
         Cache.clearCache();
 
-        if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+        if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
             Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.saveall(targettype, type, amount, isAdd, reason));
         } else {
             DataLink.saveall(targettype, type, amount, isAdd, reason);
         }
 
-        if (ServerINFO.IsBungeeCordMode) {
+        if (XConomy.Config.BUNGEECORD_ENABLE) {
             sendallpdmessage(targettype, amount, isAdd);
         }
     }
@@ -155,7 +153,7 @@ public class DataCon{
         Player mainp = null;
         if (u != null) {
             mainp = Bukkit.getPlayer(u);
-            if (mainp == null && ServerINFO.IsSemiOnlineMode) {
+            if (mainp == null && XConomy.Config.IS_SEMIONLINEMODE) {
                 UUID subu = CacheSemiOnline.CacheSubUUID_getsubuuid(u.toString());
                 if (subu != null) {
                     Player subp = Bukkit.getPlayer(subu);
@@ -169,8 +167,8 @@ public class DataCon{
     }
 
     public static void prepareudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd, BigDecimal amount, String reason) {
-        if (ServerINFO.IsBungeeCordMode) {
-            if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+        if (XConomy.Config.BUNGEECORD_ENABLE) {
+            if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
                 Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> sendudpmessage(type, u, pd, isAdd, amount, reason));
             } else {
                 sendudpmessage(type, u, pd, isAdd, amount, reason);
@@ -181,7 +179,7 @@ public class DataCon{
     @SuppressWarnings("UnstableApiUsage")
     public static void sendudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd, BigDecimal amount, String command) {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF(XConomy.getSign());
+        output.writeUTF(XConomy.Config.BUNGEECORD_SIGN);
         output.writeUTF(XConomy.syncversion);
         output.writeUTF("updateplayer");
         output.writeUTF(u.toString());
@@ -191,7 +189,7 @@ public class DataCon{
     @SuppressWarnings("UnstableApiUsage")
     public static void sendallpdmessage(String targettype, BigDecimal amount, Boolean isAdd) {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF(XConomy.getSign());
+        output.writeUTF(XConomy.Config.BUNGEECORD_SIGN);
         output.writeUTF(XConomy.syncversion);
         output.writeUTF("balanceall");
         if (targettype.equals("all")) {

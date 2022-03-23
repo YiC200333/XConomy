@@ -21,8 +21,6 @@ package me.yic.xconomy.data.caches;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.api.event.NonPlayerAccountEvent;
 import me.yic.xconomy.data.DataLink;
-import me.yic.xconomy.info.DataBaseINFO;
-import me.yic.xconomy.info.ServerINFO;
 import org.bukkit.Bukkit;
 
 import java.math.BigDecimal;
@@ -39,7 +37,7 @@ public class CacheNonPlayer {
     }
 
     public static BigDecimal getBalanceFromCacheOrDB(String u) {
-        if (ServerINFO.disablecache){
+        if (XConomy.Config.DISABLE_CACHE){
             DataLink.getBalNonPlayer(u);
         }
         if (!bal.containsKey(u)) {
@@ -62,7 +60,7 @@ public class CacheNonPlayer {
         }
         insertIntoCache(u, newvalue);
 
-        if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+        if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
             final BigDecimal fnewvalue = newvalue;
             Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.saveNonPlayer(type, u, amount, fnewvalue, isAdd));
         }else {

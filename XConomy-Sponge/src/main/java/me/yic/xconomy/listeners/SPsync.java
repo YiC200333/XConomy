@@ -39,7 +39,7 @@ public class SPsync implements RawDataListener {
     @Override
     public void handlePayload(ChannelBuf data, RemoteConnection connection, Platform.Type side) {
         String sign = data.readUTF();
-        if (!sign.equals(XConomy.getSign())) {
+        if (!sign.equals(XConomy.Config.BUNGEECORD_SIGN)) {
             return;
         }
 

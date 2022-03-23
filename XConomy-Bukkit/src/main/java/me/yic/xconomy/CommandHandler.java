@@ -27,7 +27,6 @@ import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.CompletableFutureTask;
 import me.yic.xconomy.info.PermissionINFO;
-import me.yic.xconomy.info.ServerINFO;
 import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.RGBColor;
 import org.bukkit.Bukkit;
@@ -220,7 +219,7 @@ public class CommandHandler {
                     return true;
                 }
 
-                BigDecimal taxamount = amount.multiply(ServerINFO.PaymentTax);
+                BigDecimal taxamount = amount.multiply(XConomy.Config.PAYMENT_TAX);
 
                 //Cache.refreshFromCache(((Player) sender).getUniqueId());
 
@@ -543,7 +542,7 @@ public class CommandHandler {
                             return true;
                         }
 
-                        if (ServerINFO.IsSemiOnlineMode && args[2].equalsIgnoreCase("online")) {
+                        if (XConomy.Config.IS_SEMIONLINEMODE && args[2].equalsIgnoreCase("online")) {
                             sendMessages(sender, translateColorCodes("prefix") + MessagesManager.systemMessage("§c该指令不支持在半正版模式中使用"));
                             return true;
                         }
@@ -659,7 +658,7 @@ public class CommandHandler {
     }
 
     public static boolean check() {
-        return Bukkit.getOnlinePlayers().isEmpty() && ServerINFO.IsBungeeCordMode && !ServerINFO.disablecache;
+        return Bukkit.getOnlinePlayers().isEmpty() && XConomy.Config.BUNGEECORD_ENABLE && !XConomy.Config.DISABLE_CACHE;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -710,19 +709,19 @@ public class CommandHandler {
             helplist.add(translateColorCodes("help10"));
         }
         Integer maxipages;
-        if (helplist.size() % ServerINFO.LinesNumber == 0) {
-            maxipages = helplist.size() / ServerINFO.LinesNumber;
+        if (helplist.size() % XConomy.Config.LINES_PER_PAGE == 0) {
+            maxipages = helplist.size() /  XConomy.Config.LINES_PER_PAGE;
         } else {
-            maxipages = helplist.size() / ServerINFO.LinesNumber + 1;
+            maxipages = helplist.size() /  XConomy.Config.LINES_PER_PAGE + 1;
         }
         if (num > maxipages) {
             num = maxipages;
         }
         sendMessages(sender, translateColorCodes("help_title_full").replace("%page%", num + "/" + maxipages));
         int indexpage = 0;
-        while (indexpage < ServerINFO.LinesNumber) {
-            if (helplist.size() > indexpage + (num - 1) * ServerINFO.LinesNumber) {
-                sender.sendMessage(helplist.get(indexpage + (num - 1) * ServerINFO.LinesNumber));
+        while (indexpage <  XConomy.Config.LINES_PER_PAGE) {
+            if (helplist.size() > indexpage + (num - 1) *  XConomy.Config.LINES_PER_PAGE) {
+                sender.sendMessage(helplist.get(indexpage + (num - 1) *  XConomy.Config.LINES_PER_PAGE));
             }
             indexpage += 1;
         }
@@ -731,19 +730,19 @@ public class CommandHandler {
     private static void sendRankingMessage(CommandSender sender, Integer num) {
         Integer maxipages;
         int listsize = Cache.baltop_papi.size();
-        if (listsize % ServerINFO.LinesNumber == 0) {
-            maxipages = listsize / ServerINFO.LinesNumber;
+        if (listsize %  XConomy.Config.LINES_PER_PAGE == 0) {
+            maxipages = listsize /  XConomy.Config.LINES_PER_PAGE;
         } else {
-            maxipages = listsize / ServerINFO.LinesNumber + 1;
+            maxipages = listsize /  XConomy.Config.LINES_PER_PAGE + 1;
         }
         if (num > maxipages) {
             num = maxipages;
         }
-        int endindex = num * ServerINFO.LinesNumber;
+        int endindex = num *  XConomy.Config.LINES_PER_PAGE;
         if (endindex >= listsize) {
             endindex = listsize;
         }
-        List<String> topNames = Cache.baltop_papi.subList(num * ServerINFO.LinesNumber - ServerINFO.LinesNumber, endindex);
+        List<String> topNames = Cache.baltop_papi.subList(num *  XConomy.Config.LINES_PER_PAGE -  XConomy.Config.LINES_PER_PAGE, endindex);
 
         sendMessages(sender, translateColorCodes("top_title").replace("%page%", num + "/" + maxipages));
         sendMessages(sender, translateColorCodes("sum_text")
@@ -752,7 +751,7 @@ public class CommandHandler {
         for (String topName : topNames) {
             placement++;
             sendMessages(sender, translateColorCodes("top_text")
-                    .replace("%index%", String.valueOf(num * ServerINFO.LinesNumber - ServerINFO.LinesNumber + placement))
+                    .replace("%index%", String.valueOf(num *  XConomy.Config.LINES_PER_PAGE -  XConomy.Config.LINES_PER_PAGE + placement))
                     .replace("%player%", topName)
                     .replace("%balance%", DataFormat.shown((Cache.baltop.get(topName)))));
         }
@@ -764,7 +763,7 @@ public class CommandHandler {
 
     @SuppressWarnings("UnstableApiUsage")
     public static void broadcastSendMessage(boolean ispublic, UUID u, String message) {
-        if (!ServerINFO.IsBungeeCordMode) {
+        if (!XConomy.Config.BUNGEECORD_ENABLE) {
             return;
         }
 
@@ -773,10 +772,10 @@ public class CommandHandler {
         }
 
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF(XConomy.getSign());
+        output.writeUTF(XConomy.Config.BUNGEECORD_SIGN);
         output.writeUTF(XConomy.syncversion);
         if (!ispublic) {
-            if (ServerINFO.IsSemiOnlineMode){
+            if (XConomy.Config.IS_SEMIONLINEMODE){
                 output.writeUTF("message#semi");
             }else {
                 output.writeUTF("message");

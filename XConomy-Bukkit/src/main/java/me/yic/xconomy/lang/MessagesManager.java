@@ -19,7 +19,6 @@
 package me.yic.xconomy.lang;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.info.ServerINFO;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -41,7 +40,7 @@ public class MessagesManager {
         Reader reader = null;
         InputStream is = null;
         try {
-            URL url = new URL(jarPath + "!/lang/" + ServerINFO.Lang.toLowerCase() + ".yml");
+            URL url = new URL(jarPath + "!/lang/" + XConomy.Config.LANGUAGE.toLowerCase() + ".yml");
             is = url.openStream();
             reader = new InputStreamReader(is, StandardCharsets.UTF_8);
         } catch (IOException e) {
@@ -83,9 +82,9 @@ public class MessagesManager {
         }
 
         messageFile = YamlConfiguration.loadConfiguration(mfile);
-        LanguagesManager.compare(ServerINFO.Lang, mfile);
+        LanguagesManager.compare(XConomy.Config.LANGUAGE, mfile);
         if (translate) {
-            Languages.translatorName(ServerINFO.Lang, mfile);
+            Languages.translatorName(XConomy.Config.LANGUAGE, mfile);
         }
     }
 
@@ -95,8 +94,8 @@ public class MessagesManager {
     }
 
     public static String getAuthor() {
-        if (ServerINFO.Lang.equalsIgnoreCase("Chinese")
-                | ServerINFO.Lang.equalsIgnoreCase("ChineseTW")) {
+        if (XConomy.Config.LANGUAGE.equalsIgnoreCase("Chinese")
+                | XConomy.Config.LANGUAGE.equalsIgnoreCase("ChineseTW")) {
             return "伊C";
         } else {
             return "YiC";

@@ -19,7 +19,6 @@
 package me.yic.xconomy.lang;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.info.ServerINFO;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
@@ -45,7 +44,7 @@ public class MessagesManager {
 
     public void load() {
         try {
-            URL url = new URL(XConomy.jarPath + "!/lang/" + ServerINFO.Lang.toLowerCase() + ".yml");
+            URL url = new URL(XConomy.jarPath + "!/lang/" + XConomy.Config.LANGUAGE.toLowerCase() + ".yml");
             InputStream is = url.openStream();
             is.close();
             YAMLConfigurationLoader sysloader = YAMLConfigurationLoader.builder().setURL(url).build();
@@ -80,15 +79,15 @@ public class MessagesManager {
             e.printStackTrace();
         }
 
-        LanguagesManager.compare(ServerINFO.Lang);
+        LanguagesManager.compare(XConomy.Config.LANGUAGE);
         if (translate) {
-            Languages.translatorName(ServerINFO.Lang, mfile.toFile());
+            Languages.translatorName(XConomy.Config.LANGUAGE, mfile.toFile());
         }
     }
 
     public static String getAuthor() {
-        if (ServerINFO.Lang.equalsIgnoreCase("Chinese")
-                | ServerINFO.Lang.equalsIgnoreCase("ChineseTW")) {
+        if (XConomy.Config.LANGUAGE.equalsIgnoreCase("Chinese")
+                | XConomy.Config.LANGUAGE.equalsIgnoreCase("ChineseTW")) {
             return "伊C";
         } else {
             return "YiC";

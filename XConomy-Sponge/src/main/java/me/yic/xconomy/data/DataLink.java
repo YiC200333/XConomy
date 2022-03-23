@@ -21,7 +21,6 @@ package me.yic.xconomy.data;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.sql.SQLCreateNewAccount;
-import me.yic.xconomy.info.DataBaseINFO;
 import me.yic.xconomy.utils.PlayerData;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -32,10 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class DataLink extends DataBaseINFO {
+public class DataLink {
 
     public static boolean create() {
-        switch (getStorageType()) {
+        switch (XConomy.DConfig.getStorageType()) {
             case 1:
                 XConomy.getInstance().logger("数据保存方式", 0, " - SQLite");
                 setupSqLiteAddress();
@@ -55,13 +54,13 @@ public class DataLink extends DataBaseINFO {
         }
 
         if (SQL.con()) {
-            if (getStorageType() == 2) {
+            if (XConomy.DConfig.getStorageType() == 2) {
                 SQL.getwaittimeout();
             }
             SQL.createTable();
-            loggersysmess("连接正常");
+            XConomy.DConfig.loggersysmess("连接正常");
         } else {
-            loggersysmess("连接异常");
+            XConomy.DConfig.loggersysmess("连接异常");
             return false;
         }
 
@@ -126,19 +125,19 @@ public class DataLink extends DataBaseINFO {
     }
 
     private static void setupMySqlTable() {
-        if (gettablesuffix() != null & !gettablesuffix().equals("")) {
-            SQL.tableName = "xconomy_" + gettablesuffix().replace("%sign%", XConomy.getSign());
-            SQL.tableNonPlayerName = "xconomynon_" + gettablesuffix().replace("%sign%", XConomy.getSign());
-            SQL.tableRecordName = "xconomyrecord_" + gettablesuffix().replace("%sign%", XConomy.getSign());
+        if (XConomy.DConfig.gettablesuffix() != null & !XConomy.DConfig.gettablesuffix().equals("")) {
+            SQL.tableName = "xconomy_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
+            SQL.tableNonPlayerName = "xconomynon_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
+            SQL.tableRecordName = "xconomyrecord_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
         }
     }
 
     private static void setupSqLiteAddress() {
-        if (gethost().equalsIgnoreCase("Default")) {
+        if (XConomy.DConfig.gethost().equalsIgnoreCase("Default")) {
             return;
         }
 
-        File folder = new File(gethost());
+        File folder = new File(XConomy.DConfig.gethost());
         if (folder.exists()) {
             SQL.database.userdata = new File(folder, "data.db");
         } else {

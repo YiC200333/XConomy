@@ -25,7 +25,7 @@ import me.yic.xconomy.data.caches.CacheNonPlayer;
 public class XCEconomyCommon {
 
     public static boolean isNonPlayerAccount(String name) {
-        if (!XConomy.config.getNode("Settings","non-player-account").getBoolean()) {
+        if (!XConomy.Config.NON_PLAYER_ACCOUNT) {
             return false;
         }
 

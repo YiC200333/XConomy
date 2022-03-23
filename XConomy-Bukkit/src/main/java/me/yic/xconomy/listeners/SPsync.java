@@ -25,7 +25,6 @@ import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
-import me.yic.xconomy.info.ServerINFO;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -45,7 +44,7 @@ public class SPsync implements PluginMessageListener {
         ByteArrayDataInput input = ByteStreams.newDataInput(message);
 
         String sign = input.readUTF();
-        if (!sign.equals(XConomy.getSign())) {
+        if (!sign.equals(XConomy.Config.BUNGEECORD_SIGN)) {
             return;
         }
 
@@ -65,7 +64,7 @@ public class SPsync implements PluginMessageListener {
             String mess = input.readUTF();
             if (p != null) {
                 p.sendMessage(mess);
-            }else if (ServerINFO.IsSemiOnlineMode){
+            }else if (XConomy.Config.IS_SEMIONLINEMODE){
                 UUID suid = CacheSemiOnline.CacheSubUUID_getsubuuid(muid);
                 if (suid != null) {
                     Player sp = Bukkit.getPlayer(suid);

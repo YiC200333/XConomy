@@ -19,7 +19,6 @@
 package me.yic.xconomy.data.caches;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.info.ServerINFO;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -34,7 +33,7 @@ public class CacheSemiOnline {
     public static FileConfiguration CacheSubUUID;
 
     public static boolean createfile() {
-        if (ServerINFO.IsSemiOnlineMode) {
+        if (XConomy.Config.IS_SEMIONLINEMODE) {
             File dataFolder = new File(XConomy.getInstance().getDataFolder(), "cache");
             if (!dataFolder.exists() && !dataFolder.mkdirs()) {
                 XConomy.getInstance().logger("文件夹创建异常", 1, null);
@@ -88,7 +87,7 @@ public class CacheSemiOnline {
 
     public static void save() {
         try {
-            if (ServerINFO.IsSemiOnlineMode) {
+            if (XConomy.Config.IS_SEMIONLINEMODE) {
                 CacheSubUUID.save(cachesubuuid);
             }
         } catch (IOException exception) {

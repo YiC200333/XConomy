@@ -29,7 +29,6 @@ import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.PluginINFO;
-import me.yic.xconomy.info.ServerINFO;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -222,7 +221,7 @@ public class CommandCore {
                     return CommandResult.success();
                 }
 
-                BigDecimal taxamount = amount.multiply(ServerINFO.PaymentTax);
+                BigDecimal taxamount = amount.multiply(XConomy.Config.PAYMENT_TAX);
 
                 String amountFormatted = DataFormat.shown(amount);
                 String taxamountFormatted = DataFormat.shown(taxamount);
@@ -620,7 +619,7 @@ public class CommandCore {
     }
 
     public static boolean check() {
-        return Sponge.getServer().getOnlinePlayers().isEmpty() && ServerINFO.IsBungeeCordMode && !ServerINFO.disablecache;
+        return Sponge.getServer().getOnlinePlayers().isEmpty() && XConomy.Config.BUNGEECORD_ENABLE && !XConomy.Config.DISABLE_CACHE;
     }
 
     public static boolean checkMessage(String message) {
@@ -662,19 +661,19 @@ public class CommandCore {
             helplist.add(translateColorCodes("help10"));
         }
         Integer maxipages;
-        if (helplist.size() % ServerINFO.LinesNumber == 0) {
-            maxipages = helplist.size() / ServerINFO.LinesNumber;
+        if (helplist.size() % XConomy.Config.LINES_PER_PAGE == 0) {
+            maxipages = helplist.size() / XConomy.Config.LINES_PER_PAGE;
         } else {
-            maxipages = helplist.size() / ServerINFO.LinesNumber + 1;
+            maxipages = helplist.size() / XConomy.Config.LINES_PER_PAGE + 1;
         }
         if (num > maxipages) {
             num = maxipages;
         }
         sender.sendMessage(Text.of(translateColorCodes("help_title_full").replace("%page%", num + "/" + maxipages)));
         int indexpage = 0;
-        while (indexpage < ServerINFO.LinesNumber) {
-            if (helplist.size() > indexpage + (num - 1) * ServerINFO.LinesNumber) {
-                sender.sendMessage(Text.of(helplist.get(indexpage + (num - 1) * ServerINFO.LinesNumber)));
+        while (indexpage < XConomy.Config.LINES_PER_PAGE) {
+            if (helplist.size() > indexpage + (num - 1) * XConomy.Config.LINES_PER_PAGE) {
+                sender.sendMessage(Text.of(helplist.get(indexpage + (num - 1) * XConomy.Config.LINES_PER_PAGE)));
             }
             indexpage += 1;
         }
@@ -683,19 +682,19 @@ public class CommandCore {
     private static void sendRankingMessage(CommandSource sender, Integer num) {
         Integer maxipages;
         int listsize = Cache.baltop_papi.size();
-        if (listsize % ServerINFO.LinesNumber == 0) {
-            maxipages = listsize / ServerINFO.LinesNumber;
+        if (listsize % XConomy.Config.LINES_PER_PAGE == 0) {
+            maxipages = listsize / XConomy.Config.LINES_PER_PAGE;
         } else {
-            maxipages = listsize / ServerINFO.LinesNumber + 1;
+            maxipages = listsize / XConomy.Config.LINES_PER_PAGE + 1;
         }
         if (num > maxipages) {
             num = maxipages;
         }
-        int endindex = num * ServerINFO.LinesNumber;
+        int endindex = num * XConomy.Config.LINES_PER_PAGE;
         if (endindex >= listsize) {
             endindex = listsize;
         }
-        List<String> topNames = Cache.baltop_papi.subList(num * ServerINFO.LinesNumber - ServerINFO.LinesNumber, endindex);
+        List<String> topNames = Cache.baltop_papi.subList(num * XConomy.Config.LINES_PER_PAGE - XConomy.Config.LINES_PER_PAGE, endindex);
 
         sender.sendMessage(Text.of(translateColorCodes("top_title").replace("%page%", num + "/" + maxipages)));
         sender.sendMessage(Text.of(translateColorCodes("sum_text")
@@ -704,7 +703,7 @@ public class CommandCore {
         for (String topName : topNames) {
             placement++;
             sender.sendMessage(Text.of(translateColorCodes("top_text")
-                    .replace("%index%", String.valueOf(num * ServerINFO.LinesNumber - ServerINFO.LinesNumber + placement))
+                    .replace("%index%", String.valueOf(num * XConomy.Config.LINES_PER_PAGE - XConomy.Config.LINES_PER_PAGE + placement))
                     .replace("%player%", topName)
                     .replace("%balance%", DataFormat.shown((Cache.baltop.get(topName))))));
         }
@@ -716,7 +715,7 @@ public class CommandCore {
 
     @SuppressWarnings("UnstableApiUsage")
     public static void broadcastSendMessage(boolean ispublic, UUID u, String message) {
-        if (!ServerINFO.IsBungeeCordMode) {
+        if (!XConomy.Config.BUNGEECORD_ENABLE) {
             return;
         }
 
@@ -725,7 +724,7 @@ public class CommandCore {
         }
 
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF(XConomy.getSign());
+        output.writeUTF(XConomy.Config.BUNGEECORD_SIGN);
         output.writeUTF(XConomy.syncversion);
         if (!ispublic) {
             output.writeUTF("message");

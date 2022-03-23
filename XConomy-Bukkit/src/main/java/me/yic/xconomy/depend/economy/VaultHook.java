@@ -39,7 +39,7 @@ public class VaultHook{
         }
         XConomy.getInstance().getServer().getServicesManager().register(Economy.class, econ, XConomy.getInstance(), ServicePriority.Normal);
 
-        if (XConomy.config.getBoolean("Settings.disable-essentials")) {
+        if (XConomy.Config.DISABLE_ESSENTIAL) {
             Collection<RegisteredServiceProvider<Economy>> econs = Bukkit.getPluginManager().getPlugin("Vault").getServer().getServicesManager().getRegistrations(Economy.class);
             for (RegisteredServiceProvider<Economy> econ : econs) {
                 if (econ.getProvider().getName().equalsIgnoreCase("Essentials Economy")) {

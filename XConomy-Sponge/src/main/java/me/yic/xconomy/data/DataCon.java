@@ -22,8 +22,6 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.info.DataBaseINFO;
-import me.yic.xconomy.info.ServerINFO;
 import me.yic.xconomy.utils.PlayerData;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.User;
@@ -37,7 +35,7 @@ public class DataCon{
     public static <T> PlayerData getPlayerData(T u) {
         PlayerData pd = null;
 
-        if (ServerINFO.disablecache) {
+        if (XConomy.Config.DISABLE_CACHE) {
             DataLink.getPlayerData(u);
         }
 
@@ -102,10 +100,10 @@ public class DataCon{
         }
 
         Cache.updateIntoCache(u, pd, newvalue);
-        if (ServerINFO.IsBungeeCordMode) {
+        if (XConomy.Config.BUNGEECORD_ENABLE) {
             prepareudpmessage(type, u, pd, isAdd, amount, reason);
         } else {
-            if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+            if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
                 Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataLink.save(type, pd, isAdd, amount, reason));
             } else {
                 DataLink.save(type, pd, isAdd, amount, reason);
@@ -116,13 +114,13 @@ public class DataCon{
     public static void changeall(String targettype, String type, BigDecimal amount, Boolean isAdd, String reason) {
         Cache.clearCache();
 
-        if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+        if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
             Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataLink.saveall(targettype, type, amount, isAdd, reason));
         } else {
             DataLink.saveall(targettype, type, amount, isAdd, reason);
         }
 
-        if (ServerINFO.IsBungeeCordMode) {
+        if (XConomy.Config.BUNGEECORD_ENABLE) {
             sendallpdmessage(targettype, amount, isAdd);
         }
     }
@@ -152,8 +150,8 @@ public class DataCon{
 
 
     public static void prepareudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd, BigDecimal amount, String reason) {
-        if (ServerINFO.IsBungeeCordMode) {
-            if (DataBaseINFO.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+        if (XConomy.Config.BUNGEECORD_ENABLE) {
+            if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
                 Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> sendudpmessage(type, u, pd, isAdd, amount, reason));
             } else {
                 sendudpmessage(type, u, pd, isAdd, amount, reason);
@@ -164,7 +162,7 @@ public class DataCon{
     @SuppressWarnings("UnstableApiUsage")
     public static void sendudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd, BigDecimal amount, String command) {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF(XConomy.getSign());
+        output.writeUTF(XConomy.Config.BUNGEECORD_SIGN);
         output.writeUTF(XConomy.syncversion);
         output.writeUTF("updateplayer");
         output.writeUTF(u.toString());
@@ -174,7 +172,7 @@ public class DataCon{
     @SuppressWarnings("UnstableApiUsage")
     public static void sendallpdmessage(String targettype, BigDecimal amount, Boolean isAdd) {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF(XConomy.getSign());
+        output.writeUTF(XConomy.Config.BUNGEECORD_SIGN);
         output.writeUTF(XConomy.syncversion);
         output.writeUTF("balanceall");
         if (targettype.equals("all")) {

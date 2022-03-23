@@ -19,13 +19,10 @@
 package me.yic.xconomy.listeners;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.Updater;
-import me.yic.xconomy.info.DataBaseINFO;
-import me.yic.xconomy.info.ServerINFO;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -47,7 +44,7 @@ public class ConnectionListeners {
     public void onJoin(ClientConnectionEvent.Join event) {
         Player a = event.getTargetEntity();
         Cache.removefromCache(a.getUniqueId());
-        if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
+        if (XConomy.DConfig.getStorageType() == 0 || XConomy.DConfig.getStorageType() == 1) {
             DataLink.newPlayer(a);
         } else {
             Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataLink.newPlayer(a));
@@ -61,14 +58,14 @@ public class ConnectionListeners {
 
 
     private void notifyUpdate(Player player) {
-        if (!(XConomy.checkup() & Updater.old)) {
+        if (!(XConomy.Config.CHECK_UPDATE & Updater.old)) {
             return;
         }
         player.sendMessage(Text.of("§f[XConomy]§b" + MessagesManager.systemMessage("发现新版本 ") + Updater.newVersion));
         player.sendMessage(Text.of("§f[XConomy]§ahttps://ore.spongepowered.org/YiC/XConomy"));
 
-        if (ServerINFO.Lang.equalsIgnoreCase("Chinese")
-                | ServerINFO.Lang.equalsIgnoreCase("ChineseTW")) {
+        if (XConomy.Config.LANGUAGE.equalsIgnoreCase("Chinese")
+                | XConomy.Config.LANGUAGE.equalsIgnoreCase("ChineseTW")) {
             player.sendMessage(Text.of("§f[XConomy]§ahttps://www.mcbbs.net/thread-962904-1-1.html"));
         }
 

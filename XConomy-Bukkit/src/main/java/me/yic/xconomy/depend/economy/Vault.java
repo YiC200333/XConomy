@@ -22,7 +22,6 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
-import me.yic.xconomy.info.ServerINFO;
 import me.yic.xconomy.utils.PlayerData;
 import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -77,12 +76,12 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public String currencyNamePlural() {
-        return XConomy.config.getString("Currency.plural-name");
+        return XConomy.Config.PLURAL_NAME;
     }
 
     @Override
     public String currencyNameSingular() {
-        return XConomy.config.getString("Currency.singular-name");
+        return XConomy.Config.SINGULAR_NAME;
     }
 
     @Override
@@ -93,7 +92,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse depositPlayer(String name, double amount) {
-        if (ServerINFO.IsBungeeCordMode && Bukkit.getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
+        if (XConomy.Config.BUNGEECORD_ENABLE && Bukkit.getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
                     "[BungeeCord] No player in server");
         }
@@ -121,7 +120,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer pp, double amount) {
-        if (ServerINFO.IsBungeeCordMode && Bukkit.getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
+        if (XConomy.Config.BUNGEECORD_ENABLE && Bukkit.getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
                     "[BungeeCord] No player in server");
         }
@@ -268,7 +267,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse withdrawPlayer(String name, double amount) {
-        if (ServerINFO.IsBungeeCordMode && Bukkit.getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
+        if (XConomy.Config.BUNGEECORD_ENABLE && Bukkit.getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
                     "[BungeeCord] No player in server");
         }
@@ -296,7 +295,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer pp, double amount) {
-        if (ServerINFO.IsBungeeCordMode && Bukkit.getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
+        if (XConomy.Config.BUNGEECORD_ENABLE && Bukkit.getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
                     "[BungeeCord] No player in server");
         }
@@ -327,7 +326,7 @@ public class Vault extends AbstractEconomy {
     }
 
     private boolean isNonPlayerAccount(String name) {
-        if (!XConomy.config.getBoolean("Settings.non-player-account")) {
+        if (!XConomy.Config.NON_PLAYER_ACCOUNT) {
             return false;
         }
 

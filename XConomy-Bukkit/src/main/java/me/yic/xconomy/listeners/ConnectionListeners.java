@@ -21,8 +21,6 @@ package me.yic.xconomy.listeners;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.info.DataBaseINFO;
-import me.yic.xconomy.info.ServerINFO;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.Updater;
 import org.bukkit.Bukkit;
@@ -40,7 +38,7 @@ public class ConnectionListeners implements Listener {
         if (Bukkit.getOnlinePlayers().size() == 1) {
             Cache.clearCache();
         }
-        if (!ServerINFO.IsBungeeCordMode) {
+        if (!XConomy.Config.BUNGEECORD_ENABLE) {
             TabList.PlayerList.remove(event.getPlayer().getName());
         }
     }
@@ -50,11 +48,11 @@ public class ConnectionListeners implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player a = event.getPlayer();
 
-        if (!ServerINFO.IsSemiOnlineMode) {
+        if (!XConomy.Config.IS_SEMIONLINEMODE) {
             Cache.removefromCache(a.getUniqueId());
         }
 
-        if (DataBaseINFO.getStorageType() == 0 || DataBaseINFO.getStorageType() == 1) {
+        if (XConomy.DConfig.getStorageType() == 0 || XConomy.DConfig.getStorageType() == 1) {
             DataLink.newPlayer(a);
         } else {
             Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.newPlayer(a));
@@ -71,14 +69,14 @@ public class ConnectionListeners implements Listener {
 
 
     private void notifyUpdate(Player player) {
-        if (!(XConomy.checkup() & Updater.old)) {
+        if (!(XConomy.Config.CHECK_UPDATE & Updater.old)) {
             return;
         }
         player.sendMessage("§f[XConomy]§b" + MessagesManager.systemMessage("发现新版本 ") + Updater.newVersion);
         player.sendMessage("§f[XConomy]§ahttps://www.spigotmc.org/resources/xconomy.75669/");
 
-        if (ServerINFO.Lang.equalsIgnoreCase("Chinese")
-                | ServerINFO.Lang.equalsIgnoreCase("ChineseTW")) {
+        if (XConomy.Config.LANGUAGE.equalsIgnoreCase("Chinese")
+                | XConomy.Config.LANGUAGE.equalsIgnoreCase("ChineseTW")) {
             player.sendMessage("§f[XConomy]§ahttps://www.mcbbs.net/thread-962904-1-1.html");
         }
 

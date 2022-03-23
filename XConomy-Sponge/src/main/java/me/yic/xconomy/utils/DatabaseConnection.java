@@ -19,8 +19,7 @@ package me.yic.xconomy.utils;/*
 
 import com.zaxxer.hikari.HikariDataSource;
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.info.DataBaseINFO;
-import me.yic.xconomy.info.ServerINFO;
+import me.yic.xconomy.info.DataBaseConfig;
 
 import java.io.File;
 import java.sql.Connection;
@@ -34,10 +33,10 @@ public class DatabaseConnection {
     //============================================================================================
     private final File dataFolder = new File(XConomy.getInstance().configDir.toFile(), "playerdata");
     private String url = "";
-    private final int maxPoolSize = DataBaseINFO.DataBaseINFO.getNode("Pool-Settings", "maximum-pool-size").getInt();
-    private final int minIdle = DataBaseINFO.DataBaseINFO.getNode("Pool-Settings", "minimum-idle").getInt();
-    private final int maxLife = DataBaseINFO.DataBaseINFO.getNode("Pool-Settings", "maximum-lifetime").getInt();
-    private final Long idleTime = DataBaseINFO.DataBaseINFO.getNode("Pool-Settings", "idle-timeout").getLong();
+    private final int maxPoolSize = DataBaseConfig.config.getNode("Pool-Settings", "maximum-pool-size").getInt();
+    private final int minIdle = DataBaseConfig.config.getNode("Pool-Settings", "minimum-idle").getInt();
+    private final int maxLife = DataBaseConfig.config.getNode("Pool-Settings", "maximum-lifetime").getInt();
+    private final Long idleTime = DataBaseConfig.config.getNode("Pool-Settings", "idle-timeout").getLong();
     private boolean secon = false;
     //============================================================================================
     public int waittimeout = 10;
@@ -52,8 +51,8 @@ public class DatabaseConnection {
         hikari = new HikariDataSource();
         hikari.setPoolName("XConomy");
         hikari.setJdbcUrl(url);
-        hikari.setUsername(DataBaseINFO.getuser());
-        hikari.setPassword(DataBaseINFO.getpass());
+        hikari.setUsername(XConomy.DConfig.getuser());
+        hikari.setPassword(XConomy.DConfig.getpass());
         hikari.setMaximumPoolSize(maxPoolSize);
         hikari.setMinimumIdle(minIdle);
         hikari.setMaxLifetime(maxLife);
@@ -70,26 +69,26 @@ public class DatabaseConnection {
 
 
     public boolean setGlobalConnection() {
-        url = DataBaseINFO.geturl();
+        url = XConomy.DConfig.geturl();
         try {
-            if (ServerINFO.EnableConnectionPool) {
+            if (XConomy.DConfig.EnableConnectionPool) {
                 createNewHikariConfiguration();
                 Connection connection = getConnection();
                 closeHikariConnection(connection);
             } else {
                 Class.forName(driver);
-                switch (DataBaseINFO.getStorageType()) {
+                switch (XConomy.DConfig.getStorageType()) {
                     case 1:
                         connection = DriverManager.getConnection("jdbc:sqlite:" + userdata.toString());
                         break;
                     case 2:
-                        connection = DriverManager.getConnection(url, DataBaseINFO.getuser(), DataBaseINFO.getpass());
+                        connection = DriverManager.getConnection(url, XConomy.DConfig.getuser(), XConomy.DConfig.getpass());
                         break;
                 }
             }
 
             if (secon) {
-                DataBaseINFO.loggersysmess("重新连接成功");
+                XConomy.DConfig.loggersysmess("重新连接成功");
             } else {
                 secon = true;
             }
@@ -130,7 +129,7 @@ public class DatabaseConnection {
     }
 
     public Connection getConnection() throws SQLException {
-        if (ServerINFO.EnableConnectionPool) {
+        if (XConomy.DConfig.EnableConnectionPool) {
             return hikari.getConnection();
         } else {
             return connection;
@@ -139,7 +138,7 @@ public class DatabaseConnection {
 
     public boolean canConnect() {
         try {
-            if (ServerINFO.EnableConnectionPool) {
+            if (XConomy.DConfig.EnableConnectionPool) {
                 if (hikari == null) {
                     return setGlobalConnection();
                 }
@@ -157,7 +156,7 @@ public class DatabaseConnection {
                     return setGlobalConnection();
                 }
 
-                if (DataBaseINFO.getStorageType() == 2) {
+                if (XConomy.DConfig.getStorageType() == 2) {
                     if (!connection.isValid(waittimeout)) {
                         secon = false;
                         return setGlobalConnection();
@@ -172,7 +171,7 @@ public class DatabaseConnection {
     }
 
     public void closeHikariConnection(Connection connection) {
-        if (!ServerINFO.EnableConnectionPool) {
+        if (!XConomy.DConfig.EnableConnectionPool) {
             return;
         }
 
@@ -192,7 +191,7 @@ public class DatabaseConnection {
                 hikari.close();
             }
         } catch (SQLException e) {
-            DataBaseINFO.loggersysmess("连接断开失败");
+            XConomy.DConfig.loggersysmess("连接断开失败");
             e.printStackTrace();
         }
     }

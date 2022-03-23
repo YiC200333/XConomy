@@ -28,22 +28,20 @@ import java.math.BigDecimal;
 @SuppressWarnings("NullableProblems")
 public class XCurrency implements Currency {
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public Text getDisplayName() {
-        return Text.of(XConomy.config.getNode("Currency","singular-name").getString());
+        return Text.of(XConomy.Config.SINGULAR_NAME);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public Text getPluralDisplayName() {
-        return Text.of(XConomy.config.getNode("Currency","plural-name").getString());
+        return Text.of(XConomy.Config.PLURAL_NAME);
     }
 
-    @SuppressWarnings("ConstantConditions")
+
     @Override
     public Text getSymbol() {
-        return Text.of(XConomy.config.getNode("Currency","thousands-separator").getString());
+        return Text.of(XConomy.Config.THOUSANDS_SEPARATOR);
     }
 
     @Override

@@ -18,7 +18,7 @@
  */
 package me.yic.xconomy.data.caches;
 
-import me.yic.xconomy.info.ServerINFO;
+import me.yic.xconomy.XConomy;
 import me.yic.xconomy.utils.PlayerData;
 
 import java.math.BigDecimal;
@@ -36,7 +36,7 @@ public class Cache {
         if (pd != null) {
             if (pd.getName() != null && pd.getbalance() != null) {
                 pds.put(uuid, pd);
-                if (ServerINFO.IgnoreCase) {
+                if (XConomy.Config.USERNAME_IGNORE_CASE) {
                     uuids.put(pd.getName().toLowerCase(), uuid);
                 } else {
                     uuids.put(pd.getName(), uuid);
@@ -50,7 +50,7 @@ public class Cache {
         if (key instanceof UUID) {
             return pds.containsKey((UUID) key);
         }
-        if (ServerINFO.IgnoreCase) {
+        if (XConomy.Config.USERNAME_IGNORE_CASE) {
             return uuids.containsKey(((String) key).toLowerCase());
         }
         return uuids.containsKey((String) key);
@@ -62,7 +62,7 @@ public class Cache {
         if (key instanceof UUID) {
             u = (UUID) key;
         } else {
-            if (ServerINFO.IgnoreCase) {
+            if (XConomy.Config.USERNAME_IGNORE_CASE) {
                 u = uuids.get(((String) key).toLowerCase());
             } else {
                 u = uuids.get(((String) key));

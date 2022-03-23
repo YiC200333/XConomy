@@ -24,8 +24,6 @@ import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.GetUUID;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
-import me.yic.xconomy.info.DataBaseINFO;
-import me.yic.xconomy.info.ServerINFO;
 import me.yic.xconomy.utils.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -39,7 +37,7 @@ public class SQLCreateNewAccount extends SQL {
     public static void newPlayer(Player player) {
         Connection connection = database.getConnectionAndCheck();
 
-        if (ServerINFO.IsOnlineMode) {
+        if (XConomy.Config.IS_ONLINEMODE) {
             String uid = GetUUID.getUUID(player, player.getName()).toString();
             if (uid.equalsIgnoreCase(player.getUniqueId().toString())) {
                 checkUserOnline(uid, player.getName(), connection);
@@ -84,7 +82,7 @@ public class SQLCreateNewAccount extends SQL {
                     XConomy.getInstance().logger(" 名称已更改!", 0, "<#>" + name);
                 }
             } else {
-                createAccount(uid, name, ServerINFO.InitialAmount, connection);
+                createAccount(uid, name, XConomy.Config.INITIAL_BAL, connection);
             }
 
             rs.close();
@@ -98,14 +96,14 @@ public class SQLCreateNewAccount extends SQL {
         boolean doubledata = false;
         try {
             String query;
-            if (ServerINFO.IgnoreCase) {
-                if (DataBaseINFO.isMySQL()) {
+            if (XConomy.Config.USERNAME_IGNORE_CASE) {
+                if (XConomy.DConfig.isMySQL()) {
                     query = "select * from " + tableName + " where player = ?";
                 } else {
                     query = "select * from " + tableName + " where player = ? COLLATE NOCASE";
                 }
             } else {
-                if (DataBaseINFO.isMySQL()) {
+                if (XConomy.DConfig.isMySQL()) {
                     query = "select * from " + tableName + " where binary player = ?";
                 } else {
                     query = "select * from " + tableName + " where player = ?";
@@ -123,7 +121,7 @@ public class SQLCreateNewAccount extends SQL {
                         updateUUID(player.getUniqueId().toString(), player.getName(), connection);
                     } else {
                         doubledata = true;
-                        if (!ServerINFO.IsSemiOnlineMode) {
+                        if (!XConomy.Config.IS_SEMIONLINEMODE) {
                             kickplayer(player, 0);
                         } else {
                             CacheSemiOnline.CacheSubUUID_checkUser(uid, player);
@@ -144,7 +142,7 @@ public class SQLCreateNewAccount extends SQL {
     private static void createAccount(String UID, String user, double amount, Connection co_a) {
         try {
             String query;
-            if (DataBaseINFO.isMySQL()) {
+            if (XConomy.DConfig.isMySQL()) {
                 query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
                         + "ON DUPLICATE KEY UPDATE UID = ?";
             } else {
@@ -157,7 +155,7 @@ public class SQLCreateNewAccount extends SQL {
             statement.setDouble(3, amount);
             statement.setInt(4, 0);
 
-            if (DataBaseINFO.isMySQL()) {
+            if (XConomy.DConfig.isMySQL()) {
                 statement.setString(5, UID);
             }
 
@@ -172,7 +170,7 @@ public class SQLCreateNewAccount extends SQL {
     public static void createNonPlayerAccount(String account, double bal, Connection co) {
         try {
             String query;
-            if (DataBaseINFO.isMySQL()) {
+            if (XConomy.DConfig.isMySQL()) {
                 query = "INSERT INTO " + tableNonPlayerName + "(account,balance) values(?,?) "
                         + "ON DUPLICATE KEY UPDATE account = ?";
             } else {
@@ -183,7 +181,7 @@ public class SQLCreateNewAccount extends SQL {
             statement.setString(1, account);
             statement.setDouble(2, bal);
 
-            if (DataBaseINFO.isMySQL()) {
+            if (XConomy.DConfig.isMySQL()) {
                 statement.setString(3, account);
             }
 
@@ -207,6 +205,7 @@ public class SQLCreateNewAccount extends SQL {
     }
 
 
+    @SuppressWarnings("ConstantConditions")
     private static void selectUser(UUID UID, String name, Connection connection) {
         String user = "#";
 
@@ -218,13 +217,13 @@ public class SQLCreateNewAccount extends SQL {
                 String u = rs.getString(1);
                 user = rs.getString(2);
                 BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
-                if (cacheThisAmt != null && !ServerINFO.IsSemiOnlineMode) {
+                if (cacheThisAmt != null && !XConomy.Config.IS_SEMIONLINEMODE) {
                     PlayerData bd = new PlayerData(UUID.fromString(u), user, cacheThisAmt);
                     Cache.insertIntoCache(UID, bd);
                 }
             } else {
                 user = name;
-                createAccount(UID.toString(), user, ServerINFO.InitialAmount, connection);
+                createAccount(UID.toString(), user, XConomy.Config.INITIAL_BAL, connection);
             }
             rs.close();
             statement.close();

@@ -19,7 +19,6 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.info.ServerINFO;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.spongepowered.api.Sponge;
@@ -86,7 +85,7 @@ public class GetUUID {
 
 
     private static void insertIntoCache(final String name, final UUID uuid) {
-        if (ServerINFO.IgnoreCase) {
+        if (XConomy.Config.USERNAME_IGNORE_CASE) {
             cache.put(name.toLowerCase(), uuid);
         } else {
             cache.put(name, uuid);
@@ -94,7 +93,7 @@ public class GetUUID {
     }
 
     private static boolean CacheContainsKey(final String name) {
-        if (ServerINFO.IgnoreCase) {
+        if (XConomy.Config.USERNAME_IGNORE_CASE) {
             return cache.containsKey(name.toLowerCase());
         }
         return cache.containsKey(name);
@@ -102,7 +101,7 @@ public class GetUUID {
 
 
     private static UUID getUUIDFromCache(final String name) {
-        if (ServerINFO.IgnoreCase) {
+        if (XConomy.Config.USERNAME_IGNORE_CASE) {
             return cache.get(name.toLowerCase());
         } else {
             return cache.get(name);

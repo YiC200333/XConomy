@@ -18,11 +18,10 @@
  */
 package me.yic.xconomy.depend.economyapi;
 
+import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
-import me.yic.xconomy.info.ServerINFO;
 import me.yic.xconomy.utils.PlayerData;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.cause.Cause;
@@ -56,7 +55,7 @@ public class XCVirtualAccount implements VirtualAccount {
 
     @Override
     public BigDecimal getDefaultBalance(Currency currency) {
-        return DataFormat.formatString(ServerINFO.InitialAmount.toString());
+        return DataFormat.formatString(XConomy.Config.INITIAL_BAL);
     }
 
     @Override
@@ -80,7 +79,7 @@ public class XCVirtualAccount implements VirtualAccount {
 
     @Override
     public TransactionResult setBalance(Currency currency, BigDecimal amount, Cause cause, Set<Context> contexts) {
-        if (ServerINFO.IsBungeeCordMode && Sponge.getServer().getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
+        if (XConomy.Config.BUNGEECORD_ENABLE && Sponge.getServer().getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED,
                     DummyObjectProvider.createFor(TransactionType.class, "SET"));
@@ -116,7 +115,7 @@ public class XCVirtualAccount implements VirtualAccount {
 
     @Override
     public TransactionResult resetBalance(Currency currency, Cause cause, Set<Context> contexts) {
-        if (ServerINFO.IsBungeeCordMode && Sponge.getServer().getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
+        if (XConomy.Config.BUNGEECORD_ENABLE && Sponge.getServer().getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED,
                     DummyObjectProvider.createFor(TransactionType.class, "RESET"));
@@ -143,7 +142,7 @@ public class XCVirtualAccount implements VirtualAccount {
     @Override
     public TransactionResult deposit(Currency currency, BigDecimal amount, Cause cause, Set<Context> contexts) {
 
-        if (ServerINFO.IsBungeeCordMode && Sponge.getServer().getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
+        if (XConomy.Config.BUNGEECORD_ENABLE && Sponge.getServer().getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.DEPOSIT);
         }
@@ -175,7 +174,7 @@ public class XCVirtualAccount implements VirtualAccount {
 
     @Override
     public TransactionResult withdraw(Currency currency, BigDecimal amount, Cause cause, Set<Context> contexts) {
-        if (ServerINFO.IsBungeeCordMode && Sponge.getServer().getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
+        if (XConomy.Config.BUNGEECORD_ENABLE && Sponge.getServer().getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
         }
@@ -205,7 +204,7 @@ public class XCVirtualAccount implements VirtualAccount {
 
     @Override
     public TransferResult transfer(Account to, Currency currency, BigDecimal amount, Cause cause, Set<Context> contexts) {
-        if (ServerINFO.IsBungeeCordMode && Sponge.getServer().getOnlinePlayers().isEmpty() && !ServerINFO.disablecache) {
+        if (XConomy.Config.BUNGEECORD_ENABLE && Sponge.getServer().getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
             return new XCTransferResult(to,this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.TRANSFER);
         }

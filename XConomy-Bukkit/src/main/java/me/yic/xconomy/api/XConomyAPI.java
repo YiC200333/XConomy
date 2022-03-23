@@ -23,7 +23,6 @@ import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.PermissionINFO;
-import me.yic.xconomy.info.ServerINFO;
 import org.bukkit.Bukkit;
 
 import java.math.BigDecimal;
@@ -39,7 +38,7 @@ public class XConomyAPI {
     }
 
     public boolean isbungeecordmode() {
-        return ServerINFO.IsBungeeCordMode;
+        return XConomy.Config.BUNGEECORD_ENABLE;
     }
 
     public UUID translateUUID(String playername) {
@@ -63,7 +62,7 @@ public class XConomyAPI {
     }
 
     public int changebalance(UUID u, String playername, BigDecimal amount, Boolean isadd) {
-        if (ServerINFO.IsBungeeCordMode & Bukkit.getOnlinePlayers().isEmpty()) {
+        if (XConomy.Config.BUNGEECORD_ENABLE & Bukkit.getOnlinePlayers().isEmpty()) {
             return 1;
         }
         BigDecimal bal = getbalance(u);
