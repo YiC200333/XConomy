@@ -24,7 +24,9 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
+import org.yaml.snakeyaml.DumperOptions;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -33,16 +35,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class MessagesManager {
-    private final XConomy plugin;
+
     public static ConfigurationNode messageFile;
     public static ConfigurationNode langFile;
-    public static ConfigurationLoader<CommentedConfigurationNode> loader;
+    public static ConfigurationLoader<ConfigurationNode> loader;
+    public static Messages smessageList = new Messages();
 
-    public MessagesManager(XConomy plugin) {
-        this.plugin = plugin;
-    }
-
-    public void load() {
+    public static void load() {
         try {
             URL url = new URL(XConomy.jarPath + "!/lang/" + XConomy.Config.LANGUAGE.toLowerCase() + ".yml");
             InputStream is = url.openStream();
@@ -63,14 +62,14 @@ public class MessagesManager {
         }
 
 
-        Path mfile = Paths.get(XConomy.getInstance().configDir + "/message.json");
+        File mfile = new File(XConomy.getInstance().configDir.toFile(), "message.yml");
         boolean translate = false;
-        loader = HoconConfigurationLoader.builder().setPath(mfile).build();
+        loader = YAMLConfigurationLoader.builder().setFlowStyle(DumperOptions.FlowStyle.BLOCK).setIndent(2).setFile(mfile).build();
 
-        if (!Files.exists(mfile)) {
+        if (!mfile.exists()) {
             loader.createEmptyNode();
             translate = true;
-            plugin.logger("已创建一个新的语言文件", 0, null);
+            XConomy.getInstance().logger("已创建一个新的语言文件", 0, null);
         }
 
         try {
@@ -81,7 +80,7 @@ public class MessagesManager {
 
         LanguagesManager.compare(XConomy.Config.LANGUAGE);
         if (translate) {
-            Languages.translatorName(XConomy.Config.LANGUAGE, mfile.toFile());
+            Languages.translatorName(XConomy.Config.LANGUAGE, mfile);
         }
     }
 
@@ -96,7 +95,7 @@ public class MessagesManager {
 
     @SuppressWarnings("ConstantConditions")
     public static String systemMessage(String message) {
-        return langFile.getNode(Messages.Companion.gettag(message)).getString();
+        return langFile.getNode(smessageList.gettag(message)).getString();
     }
 
     @SuppressWarnings("ConstantConditions")

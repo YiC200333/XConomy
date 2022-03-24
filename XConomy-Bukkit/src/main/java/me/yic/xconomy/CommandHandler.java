@@ -24,9 +24,9 @@ import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.CompletableFutureTask;
-import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.RGBColor;
 import org.bukkit.Bukkit;
@@ -46,7 +46,7 @@ public class CommandHandler {
             case "xconomy": {
                 if (sender.isOp()) {
                     if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-                        XConomy.getInstance().reloadMessages();
+                        MessagesManager.load();
                         sendMessages(sender, translateColorCodes("prefix") + MessagesManager.systemMessage("§amessage.yml重载成功"));
                         return true;
                     }

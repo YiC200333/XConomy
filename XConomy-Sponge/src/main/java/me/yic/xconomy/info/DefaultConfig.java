@@ -1,5 +1,5 @@
 package me.yic.xconomy.info;/*
- *  This file (DefaultConfigKeys.java) is a part of project XConomy
+ *  This file (DefaultConfig.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it

@@ -27,16 +27,14 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class MessagesManager {
-    private final XConomy plugin;
+    private static final XConomy plugin = XConomy.getInstance();
     public static FileConfiguration messageFile;
     public static FileConfiguration langFile;
+    public static Messages smessageList = new Messages();
 
-    public MessagesManager(XConomy plugin) {
-        this.plugin = plugin;
-    }
 
-    public void load() {
-        String jarPath = "jar:file:" + this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
+    public static void load() {
+        String jarPath = "jar:file:" + plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
         Reader reader = null;
         InputStream is = null;
         try {
@@ -90,7 +88,7 @@ public class MessagesManager {
 
     @SuppressWarnings("ConstantConditions")
     public static String systemMessage(String message) {
-        return langFile.getString(Messages.Companion.gettag(message));
+        return langFile.getString(smessageList.gettag(message));
     }
 
     public static String getAuthor() {

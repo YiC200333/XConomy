@@ -40,6 +40,8 @@ import me.yic.xconomy.listeners.SPsync;
 import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
 import me.yic.xconomy.utils.PluginINFO;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Platform;
@@ -57,7 +59,9 @@ import org.spongepowered.api.scheduler.SpongeExecutorService;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.text.Text;
+import org.yaml.snakeyaml.DumperOptions;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -108,8 +112,7 @@ public class XConomy {
     public void onEnable(GamePreInitializationEvent event) {
         loadconfig();
 
-        messageManager = new MessagesManager(this);
-        messageManager.load();
+        MessagesManager.load();
 
         Sponge.getServiceManager().setProvider(this, EconomyService.class, new XCService());
 
@@ -225,10 +228,6 @@ public class XConomy {
         return instance;
     }
 
-    public void reloadMessages() {
-        messageManager.load();
-    }
-
     private void loadconfig() {
         if (!Files.exists(configDir)) {
             try {
@@ -251,21 +250,22 @@ public class XConomy {
     }
 
     private void configload() {
-        Path configpath = Paths.get(configDir + System.getProperty("file.separator") + "config.yml");
+        File configpath = new File(configDir.toFile(), "config.yml");
 
         jarPath = "jar:" + this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
         int i = jarPath.indexOf(".jar!/");
         jarPath = jarPath.substring(0, i + 4);
-        if (!Files.exists(configpath)) {
+        if (!configpath.exists()) {
             try {
                 URL configurl = new URL(jarPath + "!/config.yml");
-                Files.copy(configurl.openStream(), configpath);
+                Files.copy(configurl.openStream(), Paths.get(configpath.toURI()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        YAMLConfigurationLoader loader = YAMLConfigurationLoader.builder().setPath(configpath).build();
+        ConfigurationLoader<ConfigurationNode> loader =
+                YAMLConfigurationLoader.builder().setFlowStyle(DumperOptions.FlowStyle.BLOCK).setIndent(2).setFile(configpath).build();
         try {
             DefaultConfig.config = loader.load();
         } catch (IOException e) {

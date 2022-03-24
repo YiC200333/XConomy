@@ -56,7 +56,6 @@ public class XConomy extends JavaPlugin {
 
 
     public static String syncversion = SyncInfo.syncversion;
-    private MessagesManager messageManager;
     public static boolean foundvaultpe = false;
     public static boolean foundvaultOfflinePermManager = false;
     private BukkitTask refresherTask = null;
@@ -66,10 +65,9 @@ public class XConomy extends JavaPlugin {
     @SuppressWarnings("ConstantConditions")
     public void onEnable() {
         instance = this;
-        load();
 
-        messageManager = new MessagesManager(this);
-        messageManager.load();
+        load();
+        MessagesManager.load();
 
         MCVersion.MCVersion = Bukkit.getBukkitVersion().toLowerCase();
         MCVersion.chatcolorcheck();
@@ -187,9 +185,6 @@ public class XConomy extends JavaPlugin {
         return instance;
     }
 
-    public void reloadMessages() {
-        messageManager.load();
-    }
 
     private void setupPlaceHolderAPI() {
         papiExpansion = new Placeholder(this);
