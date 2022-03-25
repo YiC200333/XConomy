@@ -25,6 +25,8 @@ import me.yic.xconomy.api.event.PlayerAccountEvent;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.utils.PlayerData;
+import me.yic.xconomy.utils.SendPluginMessage;
+import me.yic.xconomy.utils.UUIDMode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -64,6 +66,16 @@ public class DataCon{
         return pd;
     }
 
+    public static boolean containinfieldslist(String name) {
+        if (XConomy.Config.NON_PLAYER_ACCOUNT_SUBSTRING != null) {
+            for (String field : XConomy.Config.NON_PLAYER_ACCOUNT_SUBSTRING) {
+                if (name.contains(field)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     //public static void refreshFromCache(UUID uuid) {
     //    if (uuid != null) {
@@ -153,7 +165,7 @@ public class DataCon{
         Player mainp = null;
         if (u != null) {
             mainp = Bukkit.getPlayer(u);
-            if (mainp == null && XConomy.Config.IS_SEMIONLINEMODE) {
+            if (mainp == null && XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 UUID subu = CacheSemiOnline.CacheSubUUID_getsubuuid(u.toString());
                 if (subu != null) {
                     Player subp = Bukkit.getPlayer(subu);
@@ -209,12 +221,12 @@ public class DataCon{
 
     private static void SendMessTask(ByteArrayDataOutput stream, String type, PlayerData pd, Boolean isAdd, BigDecimal amount, String command) {
 
-        if (!Bukkit.getOnlinePlayers().isEmpty()) {
-            Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", stream.toByteArray());
-        }
+        SendPluginMessage.SendMessTask("xconomy:acb", stream);
         if (pd != null) {
             DataLink.save(type, pd, isAdd, amount, command);
         }
     }
+
+
 
 }

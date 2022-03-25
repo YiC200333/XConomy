@@ -31,12 +31,12 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class GetUUID {
-    private static final Map<String, UUID> cache = new ConcurrentHashMap<>();
+    private static final Map<String, UUID> cache = new HashMap<>();
 
     private static String doGetUUID(Player pp, String name) {
         String URL = "https://api.mojang.com/users/profiles/minecraft/" + name;
@@ -98,47 +98,69 @@ public class GetUUID {
     }
 
     public static UUID getUUID(Player pp, String name) {
-        if (CacheContainsKey(name)) {
-            return getUUIDFromCache(name);
-        }
-
         UUID u = null;
-        try {
-            u = UUID.fromString(doGetUUID(pp, name));
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+        switch (XConomy.Config.UUIDMODE) {
+            case ONLINE:
+                if (CacheContainsKey(name)) {
+                    if (pp.getUniqueId().toString().equalsIgnoreCase(getUUIDFromCache(name).toString())) {
+                        return getUUIDFromCache(name);
+                    }
+                }
+
+
+                try {
+                    u = UUID.fromString(doGetUUID(pp, name));
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+
+                if (u != null) {
+                    insertIntoCache(name, u);
+                }
+                break;
+            case OFFLINE:
+                u = getOfflineUUID(name);
+                break;
+        }
+            return u;
         }
 
-        if (u != null) {
-            insertIntoCache(name, u);
+        private static UUID getOfflineUUID (String name){
+            return UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(StandardCharsets.UTF_8));
         }
 
-        return u;
+        private static void insertIntoCache ( final String name, final UUID uuid){
+            if (XConomy.Config.USERNAME_IGNORE_CASE) {
+                cache.put(name.toLowerCase(), uuid);
+            } else {
+                cache.put(name, uuid);
+            }
+        }
+
+        private static boolean CacheContainsKey ( final String name){
+            if (XConomy.Config.USERNAME_IGNORE_CASE) {
+                return cache.containsKey(name.toLowerCase());
+            }
+            return cache.containsKey(name);
+        }
+
+
+        private static UUID getUUIDFromCache ( final String name){
+            if (XConomy.Config.USERNAME_IGNORE_CASE) {
+                return cache.get(name.toLowerCase());
+            } else {
+                return cache.get(name);
+            }
+        }
+
+        public static void removeUUIDFromCache(final String name){
+            if (CacheContainsKey(name)) {
+                if (XConomy.Config.USERNAME_IGNORE_CASE) {
+                    cache.remove(name.toLowerCase());
+                } else {
+                    cache.remove(name);
+                }
+            }
+        }
     }
-
-
-    private static void insertIntoCache(final String name, final UUID uuid) {
-        if (XConomy.Config.USERNAME_IGNORE_CASE) {
-            cache.put(name.toLowerCase(), uuid);
-        } else {
-            cache.put(name, uuid);
-        }
-    }
-
-    private static boolean CacheContainsKey(final String name) {
-        if (XConomy.Config.USERNAME_IGNORE_CASE) {
-            return cache.containsKey(name.toLowerCase());
-        }
-        return cache.containsKey(name);
-    }
-
-
-    private static UUID getUUIDFromCache(final String name) {
-        if (XConomy.Config.USERNAME_IGNORE_CASE) {
-            return cache.get(name.toLowerCase());
-        } else {
-            return cache.get(name);
-        }
-    }
-}
 

@@ -19,7 +19,9 @@
 package me.yic.xconomy.data.caches;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.GetUUID;
 import me.yic.xconomy.utils.PlayerData;
+import me.yic.xconomy.utils.UUIDMode;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -51,7 +53,7 @@ public class Cache {
     }
 
     public static UUID getSubUUID(final UUID uuid) {
-        if (XConomy.Config.IS_SEMIONLINEMODE) {
+        if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
             if (sub_uuids.containsKey(uuid)) {
                 return sub_uuids.get(uuid);
             }
@@ -96,6 +98,18 @@ public class Cache {
             pds.remove(uuid);
             uuids.remove(name);
         }
+    }
+
+    @SuppressWarnings("all")
+    public static void syncOnlineUUIDCache(final String oldname, final String newname, final UUID uuid) {
+        if (uuids.containsKey(newname)) {
+            UUID u = uuids.get(newname);
+            pds.remove(u);
+            uuids.remove(newname);
+        }
+        GetUUID.removeUUIDFromCache(oldname);
+        GetUUID.removeUUIDFromCache(newname);
+        removefromCache(uuid);
     }
 
 

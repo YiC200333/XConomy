@@ -153,6 +153,7 @@ public class XConomy extends JavaPlugin {
 
         DataFormat.load();
 
+
         int time = Config.REFRESH_TIME;
         refresherTask = new Baltop().runTaskTimerAsynchronously(this, time * 20L, time * 20L);
         logger(null, 0, "===== YiC =====");

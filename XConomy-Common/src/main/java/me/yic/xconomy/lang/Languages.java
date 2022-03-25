@@ -46,6 +46,7 @@ public class Languages {
         ll.add("no_account");
         ll.add("invalid_amount");
         ll.add("over_maxnumber");
+        ll.add("over_maxnumber_receive");
         ll.add("money_give");
         ll.add("money_give_receive");
         ll.add("money_take");
@@ -91,6 +92,7 @@ public class Languages {
         mess.put("no_account", "&cTarget account does not exist");
         mess.put("invalid_amount", "&cInvalid amount");
         mess.put("over_maxnumber", "&cThe target account amount over the maximum amount");
+        mess.put("over_maxnumber_receive", "&cYour amount has reached the limit");
         mess.put("money_give", "&cYou give %player% %amount%");
         mess.put("money_give_receive", "&aAdministrator give you %amount%");
         mess.put("money_take", "&cYou take %amount% from %player%");
@@ -134,6 +136,7 @@ public class Languages {
         mess.put("no_account", "&cУказанный аккаунт не существует");
         mess.put("invalid_amount", "&cНекорректная сумма");
         mess.put("over_maxnumber", "&cУ данного игрока достигнут лимит средств");
+        mess.put("over_maxnumber_receive", "&cYour amount has reached the limit");
         mess.put("money_give", "&cВы выдали игроку %player% %amount%");
         mess.put("money_give_receive", "&aАдминистрация выдала вам %amount%");
         mess.put("money_take", "&cВы забрали %amount% у игрока %player%");
@@ -178,6 +181,7 @@ public class Languages {
         mess.put("no_account", "&cEsa cuenta no existe");
         mess.put("invalid_amount", "&cMonto invalido");
         mess.put("over_maxnumber", "&cLa cuenta del usuario supera la cantidad maxima!");
+        mess.put("over_maxnumber_receive", "&cYour amount has reached the limit");
         mess.put("money_give", "&cRecibiste %player% %amount%");
         mess.put("money_give_receive", "&aUn Staff te dio %amount%");
         mess.put("money_take", "&cRecibiste %amount% de: %player%");
@@ -221,6 +225,7 @@ public class Languages {
         mess.put("no_account", "&c目标帐号不存在");
         mess.put("invalid_amount", "&c输入的金额无效");
         mess.put("over_maxnumber", "&c目标帐号金额超出最大值");
+        mess.put("over_maxnumber_receive", "&c你的金额已达到上限");
         mess.put("money_give", "&c你给予了 %player% %amount%");
         mess.put("money_give_receive", "&a管理员给予你 %amount% 余额");
         mess.put("money_take", "&c你从  %player% 收取了 %amount%");
@@ -265,6 +270,7 @@ public class Languages {
         mess.put("no_account", "&c目標帳號不存在");
         mess.put("invalid_amount", "&c輸入的金額無效");
         mess.put("over_maxnumber", "&c目標賬號金額超出最大值");
+        mess.put("over_maxnumber_receive", "&c你的金額已達到上限");
         mess.put("money_give", "&c你給予了 %player% %amount%");
         mess.put("money_give_receive", "&a管理員給予你 %amount% 餘額");
         mess.put("money_take", "&c你從 %player% 收取了 %amount%");
@@ -308,6 +314,7 @@ public class Languages {
         mess.put("no_account", "&cLe joueur n'existe pas");
         mess.put("invalid_amount", "&cMontant invalide");
         mess.put("over_maxnumber", "&cThe target account amount over the maximum amount");
+        mess.put("over_maxnumber_receive", "&cYour amount has reached the limit");
         mess.put("money_give", "&cVous avez give %amount% à %player%");
         mess.put("money_give_receive", "&aUn Administrateur vous a give %amount%");
         mess.put("money_take", "&cVous avez reçu %amount% de %player%");
@@ -352,6 +359,7 @@ public class Languages {
         mess.put("no_account", "&cBelirtilen hesap mevcut değil");
         mess.put("invalid_amount", "&cGeçersiz miktar");
         mess.put("over_maxnumber", "&cThe target account amount over the maximum amount");
+        mess.put("over_maxnumber_receive", "&cYour amount has reached the limit");
         mess.put("money_give", "&c%player% adlı oyuncuya %amount% verildi");
         mess.put("money_give_receive", "&aBir yönetici sana %amount% verdi");
         mess.put("money_take", "&c%player% adlı oyuncunun bakiyesinden %amount% alındı");
@@ -395,6 +403,7 @@ public class Languages {
         mess.put("no_account", "&c目標アカウントは存在しない。");
         mess.put("invalid_amount", "&c入力したの量は無効です。");
         mess.put("over_maxnumber", "&cThe target account amount over the maximum amount");
+        mess.put("over_maxnumber_receive", "&cYour amount has reached the limit");
         mess.put("money_give", "&cあなたは %player% さんに %amount% を与えた。");
         mess.put("money_give_receive", "&aGMさんはあなたに %amount% を与えた。");
         mess.put("money_take", "&cあなたは %player% さんから %amount% を受け取りました。");
@@ -439,6 +448,7 @@ public class Languages {
         mess.put("no_account", "&cDer Spieler existiert nicht");
         mess.put("invalid_amount", "&cFalsche Zahleneingabe");
         mess.put("over_maxnumber", "&cDer Zielkontobetrag liegt über dem Maximalbetrag");
+        mess.put("over_maxnumber_receive", "&cYour amount has reached the limit");
         mess.put("money_give", "&cDu hast %player% %amount% gegeben");
         mess.put("money_give_receive", "&aAdministrator hat dir %amount% gegeben");
         mess.put("money_take", "&cDu hast %amount% von %player% abgezogen");
@@ -482,6 +492,7 @@ public class Languages {
         mess.put("no_account", "&cAkun target tidak ada");
         mess.put("invalid_amount", "&cJumlah tidak valid");
         mess.put("over_maxnumber", "&cJumlah akun target melebihi jumlah maksimum");
+        mess.put("over_maxnumber_receive", "&cYour amount has reached the limit");
         mess.put("money_give", "&cAnda memberikan %player% %amount%");
         mess.put("money_give_receive", "&aAdministrator memberi Anda %amount%");
         mess.put("money_take", "&cAnda mengambil %amount% dari %player%");
@@ -525,6 +536,7 @@ public class Languages {
         mess.put("no_account", "&cA conta de destino não existe");
         mess.put("invalid_amount", "&cQuantidade inválida");
         mess.put("over_maxnumber", "&cO saldo da conta de destino está acima do saldo máxim");
+        mess.put("over_maxnumber_receive", "&cYour amount has reached the limit");
         mess.put("money_give", "&cVocê deu para %player% %amount%");
         mess.put("money_give_receive", "&aO administrador te deu %amount%");
         mess.put("money_take", "&cVocê pegou %amount% de %player%");

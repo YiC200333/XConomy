@@ -18,15 +18,21 @@ package me.yic.xconomy.info;/*
  */
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.utils.UUIDMode;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class DefaultConfig {
     public static FileConfiguration config;
 
-    public boolean IS_ONLINEMODE = IsOnlineMode();
-    public boolean IS_SEMIONLINEMODE = IsSemiOnlineMode();
+    public DefaultConfig() {
+        setUUIDMode();
+        setnonplayeraccount();
+    }
+
+    public UUIDMode UUIDMODE = UUIDMode.DEFAULT;
 
     public String LANGUAGE = config.getString("Settings.language");
     public boolean CHECK_UPDATE = config.getBoolean("Settings.check-update");
@@ -37,7 +43,8 @@ public class DefaultConfig {
     public BigDecimal PAYMENT_TAX = BigDecimal.ZERO;
     public int RANKING_SIZE = getrankingsize();
     public int LINES_PER_PAGE = config.getInt("Settings.lines-per-page");
-    public boolean NON_PLAYER_ACCOUNT = config.getBoolean("Settings.non-player-account");
+    public boolean NON_PLAYER_ACCOUNT = config.getBoolean("non-player-account.enable");
+    public List<String> NON_PLAYER_ACCOUNT_SUBSTRING = null;
     public boolean DISABLE_CACHE = config.getBoolean("Settings.disable-cache");
     public boolean TRANSACTION_RECORD = config.getBoolean("Settings.transaction-record");
     public boolean USERNAME_IGNORE_CASE = config.getBoolean("Settings.username-ignore-case");
@@ -53,19 +60,31 @@ public class DefaultConfig {
     public String BUNGEECORD_SIGN = config.getString("BungeeCord.sign");
 
 
-    private int getrankingsize(){
+    private int getrankingsize() {
         return Math.min(config.getInt("Settings.ranking-size"), 100);
     }
 
 
     @SuppressWarnings("ConstantConditions")
-    private boolean IsOnlineMode(){
-        return config.getString("Settings.UUID-mode").equalsIgnoreCase("Online");
+    private void setUUIDMode() {
+        if (config.getString("UUID-mode").equalsIgnoreCase("Online")) {
+            UUIDMODE = UUIDMode.ONLINE;
+        } else if (config.getString("UUID-mode").equalsIgnoreCase("Offline")) {
+            if (!USERNAME_IGNORE_CASE) {
+                UUIDMODE = UUIDMode.OFFLINE;
+            }
+        } else if (config.getString("UUID-mode").equalsIgnoreCase("SemiOnline")) {
+            UUIDMODE = UUIDMode.SEMIONLINE;
+        }
+        XConomy.getInstance().logger(null, 0, UUIDMODE.toString());
     }
 
-    @SuppressWarnings("ConstantConditions")
-    private boolean IsSemiOnlineMode(){
-        return config.getString("Settings.UUID-mode").equalsIgnoreCase("SemiOnline");
+    private void setnonplayeraccount() {
+        if (NON_PLAYER_ACCOUNT) {
+            if (config.getBoolean("non-player-account.whitelist.enable")) {
+                NON_PLAYER_ACCOUNT_SUBSTRING = config.getStringList("non-player-account.whitelist.fields-list");
+            }
+        }
     }
 
     public void setBungeecord() {

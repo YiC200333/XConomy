@@ -85,8 +85,12 @@ public class BCsync implements Listener {
         } else if (type.equalsIgnoreCase("broadcast")) {
             output.writeUTF("broadcast");
             output.writeUTF(input.readUTF());
+        } else if (type.equalsIgnoreCase("syncOnlineUUID")) {
+            output.writeUTF("syncOnlineUUID");
+            output.writeUTF(input.readUTF());
+            output.writeUTF(input.readUTF());
+            output.writeUTF(input.readUTF());
         }
-
         for (ServerInfo s : ProxyServer.getInstance().getServers().values()) {
             if (!s.getName().equals(senderServer.getInfo().getName()) && s.getPlayers().size() > 0) {
                 ProxyServer.getInstance().getScheduler().runAsync(XConomyBungee.getInstance(), () -> SendMessTaskB(s, output));

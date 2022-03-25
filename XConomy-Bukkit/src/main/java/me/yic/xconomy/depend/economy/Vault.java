@@ -334,11 +334,15 @@ public class Vault extends AbstractEconomy {
             return true;
         }
 
-        if (CacheNonPlayer.bal.containsKey(name)) {
-            return true;
-        }
+        if (XConomy.Config.NON_PLAYER_ACCOUNT_SUBSTRING == null) {
+            if (CacheNonPlayer.bal.containsKey(name)) {
+                return true;
+            }
 
-        return DataCon.getPlayerData(name).getUniqueId() == null;
+            return DataCon.getPlayerData(name).getUniqueId() == null;
+        }else{
+            return DataCon.containinfieldslist(name);
+        }
     }
 
 }

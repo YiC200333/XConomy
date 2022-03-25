@@ -18,6 +18,7 @@
  */
 package me.yic.xconomy.info;
 
+import me.yic.xconomy.XConomy;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -28,34 +29,12 @@ public class UpdateConfig {
     public static boolean update(FileConfiguration config, File cc) {
         boolean update = false;
         FileConfiguration ck = YamlConfiguration.loadConfiguration(cc);
-        if (!ck.contains("Settings.ranking-size")) {
-            config.createSection("Settings.ranking-size");
-            config.set("Settings.ranking-size", 10);
-            update = true;
-        }
-        if (!ck.contains("Settings.lines-per-page")) {
-            config.createSection("Settings.lines-per-page");
-            config.set("Settings.lines-per-page", 5);
-            update = true;
-        }
-        if (!ck.contains("Settings.payment-tax")) {
-            config.createSection("Settings.payment-tax");
-            config.set("Settings.payment-tax", 0);
-            update = true;
-        }
-        if (!ck.contains("Settings.disable-cache")) {
-            config.createSection("Settings.disable-cache");
-            config.set("Settings.disable-cache", false);
-            update = true;
-        }
-        if (!ck.contains("Settings.UUID-mode")) {
-            config.createSection("Settings.UUID-mode");
-            if (ck.getBoolean("Settings.semi-online-mode")) {
-                config.set("Settings.UUID-mode", "SemiOnline");
-            }else{
-                config.set("Settings.UUID-mode", "Default");
-            }
-            update = true;
+        if (!ck.contains("UUID-mode") || !ck.contains("non-player-account")) {
+            XConomy.getInstance().logger(null, 1, "==================================================");
+            XConomy.getInstance().logger(null, 1, "The configuration file is an older version");
+            XConomy.getInstance().logger(null, 1, "The plugin may occur configuration problems");
+            XConomy.getInstance().logger(null, 1, "It is recommended to regenerate configuration file");
+            XConomy.getInstance().logger(null, 1, "==================================================");
         }
         return update;
     }
