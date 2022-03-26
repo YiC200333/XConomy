@@ -52,7 +52,7 @@ public class CommandCore {
             case "xconomy": {
                 if (isOp(sender)) {
                     if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-                        MessagesManager.load();
+                        MessagesManager.loadlangmess();
                         sender.sendMessage(Text.of(PREFIX + MessagesManager.systemMessage("§amessage.yml重载成功")));
                         return CommandResult.success();
                     }

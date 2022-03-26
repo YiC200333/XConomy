@@ -112,7 +112,8 @@ public class XConomy {
     public void onEnable(GamePreInitializationEvent event) {
         loadconfig();
 
-        MessagesManager.load();
+        MessagesManager.loadsysmess();
+        MessagesManager.loadlangmess();
 
         Sponge.getServiceManager().setProvider(this, EconomyService.class, new XCService());
 

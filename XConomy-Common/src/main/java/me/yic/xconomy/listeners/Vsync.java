@@ -85,6 +85,11 @@ public class Vsync {
         } else if (type.equalsIgnoreCase("broadcast")) {
             output.writeUTF("broadcast");
             output.writeUTF(input.readUTF());
+        } else if (type.equalsIgnoreCase("syncOnlineUUID")) {
+            output.writeUTF("syncOnlineUUID");
+            output.writeUTF(input.readUTF());
+            output.writeUTF(input.readUTF());
+            output.writeUTF(input.readUTF());
         }
 
         for (RegisteredServer s : XConomyVelocity.getInstance().server.getAllServers()) {

@@ -33,7 +33,7 @@ public class MessagesManager {
     public static Messages smessageList = new Messages();
 
 
-    public static void load() {
+    public static void loadsysmess() {
         String jarPath = "jar:file:" + plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
         Reader reader = null;
         InputStream is = null;
@@ -63,7 +63,10 @@ public class MessagesManager {
             e.printStackTrace();
         }
 
+    }
 
+
+    public static void loadlangmess() {
         File mfile = new File(XConomy.getInstance().getDataFolder(), "message.yml");
         boolean translate = false;
         if (!mfile.exists()) {

@@ -64,6 +64,14 @@ public class Placeholder extends PlaceholderExpansion {
             }
             BigDecimal bal = DataCon.getPlayerData(player.getUniqueId()).getbalance();
             return bal.toString();
+
+        } else if (identifier.equals("balance_formatted")) {
+            if (player == null) {
+                return "0.0";
+            }
+            BigDecimal a = DataCon.getPlayerData(player.getUniqueId()).getbalance();
+            return DataFormat.PEshownf(a);
+
         } else if (identifier.contains("top_player_")) {
             String index = identifier.substring(identifier.indexOf("top_player_") + 11);
             if (isNumber(index)) {

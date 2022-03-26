@@ -152,7 +152,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public String format(double sum) {
-        return DataFormat.shownd(sum);
+        return DataFormat.shown(sum);
     }
 
     @Override

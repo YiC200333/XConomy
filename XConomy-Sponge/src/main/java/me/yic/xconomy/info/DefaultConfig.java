@@ -24,7 +24,7 @@ import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.*;
 
 public class DefaultConfig {
     public static ConfigurationNode config;
@@ -32,6 +32,7 @@ public class DefaultConfig {
     public DefaultConfig() {
         setUUIDMode();
         setnonplayeraccount();
+        setformatbalance();
     }
 
     public UUIDMode UUIDMODE = UUIDMode.DEFAULT;
@@ -57,6 +58,8 @@ public class DefaultConfig {
     public String THOUSANDS_SEPARATOR = config.getNode("Currency", "thousands-separator").getString();
     public String DISPLAY_FORMAT = config.getNode("Currency", "display-format").getString();
     public String MAX_NUMBER = config.getNode("Currency", "max-number").getString();
+    public List<Integer> FORMAT_BALANCE = null;
+    public HashMap<Integer, String> FORMAT_BALANCE_C = new HashMap<>();
 
     public boolean BUNGEECORD_ENABLE = false;
     public String BUNGEECORD_SIGN = config.getNode("BungeeCord", "sign").getString();
@@ -80,6 +83,28 @@ public class DefaultConfig {
         XConomy.getInstance().logger(null, 0, UUIDMODE.toString());
     }
 
+
+    private void setformatbalance() {
+        FORMAT_BALANCE = new ArrayList<>();
+        try {
+            ConfigurationNode section = config.getNode("Currency", "format-balance");
+            for (Map.Entry<Object, ? extends ConfigurationNode> key : section.getChildrenMap().entrySet()) {
+                int x = Integer.parseInt(key.getKey().toString());
+                if (x > 0) {
+                    FORMAT_BALANCE.add(x);
+                    FORMAT_BALANCE_C.put(x, key.getValue().getString());
+                }
+            }
+            Collections.sort(FORMAT_BALANCE);
+        } catch (Exception ignored) {
+            FORMAT_BALANCE = null;
+            XConomy.getInstance().logger(null, 1, "Error getting balance custom format");
+        }
+        if (FORMAT_BALANCE.isEmpty()){
+            FORMAT_BALANCE = null;
+            XConomy.getInstance().logger(null, 1, "Error getting balance custom format");
+        }
+    }
 
     @SuppressWarnings("UnstableApiUsage")
     private void setnonplayeraccount() {

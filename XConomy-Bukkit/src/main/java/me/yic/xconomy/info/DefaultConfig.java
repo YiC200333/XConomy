@@ -18,10 +18,16 @@ package me.yic.xconomy.info;/*
  */
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.utils.UUIDMode;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class DefaultConfig {
@@ -30,6 +36,7 @@ public class DefaultConfig {
     public DefaultConfig() {
         setUUIDMode();
         setnonplayeraccount();
+        setformatbalance();
     }
 
     public UUIDMode UUIDMODE = UUIDMode.DEFAULT;
@@ -55,6 +62,7 @@ public class DefaultConfig {
     public String THOUSANDS_SEPARATOR = config.getString("Currency.thousands-separator");
     public String DISPLAY_FORMAT = config.getString("Currency.display-format");
     public String MAX_NUMBER = config.getString("Currency.max-number");
+    public List<Integer> FORMAT_BALANCE = null;
 
     public boolean BUNGEECORD_ENABLE = false;
     public String BUNGEECORD_SIGN = config.getString("BungeeCord.sign");
@@ -78,6 +86,29 @@ public class DefaultConfig {
         }
         XConomy.getInstance().logger(null, 0, UUIDMODE.toString());
     }
+
+    @SuppressWarnings("ConstantConditions")
+    private void setformatbalance() {
+        FORMAT_BALANCE = new ArrayList<>();
+        try {
+            ConfigurationSection section = config.getConfigurationSection("Currency.format-balance");
+            for (String key : section.getKeys(false)) {
+                int x = Integer.parseInt(key);
+                if (x > 0) {
+                    FORMAT_BALANCE.add(x);
+                }
+            }
+            Collections.sort(FORMAT_BALANCE);
+        } catch (Exception ignored) {
+            FORMAT_BALANCE = null;
+            XConomy.getInstance().logger(null, 1, "Error getting balance custom format");
+        }
+        if (FORMAT_BALANCE.isEmpty()){
+            FORMAT_BALANCE = null;
+            XConomy.getInstance().logger(null, 1, "Error getting balance custom format");
+        }
+    }
+
 
     private void setnonplayeraccount() {
         if (NON_PLAYER_ACCOUNT) {

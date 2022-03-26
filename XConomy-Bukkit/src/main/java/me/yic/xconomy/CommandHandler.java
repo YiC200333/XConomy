@@ -49,7 +49,7 @@ public class CommandHandler {
             case "xconomy": {
                 if (sender.isOp()) {
                     if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-                        MessagesManager.load();
+                        MessagesManager.loadlangmess();
                         sendMessages(sender, PREFIX + MessagesManager.systemMessage("§amessage.yml重载成功"));
                         return true;
                     }

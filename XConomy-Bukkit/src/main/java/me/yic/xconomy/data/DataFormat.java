@@ -59,23 +59,31 @@ public class DataFormat {
         if (am.compareTo(BigDecimal.ONE) == 0) {
             return ChatColor.translateAlternateColorCodes('&', displayformat
                     .replace("%balance%", decimalFormat.format(am))
+                    .replace("%format_balance%", getformatbalance(am))
                     .replace("%currencyname%", singularname));
         }
         return ChatColor.translateAlternateColorCodes('&', displayformat
                 .replace("%balance%", decimalFormat.format(am))
+                .replace("%format_balance%", getformatbalance(am))
                 .replace("%currencyname%", pluralname));
     }
 
 
-    public static String shownd(double am) {
-        if (am > 1) {
+    public static String shown(double am) {
+        return shown(BigDecimal.valueOf(am));
+    }
+
+    public static String PEshownf(BigDecimal am) {
+        if (am.compareTo(BigDecimal.ONE) == 0) {
             return ChatColor.translateAlternateColorCodes('&', displayformat
-                    .replace("%balance%", decimalFormat.format(am))
-                    .replace("%currencyname%", pluralname));
+                    .replace("%balance%", getformatbalance(am))
+                    .replace("%format_balance%", getformatbalance(am))
+                    .replace("%currencyname%", singularname));
         }
         return ChatColor.translateAlternateColorCodes('&', displayformat
-                .replace("%balance%", decimalFormat.format(am))
-                .replace("%currencyname%", singularname));
+                .replace("%balance%", getformatbalance(am))
+                .replace("%format_balance%", getformatbalance(am))
+                .replace("%currencyname%", pluralname));
     }
 
     public static boolean isMAX(BigDecimal am) {
@@ -127,5 +135,25 @@ public class DataFormat {
             pt = 0.0;
         }
         return formatdouble(pt).add(BigDecimal.ONE);
+    }
+
+    private static String getformatbalance(BigDecimal bal) {
+        if (XConomy.Config.FORMAT_BALANCE != null) {
+            if (bal.doubleValue() < XConomy.Config.FORMAT_BALANCE.get(0)) {
+                return decimalFormat.format(bal);
+            }
+            BigDecimal x = BigDecimal.ZERO;
+            for (int b : XConomy.Config.FORMAT_BALANCE) {
+                if (bal.doubleValue() > b) {
+                    x = BigDecimal.valueOf(b);
+                } else {
+                    break;
+                }
+            }
+            BigDecimal aa = bal.divide(x, 3, RoundingMode.DOWN);
+            return DataFormat.decimalFormat.format(aa) + DefaultConfig.config.getString("Currency.format-balance." + x);
+        } else {
+            return decimalFormat.format(bal);
+        }
     }
 }

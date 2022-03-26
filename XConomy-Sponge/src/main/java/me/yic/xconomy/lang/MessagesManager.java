@@ -20,8 +20,6 @@ package me.yic.xconomy.lang;
 
 import me.yic.xconomy.XConomy;
 import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.yaml.snakeyaml.DumperOptions;
@@ -30,9 +28,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class MessagesManager {
 
@@ -41,7 +36,7 @@ public class MessagesManager {
     public static ConfigurationLoader<ConfigurationNode> loader;
     public static Messages smessageList = new Messages();
 
-    public static void load() {
+    public static void loadsysmess() {
         try {
             URL url = new URL(XConomy.jarPath + "!/lang/" + XConomy.Config.LANGUAGE.toLowerCase() + ".yml");
             InputStream is = url.openStream();
@@ -60,8 +55,10 @@ public class MessagesManager {
                 ioException.printStackTrace();
             }
         }
+    }
 
 
+    public static void loadlangmess() {
         File mfile = new File(XConomy.getInstance().configDir.toFile(), "message.yml");
         boolean translate = false;
         loader = YAMLConfigurationLoader.builder().setFlowStyle(DumperOptions.FlowStyle.BLOCK).setIndent(2).setFile(mfile).build();

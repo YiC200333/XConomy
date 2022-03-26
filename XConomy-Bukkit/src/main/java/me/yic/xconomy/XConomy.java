@@ -67,7 +67,8 @@ public class XConomy extends JavaPlugin {
         instance = this;
 
         load();
-        MessagesManager.load();
+        MessagesManager.loadsysmess();
+        MessagesManager.loadlangmess();
 
         MCVersion.MCVersion = Bukkit.getBukkitVersion().toLowerCase();
         MCVersion.chatcolorcheck();

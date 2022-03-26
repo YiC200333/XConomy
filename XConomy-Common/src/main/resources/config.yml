@@ -67,9 +67,14 @@ Currency:
   #Is the balance an integer
   integer-bal: false
   thousands-separator: ','
+  #%format_balance% indicate the balance after the format
   display-format: '%balance% %currencyname%'
   #Maximum amount (default is maximum)
   max-number: '10000000000000000'
+  format-balance:
+    1000: k
+    1000000: m
+
 
 
 #BungeeCord settings

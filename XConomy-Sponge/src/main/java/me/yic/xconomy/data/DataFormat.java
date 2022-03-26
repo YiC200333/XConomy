@@ -54,22 +54,20 @@ public class DataFormat {
 
     public static String shown(BigDecimal am) {
         if (am.compareTo(BigDecimal.ONE) > 0) {
-            return displayformat.replace("%balance%", decimalFormat.format(am))
+            return displayformat
+                    .replace("%balance%", decimalFormat.format(am))
+                    .replace("%format_balance%", getformatbalance(am))
                     .replace("%currencyname%", pluralname);
         }
         return displayformat
                 .replace("%balance%", decimalFormat.format(am))
+                .replace("%format_balance%", getformatbalance(am))
                 .replace("%currencyname%", singularname);
     }
 
     @SuppressWarnings(value = {"unused"})
-    public static String shownd(double am) {
-        if (am > 1) {
-            return displayformat.replace("%balance%", decimalFormat.format(am))
-                    .replace("%currencyname%", pluralname);
-        }
-        return displayformat.replace("%balance%", decimalFormat.format(am))
-                .replace("%currencyname%", singularname);
+    public static String shown(double am) {
+        return shown(BigDecimal.valueOf(am));
     }
 
     public static boolean isMAX(BigDecimal am) {
@@ -120,5 +118,27 @@ public class DataFormat {
             pt = 0.0;
         }
         return formatString(Double.toString(pt)).add(BigDecimal.ONE);
+    }
+
+    private static String getformatbalance(BigDecimal bal) {
+        if (XConomy.Config.FORMAT_BALANCE != null) {
+            if (bal.doubleValue() < XConomy.Config.FORMAT_BALANCE.get(0)) {
+                return decimalFormat.format(bal);
+            }
+            BigDecimal x = BigDecimal.ZERO;
+            String f = "";
+            for (int b : XConomy.Config.FORMAT_BALANCE) {
+                if (bal.doubleValue() > b) {
+                    x = BigDecimal.valueOf(b);
+                    f = XConomy.Config.FORMAT_BALANCE_C.get(b);
+                } else {
+                    break;
+                }
+            }
+            BigDecimal aa = bal.divide(x, 3, RoundingMode.DOWN);
+            return DataFormat.decimalFormat.format(aa) + f;
+        } else {
+            return decimalFormat.format(bal);
+        }
     }
 }
