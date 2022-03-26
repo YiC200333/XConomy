@@ -18,12 +18,17 @@
  */
 package me.yic.xconomy.data.sql;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.GetUUID;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.utils.PlayerData;
+import me.yic.xconomy.utils.SendPluginMessage;
+import me.yic.xconomy.utils.UUIDMode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -38,35 +43,74 @@ import java.util.UUID;
 public class SQLCreateNewAccount extends SQL {
 
     public static void newPlayer(Player player) {
+        if (DataCon.containinfieldslist(player.getName())){
+            kickplayer(player, 2);
+        }
         Connection connection = database.getConnectionAndCheck();
-
-        if (XConomy.Config.IS_ONLINEMODE) {
-            String uid = GetUUID.getUUID(player, player.getName()).toString();
-            if (uid.equalsIgnoreCase(player.getUniqueId().toString())) {
-                checkUserOnline(uid, player.getName(), connection);
-            } else {
-                kickplayer(player, 1);
-                database.closeHikariConnection(connection);
-                return;
-            }
-        } else {
-            boolean doubledata = checkUser(player, connection);
-            if (!doubledata) {
-                selectUser(player.getUniqueId(), player.getName(), connection);
-            }
+        switch (XConomy.Config.UUIDMODE) {
+            case ONLINE:
+                String ouid = GetUUID.getUUID(player, player.getName()).toString();
+                if (ouid.equalsIgnoreCase(player.getUniqueId().toString())) {
+                    checkUserOnline(ouid, player.getName(), connection);
+                } else {
+                    kickplayer(player, 1);
+                    database.closeHikariConnection(connection);
+                    return;
+                }
+                break;
+            case OFFLINE:
+                String fuid = GetUUID.getUUID(player, player.getName()).toString();
+                if (!fuid.equalsIgnoreCase(player.getUniqueId().toString())) {
+                    checkUserOnline(fuid, player.getName(), connection);
+                    kickplayer(player, 1);
+                    database.closeHikariConnection(connection);
+                    return;
+                }
+                break;
+            default:
+                boolean doubledata = checkUser(player, connection);
+                if (!doubledata) {
+                    selectUser(player.getUniqueId(), player.getName(), connection);
+                }
         }
         database.closeHikariConnection(connection);
     }
 
     private static void kickplayer(Player player, int x) {
-        String reason = "[XConomy] UUID mismatch";
+        String reason = "[XConomy] The same data exists in the server without different UUID";
         if (x == 1) {
-            reason = "[XConomy] The same data exists in the server without different UUID";
+            reason = "[XConomy] UUID mismatch";
+        }else if (x == 2) {
+            reason = "[XConomy] Username does not mismatch requirements";
         }
         final String freason = reason;
         if (player.isOnline()) {
             Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() ->
                     player.kick(Text.of(freason)));
+        }
+    }
+
+    private static void checkUserOnline(String uid, String name, Connection connection) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
+            statement.setString(1, uid);
+
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                String oldname = rs.getString(2);
+                if (!name.equals(oldname)) {
+                    updateUser(uid, name, connection);
+                    syncOnlineUUID(oldname, name, uid);
+                    XConomy.getInstance().logger(" 名称已更改!", 0, "<#>" + name);
+                }
+            } else {
+                createAccount(uid, name, Double.parseDouble(XConomy.Config.INITIAL_BAL), connection);
+            }
+
+            rs.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -93,9 +137,14 @@ public class SQLCreateNewAccount extends SQL {
 
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                if (!player.getUniqueId().toString().equals(rs.getString(1))) {
+                String uid = rs.getString(1);
+                if (!player.getUniqueId().toString().equals(uid)) {
                     doubledata = true;
-                    kickplayer(player, 0);
+                    if (!XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                        kickplayer(player, 0);
+                    } else {
+                        CacheSemiOnline.CacheSubUUID_checkUser(uid, player);
+                    }
                 }
             }
 
@@ -107,34 +156,11 @@ public class SQLCreateNewAccount extends SQL {
         return doubledata;
     }
 
-    private static void checkUserOnline(String uid, String name, Connection connection) {
-        try {
-            PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
-            statement.setString(1, uid);
-
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                if (!name.equals(rs.getString(2))) {
-                    Cache.removefromCache(UUID.fromString(uid));
-                    DataCon.prepareudpmessage(null, UUID.fromString(uid), null, null, null, null);
-                    updateUser(uid, name, connection);
-                    XConomy.getInstance().logger(" 名称已更改!", 0, "<#>" + name);
-                }
-            } else {
-                createAccount(uid, name, Double.parseDouble(XConomy.Config.INITIAL_BAL), connection);
-            }
-
-            rs.close();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     private static void createAccount(String UID, String user, double amount, Connection co_a) {
         try {
             String query;
-            if (XConomy.Config.USERNAME_IGNORE_CASE) {
+            if (XConomy.DConfig.isMySQL()) {
                 query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
                         + "ON DUPLICATE KEY UPDATE UID = ?";
             } else {
@@ -209,7 +235,7 @@ public class SQLCreateNewAccount extends SQL {
                 String u = rs.getString(1);
                 user = rs.getString(2);
                 BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
-                if (cacheThisAmt != null) {
+                if (cacheThisAmt != null && !XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                     PlayerData bd = new PlayerData(UUID.fromString(u), user, cacheThisAmt);
                     Cache.insertIntoCache(UID, bd);
                 }
@@ -223,11 +249,26 @@ public class SQLCreateNewAccount extends SQL {
             e.printStackTrace();
         }
         if (!user.equals(name) && !user.equals("#")) {
-            Cache.removefromCache(UID);
-            DataCon.prepareudpmessage(null, UID, null, null, null, null);
+
             updateUser(UID.toString(), name, connection);
+            syncOnlineUUID(user, name, UID.toString());
             XConomy.getInstance().logger(" 名称已更改!", 0, "<#>" + name);
         }
     }
 
+
+    @SuppressWarnings("UnstableApiUsage")
+    private static void syncOnlineUUID(String oldname, String newname, String newUUID) {
+        Cache.syncOnlineUUIDCache(oldname, newname, UUID.fromString(newUUID));
+        if (XConomy.Config.BUNGEECORD_ENABLE) {
+            ByteArrayDataOutput output = ByteStreams.newDataOutput();
+            output.writeUTF(XConomy.Config.BUNGEECORD_SIGN);
+            output.writeUTF(XConomy.syncversion);
+            output.writeUTF("syncOnlineUUID");
+            output.writeUTF(oldname);
+            output.writeUTF(newname);
+            output.writeUTF(newUUID);
+            SendPluginMessage.SendMessTask("xconomy:acb", output);
+        }
+    }
 }

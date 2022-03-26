@@ -23,9 +23,11 @@ import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.Updater;
+import me.yic.xconomy.utils.UUIDMode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.text.Text;
 
@@ -43,7 +45,11 @@ public class ConnectionListeners {
     @Listener
     public void onJoin(ClientConnectionEvent.Join event) {
         Player a = event.getTargetEntity();
-        Cache.removefromCache(a.getUniqueId());
+
+        if (!XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+            Cache.removefromCache(a.getUniqueId());
+        }
+
         if (XConomy.DConfig.getStorageType() == 0 || XConomy.DConfig.getStorageType() == 1) {
             DataLink.newPlayer(a);
         } else {

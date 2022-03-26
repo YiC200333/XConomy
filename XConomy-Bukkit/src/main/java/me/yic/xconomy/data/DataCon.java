@@ -42,7 +42,7 @@ public class DataCon{
         return getPlayerDatai(username);
     }
 
-    private static <T> PlayerData getPlayerDatai(T u) {
+    private static synchronized <T> PlayerData getPlayerDatai(T u) {
         PlayerData pd = null;
 
         if (XConomy.Config.DISABLE_CACHE) {

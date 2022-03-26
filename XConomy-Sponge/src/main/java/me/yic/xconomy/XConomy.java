@@ -27,6 +27,7 @@ import me.yic.xconomy.command.CommandSystem;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
+import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.depend.economyapi.XCService;
 import me.yic.xconomy.depend.economyapi.XCurrency;
@@ -80,7 +81,6 @@ public class XConomy {
 
 
     public static String syncversion = SyncInfo.syncversion;
-    private MessagesManager messageManager;
 
     private SpongeExecutorService refresherTask;
     @SuppressWarnings({"FieldCanBeLocal", "unused"})
@@ -215,11 +215,15 @@ public class XConomy {
     @SuppressWarnings("unused")
     @Listener
     public void onDisable(GameStoppingServerEvent event) {
+        Optional<EconomyService> serviceOpt = Sponge.getServiceManager().provide(EconomyService.class);
+        serviceOpt.ifPresent(economyService -> economyService.getCurrencies().remove(xc));
 
-        refresherTask.shutdown();
         if (Config.BUNGEECORD_ENABLE) {
             channel.removeListener(channellistener);
         }
+
+        refresherTask.shutdown();
+        CacheSemiOnline.save();
         SQL.close();
         logger("XConomy已成功卸载", 0, null);
     }

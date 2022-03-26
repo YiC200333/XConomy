@@ -35,7 +35,7 @@ public class Cache {
     public static List<String> baltop_papi = new ArrayList<>();
     public static BigDecimal sumbalance = BigDecimal.ZERO;
 
-    public static void insertIntoCache(final UUID uuid, PlayerData pd) {
+    public static void insertIntoCache(final UUID uuid, final PlayerData pd) {
         if (pd != null) {
             if (pd.getName() != null && pd.getbalance() != null) {
                 pds.put(uuid, pd);
@@ -86,7 +86,7 @@ public class Cache {
         return pds.get(u);
     }
 
-    public static void updateIntoCache(final UUID uuid, PlayerData pd, BigDecimal newbalance) {
+    public static void updateIntoCache(final UUID uuid, final PlayerData pd, final BigDecimal newbalance) {
         pd.setbalance(newbalance);
         pds.put(uuid, pd);
     }

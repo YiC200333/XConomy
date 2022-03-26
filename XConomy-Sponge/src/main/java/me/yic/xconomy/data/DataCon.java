@@ -22,7 +22,10 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.utils.PlayerData;
+import me.yic.xconomy.utils.SendPluginMessage;
+import me.yic.xconomy.utils.UUIDMode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.user.UserStorageService;
@@ -31,8 +34,15 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public class DataCon{
+    public static PlayerData getPlayerData(UUID uuid) {
+        return getPlayerDatai(Cache.getSubUUID(uuid));
+    }
 
-    public static <T> PlayerData getPlayerData(T u) {
+    public static PlayerData getPlayerData(String username) {
+        return getPlayerDatai(username);
+    }
+
+    private static <T> PlayerData getPlayerDatai(T u) {
         PlayerData pd = null;
 
         if (XConomy.Config.DISABLE_CACHE) {
@@ -54,6 +64,17 @@ public class DataCon{
             return new PlayerData(null, "*", BigDecimal.ZERO);
         }
         return pd;
+    }
+
+    public static boolean containinfieldslist(String name) {
+        if (XConomy.Config.NON_PLAYER_ACCOUNT_SUBSTRING != null) {
+            for (String field : XConomy.Config.NON_PLAYER_ACCOUNT_SUBSTRING) {
+                if (name.contains(field)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 
@@ -144,6 +165,15 @@ public class DataCon{
         User mainp = null;
         if (u != null) {
             mainp = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(u)).get();
+            if (!mainp.isOnline() && XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                UUID subu = CacheSemiOnline.CacheSubUUID_getsubuuid(u.toString());
+                if (subu != null) {
+                    User subp = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(subu)).get();
+                    if (subp.isOnline()) {
+                        return subp;
+                    }
+                }
+            }
         }
         return mainp;
     }
@@ -192,10 +222,7 @@ public class DataCon{
 
     private static void SendMessTask(ByteArrayDataOutput stream, String type, PlayerData pd, Boolean isAdd, BigDecimal amount, String command) {
 
-        if (!Sponge.getServer().getOnlinePlayers().isEmpty()) {
-            Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), "xconomy:acb").sendTo(
-                    Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> buf.writeBytes(stream.toByteArray()));
-        }
+        SendPluginMessage.SendMessTask("xconomy:acb", stream);
         if (pd != null) {
             DataLink.save(type, pd, isAdd, amount, command);
         }

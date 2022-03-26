@@ -17,16 +17,24 @@ package me.yic.xconomy.info;/*
  *
  */
 
+import com.google.common.reflect.TypeToken;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.utils.UUIDMode;
 import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class DefaultConfig {
     public static ConfigurationNode config;
 
-    public boolean IS_ONLINEMODE = IsOnlineMode();
-    //public boolean IS_SEMIONLINEMODE = IsSemiOnlineMode();
+    public DefaultConfig() {
+        setUUIDMode();
+        setnonplayeraccount();
+    }
+
+    public UUIDMode UUIDMODE = UUIDMode.DEFAULT;
 
     public String LANGUAGE = config.getNode("Settings", "language").getString();
     public boolean CHECK_UPDATE = config.getNode("Settings", "check-update").getBoolean();
@@ -37,7 +45,8 @@ public class DefaultConfig {
     public BigDecimal PAYMENT_TAX = BigDecimal.ZERO;
     public int RANKING_SIZE = getrankingsize();
     public int LINES_PER_PAGE = config.getNode("Settings", "lines-per-page").getInt();
-    public boolean NON_PLAYER_ACCOUNT = config.getNode("Settings", "non-player-account").getBoolean();
+    public boolean NON_PLAYER_ACCOUNT = config.getNode("non-player-account","enable").getBoolean();
+    public List<String> NON_PLAYER_ACCOUNT_SUBSTRING = null;
     public boolean DISABLE_CACHE = config.getNode("Settings", "disable-cache").getBoolean();
     public boolean TRANSACTION_RECORD = config.getNode("Settings", "transaction-record").getBoolean();
     public boolean USERNAME_IGNORE_CASE = config.getNode("Settings", "username-ignore-case").getBoolean();
@@ -58,17 +67,35 @@ public class DefaultConfig {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private boolean IsOnlineMode() {
-        return config.getNode("Settings", "UUID-mode").getString().equalsIgnoreCase("Online");
+    private void setUUIDMode() {
+        if (config.getNode("UUID-mode").getString().equalsIgnoreCase("Online")) {
+            UUIDMODE = UUIDMode.ONLINE;
+        } else if (config.getNode("UUID-mode").getString().equalsIgnoreCase("Offline")) {
+            if (!USERNAME_IGNORE_CASE) {
+                UUIDMODE = UUIDMode.OFFLINE;
+            }
+        } else if (config.getNode("UUID-mode").getString().equalsIgnoreCase("SemiOnline")) {
+            UUIDMODE = UUIDMode.SEMIONLINE;
+        }
+        XConomy.getInstance().logger(null, 0, UUIDMODE.toString());
     }
 
-    //@SuppressWarnings("ConstantConditions")
-    //private boolean IsSemiOnlineMode() {
-    //    return config.getNode("Settings", "UUID-mode").getString().equalsIgnoreCase("SemiOnline");
-    //}
+
+    @SuppressWarnings("UnstableApiUsage")
+    private void setnonplayeraccount() {
+        if (NON_PLAYER_ACCOUNT) {
+            if (config.getNode("non-player-account","whitelist","enable").getBoolean()) {
+                try {
+                    NON_PLAYER_ACCOUNT_SUBSTRING = config.getNode("non-player-account","whitelist","fields-list").getList(TypeToken.of(String.class));
+                } catch (ObjectMappingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     public void setBungeecord() {
-        if (!config.getNode("BungeeCord", "enable").getBoolean()) {
+        if (!config.getNode("BungeeCord","enable").getBoolean()) {
             return;
         }
 

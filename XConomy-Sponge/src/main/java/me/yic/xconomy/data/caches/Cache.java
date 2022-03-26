@@ -19,7 +19,9 @@
 package me.yic.xconomy.data.caches;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.GetUUID;
 import me.yic.xconomy.utils.PlayerData;
+import me.yic.xconomy.utils.UUIDMode;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -28,11 +30,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Cache {
     private static final Map<UUID, PlayerData> pds = new ConcurrentHashMap<>();
     private static final Map<String, UUID> uuids = new ConcurrentHashMap<>();
+    private static final Map<UUID, UUID> sub_uuids = new ConcurrentHashMap<>();
     public static Map<String, BigDecimal> baltop = new HashMap<>();
     public static List<String> baltop_papi = new ArrayList<>();
     public static BigDecimal sumbalance = BigDecimal.ZERO;
 
-    public static void insertIntoCache(final UUID uuid, PlayerData pd) {
+    public static void insertIntoCache(final UUID uuid, final PlayerData pd) {
         if (pd != null) {
             if (pd.getName() != null && pd.getbalance() != null) {
                 pds.put(uuid, pd);
@@ -45,6 +48,18 @@ public class Cache {
         }
     }
 
+    public static void insertIntoSUUIDCache(final UUID uuid, final UUID suuid) {
+        sub_uuids.put(suuid, uuid);
+    }
+
+    public static UUID getSubUUID(final UUID uuid) {
+        if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+            if (sub_uuids.containsKey(uuid)) {
+                return sub_uuids.get(uuid);
+            }
+        }
+        return uuid;
+    }
 
     public static <T> boolean CacheContainsKey(final T key) {
         if (key instanceof UUID) {
@@ -71,7 +86,7 @@ public class Cache {
         return pds.get(u);
     }
 
-    public static void updateIntoCache(final UUID uuid, PlayerData pd, BigDecimal newbalance) {
+    public static void updateIntoCache(final UUID uuid, final PlayerData pd, final BigDecimal newbalance) {
         pd.setbalance(newbalance);
         pds.put(uuid, pd);
     }
@@ -83,6 +98,19 @@ public class Cache {
             pds.remove(uuid);
             uuids.remove(name);
         }
+    }
+
+
+    @SuppressWarnings("all")
+    public static void syncOnlineUUIDCache(final String oldname, final String newname, final UUID uuid) {
+        if (uuids.containsKey(newname)) {
+            UUID u = uuids.get(newname);
+            pds.remove(u);
+            uuids.remove(newname);
+        }
+        GetUUID.removeUUIDFromCache(oldname);
+        GetUUID.removeUUIDFromCache(newname);
+        removefromCache(uuid);
     }
 
 

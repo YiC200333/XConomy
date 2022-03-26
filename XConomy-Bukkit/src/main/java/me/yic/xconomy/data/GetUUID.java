@@ -31,12 +31,12 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GetUUID {
-    private static final Map<String, UUID> cache = new HashMap<>();
+    private static final Map<String, UUID> cache = new ConcurrentHashMap<>();
 
     private static String doGetUUID(Player pp, String name) {
         String URL = "https://api.mojang.com/users/profiles/minecraft/" + name;

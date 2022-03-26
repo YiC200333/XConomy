@@ -19,6 +19,7 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import me.yic.xconomy.utils.PlayerData;
@@ -61,6 +62,10 @@ public class DataLink {
             XConomy.DConfig.loggersysmess("连接正常");
         } else {
             XConomy.DConfig.loggersysmess("连接异常");
+            return false;
+        }
+
+        if (!CacheSemiOnline.createfile()) {
             return false;
         }
 

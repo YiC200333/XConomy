@@ -80,6 +80,11 @@ public class SPsync implements RawDataListener {
         } else if (type.equalsIgnoreCase("broadcast")) {
             String mess = data.readUTF();
             Sponge.getServer().getBroadcastChannel().send(Text.of(mess));
+        } else if (type.equalsIgnoreCase("syncOnlineUUID")) {
+            String oldname = data.readUTF();
+            String newname = data.readUTF();
+            String newUUID = data.readUTF();
+            Cache.syncOnlineUUIDCache(oldname, newname, UUID.fromString(newUUID));
         }
     }
 }

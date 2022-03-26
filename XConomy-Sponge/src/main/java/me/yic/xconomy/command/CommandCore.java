@@ -29,6 +29,8 @@ import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.PluginINFO;
+import me.yic.xconomy.utils.SendPluginMessage;
+import me.yic.xconomy.utils.UUIDMode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -42,6 +44,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class CommandCore {
+    private static final String PREFIX = translateColorCodes("prefix");
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static CommandResult onCommand(CommandSource sender, String commandName, String[] args) {
@@ -50,7 +53,7 @@ public class CommandCore {
                 if (isOp(sender)) {
                     if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
                         MessagesManager.load();
-                        sender.sendMessage(Text.of(translateColorCodes("prefix") + MessagesManager.systemMessage("§amessage.yml重载成功")));
+                        sender.sendMessage(Text.of(PREFIX + MessagesManager.systemMessage("§amessage.yml重载成功")));
                         return CommandResult.success();
                     }
                 }
@@ -85,7 +88,7 @@ public class CommandCore {
                                         PlayerData pd = DataCon.getPlayerData(args[3]);
                                         UUID targetUUID = pd.getUniqueId();
                                         if (targetUUID == null) {
-                                            sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_account")));
+                                            sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_account")));
                                         } else {
                                             String realname = pd.getName();
                                             PermissionINFO.setPaymentPermission(targetUUID, vv);
@@ -102,7 +105,7 @@ public class CommandCore {
                                 PlayerData pd = DataCon.getPlayerData(args[3]);
                                 UUID targetUUID = pd.getUniqueId();
                                 if (targetUUID == null) {
-                                    sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_account")));
+                                    sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_account")));
                                 } else {
                                     String realname = pd.getName();
                                     PermissionINFO.setPaymentPermission(targetUUID, null);
@@ -124,12 +127,12 @@ public class CommandCore {
                 if (args.length == 0 || args.length == 1) {
 
                     if (!(isOp(sender) || sender.hasPermission("xconomy.user.balancetop"))) {
-                        sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_permission")));
+                        sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_permission")));
                         return CommandResult.success();
                     }
 
                     if (Cache.baltop.isEmpty()) {
-                        sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("top_nodata")));
+                        sender.sendMessage(Text.of(PREFIX + translateColorCodes("top_nodata")));
                         return CommandResult.success();
                     }
 
@@ -160,16 +163,16 @@ public class CommandCore {
                         UUID targetUUID = pd.getUniqueId();
 
                         if (targetUUID == null) {
-                            sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_account")));
+                            sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_account")));
                             return CommandResult.success();
                         }
 
                         if (args[0].equalsIgnoreCase("hide")) {
                             DataLink.setTopBalHide(targetUUID, 1);
-                            sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("top_hidden").replace("%player%", args[1])));
+                            sender.sendMessage(Text.of(PREFIX + translateColorCodes("top_hidden").replace("%player%", args[1])));
                         } else if (args[0].equalsIgnoreCase("display")) {
                             DataLink.setTopBalHide(targetUUID, 0);
-                            sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("top_displayed").replace("%player%", args[1])));
+                            sender.sendMessage(Text.of(PREFIX + translateColorCodes("top_displayed").replace("%player%", args[1])));
                         }
 
                         break;
@@ -179,22 +182,22 @@ public class CommandCore {
 
             case "pay": {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(Text.of(translateColorCodes("prefix") + MessagesManager.systemMessage("§6控制台无法使用该指令")));
+                    sender.sendMessage(Text.of(PREFIX + MessagesManager.systemMessage("§6控制台无法使用该指令")));
                     return CommandResult.success();
                 }
 
                 if (!isOp(sender)) {
                     if (!PermissionINFO.getGlobalPayment()) {
-                        sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_permission")));
+                        sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_permission")));
                         return CommandResult.success();
                     }
                     if (PermissionINFO.getPaymentPermission(((Player) sender).getUniqueId()) == null) {
                         if (!(sender.hasPermission("xconomy.user.pay"))) {
-                            sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_permission")));
+                            sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_permission")));
                             return CommandResult.success();
                         }
                     } else if (!PermissionINFO.getPaymentPermission(((Player) sender).getUniqueId())) {
-                        sender.sendMessage(Text.of(sender, translateColorCodes("prefix") + translateColorCodes("no_permission")));
+                        sender.sendMessage(Text.of(sender, PREFIX + translateColorCodes("no_permission")));
                         return CommandResult.success();
                     }
                 }
@@ -205,19 +208,19 @@ public class CommandCore {
                 }
 
                 if (sender.getName().equalsIgnoreCase(args[0])) {
-                    sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("pay_self")));
+                    sender.sendMessage(Text.of(PREFIX + translateColorCodes("pay_self")));
                     return CommandResult.success();
                 }
 
                 if (!isDouble(args[1])) {
-                    sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("invalid_amount")));
+                    sender.sendMessage(Text.of(PREFIX + translateColorCodes("invalid_amount")));
                     return CommandResult.success();
                 }
 
                 BigDecimal amount = DataFormat.formatString(args[1]);
 
                 if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                    sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("invalid_amount")));
+                    sender.sendMessage(Text.of(PREFIX + translateColorCodes("invalid_amount")));
                     return CommandResult.success();
                 }
 
@@ -228,7 +231,7 @@ public class CommandCore {
                 BigDecimal bal_sender = DataCon.getPlayerData(((Player) sender).getUniqueId()).getbalance();
 
                 if (bal_sender.compareTo(taxamount) < 0) {
-                    sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("pay_fail")
+                    sender.sendMessage(Text.of(PREFIX + translateColorCodes("pay_fail")
                             .replace("%amount%", taxamountFormatted)));
                     return CommandResult.success();
                 }
@@ -237,30 +240,30 @@ public class CommandCore {
                 PlayerData pd = DataCon.getPlayerData(args[0]);
                 UUID targetUUID = pd.getUniqueId();
                 if (targetUUID == null) {
-                    sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_account")));
+                    sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_account")));
                     return CommandResult.success();
                 }
                 String realname = pd.getName();
 
                 if (!target.hasPermission("xconomy.user.pay.receive")) {
-                    sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_receive_permission")));
+                    sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_receive_permission")));
                     return CommandResult.success();
                 }
 
                 BigDecimal bal_target = DataCon.getPlayerData(targetUUID).getbalance();
                 if (DataFormat.isMAX(bal_target.add(amount))) {
-                    sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("over_maxnumber")));
+                    sender.sendMessage(Text.of(PREFIX + translateColorCodes("over_maxnumber")));
                     return CommandResult.success();
                 }
 
                 String com = commandName + " " + args[0] + " " + amount;
                 DataCon.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), taxamount, false, com);
-                sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("pay")
+                sender.sendMessage(Text.of(PREFIX + translateColorCodes("pay")
                         .replace("%player%", realname)
                         .replace("%amount%", amountFormatted)));
 
                 DataCon.change("PLAYER_COMMAND", targetUUID, amount, true, com);
-                String mess = translateColorCodes("prefix") + translateColorCodes("pay_receive")
+                String mess = PREFIX + translateColorCodes("pay_receive")
                         .replace("%player%", sender.getName())
                         .replace("%amount%", amountFormatted);
 
@@ -281,12 +284,12 @@ public class CommandCore {
                 switch (args.length) {
                     case 0: {
                         if (!(sender instanceof Player)) {
-                            sender.sendMessage(Text.of(translateColorCodes("prefix") + MessagesManager.systemMessage("§6控制台无法使用该指令")));
+                            sender.sendMessage(Text.of(PREFIX + MessagesManager.systemMessage("§6控制台无法使用该指令")));
                             return CommandResult.success();
                         }
 
                         if (!(isOp(sender) || sender.hasPermission("xconomy.user.balance"))) {
-                            sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_permission")));
+                            sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_permission")));
                             return CommandResult.success();
                         }
 
@@ -295,7 +298,7 @@ public class CommandCore {
                         //Cache.refreshFromCache(player.getUniqueId());
 
                         BigDecimal a = DataCon.getPlayerData(player.getUniqueId()).getbalance();
-                        sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("balance")
+                        sender.sendMessage(Text.of(PREFIX + translateColorCodes("balance")
                                 .replace("%balance%", DataFormat.shown((a)))));
 
                         break;
@@ -303,20 +306,20 @@ public class CommandCore {
 
                     case 1: {
                         if (!(isOp(sender) || sender.hasPermission("xconomy.user.balance.other"))) {
-                            sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_permission")));
+                            sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_permission")));
                             return CommandResult.success();
                         }
 
                         PlayerData pd = DataCon.getPlayerData(args[0]);
                         UUID targetUUID = pd.getUniqueId();
                         if (targetUUID == null) {
-                            sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_account")));
+                            sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_account")));
                             return CommandResult.success();
                         }
                         String realname = pd.getName();
 
                         BigDecimal targetBalance = DataCon.getPlayerData(targetUUID).getbalance();
-                        sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("balance_other")
+                        sender.sendMessage(Text.of(PREFIX + translateColorCodes("balance_other")
                                 .replace("%player%", realname)
                                 .replace("%balance%", DataFormat.shown((targetBalance)))));
 
@@ -332,12 +335,12 @@ public class CommandCore {
                         }
 
                         if (check()) {
-                            sender.sendMessage(Text.of(translateColorCodes("prefix") + MessagesManager.systemMessage("§cBC模式开启的情况下,无法在无人的服务器中使用OP命令")));
+                            sender.sendMessage(Text.of(PREFIX + MessagesManager.systemMessage("§cBC模式开启的情况下,无法在无人的服务器中使用OP命令")));
                             return CommandResult.success();
                         }
 
                         if (!isDouble(args[2])) {
-                            sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("invalid_amount")));
+                            sender.sendMessage(Text.of(PREFIX + translateColorCodes("invalid_amount")));
                             return CommandResult.success();
                         }
 
@@ -347,7 +350,7 @@ public class CommandCore {
                         PlayerData pd = DataCon.getPlayerData(args[1]);
                         UUID targetUUID = pd.getUniqueId();
                         if (targetUUID == null) {
-                            sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("no_account")));
+                            sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_account")));
                             return CommandResult.success();
                         }
 
@@ -368,29 +371,32 @@ public class CommandCore {
                                 }
 
                                 if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                                    sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("invalid_amount")));
+                                    sender.sendMessage(Text.of(PREFIX + translateColorCodes("invalid_amount")));
                                     return CommandResult.success();
                                 }
 
                                 BigDecimal bal = DataCon.getPlayerData(targetUUID).getbalance();
                                 if (DataFormat.isMAX(bal.add(amount))) {
-                                    sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("over_maxnumber")));
+                                    sender.sendMessage(Text.of(PREFIX + translateColorCodes("over_maxnumber")));
+                                    if (target.isOnline()) {
+                                        target.getPlayer().get().sendMessage(Text.of(PREFIX + translateColorCodes("over_maxnumber_receive")));
+                                    }
                                     return CommandResult.success();
                                 }
 
                                 DataCon.change("ADMIN_COMMAND", targetUUID, amount, true, com);
-                                sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("money_give")
+                                sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_give")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
 
                                 if (checkMessage("money_give_receive") | args.length == 4) {
 
-                                    String message = translateColorCodes("prefix") + translateColorCodes("money_give_receive")
+                                    String message = PREFIX + translateColorCodes("money_give_receive")
                                             .replace("%player%", realname)
                                             .replace("%amount%", amountFormatted);
 
                                     if (args.length == 4) {
-                                        message = translateColorCodes("prefix") + reason;
+                                        message = PREFIX + reason;
                                     }
 
                                     if (!target.isOnline()) {
@@ -411,13 +417,13 @@ public class CommandCore {
                                 }
 
                                 if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                                    sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("invalid_amount")));
+                                    sender.sendMessage(Text.of(PREFIX + translateColorCodes("invalid_amount")));
                                     return CommandResult.success();
                                 }
 
                                 BigDecimal bal = DataCon.getPlayerData(targetUUID).getbalance();
                                 if (bal.compareTo(amount) < 0) {
-                                    sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("money_take_fail")
+                                    sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_take_fail")
                                             .replace("%player%", realname)
                                             .replace("%amount%", amountFormatted)));
 
@@ -425,16 +431,16 @@ public class CommandCore {
                                 }
 
                                 DataCon.change("ADMIN_COMMAND", targetUUID, amount, false, com);
-                                sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("money_take")
+                                sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_take")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
 
                                 if (checkMessage("money_give_receive") | args.length == 4) {
-                                    String mess = translateColorCodes("prefix") + translateColorCodes("money_take_receive")
+                                    String mess = PREFIX + translateColorCodes("money_take_receive")
                                             .replace("%player%", realname).replace("%amount%", amountFormatted);
 
                                     if (args.length == 4) {
-                                        mess = translateColorCodes("prefix") + reason;
+                                        mess = PREFIX + reason;
                                     }
 
                                     if (!target.isOnline()) {
@@ -455,17 +461,17 @@ public class CommandCore {
                                 }
 
                                 DataCon.change("ADMIN_COMMAND", targetUUID, amount, null, com);
-                                sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("money_set")
+                                sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_set")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
 
                                 if (checkMessage("money_give_receive") | args.length == 4) {
-                                    String mess = translateColorCodes("prefix") + translateColorCodes("money_set_receive")
+                                    String mess = PREFIX + translateColorCodes("money_set_receive")
                                             .replace("%player%", realname)
                                             .replace("%amount%", amountFormatted);
 
                                     if (args.length == 4) {
-                                        mess = translateColorCodes("prefix") + reason;
+                                        mess = PREFIX + reason;
                                     }
 
                                     if (!target.isOnline()) {
@@ -505,20 +511,25 @@ public class CommandCore {
                             return CommandResult.success();
                         }
 
+                        if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE) && args[2].equalsIgnoreCase("online")) {
+                            sender.sendMessage(Text.of(PREFIX + MessagesManager.systemMessage("§c该指令不支持在半正版模式中使用")));
+                            return CommandResult.success();
+                        }
+
                         if (check()) {
-                            sender.sendMessage(Text.of(translateColorCodes("prefix") + MessagesManager.systemMessage("§cBungeeCord模式开启的情况下,无法在无人的服务器中使用OP命令")));
+                            sender.sendMessage(Text.of(PREFIX + MessagesManager.systemMessage("§cBungeeCord模式开启的情况下,无法在无人的服务器中使用OP命令")));
                             return CommandResult.success();
                         }
 
                         if (!isDouble(args[3])) {
-                            sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("invalid_amount")));
+                            sender.sendMessage(Text.of(PREFIX + translateColorCodes("invalid_amount")));
                             return CommandResult.success();
                         }
 
                         BigDecimal amount = DataFormat.formatString(args[3]);
 
                         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                            sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("invalid_amount")));
+                            sender.sendMessage(Text.of(PREFIX + translateColorCodes("invalid_amount")));
                             return CommandResult.success();
                         }
 
@@ -539,11 +550,11 @@ public class CommandCore {
                                 }
 
                                 DataCon.changeall(args[2], "ADMIN_COMMAND", amount, true, com);
-                                sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("money_give")
+                                sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_give")
                                         .replace("%player%", target)
                                         .replace("%amount%", amountFormatted)));
 
-                                String message = translateColorCodes("prefix") + args[4];
+                                String message = PREFIX + args[4];
                                 Sponge.getServer().getBroadcastChannel().send(Text.of(message));
                                 broadcastSendMessage(true, null, message);
                                 break;
@@ -556,11 +567,11 @@ public class CommandCore {
                                 }
 
                                 DataCon.changeall(args[2], "ADMIN_COMMAND", amount, false, com);
-                                sender.sendMessage(Text.of(translateColorCodes("prefix") + translateColorCodes("money_take")
+                                sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_take")
                                         .replace("%player%", target)
                                         .replace("%amount%", amountFormatted)));
 
-                                String message = translateColorCodes("prefix") + args[4];
+                                String message = PREFIX + args[4];
                                 Sponge.getServer().getBroadcastChannel().send(Text.of(message));
                                 broadcastSendMessage(true, null, message);
 
@@ -632,11 +643,11 @@ public class CommandCore {
     }
 
     public static void showVersion(CommandSource sender) {
-        sender.sendMessage(Text.of(translateColorCodes("prefix") + "§6 XConomy §f(Version: "
+        sender.sendMessage(Text.of(PREFIX + "§6 XConomy §f(Version: "
                 + PluginINFO.VERSION + ") §6|§7 Author: §f" + MessagesManager.getAuthor()));
         String trs = MessagesManager.getTranslatorS();
         if (trs != null) {
-            sender.sendMessage(Text.of(translateColorCodes("prefix") + "§7 Translator (system): §f" + trs));
+            sender.sendMessage(Text.of(PREFIX + "§7 Translator (system): §f" + trs));
         }
     }
 
@@ -727,15 +738,18 @@ public class CommandCore {
         output.writeUTF(XConomy.Config.BUNGEECORD_SIGN);
         output.writeUTF(XConomy.syncversion);
         if (!ispublic) {
-            output.writeUTF("message");
+            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)){
+                output.writeUTF("message#semi");
+            }else {
+                output.writeUTF("message");
+            }
             output.writeUTF(u.toString());
             output.writeUTF(message);
         } else {
             output.writeUTF("broadcast");
             output.writeUTF(message);
         }
-        Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), "xconomy:acb").sendTo(
-                Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> buf.writeBytes(output.toByteArray()));
+        SendPluginMessage.SendMessTask("xconomy:acb", output);
 
     }
 }

@@ -18,40 +18,24 @@
  */
 package me.yic.xconomy.info;
 
+import me.yic.xconomy.XConomy;
 import ninja.leaping.configurate.ConfigurationNode;
 
 public class UpdateConfig {
 
     public static boolean update(ConfigurationNode config) {
         boolean update = false;
-        if (config.getNode("Settings","ranking-size").isVirtual()) {
-            config.getNode("Settings","ranking-size").setValue(10);
-            update = true;
+        if (config.getNode("UUID-mode").isVirtual() || config.getNode("non-player-account").isVirtual()) {
+            XConomy.getInstance().logger(null, 1, "==================================================");
+            XConomy.getInstance().logger(null, 1, "The configuration file is an older version");
+            XConomy.getInstance().logger(null, 1, "The plugin may occur configuration problems");
+            XConomy.getInstance().logger(null, 1, "It is recommended to regenerate configuration file");
+            XConomy.getInstance().logger(null, 1, "==================================================");
         }
-        if (config.getNode("Settings","lines-per-page").isVirtual()) {
-            config.getNode("Settings","lines-per-page").setValue(5);
-            update = true;
-        }
-        if (config.getNode("Settings","payment-tax").isVirtual()) {
-            config.getNode("Settings","payment-tax").setValue(0);
-            update = true;
-        }
-        if (config.getNode("Settings","payment-tax").isVirtual()) {
-            config.getNode("Settings","payment-tax").setValue(0);
-            update = true;
-        }
-        if (config.getNode("Settings","disable-cache").isVirtual()) {
-            config.getNode("Settings","disable-cache").setValue(false);
-            update = true;
-        }
-        if (config.getNode("Settings","UUID-mode").isVirtual()) {
-            if (config.getNode("Settings","semi-online-mode").getBoolean()) {
-                config.getNode("Settings", "UUID-mode").setValue("SemiOnline");
-            }else{
-                config.getNode("Settings", "UUID-mode").setValue("Default");
-            }
-            update = true;
-        }
+        //if (config.getNode("Settings","ranking-size").isVirtual()) {
+        //    config.getNode("Settings","ranking-size").setValue(10);
+        //    update = true;
+        //}
         return update;
     }
 }

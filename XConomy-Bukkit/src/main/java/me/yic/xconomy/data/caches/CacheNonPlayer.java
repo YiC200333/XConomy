@@ -30,13 +30,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CacheNonPlayer {
     public static Map<String, BigDecimal> bal = new ConcurrentHashMap<>();
 
-    public static void insertIntoCache(final String playerName, BigDecimal value) {
+    public static void insertIntoCache(final String playerName, final BigDecimal value) {
         if (value != null) {
             bal.put(playerName, value);
         }
     }
 
-    public static BigDecimal getBalanceFromCacheOrDB(String u) {
+    public static BigDecimal getBalanceFromCacheOrDB(final String u) {
         if (XConomy.Config.DISABLE_CACHE){
             DataLink.getBalNonPlayer(u);
         }
@@ -47,7 +47,7 @@ public class CacheNonPlayer {
 
     }
 
-    public static void change(String u, BigDecimal amount, Boolean isAdd, String type) {
+    public static void change(final String u, final BigDecimal amount, final Boolean isAdd, final String type) {
         BigDecimal newvalue = amount;
         BigDecimal balance = getBalanceFromCacheOrDB(u);
         Bukkit.getScheduler().runTask(XConomy.getInstance(), () -> Bukkit.getPluginManager().callEvent(new NonPlayerAccountEvent(u, balance, amount, isAdd, type)));

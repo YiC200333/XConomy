@@ -1,7 +1,7 @@
 #Default Online Offline SemiOnline
-#Default mode will automatically detect the player's UUID
+#Default mode will automatically detect the player's UUID(support GeyserMC)
 #Online mode is better for servers that enable online-mode(support Yggdrasil)
-#SemiOnline mode do not support Sponge servers
+#Offline mode does not support ignoring username case
 UUID-mode: Default
 
 
@@ -13,12 +13,12 @@ Settings:
   check-update: true
   #TOP10 and the Server Total refresh time interval (Seconds)
   refresh-time: 300
-    #If set to true, XConomy will register the following commands:
+  #If set to true, XConomy will register the following commands:
     # - economy
     # - eco
     # - ebalancetop
-  # - ebaltop
-  # - eeconomy
+    # - ebaltop
+    # - eeconomy
   #Please keep in mind that if Essentials is installed on your server
   #XConomy will take over these commands.
   eco-command: true

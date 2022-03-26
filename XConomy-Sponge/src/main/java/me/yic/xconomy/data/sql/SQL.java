@@ -25,6 +25,7 @@ import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.utils.DatabaseConnection;
 import me.yic.xconomy.utils.PlayerData;
+import me.yic.xconomy.utils.UUIDMode;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -147,6 +148,7 @@ public class SQL {
         }
     }
 
+
     @SuppressWarnings("ConstantConditions")
     public static void getPlayerData(String name) {
         try {
@@ -173,10 +175,11 @@ public class SQL {
             while (rs.next()) {
                 UUID uuid = UUID.fromString(rs.getString(1));
                 UUID puuid = null;
-                if (XConomy.Config.IS_ONLINEMODE) {
+                if (XConomy.Config.UUIDMODE.equals(UUIDMode.OFFLINE) || XConomy.Config.UUIDMODE.equals(UUIDMode.ONLINE)) {
                     puuid = GetUUID.getUUID(null, name);
                 }
-                if (!XConomy.Config.IS_ONLINEMODE || (puuid != null && uuid.toString().equalsIgnoreCase(puuid.toString()))) {
+                if (XConomy.Config.UUIDMODE.equals(UUIDMode.DEFAULT) || XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)
+                        || (puuid != null && uuid.toString().equalsIgnoreCase(puuid.toString()))) {
                     String username = rs.getString(2);
                     BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
                     if (cacheThisAmt != null) {
