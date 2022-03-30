@@ -41,6 +41,12 @@ import java.util.UUID;
 
 public class SQLCreateNewAccount extends SQL {
 
+    public static void newPlayer(String uid, String name) {
+        Connection connection = database.getConnectionAndCheck();
+        createAccount(uid, name, XConomy.Config.INITIAL_BAL, connection);
+        database.closeHikariConnection(connection);
+    }
+
     public static void newPlayer(Player player) {
         if (DataCon.containinfieldslist(player.getName())){
             kickplayer(player, 2);

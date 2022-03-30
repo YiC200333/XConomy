@@ -1,4 +1,4 @@
-package me.yic.xconomy.info;/*
+/*
  *  This file (DefaultConfig.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
@@ -16,6 +16,7 @@ package me.yic.xconomy.info;/*
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package me.yic.xconomy.info;
 
 import com.google.common.reflect.TypeToken;
 import me.yic.xconomy.XConomy;
@@ -46,11 +47,12 @@ public class DefaultConfig {
     public BigDecimal PAYMENT_TAX = BigDecimal.ZERO;
     public int RANKING_SIZE = getrankingsize();
     public int LINES_PER_PAGE = config.getNode("Settings", "lines-per-page").getInt();
-    public boolean NON_PLAYER_ACCOUNT = config.getNode("non-player-account","enable").getBoolean();
-    public List<String> NON_PLAYER_ACCOUNT_SUBSTRING = null;
     public boolean DISABLE_CACHE = config.getNode("Settings", "disable-cache").getBoolean();
     public boolean TRANSACTION_RECORD = config.getNode("Settings", "transaction-record").getBoolean();
     public boolean USERNAME_IGNORE_CASE = config.getNode("Settings", "username-ignore-case").getBoolean();
+
+    public boolean NON_PLAYER_ACCOUNT = config.getNode("non-player-account","enable").getBoolean();
+    public List<String> NON_PLAYER_ACCOUNT_SUBSTRING = null;
 
     public String SINGULAR_NAME = config.getNode("Currency", "singular-name").getString();
     public String PLURAL_NAME = config.getNode("Currency", "plural-name").getString();

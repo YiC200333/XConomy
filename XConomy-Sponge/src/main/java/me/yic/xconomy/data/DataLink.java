@@ -73,6 +73,10 @@ public class DataLink {
         return true;
     }
 
+    public static void newPlayer(String uid, String name) {
+        SQLCreateNewAccount.newPlayer(uid, name);
+    }
+
     public static void newPlayer(Player a) {
         SQLCreateNewAccount.newPlayer(a);
     }

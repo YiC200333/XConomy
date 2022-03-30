@@ -20,7 +20,7 @@ package me.yic.xconomy.depend.economyapi;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
-import me.yic.xconomy.data.sql.SQLCreateNewAccount;
+import me.yic.xconomy.data.DataLink;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.service.context.ContextCalculator;
 import org.spongepowered.api.service.economy.Currency;
@@ -66,7 +66,7 @@ public class XCService implements EconomyService {
     @Override
     public Optional<UniqueAccount> getOrCreateAccount(UUID uuid) {
         if (!hasAccount(uuid)) {
-            SQLCreateNewAccount.newPlayer(Sponge.getServer().getPlayer(uuid).get());
+            DataLink.newPlayer(uuid.toString(), Sponge.getServer().getPlayer(uuid).get().getName());
         }
         return Optional.of(new XCUniqueAccount(
                 Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(uuid)).get()));

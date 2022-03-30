@@ -1,4 +1,4 @@
-package me.yic.xconomy.info;/*
+/*
  *  This file (DefaultConfig.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
@@ -16,18 +16,16 @@ package me.yic.xconomy.info;/*
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package me.yic.xconomy.info;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.utils.UUIDMode;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 public class DefaultConfig {
@@ -50,11 +48,12 @@ public class DefaultConfig {
     public BigDecimal PAYMENT_TAX = BigDecimal.ZERO;
     public int RANKING_SIZE = getrankingsize();
     public int LINES_PER_PAGE = config.getInt("Settings.lines-per-page");
-    public boolean NON_PLAYER_ACCOUNT = config.getBoolean("non-player-account.enable");
-    public List<String> NON_PLAYER_ACCOUNT_SUBSTRING = null;
     public boolean DISABLE_CACHE = config.getBoolean("Settings.disable-cache");
     public boolean TRANSACTION_RECORD = config.getBoolean("Settings.transaction-record");
     public boolean USERNAME_IGNORE_CASE = config.getBoolean("Settings.username-ignore-case");
+
+    public boolean NON_PLAYER_ACCOUNT = config.getBoolean("non-player-account.enable");
+    public List<String> NON_PLAYER_ACCOUNT_SUBSTRING = null;
 
     public String SINGULAR_NAME = config.getString("Currency.singular-name");
     public String PLURAL_NAME = config.getString("Currency.plural-name");

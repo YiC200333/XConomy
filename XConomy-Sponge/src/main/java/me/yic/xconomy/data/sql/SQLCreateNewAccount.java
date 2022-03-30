@@ -42,8 +42,14 @@ import java.util.UUID;
 
 public class SQLCreateNewAccount extends SQL {
 
+    public static void newPlayer(String uid, String name) {
+        Connection connection = database.getConnectionAndCheck();
+        createAccount(uid, name, Double.parseDouble(XConomy.Config.INITIAL_BAL), connection);
+        database.closeHikariConnection(connection);
+    }
+
     public static void newPlayer(Player player) {
-        if (DataCon.containinfieldslist(player.getName())){
+        if (DataCon.containinfieldslist(player.getName())) {
             kickplayer(player, 2);
         }
         Connection connection = database.getConnectionAndCheck();
@@ -80,7 +86,7 @@ public class SQLCreateNewAccount extends SQL {
         String reason = "[XConomy] The same data exists in the server without different UUID";
         if (x == 1) {
             reason = "[XConomy] UUID mismatch";
-        }else if (x == 2) {
+        } else if (x == 2) {
             reason = "[XConomy] Username does not mismatch requirements";
         }
         final String freason = reason;

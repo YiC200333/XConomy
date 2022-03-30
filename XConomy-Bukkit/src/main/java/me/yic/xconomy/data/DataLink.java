@@ -79,6 +79,10 @@ public class DataLink {
         SQLCreateNewAccount.newPlayer(a);
     }
 
+    public static void newPlayer(String uid, String name) {
+        SQLCreateNewAccount.newPlayer(uid, name);
+    }
+
     public static <T> void getPlayerData(T key) {
         if (key instanceof UUID) {
             SQL.getPlayerData((UUID) key);

@@ -21,6 +21,7 @@ package me.yic.xconomy.depend.economy;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.utils.PlayerData;
 import net.milkbowl.vault.economy.AbstractEconomy;
@@ -75,6 +76,24 @@ public class Vault extends AbstractEconomy {
     }
 
     @Override
+    public boolean createPlayerAccount(OfflinePlayer pp) {
+        if (pp.getName() == null) {
+            return false;
+        }
+        try {
+            DataLink.newPlayer(pp.getUniqueId().toString(), pp.getName());
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean createPlayerAccount(OfflinePlayer pp, String arg1) {
+        return createPlayerAccount(pp);
+    }
+
+    @Override
     public String currencyNamePlural() {
         return XConomy.Config.PLURAL_NAME;
     }
@@ -126,7 +145,9 @@ public class Vault extends AbstractEconomy {
         }
 
         if (DataCon.getPlayerData(pp.getUniqueId()).getUniqueId() == null) {
-            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
+            if (!createPlayerAccount(pp)) {
+                return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
+            }
         }
 
         double bal = getBalance(pp);
@@ -301,7 +322,9 @@ public class Vault extends AbstractEconomy {
         }
 
         if (DataCon.getPlayerData(pp.getUniqueId()).getUniqueId() == null) {
-            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
+            if (!createPlayerAccount(pp)) {
+                return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
+            }
         }
 
         double bal = getBalance(pp);
@@ -340,7 +363,7 @@ public class Vault extends AbstractEconomy {
             }
 
             return DataCon.getPlayerData(name).getUniqueId() == null;
-        }else{
+        } else {
             return DataCon.containinfieldslist(name);
         }
     }

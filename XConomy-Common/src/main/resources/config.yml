@@ -48,9 +48,9 @@ Settings:
 non-player-account:
   #Whether to enable non-player accounts.
   enable: false
-  #If the account name contains fields in the white list, it will be recognized as non-player accounts.
+  #If the account name contains fields in the whitelist, it will be recognized as non-player accounts.
   #Otherwise, it is recognized as a player account
-  #If the player's name contains fields in the white list, it will be denied access to the server.
+  #If the player's name contains fields in the whitelist, it will be denied access to the server.
   whitelist:
     #Whether to enable whitelist.
     enable: false
