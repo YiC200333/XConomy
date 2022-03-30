@@ -36,6 +36,11 @@ public class UpdateConfig {
             XConomy.getInstance().logger(null, 1, "It is recommended to regenerate configuration file");
             XConomy.getInstance().logger(null, 1, "==================================================");
         }
+        if (!ck.contains("Settings.offline-pay-transfer-tips")) {
+            config.createSection("Settings.offline-pay-transfer-tips");
+            config.set("Settings.offline-pay-transfer-tips", false);
+            update = true;
+        }
         return update;
     }
 }

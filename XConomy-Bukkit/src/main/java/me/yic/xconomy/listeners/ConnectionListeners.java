@@ -19,7 +19,6 @@
 package me.yic.xconomy.listeners;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.lang.MessagesManager;
@@ -44,6 +43,9 @@ public class ConnectionListeners implements Listener {
         if (!XConomy.Config.BUNGEECORD_ENABLE) {
             TabList.PlayerList.remove(event.getPlayer().getName());
         }
+        if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
+            DataLink.updatelogininfo(event.getPlayer().getUniqueId().toString());
+        }
     }
 
     @SuppressWarnings("unused")
@@ -55,7 +57,7 @@ public class ConnectionListeners implements Listener {
             Cache.removefromCache(a.getUniqueId());
         }
 
-        if (XConomy.DConfig.getStorageType() == 0 || XConomy.DConfig.getStorageType() == 1) {
+        if (XConomy.DConfig.canasync) {
             DataLink.newPlayer(a);
         } else {
             Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.newPlayer(a));
@@ -63,6 +65,10 @@ public class ConnectionListeners implements Listener {
 
         if (!TabList.PlayerList.contains(a.getName())) {
             TabList.PlayerList.add(a.getName());
+        }
+
+        if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
+            DataLink.selectlogininfo(a);
         }
 
         if (a.isOp()) {

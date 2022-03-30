@@ -29,6 +29,7 @@ import me.yic.xconomy.utils.UUIDMode;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -38,6 +39,7 @@ public class SQL {
     public static String tableName = "xconomy";
     public static String tableNonPlayerName = "xconomynon";
     public static String tableRecordName = "xconomyrecord";
+    public static String tableLoginName = "xconomylogin";
     public final static DatabaseConnection database = new DatabaseConnection();
     static final String encoding = XConomy.DConfig.ENCODING;
 
@@ -88,23 +90,25 @@ public class SQL {
 
             String query1;
             String query2;
-            String query3 = "CREATE TABLE IF NOT EXISTS " + tableRecordName
+            String query3 = "create table if not exists " + tableRecordName
                     + "(id int(20) not null auto_increment, type varchar(50) not null, uid varchar(50) not null, player varchar(50) not null,"
                     + "balance double(20,2), amount double(20,2) not null, operation varchar(50) not null,"
-                    + " date varchar(50) not null, command varchar(50) not null,"
-                    + "primary key (id)) DEFAULT CHARSET = " + encoding + ";";
+                    + " date varchar(50) not null, command varchar(50) not null, datetime datetime not null,"
+                    + " primary key (id)) default charset = " + encoding + ";";
+            String query4 = "create table if not exists " + tableLoginName
+                    + "(UUID varchar(50) not null, last_time datetime not null, " + "primary key (UUID)) default charset = " + encoding + ";";
             if (XConomy.DConfig.isMySQL()) {
-                query1 = "CREATE TABLE IF NOT EXISTS " + tableName
+                query1 = "create table if not exists " + tableName
                         + "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, hidden int(5) not null, "
-                        + "primary key (UID)) DEFAULT CHARSET = " + encoding + ";";
-                query2 = "CREATE TABLE IF NOT EXISTS " + tableNonPlayerName
+                        + "primary key (UID)) default charset = " + encoding + ";";
+                query2 = "create table if not exists " + tableNonPlayerName
                         + "(account varchar(50) not null, balance double(20,2) not null, "
-                        + "primary key (account)) DEFAULT CHARSET = " + encoding + ";";
+                        + "primary key (account)) default charset = " + encoding + ";";
             } else {
-                query1 = "CREATE TABLE IF NOT EXISTS " + tableName
+                query1 = "create table if not exists " + tableName
                         + "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, hidden int(5) not null, "
                         + "primary key (UID));";
-                query2 = "CREATE TABLE IF NOT EXISTS " + tableNonPlayerName
+                query2 = "create table if not exists " + tableNonPlayerName
                         + "(account varchar(50) not null, balance double(20,2) not null, "
                         + "primary key (account));";
             }
@@ -115,6 +119,9 @@ public class SQL {
             }
             if (XConomy.DConfig.isMySQL() && XConomy.Config.TRANSACTION_RECORD) {
                 statement.executeUpdate(query3);
+                if (XConomy.Config.PAY_TIPS) {
+                    statement.executeUpdate(query4);
+                }
             }
             statement.close();
             database.closeHikariConnection(connection);
@@ -123,33 +130,6 @@ public class SQL {
             e.printStackTrace();
         }
     }
-
-    public static void updataTable() {
-        Connection connection = database.getConnectionAndCheck();
-        try {
-
-            PreparedStatement statementa = connection.prepareStatement("select * from " + tableName + " where hidden = '1'");
-
-            statementa.executeQuery();
-            statementa.close();
-            database.closeHikariConnection(connection);
-
-        } catch (SQLException e) {
-            try {
-                XConomy.getInstance().logger("升级数据库表格。。。", 0, null);
-
-                PreparedStatement statementb = connection.prepareStatement("alter table " + tableName + " add column hidden int(5) not null default '0'");
-
-                statementb.executeUpdate();
-                statementb.close();
-                database.closeHikariConnection(connection);
-
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        }
-    }
-
 
     @SuppressWarnings("ConstantConditions")
     public static void getPlayerData(UUID uuid) {
@@ -456,7 +436,9 @@ public class SQL {
             }
             try {
                 String query;
-                query = "INSERT INTO " + tableRecordName + "(type,uid,player,balance,amount,operation,date,command) values(?,?,?,?,?,?,?,?)";
+                Date dd = new Date();
+                String sd = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(dd);
+                query = "INSERT INTO " + tableRecordName + "(type,uid,player,balance,amount,operation,date,command,datetime) values(?,?,?,?,?,?,?,?,?)";
                 PreparedStatement statement = co.prepareStatement(query);
                 statement.setString(1, type);
                 statement.setString(2, uid);
@@ -464,8 +446,9 @@ public class SQL {
                 statement.setDouble(4, newbalance.doubleValue());
                 statement.setDouble(5, amount.doubleValue());
                 statement.setString(6, operation);
-                statement.setString(7, new Date().toString());
+                statement.setString(7, dd.toString());
                 statement.setString(8, command);
+                statement.setString(9, sd);
                 statement.executeUpdate();
                 statement.close();
             } catch (SQLException e) {

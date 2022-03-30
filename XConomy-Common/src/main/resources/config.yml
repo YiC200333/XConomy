@@ -39,6 +39,10 @@ Settings:
   #Dose save transaction record
   #Only MySQL is supported
   transaction-record: true
+  #Record transaction information of pay command while player offline.
+  #The player will receive tips when they reconnect.
+  #Transaction-record function must be enabled.
+  offline-pay-transfer-tips: false
   #Ignore the case of player names
   username-ignore-case: false
 

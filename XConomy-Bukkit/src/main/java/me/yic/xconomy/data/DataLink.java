@@ -22,6 +22,8 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.sql.SQLCreateNewAccount;
+import me.yic.xconomy.data.sql.SQLLogin;
+import me.yic.xconomy.data.sql.SQLUpdateTable;
 import me.yic.xconomy.utils.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -60,7 +62,8 @@ public class DataLink {
                 SQL.getwaittimeout();
             }
             SQL.createTable();
-            SQL.updataTable();
+            SQLUpdateTable.updataTable();
+            SQLUpdateTable.updataTable_record();
             XConomy.DConfig.loggersysmess("连接正常");
         } else {
             XConomy.DConfig.loggersysmess("连接异常");
@@ -81,6 +84,22 @@ public class DataLink {
 
     public static void newPlayer(String uid, String name) {
         SQLCreateNewAccount.newPlayer(uid, name);
+    }
+
+    public static void updatelogininfo(String uid) {
+        if (XConomy.DConfig.canasync) {
+            Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> SQLLogin.updatelogininfo(uid));
+        } else {
+            SQLLogin.updatelogininfo(uid);
+        }
+    }
+
+    public static void selectlogininfo(Player pp) {
+        if (XConomy.DConfig.canasync) {
+            Bukkit.getScheduler().runTaskLaterAsynchronously(XConomy.getInstance(), () -> SQLLogin.getPlayerlogin(pp), 20L);
+        } else {
+            SQLLogin.getPlayerlogin(pp);
+        }
     }
 
     public static <T> void getPlayerData(T key) {
@@ -142,6 +161,7 @@ public class DataLink {
             SQL.tableName = "xconomy_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
             SQL.tableNonPlayerName = "xconomynon_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
             SQL.tableRecordName = "xconomyrecord_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
+            SQL.tableLoginName = "xconomylogin_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
         }
     }
 

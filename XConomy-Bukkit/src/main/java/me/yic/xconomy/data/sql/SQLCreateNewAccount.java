@@ -54,19 +54,11 @@ public class SQLCreateNewAccount extends SQL {
         Connection connection = database.getConnectionAndCheck();
         switch (XConomy.Config.UUIDMODE) {
             case ONLINE:
+            case OFFLINE:
                 String ouid = GetUUID.getUUID(player, player.getName()).toString();
                 if (ouid.equalsIgnoreCase(player.getUniqueId().toString())) {
                     checkUserOnline(ouid, player.getName(), connection);
                 } else {
-                    kickplayer(player, 1);
-                    database.closeHikariConnection(connection);
-                    return;
-                }
-                break;
-            case OFFLINE:
-                String fuid = GetUUID.getUUID(player, player.getName()).toString();
-                if (!fuid.equalsIgnoreCase(player.getUniqueId().toString())) {
-                    checkUserOnline(fuid, player.getName(), connection);
                     kickplayer(player, 1);
                     database.closeHikariConnection(connection);
                     return;
@@ -164,23 +156,15 @@ public class SQLCreateNewAccount extends SQL {
 
     private static void createAccount(String UID, String user, double amount, Connection co_a) {
         try {
-            String query;
-            if (XConomy.DConfig.isMySQL()) {
-                query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
-                        + "ON DUPLICATE KEY UPDATE UID = ?";
-            } else {
-                query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) ";
-            }
+            String query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?)";
+            //String query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
+            //        + "ON DUPLICATE KEY UPDATE UID = ?";
 
             PreparedStatement statement = co_a.prepareStatement(query);
             statement.setString(1, UID);
             statement.setString(2, user);
             statement.setDouble(3, amount);
             statement.setInt(4, 0);
-
-            if (XConomy.DConfig.isMySQL()) {
-                statement.setString(5, UID);
-            }
 
             statement.executeUpdate();
             statement.close();
@@ -192,21 +176,11 @@ public class SQLCreateNewAccount extends SQL {
 
     public static void createNonPlayerAccount(String account, double bal, Connection co) {
         try {
-            String query;
-            if (XConomy.DConfig.isMySQL()) {
-                query = "INSERT INTO " + tableNonPlayerName + "(account,balance) values(?,?) "
-                        + "ON DUPLICATE KEY UPDATE account = ?";
-            } else {
-                query = "INSERT INTO " + tableNonPlayerName + "(account,balance) values(?,?)";
-            }
+            String query = "INSERT INTO " + tableNonPlayerName + "(account,balance) values(?,?)";
 
             PreparedStatement statement = co.prepareStatement(query);
             statement.setString(1, account);
             statement.setDouble(2, bal);
-
-            if (XConomy.DConfig.isMySQL()) {
-                statement.setString(3, account);
-            }
 
             statement.executeUpdate();
             statement.close();
