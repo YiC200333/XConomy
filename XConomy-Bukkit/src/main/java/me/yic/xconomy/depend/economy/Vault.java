@@ -81,11 +81,10 @@ public class Vault extends AbstractEconomy {
             return false;
         }
         try {
-            DataLink.newPlayer(pp.getUniqueId().toString(), pp.getName());
+            return DataLink.newPlayer(pp.getUniqueId(), pp.getName());
         } catch (Exception e) {
             return false;
         }
-        return true;
     }
 
     @Override

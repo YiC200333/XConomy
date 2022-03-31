@@ -19,10 +19,14 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.sql.SQLCreateNewAccount;
+import me.yic.xconomy.data.sql.SQLLogin;
+import me.yic.xconomy.data.sql.SQLUpdateTable;
 import me.yic.xconomy.utils.PlayerData;
+import me.yic.xconomy.utils.UUIDMode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 
@@ -59,6 +63,7 @@ public class DataLink {
                 SQL.getwaittimeout();
             }
             SQL.createTable();
+            SQLUpdateTable.updataTable_record();
             XConomy.DConfig.loggersysmess("连接正常");
         } else {
             XConomy.DConfig.loggersysmess("连接异常");
@@ -73,12 +78,28 @@ public class DataLink {
         return true;
     }
 
-    public static void newPlayer(String uid, String name) {
-        SQLCreateNewAccount.newPlayer(uid, name);
+    public static boolean newPlayer(UUID uid, String name) {
+        return SQLCreateNewAccount.newPlayer(uid, name, null);
     }
 
     public static void newPlayer(Player a) {
         SQLCreateNewAccount.newPlayer(a);
+    }
+
+    public static void updatelogininfo(String uid) {
+        if (XConomy.DConfig.canasync) {
+            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> SQLLogin.updatelogininfo(uid));
+        } else {
+            SQLLogin.updatelogininfo(uid);
+        }
+    }
+
+    public static void selectlogininfo(Player pp) {
+        if (XConomy.DConfig.canasync) {
+            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> SQLLogin.getPlayerlogin(pp));
+        } else {
+            SQLLogin.getPlayerlogin(pp);
+        }
     }
 
     public static <T> void getPlayerData(T key) {

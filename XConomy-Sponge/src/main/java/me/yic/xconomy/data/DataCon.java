@@ -31,6 +31,7 @@ import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.user.UserStorageService;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
 public class DataCon{
@@ -158,24 +159,21 @@ public class DataCon{
     }
 
 
-    @SuppressWarnings({"OptionalGetWithoutIsPresent"})
     public static User getplayer(String name) {
         PlayerData pd = getPlayerData(name);
         UUID u = pd.getUniqueId();
-        User mainp = null;
+        Optional<Object> mainp = Optional.empty();
         if (u != null) {
-            mainp = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(u)).get();
-            if (!mainp.isOnline() && XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+            mainp = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(u));
+            if (!mainp.isPresent() && XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 UUID subu = CacheSemiOnline.CacheSubUUID_getsubuuid(u.toString());
                 if (subu != null) {
-                    User subp = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(subu)).get();
-                    if (subp.isOnline()) {
-                        return subp;
-                    }
+                    Optional<Object> subp = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(subu));
+                    return (User) subp.orElse(null);
                 }
             }
         }
-        return mainp;
+        return (User) mainp.orElse(null);
     }
 
 

@@ -42,49 +42,53 @@ import java.util.UUID;
 
 public class SQLCreateNewAccount extends SQL {
 
-    public static void newPlayer(String uid, String name) {
-        Connection connection = database.getConnectionAndCheck();
-        createAccount(uid, name, Double.parseDouble(XConomy.Config.INITIAL_BAL), connection);
-        database.closeHikariConnection(connection);
-    }
-
-    public static void newPlayer(Player player) {
-        if (DataCon.containinfieldslist(player.getName())) {
+    public static boolean newPlayer(UUID uid, String name, Player player) {
+        if (DataCon.containinfieldslist(name)){
             kickplayer(player, 2);
+            return false;
         }
         Connection connection = database.getConnectionAndCheck();
         switch (XConomy.Config.UUIDMODE) {
             case ONLINE:
             case OFFLINE:
-                String ouid = GetUUID.getUUID(player, player.getName()).toString();
-                if (ouid.equalsIgnoreCase(player.getUniqueId().toString())) {
-                    checkUserOnline(ouid, player.getName(), connection);
+                String ouid = GetUUID.getUUID(player, name).toString();
+                if (ouid.equalsIgnoreCase(uid.toString())) {
+                    checkUserOnline(ouid, name, connection);
                 } else {
                     kickplayer(player, 1);
                     database.closeHikariConnection(connection);
-                    return;
+                    return false;
                 }
                 break;
             default:
-                boolean doubledata = checkUser(player, connection);
+                boolean doubledata = checkUser(uid, name, player, connection);
                 if (!doubledata) {
-                    selectUser(player.getUniqueId(), player.getName(), connection);
+                    selectUser(uid, name, connection);
                 }
+                break;
         }
         database.closeHikariConnection(connection);
+        return true;
     }
 
+    public static void newPlayer(Player player) {
+        newPlayer(player.getUniqueId(), player.getName(), player);
+    }
+
+
     private static void kickplayer(Player player, int x) {
-        String reason = "[XConomy] The same data exists in the server without different UUID";
-        if (x == 1) {
-            reason = "[XConomy] UUID mismatch";
-        } else if (x == 2) {
-            reason = "[XConomy] Username does not mismatch requirements";
-        }
-        final String freason = reason;
-        if (player.isOnline()) {
-            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() ->
-                    player.kick(Text.of(freason)));
+        if (player != null) {
+            String reason = "[XConomy] The same data exists in the server without different UUID";
+            if (x == 1) {
+                reason = "[XConomy] UUID mismatch";
+            } else if (x == 2) {
+                reason = "[XConomy] Username does not mismatch requirements";
+            }
+            final String freason = reason;
+            if (player.isOnline()) {
+                Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() ->
+                        player.kick(Text.of(freason)));
+            }
         }
     }
 
@@ -112,7 +116,7 @@ public class SQLCreateNewAccount extends SQL {
         }
     }
 
-    private static boolean checkUser(Player player, Connection connection) {
+    private static boolean checkUser(UUID uuid, String name, Player player, Connection connection) {
         boolean doubledata = false;
         try {
             String query;
@@ -131,17 +135,17 @@ public class SQLCreateNewAccount extends SQL {
             }
 
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, player.getName());
+            statement.setString(1, name);
 
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 String uid = rs.getString(1);
-                if (!player.getUniqueId().toString().equals(uid)) {
+                if (!uuid.toString().equals(uid)) {
                     doubledata = true;
                     if (!XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                         kickplayer(player, 0);
                     } else {
-                        CacheSemiOnline.CacheSubUUID_checkUser(uid, player);
+                        CacheSemiOnline.CacheSubUUID_checkUser(uid, uuid, player);
                     }
                 }
             }
@@ -166,10 +170,6 @@ public class SQLCreateNewAccount extends SQL {
             statement.setString(2, user);
             statement.setDouble(3, amount);
             statement.setInt(4, 0);
-
-            if (XConomy.DConfig.isMySQL()) {
-                statement.setString(5, UID);
-            }
 
             statement.executeUpdate();
             statement.close();

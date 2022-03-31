@@ -63,21 +63,21 @@ public class CacheSemiOnline {
 
 
     @SuppressWarnings("ConstantConditions")
-    public static void CacheSubUUID_checkUser(String mainu, Player pp) {
+    public static void CacheSubUUID_checkUser(String mainu,  UUID suuid, Player pp) {
         if (!CacheSubUUID.getNode(mainu).isVirtual()) {
-            if (!CacheSubUUID.getNode(mainu, "SubUUID").getString().equals(pp.getUniqueId().toString())) {
-                if (pp.isOnline()) {
+            if (!CacheSubUUID.getNode(mainu, "SubUUID").getString().equals(suuid.toString())) {
+                if (pp !=null && pp.isOnline()) {
                         Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() ->
                             pp.kick(Text.of("[XConomy] The player with the same name exists on the server (Three times)")));
                 }
             } else {
                 Cache.removefromCache(Cache.getSubUUID(UUID.fromString(mainu)));
-                Cache.insertIntoSUUIDCache(UUID.fromString(mainu), pp.getUniqueId());
+                Cache.insertIntoSUUIDCache(UUID.fromString(mainu), suuid);
             }
         } else {
-            CacheSubUUID.getNode(mainu, "SubUUID").setValue(pp.getUniqueId().toString());
+            CacheSubUUID.getNode(mainu, "SubUUID").setValue(suuid.toString());
             Cache.removefromCache(Cache.getSubUUID(UUID.fromString(mainu)));
-            Cache.insertIntoSUUIDCache(UUID.fromString(mainu), pp.getUniqueId());
+            Cache.insertIntoSUUIDCache(UUID.fromString(mainu), suuid);
         }
     }
 

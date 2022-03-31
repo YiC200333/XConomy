@@ -27,7 +27,6 @@ import me.yic.xconomy.utils.UUIDMode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.text.Text;
 
@@ -38,6 +37,9 @@ public class ConnectionListeners {
     public void onQuit(ClientConnectionEvent.Disconnect event) {
         if (Sponge.getServer().getOnlinePlayers().size() == 1) {
             Cache.clearCache();
+        }
+        if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
+            DataLink.updatelogininfo(event.getTargetEntity().getUniqueId().toString());
         }
     }
 
@@ -54,6 +56,10 @@ public class ConnectionListeners {
             DataLink.newPlayer(a);
         } else {
             Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataLink.newPlayer(a));
+        }
+
+        if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
+            DataLink.selectlogininfo(a);
         }
 
         if (a.hasPermission("xconomy.admin.op")) {

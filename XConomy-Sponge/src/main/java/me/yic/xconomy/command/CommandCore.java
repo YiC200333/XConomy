@@ -245,7 +245,7 @@ public class CommandCore {
                 }
                 String realname = pd.getName();
 
-                if (!target.hasPermission("xconomy.user.pay.receive")) {
+                if (target !=null && !target.hasPermission("xconomy.user.pay.receive")) {
                     sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_receive_permission")));
                     return CommandResult.success();
                 }
@@ -267,7 +267,7 @@ public class CommandCore {
                         .replace("%player%", sender.getName())
                         .replace("%amount%", amountFormatted);
 
-                if (!target.isOnline()) {
+                if (target == null || !target.isOnline()) {
                     broadcastSendMessage(false, targetUUID, mess);
                     return CommandResult.success();
                 }
@@ -378,7 +378,7 @@ public class CommandCore {
                                 BigDecimal bal = DataCon.getPlayerData(targetUUID).getbalance();
                                 if (DataFormat.isMAX(bal.add(amount))) {
                                     sender.sendMessage(Text.of(PREFIX + translateColorCodes("over_maxnumber")));
-                                    if (target.isOnline()) {
+                                    if (target != null && target.isOnline()) {
                                         target.getPlayer().get().sendMessage(Text.of(PREFIX + translateColorCodes("over_maxnumber_receive")));
                                     }
                                     return CommandResult.success();
@@ -399,7 +399,7 @@ public class CommandCore {
                                         message = PREFIX + reason;
                                     }
 
-                                    if (!target.isOnline()) {
+                                    if (target == null || !target.isOnline()) {
                                         broadcastSendMessage(false, targetUUID, message);
                                         return CommandResult.success();
                                     }
@@ -443,7 +443,7 @@ public class CommandCore {
                                         mess = PREFIX + reason;
                                     }
 
-                                    if (!target.isOnline()) {
+                                    if (target == null || !target.isOnline()) {
                                         broadcastSendMessage(false, targetUUID, mess);
                                         return CommandResult.success();
                                     }
@@ -474,7 +474,7 @@ public class CommandCore {
                                         mess = PREFIX + reason;
                                     }
 
-                                    if (!target.isOnline()) {
+                                    if (target == null || !target.isOnline()) {
                                         broadcastSendMessage(false, targetUUID, mess);
                                         return CommandResult.success();
                                     }
@@ -635,6 +635,13 @@ public class CommandCore {
 
     public static boolean checkMessage(String message) {
         return !MessagesManager.messageFile.getString(message).equals("");
+    }
+
+    public static void sendMessages(Player sender, String name, String amount) {
+        String mess = PREFIX + translateColorCodes("pay_receive")
+                .replace("%player%", name)
+                .replace("%amount%", amount);
+        sender.sendMessage(Text.of(mess));
     }
 
     @SuppressWarnings("ConstantConditions")

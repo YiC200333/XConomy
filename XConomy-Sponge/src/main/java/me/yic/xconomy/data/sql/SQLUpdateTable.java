@@ -25,25 +25,6 @@ import java.util.Date;
 
 public class SQLUpdateTable extends SQL {
 
-    public static void updataTable() {
-        Connection connection = database.getConnectionAndCheck();
-        try {
-
-            PreparedStatement statementa = connection.prepareStatement("desc " + tableName + " hidden");
-
-            ResultSet rs = statementa.executeQuery();
-            if (!rs.next()) {
-                XConomy.getInstance().logger("升级数据库表格。。。", 0, tableName);
-                PreparedStatement statementb = connection.prepareStatement("alter table " + tableName + " add column hidden int(5) not null default '0'");
-                statementb.executeUpdate();
-                statementb.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        database.closeHikariConnection(connection);
-    }
-
     public static void updataTable_record() {
         Connection connection = database.getConnectionAndCheck();
         try {

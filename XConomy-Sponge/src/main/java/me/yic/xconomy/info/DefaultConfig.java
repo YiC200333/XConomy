@@ -34,6 +34,7 @@ public class DefaultConfig {
         setUUIDMode();
         setnonplayeraccount();
         setformatbalance();
+        setpaytips();
     }
 
     public UUIDMode UUIDMODE = UUIDMode.DEFAULT;
@@ -49,6 +50,7 @@ public class DefaultConfig {
     public int LINES_PER_PAGE = config.getNode("Settings", "lines-per-page").getInt();
     public boolean DISABLE_CACHE = config.getNode("Settings", "disable-cache").getBoolean();
     public boolean TRANSACTION_RECORD = config.getNode("Settings", "transaction-record").getBoolean();
+    public boolean PAY_TIPS = false;
     public boolean USERNAME_IGNORE_CASE = config.getNode("Settings", "username-ignore-case").getBoolean();
 
     public boolean NON_PLAYER_ACCOUNT = config.getNode("non-player-account","enable").getBoolean();
@@ -132,5 +134,11 @@ public class DefaultConfig {
 
         BUNGEECORD_ENABLE = true;
 
+    }
+
+    private void setpaytips() {
+        if (TRANSACTION_RECORD) {
+            PAY_TIPS = config.getNode("Settings","offline-pay-transfer-tips").getBoolean();
+        }
     }
 }

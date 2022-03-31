@@ -82,8 +82,8 @@ public class DataLink {
         SQLCreateNewAccount.newPlayer(a);
     }
 
-    public static void newPlayer(String uid, String name) {
-        SQLCreateNewAccount.newPlayer(uid, name);
+    public static boolean newPlayer(UUID uid, String name) {
+        return SQLCreateNewAccount.newPlayer(uid, name, null);
     }
 
     public static void updatelogininfo(String uid) {

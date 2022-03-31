@@ -66,7 +66,9 @@ public class XCService implements EconomyService {
     @Override
     public Optional<UniqueAccount> getOrCreateAccount(UUID uuid) {
         if (!hasAccount(uuid)) {
-            DataLink.newPlayer(uuid.toString(), Sponge.getServer().getPlayer(uuid).get().getName());
+            if (!DataLink.newPlayer(uuid, Sponge.getServer().getPlayer(uuid).get().getName())){
+                return Optional.empty();
+            }
         }
         return Optional.of(new XCUniqueAccount(
                 Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(uuid)).get()));
