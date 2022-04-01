@@ -29,37 +29,46 @@ public class SQLUpdateTable extends SQL {
         Connection connection = database.getConnectionAndCheck();
         try {
 
-            PreparedStatement statementa = connection.prepareStatement("desc " + tableName + " hidden");
+            PreparedStatement statementa = connection.prepareStatement("select * from " + tableName + " where hidden = '1'");
 
-            ResultSet rs = statementa.executeQuery();
-            if (!rs.next()) {
-                XConomy.getInstance().logger("升级数据库表格。。。", 0, tableName);
+            statementa.executeQuery();
+            statementa.close();
+            database.closeHikariConnection(connection);
+
+        } catch (SQLException e) {
+            try {
+                XConomy.getInstance().logger("升级数据库表格。。。", 0, null);
+
                 PreparedStatement statementb = connection.prepareStatement("alter table " + tableName + " add column hidden int(5) not null default '0'");
+
                 statementb.executeUpdate();
                 statementb.close();
+                database.closeHikariConnection(connection);
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        database.closeHikariConnection(connection);
     }
 
     public static void updataTable_record() {
-        Connection connection = database.getConnectionAndCheck();
-        try {
-            PreparedStatement statementa = connection.prepareStatement("desc " + tableRecordName + " datetime");
-            ResultSet rs = statementa.executeQuery();
-            if (!rs.next()) {
-                XConomy.getInstance().logger("升级数据库表格。。。", 0, tableRecordName);
-                Timestamp dd = new Timestamp((new Date()).getTime());
-                PreparedStatement statementb = connection.prepareStatement("alter table " + tableRecordName + " add column datetime datetime not null default ?");
-                statementb.setTimestamp(1, dd);
-                statementb.executeUpdate();
-                statementb.close();
+        if (XConomy.DConfig.isMySQL() && XConomy.Config.TRANSACTION_RECORD) {
+            Connection connection = database.getConnectionAndCheck();
+            try {
+                PreparedStatement statementa = connection.prepareStatement("desc " + tableRecordName + " datetime");
+                ResultSet rs = statementa.executeQuery();
+                if (!rs.next()) {
+                    XConomy.getInstance().logger("升级数据库表格。。。", 0, tableRecordName);
+                    Timestamp dd = new Timestamp((new Date()).getTime());
+                    PreparedStatement statementb = connection.prepareStatement("alter table " + tableRecordName + " add column datetime datetime not null default ?");
+                    statementb.setTimestamp(1, dd);
+                    statementb.executeUpdate();
+                    statementb.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            database.closeHikariConnection(connection);
         }
-        database.closeHikariConnection(connection);
     }
 }
