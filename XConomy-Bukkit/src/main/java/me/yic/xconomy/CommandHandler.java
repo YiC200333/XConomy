@@ -228,7 +228,7 @@ public class CommandHandler {
 
                 String amountFormatted = DataFormat.shown(amount);
                 String taxamountFormatted = DataFormat.shown(taxamount);
-                BigDecimal bal_sender = DataCon.getPlayerData(((Player) sender).getUniqueId()).getbalance();
+                BigDecimal bal_sender = DataCon.getPlayerData(((Player) sender).getUniqueId()).getBalance();
 
                 if (bal_sender.compareTo(taxamount) < 0) {
                     sendMessages(sender, PREFIX + translateColorCodes("pay_fail")
@@ -254,19 +254,19 @@ public class CommandHandler {
 
                 //Cache.refreshFromCache(targetUUID);
 
-                BigDecimal bal_target = DataCon.getPlayerData(targetUUID).getbalance();
+                BigDecimal bal_target = DataCon.getPlayerData(targetUUID).getBalance();
                 if (DataFormat.isMAX(bal_target.add(amount))) {
                     sendMessages(sender, PREFIX + translateColorCodes("over_maxnumber"));
                     return true;
                 }
 
                 String com = commandName + " " + args[0] + " " + amount;
-                DataCon.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), taxamount, false, com);
+                DataCon.changeplayerdata("PLAYER_COMMAND", ((Player) sender).getUniqueId(), taxamount, false, com);
                 sendMessages(sender, PREFIX + translateColorCodes("pay")
                         .replace("%player%", realname)
                         .replace("%amount%", amountFormatted));
 
-                DataCon.change("PLAYER_COMMAND", targetUUID, amount, true, com);
+                DataCon.changeplayerdata("PLAYER_COMMAND", targetUUID, amount, true, com);
                 String mess = PREFIX + translateColorCodes("pay_receive")
                         .replace("%player%", sender.getName())
                         .replace("%amount%", amountFormatted);
@@ -333,7 +333,7 @@ public class CommandHandler {
 
                         //Cache.refreshFromCache(player.getUniqueId());
 
-                        BigDecimal a = DataCon.getPlayerData(player.getUniqueId()).getbalance();
+                        BigDecimal a = DataCon.getPlayerData(player.getUniqueId()).getBalance();
                         sendMessages(sender, PREFIX + translateColorCodes("balance")
                                 .replace("%balance%", DataFormat.shown((a))));
 
@@ -354,7 +354,7 @@ public class CommandHandler {
                         }
                         String realname = pd.getName();
 
-                        BigDecimal targetBalance = DataCon.getPlayerData(targetUUID).getbalance();
+                        BigDecimal targetBalance = DataCon.getPlayerData(targetUUID).getBalance();
                         sendMessages(sender, PREFIX + translateColorCodes("balance_other")
                                 .replace("%player%", realname)
                                 .replace("%balance%", DataFormat.shown((targetBalance))));
@@ -411,7 +411,7 @@ public class CommandHandler {
 
                                 //Cache.refreshFromCache(targetUUID);
 
-                                BigDecimal bal = DataCon.getPlayerData(targetUUID).getbalance();
+                                BigDecimal bal = DataCon.getPlayerData(targetUUID).getBalance();
                                 if (DataFormat.isMAX(bal.add(amount))) {
                                     sendMessages(sender, PREFIX + translateColorCodes("over_maxnumber"));
                                     if (target != null) {
@@ -420,7 +420,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                DataCon.change("ADMIN_COMMAND", targetUUID, amount, true, com);
+                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, true, com);
                                 sendMessages(sender, PREFIX + translateColorCodes("money_give")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
@@ -458,7 +458,7 @@ public class CommandHandler {
                                 }
 
                                 //Cache.refreshFromCache(targetUUID);
-                                BigDecimal bal = DataCon.getPlayerData(targetUUID).getbalance();
+                                BigDecimal bal = DataCon.getPlayerData(targetUUID).getBalance();
                                 if (bal.compareTo(amount) < 0) {
                                     sendMessages(sender, PREFIX + translateColorCodes("money_take_fail")
                                             .replace("%player%", realname)
@@ -467,7 +467,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                DataCon.change("ADMIN_COMMAND", targetUUID, amount, false, com);
+                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, false, com);
                                 sendMessages(sender, PREFIX + translateColorCodes("money_take")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
@@ -497,7 +497,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                DataCon.change("ADMIN_COMMAND", targetUUID, amount, null, com);
+                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, null, com);
                                 sendMessages(sender, PREFIX + translateColorCodes("money_set")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
@@ -586,7 +586,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                DataCon.changeall(args[2], "ADMIN_COMMAND", amount, true, com);
+                                DataCon.changeallplayerdata(args[2], "ADMIN_COMMAND", amount, true, com);
                                 sendMessages(sender, PREFIX + translateColorCodes("money_give")
                                         .replace("%player%", target)
                                         .replace("%amount%", amountFormatted));
@@ -603,7 +603,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                DataCon.changeall(args[2], "ADMIN_COMMAND", amount, false, com);
+                                DataCon.changeallplayerdata(args[2], "ADMIN_COMMAND", amount, false, com);
                                 sendMessages(sender, PREFIX + translateColorCodes("money_take")
                                         .replace("%player%", target)
                                         .replace("%amount%", amountFormatted));

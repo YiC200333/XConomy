@@ -21,7 +21,6 @@ package me.yic.xconomy.depend.economyapi;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.caches.Cache;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.cause.Cause;
@@ -67,8 +66,8 @@ public class XCUniqueAccount implements UniqueAccount {
 
     @Override
     public BigDecimal getBalance(Currency currency, Set<Context> contexts) {
-        if (DataCon.getPlayerData(uuid).getUniqueId() != null) {
-            return DataCon.getPlayerData(uuid).getbalance();
+        if (DataCon.getPlayerData(uuid).isValid()) {
+            return DataCon.getPlayerData(uuid).getBalance();
         } else {
             return BigDecimal.ZERO;
         }
@@ -93,7 +92,7 @@ public class XCUniqueAccount implements UniqueAccount {
                     currency, amount, contexts, ResultType.FAILED,
                     DummyObjectProvider.createFor(TransactionType.class, "SET"));
         }
-        DataCon.change("PLUGIN", uuid, amount, null, "SETBALANCE");
+        DataCon.changeplayerdata("PLUGIN", uuid, amount, null, "SETBALANCE");
         return new XCTransactionResult(this,
                 currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS,
                 DummyObjectProvider.createFor(TransactionType.class, "SET"));
@@ -112,7 +111,7 @@ public class XCUniqueAccount implements UniqueAccount {
                     DummyObjectProvider.createFor(TransactionType.class, "RESET"));
         }
 
-        DataCon.change("PLUGIN", uuid, getDefaultBalance(currency), null, "RESETBALANCE");
+        DataCon.changeplayerdata("PLUGIN", uuid, getDefaultBalance(currency), null, "RESETBALANCE");
         return new XCTransactionResult(this,
                 currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS,
                 DummyObjectProvider.createFor(TransactionType.class, "RESET"));
@@ -133,7 +132,7 @@ public class XCUniqueAccount implements UniqueAccount {
                     currency, amount, contexts, ResultType.FAILED, TransactionTypes.DEPOSIT);
         }
 
-        DataCon.change("PLUGIN", uuid, amountFormatted, true, "N/A");
+        DataCon.changeplayerdata("PLUGIN", uuid, amountFormatted, true, "N/A");
         return new XCTransactionResult(this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.DEPOSIT);
 
@@ -154,7 +153,7 @@ public class XCUniqueAccount implements UniqueAccount {
                     currency, amount, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
         }
 
-        DataCon.change("PLUGIN", uuid, amountFormatted, false, "N/A");
+        DataCon.changeplayerdata("PLUGIN", uuid, amountFormatted, false, "N/A");
         return new XCTransactionResult(this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.WITHDRAW);
     }

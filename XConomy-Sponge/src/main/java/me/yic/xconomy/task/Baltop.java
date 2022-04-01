@@ -18,11 +18,14 @@
  */
 package me.yic.xconomy.task;
 
+import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.sql.SQL;
 
 import me.yic.xconomy.data.caches.Cache;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
 
 public class Baltop implements Runnable {
 
@@ -32,8 +35,14 @@ public class Baltop implements Runnable {
         Cache.baltop.clear();
         SQL.getBaltop();
         DataCon.sumbal();
-        if (Sponge.getServer().getOnlinePlayers().size() == 0) {
+        if (Sponge.getServer().getOnlinePlayers().isEmpty()) {
             Cache.clearCache();
+        }else{
+            if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
+                for (Player pp : Sponge.getServer().getOnlinePlayers()) {
+                    DataLink.updatelogininfo(pp.getUniqueId().toString());
+                }
+            }
         }
     }
 }

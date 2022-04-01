@@ -56,20 +56,20 @@ public class Placeholder extends PlaceholderExpansion {
             if (player == null) {
                 return "0.0";
             }
-            BigDecimal a = DataCon.getPlayerData(player.getUniqueId()).getbalance();
+            BigDecimal a = DataCon.getPlayerData(player.getUniqueId()).getBalance();
             return DataFormat.shown(a);
         } else if (identifier.equals("balance_value")) {
             if (player == null) {
                 return "0.0";
             }
-            BigDecimal bal = DataCon.getPlayerData(player.getUniqueId()).getbalance();
+            BigDecimal bal = DataCon.getPlayerData(player.getUniqueId()).getBalance();
             return bal.toString();
 
         } else if (identifier.equals("balance_formatted")) {
             if (player == null) {
                 return "0.0";
             }
-            BigDecimal a = DataCon.getPlayerData(player.getUniqueId()).getbalance();
+            BigDecimal a = DataCon.getPlayerData(player.getUniqueId()).getBalance();
             return DataFormat.PEshownf(a);
 
         } else if (identifier.contains("top_player_")) {

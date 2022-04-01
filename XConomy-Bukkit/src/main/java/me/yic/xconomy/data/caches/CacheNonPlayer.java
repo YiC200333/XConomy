@@ -19,21 +19,23 @@
 package me.yic.xconomy.data.caches;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.api.event.NonPlayerAccountEvent;
 import me.yic.xconomy.data.DataLink;
-import org.bukkit.Bukkit;
 
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CacheNonPlayer {
-    public static Map<String, BigDecimal> bal = new ConcurrentHashMap<>();
+    private static Map<String, BigDecimal> bal = new ConcurrentHashMap<>();
 
     public static void insertIntoCache(final String playerName, final BigDecimal value) {
         if (value != null) {
             bal.put(playerName, value);
         }
+    }
+
+    public static boolean CacheContainsKey(final String key) {
+        return bal.containsKey(key);
     }
 
     public static BigDecimal getBalanceFromCacheOrDB(final String u) {
@@ -45,27 +47,6 @@ public class CacheNonPlayer {
         }
         return bal.get(u);
 
-    }
-
-    public static void change(final String u, final BigDecimal amount, final Boolean isAdd, final String type) {
-        BigDecimal newvalue = amount;
-        BigDecimal balance = getBalanceFromCacheOrDB(u);
-        Bukkit.getScheduler().runTask(XConomy.getInstance(), () -> Bukkit.getPluginManager().callEvent(new NonPlayerAccountEvent(u, balance, amount, isAdd, type)));
-        if (isAdd != null) {
-            if (isAdd) {
-                newvalue = balance.add(amount);
-            } else {
-                newvalue = balance.subtract(amount);
-            }
-        }
-        insertIntoCache(u, newvalue);
-
-        if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
-            final BigDecimal fnewvalue = newvalue;
-            Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.saveNonPlayer(type, u, amount, fnewvalue, isAdd));
-        }else {
-            DataLink.saveNonPlayer(type, u, amount, newvalue, isAdd);
-        }
     }
 
 }

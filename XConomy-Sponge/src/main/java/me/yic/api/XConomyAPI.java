@@ -21,9 +21,10 @@ package me.yic.api;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.PermissionINFO;
-import me.yic.xconomy.utils.PluginINFO;
+import me.yic.xconomy.utils.PlayerData;
 import org.spongepowered.api.Sponge;
 
 import java.math.BigDecimal;
@@ -35,15 +36,11 @@ import java.util.UUID;
 public class XConomyAPI {
 
     public String getversion() {
-        return PluginINFO.VERSION;
+        return XConomy.PVersion;
     }
 
     public boolean isbungeecordmode() {
         return XConomy.Config.BUNGEECORD_ENABLE;
-    }
-
-    public UUID translateUUID(String playername) {
-        return DataCon.getPlayerData(playername).getUniqueId();
     }
 
     public BigDecimal formatdouble(String amount) {
@@ -54,19 +51,31 @@ public class XConomyAPI {
         return DataFormat.shown(balance);
     }
 
-    public BigDecimal getbalance(UUID uid) {
-        return DataCon.getPlayerData(uid).getbalance();
+    public boolean createPlayerData(UUID uid, String name) {
+        return DataLink.newPlayer(uid, name);
+    }
+
+    public PlayerData getPlayerData(UUID uid) {
+        return DataCon.getPlayerData(uid);
+    }
+
+    public PlayerData getPlayerData(String name) {
+        return DataCon.getPlayerData(name);
+    }
+
+    public BigDecimal getorcreateAccountBalance(String account) {
+        return DataCon.getAccountBalance(account);
     }
 
     public boolean ismaxnumber(BigDecimal amount) {
         return DataFormat.isMAX(amount);
     }
 
-    public int changebalance(UUID u, String playername, BigDecimal amount, Boolean isadd) {
+    public int changePlayerBalance(UUID u, String playername, BigDecimal amount, Boolean isadd) {
         if (XConomy.Config.BUNGEECORD_ENABLE & Sponge.getServer().getOnlinePlayers().isEmpty()) {
             return 1;
         }
-        BigDecimal bal = getbalance(u);
+        BigDecimal bal = getPlayerData(u).getBalance();
         if (isadd) {
             if (ismaxnumber(bal.add(amount))) {
                 return 3;
@@ -76,7 +85,22 @@ public class XConomyAPI {
                 return 2;
             }
         }
-        DataCon.change("PLUGIN_API", u, amount, isadd, "N/A");
+        DataCon.changeplayerdata("PLUGIN_API", u, amount, isadd, "N/A");
+        return 0;
+    }
+
+    public int changeAccountBalance(String account, BigDecimal amount, Boolean isadd) {
+        BigDecimal bal = getorcreateAccountBalance(account);
+        if (isadd) {
+            if (ismaxnumber(bal.add(amount))) {
+                return 3;
+            }
+        } else {
+            if (bal.compareTo(amount) < 0) {
+                return 2;
+            }
+        }
+        DataCon.changeaccountdata("PLUGIN_API", amount, isadd, "N/A");
         return 0;
     }
 
@@ -105,5 +129,35 @@ public class XConomyAPI {
 
     public void setpaymentpermission(UUID uid, Boolean vaule) {
         PermissionINFO.setPaymentPermission(uid, vaule);
+    }
+
+
+    @Deprecated
+    public UUID translateUUID(String playername) {
+        return DataCon.getPlayerData(playername).getUniqueId();
+    }
+
+    @Deprecated
+    public BigDecimal getbalance(UUID uid) {
+        return DataCon.getPlayerData(uid).getBalance();
+    }
+
+    @Deprecated
+    public int changebalance(UUID u, String playername, BigDecimal amount, Boolean isadd) {
+        if (XConomy.Config.BUNGEECORD_ENABLE & Sponge.getServer().getOnlinePlayers().isEmpty()) {
+            return 1;
+        }
+        BigDecimal bal = getbalance(u);
+        if (isadd) {
+            if (ismaxnumber(bal.add(amount))) {
+                return 3;
+            }
+        } else {
+            if (bal.compareTo(amount) < 0) {
+                return 2;
+            }
+        }
+        DataCon.changeplayerdata("PLUGIN_API", u, amount, isadd, "N/A");
+        return 0;
     }
 }

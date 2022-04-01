@@ -241,14 +241,14 @@ public class SQL {
         try {
             String query = " set balance = ? where UID = ?";
             PreparedStatement statement = connection.prepareStatement("update " + tableName + query);
-            statement.setDouble(1, pd.getbalance().doubleValue());
+            statement.setDouble(1, pd.getBalance().doubleValue());
             statement.setString(2, pd.getUniqueId().toString());
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        record(connection, type, pd, isAdd, amount, pd.getbalance(), command);
+        record(connection, type, pd, isAdd, amount, pd.getBalance(), command);
         database.closeHikariConnection(connection);
     }
 

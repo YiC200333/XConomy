@@ -69,7 +69,7 @@ public class XCVirtualAccount implements VirtualAccount {
             return CacheNonPlayer.getBalanceFromCacheOrDB(account);
         }
 
-        return DataCon.getPlayerData(account).getbalance();
+        return DataCon.getPlayerData(account).getBalance();
     }
 
     @Override
@@ -90,7 +90,7 @@ public class XCVirtualAccount implements VirtualAccount {
                     DummyObjectProvider.createFor(TransactionType.class, "SET"));
         }
         if (XCEconomyCommon.isNonPlayerAccount(account)) {
-            CacheNonPlayer.change(account, amount, null, "PLUGIN");
+            DataCon.changeaccountdata(account, amount, null, "PLUGIN");
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS,
                     DummyObjectProvider.createFor(TransactionType.class, "SET"));
@@ -102,7 +102,7 @@ public class XCVirtualAccount implements VirtualAccount {
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED,
                     DummyObjectProvider.createFor(TransactionType.class, "SET"));
         }
-        DataCon.change("PLUGIN", playeruuid, amount, null, "SETBALANCE");
+        DataCon.changeplayerdata("PLUGIN", playeruuid, amount, null, "SETBALANCE");
         return new XCTransactionResult(this,
                 currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS,
                 DummyObjectProvider.createFor(TransactionType.class, "SET"));
@@ -121,7 +121,7 @@ public class XCVirtualAccount implements VirtualAccount {
                     DummyObjectProvider.createFor(TransactionType.class, "RESET"));
         }
         if (XCEconomyCommon.isNonPlayerAccount(account)) {
-            CacheNonPlayer.change(account, BigDecimal.ZERO, null, "PLUGIN");
+            DataCon.changeaccountdata(account, BigDecimal.ZERO, null, "PLUGIN");
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS,
                     DummyObjectProvider.createFor(TransactionType.class, "RESET"));
@@ -133,7 +133,7 @@ public class XCVirtualAccount implements VirtualAccount {
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED,
                     DummyObjectProvider.createFor(TransactionType.class, "RESET"));
         }
-        DataCon.change("PLUGIN", playeruuid, getDefaultBalance(currency), null, "RESETBALANCE");
+        DataCon.changeplayerdata("PLUGIN", playeruuid, getDefaultBalance(currency), null, "RESETBALANCE");
         return new XCTransactionResult(this,
                 currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS,
                 DummyObjectProvider.createFor(TransactionType.class, "RESET"));
@@ -156,7 +156,7 @@ public class XCVirtualAccount implements VirtualAccount {
         }
 
         if (XCEconomyCommon.isNonPlayerAccount(account)) {
-            CacheNonPlayer.change(account, amount, true, "PLUGIN");
+            DataCon.changeaccountdata(account, amount, true, "PLUGIN");
             return new XCTransactionResult(this,
                     currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.DEPOSIT);
         }
@@ -166,7 +166,7 @@ public class XCVirtualAccount implements VirtualAccount {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.DEPOSIT);
         }
-        DataCon.change("PLUGIN", playeruuid, amountFormatted, true, "N/A");
+        DataCon.changeplayerdata("PLUGIN", playeruuid, amountFormatted, true, "N/A");
         return new XCTransactionResult(this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.DEPOSIT);
 
@@ -187,7 +187,7 @@ public class XCVirtualAccount implements VirtualAccount {
                     currency, amount, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
         }
         if (XCEconomyCommon.isNonPlayerAccount(account)) {
-            CacheNonPlayer.change(account, amount, false, "PLUGIN");
+            DataCon.changeaccountdata(account, amount, false, "PLUGIN");
             return new XCTransactionResult(this,
                     currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.WITHDRAW);
         }
@@ -197,7 +197,7 @@ public class XCVirtualAccount implements VirtualAccount {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
         }
-        DataCon.change("PLUGIN", playeruuid, amountFormatted, false, "N/A");
+        DataCon.changeplayerdata("PLUGIN", playeruuid, amountFormatted, false, "N/A");
         return new XCTransactionResult(this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.WITHDRAW);
     }

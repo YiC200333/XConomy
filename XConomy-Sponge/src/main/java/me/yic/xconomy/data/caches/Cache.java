@@ -37,7 +37,7 @@ public class Cache {
 
     public static void insertIntoCache(final UUID uuid, final PlayerData pd) {
         if (pd != null) {
-            if (pd.getName() != null && pd.getbalance() != null) {
+            if (pd.getName() != null && pd.getBalance() != null) {
                 pds.put(uuid, pd);
                 if (XConomy.Config.USERNAME_IGNORE_CASE) {
                     uuids.put(pd.getName().toLowerCase(), uuid);
@@ -87,7 +87,7 @@ public class Cache {
     }
 
     public static void updateIntoCache(final UUID uuid, final PlayerData pd, final BigDecimal newbalance) {
-        pd.setbalance(newbalance);
+        pd.setBalance(newbalance);
         pds.put(uuid, pd);
     }
 

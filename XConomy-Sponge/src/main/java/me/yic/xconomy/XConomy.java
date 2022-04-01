@@ -57,7 +57,6 @@ import org.spongepowered.api.network.ChannelBinding;
 import org.spongepowered.api.network.RawDataListener;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
-import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.text.Text;
 import org.yaml.snakeyaml.DumperOptions;
@@ -76,6 +75,7 @@ import java.util.concurrent.TimeUnit;
 public class XConomy {
 
     private static XConomy instance;
+    public static String PVersion = PluginINFO.VERSION;
     public static DataBaseConfig DConfig;
     public static DefaultConfig Config;
 
@@ -204,12 +204,10 @@ public class XConomy {
         int time = Config.REFRESH_TIME;
 
         refresherTask = Sponge.getScheduler().createAsyncExecutor(this);
-        refresherTask.schedule(() -> {
-            Task.builder().execute(new Baltop() {
-            });
-        }, time, TimeUnit.SECONDS);
+        refresherTask.scheduleAtFixedRate(new Baltop(), time, time, TimeUnit.SECONDS);
+        //Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(Baltop::new);
 
-        logger(null, 0, "===== YiC =====");
+                logger(null, 0, "===== YiC =====");
 
     }
 

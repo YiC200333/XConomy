@@ -18,10 +18,13 @@
  */
 package me.yic.xconomy.task;
 
+import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.sql.SQL;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Baltop extends BukkitRunnable {
@@ -32,8 +35,14 @@ public class Baltop extends BukkitRunnable {
         Cache.baltop.clear();
         SQL.getBaltop();
         DataCon.sumbal();
-        if (Bukkit.getOnlinePlayers().size() == 0) {
+        if (Bukkit.getOnlinePlayers().isEmpty()) {
             Cache.clearCache();
+        }else{
+            if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
+                for (Player pp : Bukkit.getOnlinePlayers()) {
+                    DataLink.updatelogininfo(pp.getUniqueId().toString());
+                }
+            }
         }
     }
 }

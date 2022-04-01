@@ -22,7 +22,6 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
-import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.utils.PlayerData;
 import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -123,7 +122,7 @@ public class Vault extends AbstractEconomy {
         }
 
         if (isNonPlayerAccount(name)) {
-            CacheNonPlayer.change(name, amountFormatted, true, "PLUGIN");
+            DataCon.changeaccountdata(name, amountFormatted, true, "PLUGIN");
             return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
         }
 
@@ -132,7 +131,7 @@ public class Vault extends AbstractEconomy {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
         }
 
-        DataCon.change("PLUGIN", pd.getUniqueId(), amountFormatted, true, "N/A");
+        DataCon.changeplayerdata("PLUGIN", pd.getUniqueId(), amountFormatted, true, "N/A");
         return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
     }
 
@@ -156,7 +155,7 @@ public class Vault extends AbstractEconomy {
             return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Max balance!");
         }
 
-        DataCon.change("PLUGIN", pp.getUniqueId(), amountFormatted, true, "N/A");
+        DataCon.changeplayerdata("PLUGIN", pp.getUniqueId(), amountFormatted, true, "N/A");
         return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
     }
 
@@ -186,15 +185,15 @@ public class Vault extends AbstractEconomy {
     @Override
     public double getBalance(String name) {
         if (isNonPlayerAccount(name)) {
-            return CacheNonPlayer.getBalanceFromCacheOrDB(name).doubleValue();
+            return DataCon.getAccountBalance(name).doubleValue();
         }
-        return DataCon.getPlayerData(name).getbalance().doubleValue();
+        return DataCon.getPlayerData(name).getBalance().doubleValue();
     }
 
     @Override
     public double getBalance(OfflinePlayer aa) {
         UUID uuid = aa.getUniqueId();
-        return DataCon.getPlayerData(uuid).getbalance().doubleValue();
+        return DataCon.getPlayerData(uuid).getBalance().doubleValue();
     }
 
     @Override
@@ -254,7 +253,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public boolean hasAccount(OfflinePlayer pp) {
-        return DataCon.getPlayerData(pp.getUniqueId()).getUniqueId() != null;
+        return DataCon.getPlayerData(pp.getUniqueId()).isValid();
     }
 
     @Override
@@ -300,7 +299,7 @@ public class Vault extends AbstractEconomy {
         }
 
         if (isNonPlayerAccount(name)) {
-            CacheNonPlayer.change(name, amountFormatted, false, "PLUGIN");
+            DataCon.changeaccountdata(name, amountFormatted, false, "PLUGIN");
             return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
         }
 
@@ -309,7 +308,7 @@ public class Vault extends AbstractEconomy {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
         }
 
-        DataCon.change("PLUGIN", pd.getUniqueId(), amountFormatted, false, "N/A");
+        DataCon.changeplayerdata("PLUGIN", pd.getUniqueId(), amountFormatted, false, "N/A");
         return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
     }
 
@@ -333,7 +332,7 @@ public class Vault extends AbstractEconomy {
             return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Insufficient balance!");
         }
 
-        DataCon.change("PLUGIN", pp.getUniqueId(), amountFormatted, false, "N/A");
+        DataCon.changeplayerdata("PLUGIN", pp.getUniqueId(), amountFormatted, false, "N/A");
         return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
     }
 
@@ -357,7 +356,7 @@ public class Vault extends AbstractEconomy {
         }
 
         if (XConomy.Config.NON_PLAYER_ACCOUNT_SUBSTRING == null) {
-            if (CacheNonPlayer.bal.containsKey(name)) {
+            if (DataCon.hasaccountdatacache(name)) {
                 return true;
             }
 

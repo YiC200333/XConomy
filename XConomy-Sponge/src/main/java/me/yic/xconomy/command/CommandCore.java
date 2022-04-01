@@ -28,7 +28,6 @@ import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.utils.PlayerData;
-import me.yic.xconomy.utils.PluginINFO;
 import me.yic.xconomy.utils.SendPluginMessage;
 import me.yic.xconomy.utils.UUIDMode;
 import org.spongepowered.api.Sponge;
@@ -228,7 +227,7 @@ public class CommandCore {
 
                 String amountFormatted = DataFormat.shown(amount);
                 String taxamountFormatted = DataFormat.shown(taxamount);
-                BigDecimal bal_sender = DataCon.getPlayerData(((Player) sender).getUniqueId()).getbalance();
+                BigDecimal bal_sender = DataCon.getPlayerData(((Player) sender).getUniqueId()).getBalance();
 
                 if (bal_sender.compareTo(taxamount) < 0) {
                     sender.sendMessage(Text.of(PREFIX + translateColorCodes("pay_fail")
@@ -250,19 +249,19 @@ public class CommandCore {
                     return CommandResult.success();
                 }
 
-                BigDecimal bal_target = DataCon.getPlayerData(targetUUID).getbalance();
+                BigDecimal bal_target = DataCon.getPlayerData(targetUUID).getBalance();
                 if (DataFormat.isMAX(bal_target.add(amount))) {
                     sender.sendMessage(Text.of(PREFIX + translateColorCodes("over_maxnumber")));
                     return CommandResult.success();
                 }
 
                 String com = commandName + " " + args[0] + " " + amount;
-                DataCon.change("PLAYER_COMMAND", ((Player) sender).getUniqueId(), taxamount, false, com);
+                DataCon.changeplayerdata("PLAYER_COMMAND", ((Player) sender).getUniqueId(), taxamount, false, com);
                 sender.sendMessage(Text.of(PREFIX + translateColorCodes("pay")
                         .replace("%player%", realname)
                         .replace("%amount%", amountFormatted)));
 
-                DataCon.change("PLAYER_COMMAND", targetUUID, amount, true, com);
+                DataCon.changeplayerdata("PLAYER_COMMAND", targetUUID, amount, true, com);
                 String mess = PREFIX + translateColorCodes("pay_receive")
                         .replace("%player%", sender.getName())
                         .replace("%amount%", amountFormatted);
@@ -297,7 +296,7 @@ public class CommandCore {
 
                         //Cache.refreshFromCache(player.getUniqueId());
 
-                        BigDecimal a = DataCon.getPlayerData(player.getUniqueId()).getbalance();
+                        BigDecimal a = DataCon.getPlayerData(player.getUniqueId()).getBalance();
                         sender.sendMessage(Text.of(PREFIX + translateColorCodes("balance")
                                 .replace("%balance%", DataFormat.shown((a)))));
 
@@ -318,7 +317,7 @@ public class CommandCore {
                         }
                         String realname = pd.getName();
 
-                        BigDecimal targetBalance = DataCon.getPlayerData(targetUUID).getbalance();
+                        BigDecimal targetBalance = DataCon.getPlayerData(targetUUID).getBalance();
                         sender.sendMessage(Text.of(PREFIX + translateColorCodes("balance_other")
                                 .replace("%player%", realname)
                                 .replace("%balance%", DataFormat.shown((targetBalance)))));
@@ -375,7 +374,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                BigDecimal bal = DataCon.getPlayerData(targetUUID).getbalance();
+                                BigDecimal bal = DataCon.getPlayerData(targetUUID).getBalance();
                                 if (DataFormat.isMAX(bal.add(amount))) {
                                     sender.sendMessage(Text.of(PREFIX + translateColorCodes("over_maxnumber")));
                                     if (target != null && target.isOnline()) {
@@ -384,7 +383,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                DataCon.change("ADMIN_COMMAND", targetUUID, amount, true, com);
+                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, true, com);
                                 sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_give")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
@@ -421,7 +420,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                BigDecimal bal = DataCon.getPlayerData(targetUUID).getbalance();
+                                BigDecimal bal = DataCon.getPlayerData(targetUUID).getBalance();
                                 if (bal.compareTo(amount) < 0) {
                                     sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_take_fail")
                                             .replace("%player%", realname)
@@ -430,7 +429,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                DataCon.change("ADMIN_COMMAND", targetUUID, amount, false, com);
+                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, false, com);
                                 sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_take")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
@@ -460,7 +459,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                DataCon.change("ADMIN_COMMAND", targetUUID, amount, null, com);
+                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, null, com);
                                 sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_set")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
@@ -549,7 +548,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                DataCon.changeall(args[2], "ADMIN_COMMAND", amount, true, com);
+                                DataCon.changeallplayerdata(args[2], "ADMIN_COMMAND", amount, true, com);
                                 sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_give")
                                         .replace("%player%", target)
                                         .replace("%amount%", amountFormatted)));
@@ -566,7 +565,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                DataCon.changeall(args[2], "ADMIN_COMMAND", amount, false, com);
+                                DataCon.changeallplayerdata(args[2], "ADMIN_COMMAND", amount, false, com);
                                 sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_take")
                                         .replace("%player%", target)
                                         .replace("%amount%", amountFormatted)));
@@ -651,7 +650,7 @@ public class CommandCore {
 
     public static void showVersion(CommandSource sender) {
         sender.sendMessage(Text.of(PREFIX + "§6 XConomy §f(Version: "
-                + PluginINFO.VERSION + ") §6|§7 Author: §f" + MessagesManager.getAuthor()));
+                + XConomy.PVersion + ") §6|§7 Author: §f" + MessagesManager.getAuthor()));
         String trs = MessagesManager.getTranslatorS();
         if (trs != null) {
             sender.sendMessage(Text.of(PREFIX + "§7 Translator (system): §f" + trs));

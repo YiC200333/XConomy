@@ -34,6 +34,10 @@ public class CacheNonPlayer {
         }
     }
 
+    public static boolean CacheContainsKey(final String key) {
+        return bal.containsKey(key);
+    }
+
     public static BigDecimal getBalanceFromCacheOrDB(final String u) {
         if (XConomy.Config.DISABLE_CACHE){
             DataLink.getBalNonPlayer(u);
@@ -43,21 +47,6 @@ public class CacheNonPlayer {
         }
         return bal.get(u);
 
-    }
-
-
-    public static void change(final String u, final BigDecimal amount, final Boolean isAdd, final String type) {
-        BigDecimal newvalue = amount;
-        BigDecimal balance = getBalanceFromCacheOrDB(u);
-        if (isAdd != null) {
-            if (isAdd) {
-                newvalue = balance.add(amount);
-            } else {
-                newvalue = balance.subtract(amount);
-            }
-        }
-        insertIntoCache(u, newvalue);
-        DataLink.saveNonPlayer(type, u, amount, newvalue, isAdd);
     }
 
 }

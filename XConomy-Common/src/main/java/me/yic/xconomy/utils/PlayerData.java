@@ -40,12 +40,16 @@ public class PlayerData {
         return name;
     }
 
-    public BigDecimal getbalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setbalance(BigDecimal balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    public boolean isValid() {
+        return this.u != null && this.balance != null;
     }
 
 }

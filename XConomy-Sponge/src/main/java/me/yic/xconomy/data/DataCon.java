@@ -22,6 +22,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.SendPluginMessage;
@@ -41,6 +42,10 @@ public class DataCon{
 
     public static PlayerData getPlayerData(String username) {
         return getPlayerDatai(username);
+    }
+
+    public static BigDecimal getAccountBalance(String account) {
+        return CacheNonPlayer.getBalanceFromCacheOrDB(account);
     }
 
     private static <T> PlayerData getPlayerDatai(T u) {
@@ -67,6 +72,11 @@ public class DataCon{
         return pd;
     }
 
+    public static boolean hasaccountdatacache(String name) {
+        return CacheNonPlayer.CacheContainsKey(name);
+
+    }
+
     public static boolean containinfieldslist(String name) {
         if (XConomy.Config.NON_PLAYER_ACCOUNT_SUBSTRING != null) {
             for (String field : XConomy.Config.NON_PLAYER_ACCOUNT_SUBSTRING) {
@@ -79,39 +89,10 @@ public class DataCon{
     }
 
 
-    //public static void refreshFromCache(UUID uuid) {
-    //    if (uuid != null) {
-    //        DataLink.getPlayerData(uuid);
-    //    }
-    //}
-
-    //@SuppressWarnings("UnstableApiUsage")
-    //public static PlayerData cachecorrection(UUID u, BigDecimal amount, Boolean isAdd) {
-    //    BigDecimal newvalue;
-    //    PlayerData npd = getPlayerData(u);
-    //    if (isAdd) {
-    //        newvalue = npd.getbalance().add(amount);
-    //    } else {
-    //        newvalue = npd.getbalance().subtract(amount);
-    //    }
-    //    Cache.updateIntoCache(u, npd, newvalue);
-
-    //    if (ServerINFO.IsBungeeCordMode) {
-    //        ByteArrayDataOutput output = ByteStreams.newDataOutput();
-    //        output.writeUTF("balance");
-    //        output.writeUTF(XConomy.getSign());
-    //        output.writeUTF(u.toString());
-    //        output.writeUTF(amount.toString());
-    //        Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), "xconomy:acb", output.toByteArray());
-    //    }
-    //    return npd;
-    //}
-
-
-    public static void change(String type, UUID u, BigDecimal amount, Boolean isAdd, String reason) {
+    public static void changeplayerdata(String type, UUID u, BigDecimal amount, Boolean isAdd, String reason) {
         PlayerData pd = getPlayerData(u);
         BigDecimal newvalue = amount;
-        BigDecimal bal = pd.getbalance();
+        BigDecimal bal = pd.getBalance();
 
         if (isAdd != null) {
             if (isAdd) {
@@ -133,7 +114,28 @@ public class DataCon{
         }
     }
 
-    public static void changeall(String targettype, String type, BigDecimal amount, Boolean isAdd, String reason) {
+    public static void changeaccountdata(final String u, final BigDecimal amount, final Boolean isAdd, final String type) {
+        BigDecimal newvalue = amount;
+        BigDecimal balance = CacheNonPlayer.getBalanceFromCacheOrDB(u);
+        if (isAdd != null) {
+            if (isAdd) {
+                newvalue = balance.add(amount);
+            } else {
+                newvalue = balance.subtract(amount);
+            }
+        }
+        CacheNonPlayer.insertIntoCache(u, newvalue);
+
+        if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+            final BigDecimal fnewvalue = newvalue;
+            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataLink.saveNonPlayer(type, u, amount, fnewvalue, isAdd));
+        }else {
+            DataLink.saveNonPlayer(type, u, amount, newvalue, isAdd);
+        }
+    }
+
+
+    public static void changeallplayerdata(String targettype, String type, BigDecimal amount, Boolean isAdd, String reason) {
         Cache.clearCache();
 
         if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
