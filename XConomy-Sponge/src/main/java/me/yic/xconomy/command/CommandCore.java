@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class CommandCore {
-    private static final String PREFIX = translateColorCodes("prefix");
+    private static String PREFIX = translateColorCodes("prefix");
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static CommandResult onCommand(CommandSource sender, String commandName, String[] args) {
@@ -52,6 +52,7 @@ public class CommandCore {
                 if (isOp(sender)) {
                     if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
                         MessagesManager.loadlangmess();
+                        PREFIX = translateColorCodes("prefix");
                         sender.sendMessage(Text.of(PREFIX + MessagesManager.systemMessage("§amessage.yml重载成功")));
                         return CommandResult.success();
                     }
