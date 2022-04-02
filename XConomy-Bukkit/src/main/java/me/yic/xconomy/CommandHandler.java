@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class CommandHandler {
-    private static final String PREFIX = translateColorCodes("prefix");
+    private static String PREFIX = translateColorCodes("prefix");
 
     public static boolean onCommand(CommandSender sender, String commandName, String[] args) {
         switch (commandName) {
@@ -50,6 +50,7 @@ public class CommandHandler {
                 if (sender.isOp()) {
                     if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
                         MessagesManager.loadlangmess();
+                        PREFIX = translateColorCodes("prefix");
                         sendMessages(sender, PREFIX + MessagesManager.systemMessage("§amessage.yml重载成功"));
                         return true;
                     }
@@ -472,7 +473,7 @@ public class CommandHandler {
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
 
-                                if (checkMessage("money_give_receive") | commndlength == 4) {
+                                if (checkMessage("money_take_receive") | commndlength == 4) {
                                     String mess = PREFIX + translateColorCodes("money_take_receive")
                                             .replace("%player%", realname).replace("%amount%", amountFormatted);
 
@@ -502,7 +503,7 @@ public class CommandHandler {
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
 
-                                if (checkMessage("money_give_receive") | commndlength == 4) {
+                                if (checkMessage("money_set_receive") | commndlength == 4) {
                                     String mess = PREFIX + translateColorCodes("money_set_receive")
                                             .replace("%player%", realname)
                                             .replace("%amount%", amountFormatted);
@@ -679,12 +680,14 @@ public class CommandHandler {
     }
 
     private static void sendMessages(CommandSender sender, String message) {
-       if (message.contains("\\n")){
-           String[] messs = message.split("\\\\n");
-           sender.sendMessage(messs);
-        }else{
-           sender.sendMessage(message);
-       }
+        if (!message.replace(PREFIX,"").equalsIgnoreCase("")) {
+            if (message.contains("\\n")) {
+                String[] messs = message.split("\\\\n");
+                sender.sendMessage(messs);
+            } else {
+                sender.sendMessage(message);
+            }
+        }
     }
 
     public static String translateColorCodes(String message) {
@@ -768,8 +771,7 @@ public class CommandHandler {
                     .replace("%balance%", DataFormat.shown((Cache.baltop.get(topName)))));
         }
 
-        if (checkMessage("top_subtitle"))
-            sendMessages(sender, translateColorCodes("top_subtitle"));
+        sendMessages(sender, translateColorCodes("top_subtitle"));
 
     }
 

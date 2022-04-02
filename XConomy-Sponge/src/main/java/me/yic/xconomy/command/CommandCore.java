@@ -434,7 +434,7 @@ public class CommandCore {
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
 
-                                if (checkMessage("money_give_receive") | args.length == 4) {
+                                if (checkMessage("money_take_receive") | args.length == 4) {
                                     String mess = PREFIX + translateColorCodes("money_take_receive")
                                             .replace("%player%", realname).replace("%amount%", amountFormatted);
 
@@ -464,7 +464,7 @@ public class CommandCore {
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
 
-                                if (checkMessage("money_give_receive") | args.length == 4) {
+                                if (checkMessage("money_set_receive") | args.length == 4) {
                                     String mess = PREFIX + translateColorCodes("money_set_receive")
                                             .replace("%player%", realname)
                                             .replace("%amount%", amountFormatted);

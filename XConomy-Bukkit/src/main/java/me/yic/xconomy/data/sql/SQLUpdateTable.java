@@ -37,7 +37,7 @@ public class SQLUpdateTable extends SQL {
 
         } catch (SQLException e) {
             try {
-                XConomy.getInstance().logger("升级数据库表格。。。", 0, null);
+                XConomy.getInstance().logger("升级数据库表格。。。", 0, tableName);
 
                 PreparedStatement statementb = connection.prepareStatement("alter table " + tableName + " add column hidden int(5) not null default '0'");
 
