@@ -128,7 +128,7 @@ public class DataFormat {
             BigDecimal x = BigDecimal.ZERO;
             String f = "";
             for (int b : XConomy.Config.FORMAT_BALANCE) {
-                if (bal.doubleValue() > b) {
+                if (bal.doubleValue() >= b) {
                     x = BigDecimal.valueOf(b);
                     f = XConomy.Config.FORMAT_BALANCE_C.get(b);
                 } else {

@@ -144,7 +144,7 @@ public class DataFormat {
             }
             BigDecimal x = BigDecimal.ZERO;
             for (int b : XConomy.Config.FORMAT_BALANCE) {
-                if (bal.doubleValue() > b) {
+                if (bal.doubleValue() >= b) {
                     x = BigDecimal.valueOf(b);
                 } else {
                     break;
