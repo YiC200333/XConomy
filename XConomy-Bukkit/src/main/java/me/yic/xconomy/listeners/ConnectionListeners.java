@@ -58,9 +58,9 @@ public class ConnectionListeners implements Listener {
         }
 
         if (XConomy.DConfig.canasync) {
-            DataLink.newPlayer(a);
-        } else {
             Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.newPlayer(a));
+        } else {
+            DataLink.newPlayer(a);
         }
 
         if (!TabList.PlayerList.contains(a.getName())) {

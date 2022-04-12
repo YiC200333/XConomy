@@ -52,10 +52,10 @@ public class ConnectionListeners {
             Cache.removefromCache(a.getUniqueId());
         }
 
-        if (XConomy.DConfig.getStorageType() == 0 || XConomy.DConfig.getStorageType() == 1) {
-            DataLink.newPlayer(a);
-        } else {
+        if (XConomy.DConfig.canasync) {
             Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataLink.newPlayer(a));
+        } else {
+            DataLink.newPlayer(a);
         }
 
         if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
