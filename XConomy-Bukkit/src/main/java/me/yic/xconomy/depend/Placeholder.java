@@ -106,6 +106,8 @@ public class Placeholder extends PlaceholderExpansion {
             String index = identifier.substring(identifier.indexOf("top_balance_") + 12);
             if (identifier.contains("top_balance_value")) {
                 index = identifier.substring(identifier.indexOf("top_balance_value_") + 18);
+            }else if (identifier.contains("top_balance_formatted")) {
+                index = identifier.substring(identifier.indexOf("top_balance_formatted_") + 22);
             }
             if (isNumber(index)) {
                 if (outindex(index)) {
@@ -116,6 +118,8 @@ public class Placeholder extends PlaceholderExpansion {
                 BigDecimal bal = Cache.baltop.get(name);
                 if (identifier.contains("top_balance_value")) {
                     return bal.toString();
+                }else if (identifier.contains("top_balance_formatted")) {
+                    return DataFormat.PEshownf(bal);
                 }
                 return DataFormat.shown(bal);
             } else {

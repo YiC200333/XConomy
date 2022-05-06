@@ -26,6 +26,9 @@ commands:
   pay:
     usage: /<command>
     description: XConomy.
+  paytoggle:
+    usage: /<command>
+    description: XConomy.
 
 permissions:
   xconomy.user.balance:
@@ -38,6 +41,8 @@ permissions:
       xconomy.user.pay.receive: true
   xconomy.user.balancetop:
     default: true
+  xconomy.user.paytoggle:
+    default: true
   xconomy.admin.give:
     default: op
   xconomy.admin.take:
@@ -47,4 +52,6 @@ permissions:
   xconomy.admin.permission:
     default: op
   xconomy.admin.balancetop:
+    default: op
+  xconomy.admin.paytoggle:
     default: op

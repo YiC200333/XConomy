@@ -43,7 +43,7 @@ public class SQLCreateNewAccount extends SQL {
 
     public static boolean newPlayer(UUID uid, String name, Player player) {
         if (DataCon.containinfieldslist(name)){
-            kickplayer(player, 2);
+            kickplayer(player, 2, "");
             return false;
         }
         Connection connection = database.getConnectionAndCheck();
@@ -54,7 +54,7 @@ public class SQLCreateNewAccount extends SQL {
                 if (ouid.equalsIgnoreCase(uid.toString())) {
                     checkUserOnline(ouid, name, connection);
                 } else {
-                    kickplayer(player, 1);
+                    kickplayer(player, 1, ouid);
                     database.closeHikariConnection(connection);
                     return false;
                 }
@@ -74,11 +74,13 @@ public class SQLCreateNewAccount extends SQL {
         newPlayer(player.getUniqueId(), player.getName(), player);
     }
 
-    private static void kickplayer(Player player, int x) {
+    private static void kickplayer(Player player, int x, String DUID) {
         if (player != null) {
-            String reason = "[XConomy] The same data exists in the server without different UUID";
+            String reason = "[XConomy] The same data exists in the server without different UUID\nUsername - "
+                    + player.getName() + "\nUUID[C] - " + player.getUniqueId() + "\nUUID[D] - " + DUID;
             if (x == 1) {
-                reason = "[XConomy] UUID mismatch";
+                reason = "[XConomy] UUID mismatch\nUsername - "
+                        + player.getName() + "\nUUID[C] - " + player.getUniqueId() + "\nUUID[O] - " + DUID;
             } else if (x == 2) {
                 reason = "[XConomy] Username does not mismatch requirements";
             }
@@ -141,7 +143,7 @@ public class SQLCreateNewAccount extends SQL {
                 if (!uuid.toString().equals(uid)) {
                     doubledata = true;
                     if (!XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-                        kickplayer(player, 0);
+                        kickplayer(player, 0, uid);
                     } else {
                         CacheSemiOnline.CacheSubUUID_checkUser(uid, uuid, player);
                     }

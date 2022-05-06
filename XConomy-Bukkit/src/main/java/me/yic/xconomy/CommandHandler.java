@@ -24,6 +24,7 @@ import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.info.MessageConfig;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.CompletableFutureTask;
@@ -86,7 +87,7 @@ public class CommandHandler {
                                         PlayerData pd = DataCon.getPlayerData(args[3]);
                                         UUID targetUUID = pd.getUniqueId();
                                         if (targetUUID == null) {
-                                            sendMessages(sender, PREFIX + translateColorCodes("no_account"));
+                                            sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                                         } else {
                                             String realname = pd.getName();
                                             PermissionINFO.setPaymentPermission(targetUUID, vv);
@@ -103,7 +104,7 @@ public class CommandHandler {
                                 PlayerData pd = DataCon.getPlayerData(args[3]);
                                 UUID targetUUID = pd.getUniqueId();
                                 if (targetUUID == null) {
-                                    sendMessages(sender, PREFIX + translateColorCodes("no_account"));
+                                    sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                                 } else {
                                     String realname = pd.getName();
                                     PermissionINFO.setPaymentPermission(targetUUID, null);
@@ -118,6 +119,56 @@ public class CommandHandler {
                     }
                 }
                 showVersion(sender);
+                break;
+            }
+
+            case "paytoggle": {
+                if (args.length == 0) {
+                    if (!(sender instanceof Player)) {
+                        sendMessages(sender, PREFIX + MessagesManager.systemMessage("§6控制台无法使用该指令"));
+                        return true;
+                    }
+                    if (sender.isOp() || sender.hasPermission("xconomy.user.paytoggle")) {
+                        PermissionINFO.setRPaymentPermission(((Player) sender).getUniqueId());
+                        if (PermissionINFO.getRPaymentPermission(((Player) sender).getUniqueId())){
+                            sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_TRUE));
+                        } else {
+                            sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_FALSE));
+                        }
+                    }
+                    return true;
+                } else if (args.length == 1) {
+                    if (sender.isOp() || sender.hasPermission("xconomy.admin.paytoggle")) {
+                        PlayerData pd = DataCon.getPlayerData(args[0]);
+                        UUID targetUUID = pd.getUniqueId();
+                        if (targetUUID == null) {
+                            sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
+                        } else {
+
+                            Player target = DataCon.getplayer(args[0]);
+                            String realname = pd.getName();
+                            PermissionINFO.setRPaymentPermission(((Player) sender).getUniqueId());
+
+                            String mess = translateColorCodes(MessageConfig.PAYTOGGLE_TRUE);
+                            if (PermissionINFO.getRPaymentPermission(((Player) sender).getUniqueId())) {
+                                sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_OTHER_TRUE)
+                                        .replace("%player%", realname));
+                            }else{
+                                sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_OTHER_FALSE)
+                                        .replace("%player%", realname));
+
+                                mess = translateColorCodes(MessageConfig.PAYTOGGLE_FALSE);
+                            }
+                            if (target == null) {
+                                broadcastSendMessage(false, targetUUID, mess);
+                                return true;
+                            }
+
+                            target.sendMessage(mess);
+                        }
+                        return true;
+                    }
+                }
                 break;
             }
 
@@ -161,7 +212,7 @@ public class CommandHandler {
                         UUID targetUUID = pd.getUniqueId();
 
                         if (targetUUID == null) {
-                            sendMessages(sender, PREFIX + translateColorCodes("no_account"));
+                            sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                             return true;
                         }
 
@@ -241,7 +292,7 @@ public class CommandHandler {
                 PlayerData pd = DataCon.getPlayerData(args[0]);
                 UUID targetUUID = pd.getUniqueId();
                 if (targetUUID == null) {
-                    sendMessages(sender, PREFIX + translateColorCodes("no_account"));
+                    sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                     return true;
                 }
 
@@ -350,7 +401,7 @@ public class CommandHandler {
                         PlayerData pd = DataCon.getPlayerData(args[0]);
                         UUID targetUUID = pd.getUniqueId();
                         if (targetUUID == null) {
-                            sendMessages(sender, PREFIX + translateColorCodes("no_account"));
+                            sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                             return true;
                         }
                         String realname = pd.getName();
@@ -388,7 +439,7 @@ public class CommandHandler {
                         UUID targetUUID = pd.getUniqueId();
 
                         if (targetUUID == null) {
-                            sendMessages(sender, PREFIX + translateColorCodes("no_account"));
+                            sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                             return true;
                         }
 
@@ -646,7 +697,7 @@ public class CommandHandler {
     }
 
     private static boolean isDouble(String s) {
-        if (s.matches(".*[a-zA-Z].*")){
+        if (s.matches(".*[a-zA-Z].*")) {
             return false;
         }
         try {
@@ -680,7 +731,7 @@ public class CommandHandler {
     }
 
     private static void sendMessages(CommandSender sender, String message) {
-        if (!message.replace(PREFIX,"").equalsIgnoreCase("")) {
+        if (!message.replace(PREFIX, "").equalsIgnoreCase("")) {
             if (message.contains("\\n")) {
                 String[] messs = message.split("\\\\n");
                 sender.sendMessage(messs);
@@ -688,6 +739,10 @@ public class CommandHandler {
                 sender.sendMessage(message);
             }
         }
+    }
+
+    public static String translateColorCodes(MessageConfig message) {
+        return ChatColor.translateAlternateColorCodes('&', RGBColor.translateHexColorCodes(MessagesManager.messageFile.getString(message.toString())));
     }
 
     public static String translateColorCodes(String message) {
@@ -725,18 +780,18 @@ public class CommandHandler {
         }
         Integer maxipages;
         if (helplist.size() % XConomy.Config.LINES_PER_PAGE == 0) {
-            maxipages = helplist.size() /  XConomy.Config.LINES_PER_PAGE;
+            maxipages = helplist.size() / XConomy.Config.LINES_PER_PAGE;
         } else {
-            maxipages = helplist.size() /  XConomy.Config.LINES_PER_PAGE + 1;
+            maxipages = helplist.size() / XConomy.Config.LINES_PER_PAGE + 1;
         }
         if (num > maxipages) {
             num = maxipages;
         }
         sendMessages(sender, translateColorCodes("help_title_full").replace("%page%", num + "/" + maxipages));
         int indexpage = 0;
-        while (indexpage <  XConomy.Config.LINES_PER_PAGE) {
-            if (helplist.size() > indexpage + (num - 1) *  XConomy.Config.LINES_PER_PAGE) {
-                sender.sendMessage(helplist.get(indexpage + (num - 1) *  XConomy.Config.LINES_PER_PAGE));
+        while (indexpage < XConomy.Config.LINES_PER_PAGE) {
+            if (helplist.size() > indexpage + (num - 1) * XConomy.Config.LINES_PER_PAGE) {
+                sender.sendMessage(helplist.get(indexpage + (num - 1) * XConomy.Config.LINES_PER_PAGE));
             }
             indexpage += 1;
         }
@@ -745,19 +800,19 @@ public class CommandHandler {
     private static void sendRankingMessage(CommandSender sender, Integer num) {
         Integer maxipages;
         int listsize = Cache.baltop_papi.size();
-        if (listsize %  XConomy.Config.LINES_PER_PAGE == 0) {
-            maxipages = listsize /  XConomy.Config.LINES_PER_PAGE;
+        if (listsize % XConomy.Config.LINES_PER_PAGE == 0) {
+            maxipages = listsize / XConomy.Config.LINES_PER_PAGE;
         } else {
-            maxipages = listsize /  XConomy.Config.LINES_PER_PAGE + 1;
+            maxipages = listsize / XConomy.Config.LINES_PER_PAGE + 1;
         }
         if (num > maxipages) {
             num = maxipages;
         }
-        int endindex = num *  XConomy.Config.LINES_PER_PAGE;
+        int endindex = num * XConomy.Config.LINES_PER_PAGE;
         if (endindex >= listsize) {
             endindex = listsize;
         }
-        List<String> topNames = Cache.baltop_papi.subList(num *  XConomy.Config.LINES_PER_PAGE -  XConomy.Config.LINES_PER_PAGE, endindex);
+        List<String> topNames = Cache.baltop_papi.subList(num * XConomy.Config.LINES_PER_PAGE - XConomy.Config.LINES_PER_PAGE, endindex);
 
         sendMessages(sender, translateColorCodes("top_title").replace("%page%", num + "/" + maxipages));
         sendMessages(sender, translateColorCodes("sum_text")
@@ -766,7 +821,7 @@ public class CommandHandler {
         for (String topName : topNames) {
             placement++;
             sendMessages(sender, translateColorCodes("top_text")
-                    .replace("%index%", String.valueOf(num *  XConomy.Config.LINES_PER_PAGE -  XConomy.Config.LINES_PER_PAGE + placement))
+                    .replace("%index%", String.valueOf(num * XConomy.Config.LINES_PER_PAGE - XConomy.Config.LINES_PER_PAGE + placement))
                     .replace("%player%", topName)
                     .replace("%balance%", DataFormat.shown((Cache.baltop.get(topName)))));
         }
@@ -789,13 +844,13 @@ public class CommandHandler {
         output.writeUTF(XConomy.Config.BUNGEECORD_SIGN);
         output.writeUTF(XConomy.syncversion);
         if (!ispublic) {
-            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)){
+            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 output.writeUTF("message#semi");
-            }else {
+            } else {
                 output.writeUTF("message");
             }
-                output.writeUTF(u.toString());
-                output.writeUTF(message);
+            output.writeUTF(u.toString());
+            output.writeUTF(message);
         } else {
             output.writeUTF("broadcast");
             output.writeUTF(message);

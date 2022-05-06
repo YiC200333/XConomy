@@ -31,6 +31,7 @@ public class DataFormat {
 
     public static boolean isint = false;
     public static DecimalFormat decimalFormat;
+    public static DecimalFormat decimalFormatX;
     public static BigDecimal maxNumber;
     final static String displayformat = XConomy.Config.DISPLAY_FORMAT;
     final static String pluralname = XConomy.Config.PLURAL_NAME;
@@ -95,8 +96,15 @@ public class DataFormat {
         isint = XConomy.Config.INTEGER_BAL;
         String gpoint = XConomy.Config.THOUSANDS_SEPARATOR;
         decimalFormat = new DecimalFormat();
+        decimalFormatX = new DecimalFormat();
 
-        if (!isint) {
+        decimalFormatX.setMinimumFractionDigits(2);
+        decimalFormatX.setMaximumFractionDigits(2);
+
+        if (isint) {
+            decimalFormat.setMinimumFractionDigits(0);
+            decimalFormat.setMaximumFractionDigits(0);
+        }else{
             decimalFormat.setMinimumFractionDigits(2);
             decimalFormat.setMaximumFractionDigits(2);
         }
@@ -105,6 +113,7 @@ public class DataFormat {
             DecimalFormatSymbols spoint = new DecimalFormatSymbols();
             spoint.setGroupingSeparator(gpoint.charAt(0));
             decimalFormat.setDecimalFormatSymbols(spoint);
+            decimalFormatX.setDecimalFormatSymbols(spoint);
         }
 
         XConomy.Config.PAYMENT_TAX = setpaymenttax();
@@ -151,7 +160,7 @@ public class DataFormat {
                 }
             }
             BigDecimal aa = bal.divide(x, 3, RoundingMode.DOWN);
-            return DataFormat.decimalFormat.format(aa) + DefaultConfig.config.getString("Currency.format-balance." + x);
+            return decimalFormatX.format(aa) + DefaultConfig.config.getString("Currency.format-balance." + x);
         } else {
             return decimalFormat.format(bal);
         }

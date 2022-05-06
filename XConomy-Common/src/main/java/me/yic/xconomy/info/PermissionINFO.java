@@ -18,14 +18,13 @@
  */
 package me.yic.xconomy.info;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class PermissionINFO {
     public static boolean globalpayment = true;
 
     private static final Map<UUID, Boolean> payment = new HashMap<>();
+    private static final List<UUID> rpayment = new ArrayList<>();
 
     public static boolean getGlobalPayment() {
         return globalpayment;
@@ -40,6 +39,20 @@ public class PermissionINFO {
             payment.remove(u);
         }else {
             payment.put(u, b);
+        }
+    }
+    public static boolean getRPaymentPermission(UUID u) {
+        if (rpayment.contains(u)){
+            return false;
+        }
+        return true;
+    }
+
+    public static void setRPaymentPermission(UUID u) {
+        if (rpayment.contains(u)){
+            rpayment.remove(u);
+        }else {
+            rpayment.add(u);
         }
     }
 }

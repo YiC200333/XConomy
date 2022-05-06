@@ -55,6 +55,7 @@ non-player-account:
   #If the account name contains fields in the whitelist, it will be recognized as non-player accounts.
   #Otherwise, it is recognized as a player account
   #If the player's name contains fields in the whitelist, it will be denied access to the server.
+  #This function can reduce the times that reading data from the database.
   whitelist:
     #Whether to enable whitelist.
     enable: false
