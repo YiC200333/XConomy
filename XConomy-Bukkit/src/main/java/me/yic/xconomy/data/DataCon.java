@@ -18,24 +18,27 @@
  */
 package me.yic.xconomy.data;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.api.event.NonPlayerAccountEvent;
 import me.yic.xconomy.api.event.PlayerAccountEvent;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
+import me.yic.xconomy.data.syncdata.SyncBalanceAll;
+import me.yic.xconomy.data.syncdata.SyncUpdatePlayer;
 import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.SendPluginMessage;
 import me.yic.xconomy.utils.UUIDMode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class DataCon{
+public class DataCon {
     public static PlayerData getPlayerData(UUID uuid) {
         return getPlayerDatai(Cache.getSubUUID(uuid));
     }
@@ -135,7 +138,7 @@ public class DataCon{
         if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
             final BigDecimal fnewvalue = newvalue;
             Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.saveNonPlayer(type, u, amount, fnewvalue, isAdd));
-        }else {
+        } else {
             DataLink.saveNonPlayer(type, u, amount, newvalue, isAdd);
         }
     }
@@ -195,45 +198,43 @@ public class DataCon{
         }
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     public static void sendudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd, BigDecimal amount, String command) {
-        ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF(XConomy.Config.BUNGEECORD_SIGN);
-        output.writeUTF(XConomy.syncversion);
-        output.writeUTF("updateplayer");
-        output.writeUTF(u.toString());
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(output);
+            oos.writeUTF(XConomy.syncversion);
+            oos.writeObject(new SyncUpdatePlayer(XConomy.Config.BUNGEECORD_SIGN, u));
+            oos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         SendMessTask(output, type, pd, isAdd, amount, command);
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     public static void sendallpdmessage(String targettype, BigDecimal amount, Boolean isAdd) {
-        ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF(XConomy.Config.BUNGEECORD_SIGN);
-        output.writeUTF(XConomy.syncversion);
-        output.writeUTF("balanceall");
-        if (targettype.equals("all")) {
-            output.writeUTF("all");
-        } else if (targettype.equals("online")) {
-            output.writeUTF("online");
-        }
-        output.writeUTF(amount.toString());
-        if (isAdd) {
-            output.writeUTF("add");
-        } else {
-            output.writeUTF("subtract");
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(output);
+            oos.writeUTF(XConomy.syncversion);
+            if (targettype.equals("all")) {
+                oos.writeObject(new SyncBalanceAll(XConomy.Config.BUNGEECORD_SIGN, true, isAdd, amount));
+            } else if (targettype.equals("online")) {
+                oos.writeObject(new SyncBalanceAll(XConomy.Config.BUNGEECORD_SIGN, false, isAdd, amount));
+            }
+            oos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         SendMessTask(output, null, null, isAdd, null, null);
 
     }
 
-    private static void SendMessTask(ByteArrayDataOutput stream, String type, PlayerData pd, Boolean isAdd, BigDecimal amount, String command) {
+    private static void SendMessTask(ByteArrayOutputStream stream, String type, PlayerData pd, Boolean isAdd, BigDecimal amount, String command) {
 
         SendPluginMessage.SendMessTask("xconomy:acb", stream);
         if (pd != null) {
             DataLink.save(type, pd, isAdd, amount, command);
         }
     }
-
-
 
 }

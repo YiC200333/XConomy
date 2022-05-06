@@ -1,5 +1,5 @@
 /*
- *  This file (SyncType.java) is a part of project XConomy
+ *  This file (SyncBalanceAll.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -16,31 +16,34 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.info;
+package me.yic.xconomy.data.syncdata;
 
+import me.yic.xconomy.info.SyncType;
 
-public enum SyncType {
-    UPDATEPLAYER("updateplayer"),
-    BALANCEALL("balanceall"),
-    MESSAGE("message"),
-    MESSAGE_SEMI("message#semi"),
-    BROADCAST("broadcast"),
-    SYNCONLINEUUID("syncOnlineUUID");
+import java.math.BigDecimal;
 
-    final String value;
+public class SyncBalanceAll extends SyncData{
 
+    private final boolean isall;
+    private final Boolean c;
+    private final BigDecimal amount;
 
-    SyncType(String value){
-        this.value = value;
+    public SyncBalanceAll(String sign, boolean isall, Boolean c, BigDecimal amount){
+        super(sign, SyncType.BALANCEALL, null);
+        this.isall = isall;
+        this.c = c;
+        this.amount = amount;
     }
 
-
-    @Override
-    public String toString() {
-        return this.value;
+    public boolean getisOnline(){
+        return !isall;
     }
 
-    public boolean equals(SyncType Other){
-        return this.value.equals(Other.value);
+    public Boolean getC(){
+        return c;
+    }
+
+    public BigDecimal getAmount(){
+        return amount;
     }
 }

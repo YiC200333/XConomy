@@ -1,5 +1,5 @@
 /*
- *  This file (SyncType.java) is a part of project XConomy
+ *  This file (SyncMessage.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -16,31 +16,22 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.info;
+package me.yic.xconomy.data.syncdata;
 
+import me.yic.xconomy.info.SyncType;
 
-public enum SyncType {
-    UPDATEPLAYER("updateplayer"),
-    BALANCEALL("balanceall"),
-    MESSAGE("message"),
-    MESSAGE_SEMI("message#semi"),
-    BROADCAST("broadcast"),
-    SYNCONLINEUUID("syncOnlineUUID");
+import java.util.UUID;
 
-    final String value;
+public class SyncMessage extends SyncData{
 
+    private String message;
 
-    SyncType(String value){
-        this.value = value;
+    public SyncMessage(String sign, SyncType st, UUID uuid, String message){
+        super(sign, st, uuid);
+        this.message = message;
     }
 
-
-    @Override
-    public String toString() {
-        return this.value;
-    }
-
-    public boolean equals(SyncType Other){
-        return this.value.equals(Other.value);
+    public String getMessage(){
+        return message;
     }
 }

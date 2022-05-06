@@ -18,86 +18,80 @@
  */
 package me.yic.xconomy.listeners;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteStreams;
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
+import me.yic.xconomy.data.syncdata.*;
+import me.yic.xconomy.info.SyncType;
 import me.yic.xconomy.utils.UUIDMode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.UUID;
 
 public class SPsync implements PluginMessageListener {
 
-    @SuppressWarnings(value = {"UnstableApiUsage"})
     @Override
     public void onPluginMessageReceived(String channel, @NotNull Player arg1, byte[] message) {
         if (!channel.equals("xconomy:aca")) {
             return;
         }
 
-        ByteArrayDataInput input = ByteStreams.newDataInput(message);
+        ByteArrayInputStream input = new ByteArrayInputStream(message);
+        try {
+            ObjectInputStream ios = new ObjectInputStream(input);
 
-        String sign = input.readUTF();
-        if (!sign.equals(XConomy.Config.BUNGEECORD_SIGN)) {
-            return;
-        }
+            String sv = ios.readUTF();
+            if (!sv.equals(XConomy.syncversion)) {
+                XConomy.getInstance().logger("收到不同版本插件的数据，无法同步，当前插件版本 ", 1, XConomy.syncversion);
+                return;
+            }
 
-        String sv = input.readUTF();
-        if (!sv.equals(XConomy.syncversion)) {
-            XConomy.getInstance().logger("收到不同版本插件的数据，无法同步，当前插件版本 ", 1, XConomy.syncversion);
-            return;
-        }
+            SyncData ob = (SyncData) ios.readObject();
+            if (!ob.getSign().equals(XConomy.Config.BUNGEECORD_SIGN)) {
+                return;
+            }
 
-        String type = input.readUTF();
-        if (type.equalsIgnoreCase("updateplayer")) {
-            UUID u = UUID.fromString(input.readUTF());
-            Cache.removefromCache(u);
-        } else if (type.equalsIgnoreCase("message")) {
-            String muid = input.readUTF();
-            Player p = Bukkit.getPlayer(UUID.fromString(muid));
-            String mess = input.readUTF();
-            if (p != null) {
-                p.sendMessage(mess);
-            }else if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)){
-                UUID suid = CacheSemiOnline.CacheSubUUID_getsubuuid(muid);
-                if (suid != null) {
-                    Player sp = Bukkit.getPlayer(suid);
-                    if (sp != null) {
-                        sp.sendMessage(mess);
+            if (ob.getSyncType().equals(SyncType.UPDATEPLAYER)) {
+                SyncUpdatePlayer sd = (SyncUpdatePlayer) ob;
+                UUID u = sd.getUUID();
+                Cache.removefromCache(u);
+            } else if (ob.getSyncType().equals(SyncType.MESSAGE) || ob.getSyncType().equals(SyncType.MESSAGE_SEMI) ) {
+                SyncMessage sd = (SyncMessage) ob;
+                UUID muid = sd.getUUID();
+                Player p = Bukkit.getPlayer(sd.getUUID());
+                if (p != null) {
+                    p.sendMessage(sd.getMessage());
+                } else if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                    UUID suid = CacheSemiOnline.CacheSubUUID_getsubuuid(muid.toString());
+                    if (suid != null) {
+                        Player sp = Bukkit.getPlayer(suid);
+                        if (sp != null) {
+                            sp.sendMessage(sd.getMessage());
+                        }
                     }
                 }
-            }
-        } else if (type.equalsIgnoreCase("balanceall")) {
-            String targettype = input.readUTF();
-            String amount = input.readUTF();
-            String isadds = input.readUTF();
-            if (targettype.equalsIgnoreCase("all")) {
+            } else if (ob.getSyncType().equals(SyncType.BALANCEALL)) {
+                SyncBalanceAll sd = (SyncBalanceAll) ob;
                 Cache.clearCache();
-            } else if (targettype.equalsIgnoreCase("online")) {
-                Cache.clearCache();
-                Boolean isadd = null;
-                if (isadds.equalsIgnoreCase("add")) {
-                    isadd = true;
-                } else if (isadds.equalsIgnoreCase("subtract")) {
-                    isadd = false;
+                if (sd.getisOnline()) {
+                    DataLink.saveall("online", null, sd.getAmount(), sd.getC(), null);
                 }
-                DataLink.saveall("online", null, DataFormat.formatString(amount), isadd, null);
+            } else if (ob.getSyncType().equals(SyncType.BROADCAST)) {
+                SyncMessage sd = (SyncMessage) ob;
+                Bukkit.broadcastMessage(sd.getMessage());
+            } else if (ob.getSyncType().equals(SyncType.SYNCONLINEUUID)) {
+                SyncUUID sd = (SyncUUID) ob;
+                Cache.syncOnlineUUIDCache(sd.getOldname(), sd.getNewname(), sd.getUUID());
             }
-        } else if (type.equalsIgnoreCase("broadcast")) {
-            String mess = input.readUTF();
-            Bukkit.broadcastMessage(mess);
-        } else if (type.equalsIgnoreCase("syncOnlineUUID")) {
-            String oldname = input.readUTF();
-            String newname = input.readUTF();
-            String newUUID = input.readUTF();
-            Cache.syncOnlineUUIDCache(oldname, newname, UUID.fromString(newUUID));
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 

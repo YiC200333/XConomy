@@ -18,15 +18,15 @@
  */
 package me.yic.xconomy.command;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.lang.MessagesManager;
+import me.yic.xconomy.data.syncdata.SyncMessage;
 import me.yic.xconomy.info.PermissionINFO;
+import me.yic.xconomy.info.SyncType;
+import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.SendPluginMessage;
 import me.yic.xconomy.utils.UUIDMode;
@@ -37,6 +37,9 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.text.Text;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -731,7 +734,7 @@ public class CommandCore {
 
     }
 
-    @SuppressWarnings("UnstableApiUsage")
+
     public static void broadcastSendMessage(boolean ispublic, UUID u, String message) {
         if (!XConomy.Config.BUNGEECORD_ENABLE) {
             return;
@@ -741,20 +744,22 @@ public class CommandCore {
             return;
         }
 
-        ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF(XConomy.Config.BUNGEECORD_SIGN);
-        output.writeUTF(XConomy.syncversion);
-        if (!ispublic) {
-            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)){
-                output.writeUTF("message#semi");
-            }else {
-                output.writeUTF("message");
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(output);
+            oos.writeUTF(XConomy.syncversion);
+            if (!ispublic) {
+                if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                    oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE_SEMI, u, message));
+                } else {
+                    oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE, u, message));
+                }
+            } else {
+                oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.BROADCAST, null, message));
             }
-            output.writeUTF(u.toString());
-            output.writeUTF(message);
-        } else {
-            output.writeUTF("broadcast");
-            output.writeUTF(message);
+            oos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         SendPluginMessage.SendMessTask("xconomy:acb", output);
 

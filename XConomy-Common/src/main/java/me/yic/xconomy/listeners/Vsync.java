@@ -18,22 +18,22 @@
  */
 package me.yic.xconomy.listeners;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import me.yic.xconomy.XConomyVelocity;
+import me.yic.xconomy.data.syncdata.SyncMessage;
+import me.yic.xconomy.info.SyncType;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.io.*;
 
 public class Vsync {
 
-    @SuppressWarnings(value = {"UnstableApiUsage", "unused"})
+    @SuppressWarnings(value = {"unused"})
     @Subscribe
     public void on(PluginMessageEvent event) {
         if (event.getSource() instanceof Player) {
@@ -45,62 +45,53 @@ public class Vsync {
         }
 
 
-        ByteArrayDataInput input = ByteStreams.newDataInput(event.getData());
-        ServerConnection senderServer = (ServerConnection) event.getSource();
+        ByteArrayInputStream input = new ByteArrayInputStream(event.getData());
+        try {
+            ObjectInputStream ios = new ObjectInputStream(input);
+            ServerConnection senderServer = (ServerConnection) event.getSource();
 
-        ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF(input.readUTF());
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(output);
 
-        String sv = input.readUTF();
-        output.writeUTF(sv);
-        String svv = sv;
-        if (svv.contains(".")) {
-            svv = "versions §f" + svv;
-        } else {
-            svv = "§fold versions";
-        }
-        if (!sv.equals(XConomyVelocity.syncversion)) {
-            XConomyVelocity.getInstance().logger.warn("§cReceived data from " + svv + ", §cunable to synchronize, Current plugin version §f" + XConomyVelocity.syncversion);
-            return;
-        }
-
-        String type = input.readUTF();
-        if (type.equalsIgnoreCase("updateplayer")) {
-            output.writeUTF("updateplayer");
-            output.writeUTF(input.readUTF());
-        } else if (type.equalsIgnoreCase("message") || type.equalsIgnoreCase("message#semi")) {
-            output.writeUTF("message");
-            String uid = input.readUTF();
-            Optional<Player> p = XConomyVelocity.getInstance().server.getPlayer(UUID.fromString(uid));
-            if (type.equalsIgnoreCase("message") && !p.isPresent()) {
+            String sv = ios.readUTF();
+            oos.writeUTF(sv);
+            String svv = sv;
+            if (svv.contains(".")) {
+                svv = "versions §f" + svv;
+            } else {
+                svv = "§fold versions";
+            }
+            if (!sv.equals(XConomyVelocity.syncversion)) {
+                XConomyVelocity.getInstance().logger.warn("§cReceived data from " + svv + ", §cunable to synchronize, Current plugin version §f" + XConomyVelocity.syncversion);
                 return;
             }
-            output.writeUTF(uid);
-            output.writeUTF(input.readUTF());
-        } else if (type.equalsIgnoreCase("balanceall")) {
-            output.writeUTF("balanceall");
-            output.writeUTF(input.readUTF());
-            output.writeUTF(input.readUTF());
-            output.writeUTF(input.readUTF());
-        } else if (type.equalsIgnoreCase("broadcast")) {
-            output.writeUTF("broadcast");
-            output.writeUTF(input.readUTF());
-        } else if (type.equalsIgnoreCase("syncOnlineUUID")) {
-            output.writeUTF("syncOnlineUUID");
-            output.writeUTF(input.readUTF());
-            output.writeUTF(input.readUTF());
-            output.writeUTF(input.readUTF());
-        }
 
-        for (RegisteredServer s : XConomyVelocity.getInstance().server.getAllServers()) {
-            if (!s.equals(senderServer.getServer()) && s.getPlayersConnected().size() > 0) {
-                XConomyVelocity.getInstance().server.getScheduler().buildTask(XConomyVelocity.getInstance(), () -> SendMessTaskB(s, output)).schedule();
+            Object ob = ios.readObject();
+            if (ob instanceof SyncMessage) {
+                SyncMessage sd = (SyncMessage) ob;
+                if (sd.getSyncType().equals(SyncType.MESSAGE)) {
+                    ProxiedPlayer p = ProxyServer.getInstance().getPlayer(sd.getUUID());
+                    if (p == null) {
+                        return;
+                    }
+                }
             }
-        }
 
+            oos.writeObject(ob);
+            oos.flush();
+            for (RegisteredServer s : XConomyVelocity.getInstance().server.getAllServers()) {
+                if (!s.equals(senderServer.getServer()) && s.getPlayersConnected().size() > 0) {
+                    XConomyVelocity.getInstance().server.getScheduler().buildTask(XConomyVelocity.getInstance(), () -> SendMessTaskB(s, output)).schedule();
+                }
+            }
+
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void SendMessTaskB(RegisteredServer s, ByteArrayDataOutput stream) {
+    public static void SendMessTaskB(RegisteredServer s, ByteArrayOutputStream stream) {
         s.sendPluginMessage(XConomyVelocity.aca, stream.toByteArray());
     }
 }

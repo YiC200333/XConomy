@@ -18,10 +18,9 @@
  */
 package me.yic.xconomy.listeners;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import me.yic.xconomy.XConomyBungee;
+import me.yic.xconomy.data.syncdata.SyncMessage;
+import me.yic.xconomy.info.SyncType;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -30,11 +29,11 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-import java.util.UUID;
+import java.io.*;
 
 public class BCsync implements Listener {
 
-    @SuppressWarnings(value = {"UnstableApiUsage", "unused"})
+    @SuppressWarnings(value = {"unused"})
     @EventHandler
     public void on(PluginMessageEvent event) {
         if (!(event.getSender() instanceof Server)) {
@@ -45,61 +44,51 @@ public class BCsync implements Listener {
             return;
         }
 
-        ByteArrayDataInput input = ByteStreams.newDataInput(event.getData());
-        Server senderServer = (Server) event.getSender();
+        ByteArrayInputStream input = new ByteArrayInputStream(event.getData());
+        try {
+            ObjectInputStream ios = new ObjectInputStream(input);
+            Server senderServer = (Server) event.getSender();
 
-        ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF(input.readUTF());
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(output);
 
-        String sv = input.readUTF();
-        output.writeUTF(sv);
-        String svv = sv;
-        if (svv.contains(".")) {
-            svv = "versions §f" + svv;
-        } else {
-            svv = "§fold versions";
-        }
-        if (!sv.equals(XConomyBungee.syncversion)) {
-            XConomyBungee.getInstance().getLogger().warning("§cReceived data from " + svv + ", §cunable to synchronize, Current plugin version §f" + XConomyBungee.syncversion);
-            return;
-        }
-
-        String type = input.readUTF();
-        if (type.equalsIgnoreCase("updateplayer")) {
-            output.writeUTF("updateplayer");
-            output.writeUTF(input.readUTF());
-        } else if (type.equalsIgnoreCase("message") || type.equalsIgnoreCase("message#semi")) {
-            output.writeUTF("message");
-            String uid = input.readUTF();
-            ProxiedPlayer p = ProxyServer.getInstance().getPlayer(UUID.fromString(uid));
-            if (type.equalsIgnoreCase("message") && p == null) {
+            String sv = ios.readUTF();
+            oos.writeUTF(sv);
+            String svv = sv;
+            if (svv.contains(".")) {
+                svv = "versions §f" + svv;
+            } else {
+                svv = "§fold versions";
+            }
+            if (!sv.equals(XConomyBungee.syncversion)) {
+                XConomyBungee.getInstance().getLogger().warning("§cReceived data from " + svv + ", §cunable to synchronize, Current plugin version §f" + XConomyBungee.syncversion);
                 return;
             }
-            output.writeUTF(uid);
-            output.writeUTF(input.readUTF());
-        } else if (type.equalsIgnoreCase("balanceall")) {
-            output.writeUTF("balanceall");
-            output.writeUTF(input.readUTF());
-            output.writeUTF(input.readUTF());
-            output.writeUTF(input.readUTF());
-        } else if (type.equalsIgnoreCase("broadcast")) {
-            output.writeUTF("broadcast");
-            output.writeUTF(input.readUTF());
-        } else if (type.equalsIgnoreCase("syncOnlineUUID")) {
-            output.writeUTF("syncOnlineUUID");
-            output.writeUTF(input.readUTF());
-            output.writeUTF(input.readUTF());
-            output.writeUTF(input.readUTF());
-        }
-        for (ServerInfo s : ProxyServer.getInstance().getServers().values()) {
-            if (!s.getName().equals(senderServer.getInfo().getName()) && s.getPlayers().size() > 0) {
-                ProxyServer.getInstance().getScheduler().runAsync(XConomyBungee.getInstance(), () -> SendMessTaskB(s, output));
-            }
-        }
 
+            Object ob = ios.readObject();
+            if (ob instanceof SyncMessage) {
+                SyncMessage sd = (SyncMessage) ob;
+                if (sd.getSyncType().equals(SyncType.MESSAGE)) {
+                    ProxiedPlayer p = ProxyServer.getInstance().getPlayer(sd.getUUID());
+                    if (p == null) {
+                        return;
+                    }
+                }
+            }
+            oos.writeObject(ob);
+            oos.flush();
+            for (ServerInfo s : ProxyServer.getInstance().getServers().values()) {
+                if (!s.getName().equals(senderServer.getInfo().getName()) && s.getPlayers().size() > 0) {
+                    ProxyServer.getInstance().getScheduler().runAsync(XConomyBungee.getInstance(), () -> SendMessTaskB(s, output));
+                }
+            }
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void SendMessTaskB(ServerInfo s, ByteArrayDataOutput stream) {
+    public static void SendMessTaskB(ServerInfo s, ByteArrayOutputStream stream) {
         s.sendData("xconomy:aca", stream.toByteArray());
     }
 }

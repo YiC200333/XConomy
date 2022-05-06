@@ -19,9 +19,13 @@
 package me.yic.xconomy.listeners;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.caches.CacheSemiOnline;
+import me.yic.xconomy.data.syncdata.*;
+import me.yic.xconomy.info.SyncType;
+import me.yic.xconomy.utils.UUIDMode;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.Platform;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.User;
@@ -31,60 +35,70 @@ import org.spongepowered.api.network.RemoteConnection;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.UUID;
 
 public class SPsync implements RawDataListener {
 
-    @SuppressWarnings({"OptionalGetWithoutIsPresent", "NullableProblems"})
+    @SuppressWarnings({"OptionalGetWithoutIsPresent"})
     @Override
-    public void handlePayload(ChannelBuf data, RemoteConnection connection, Platform.Type side) {
-        String sign = data.readUTF();
-        if (!sign.equals(XConomy.Config.BUNGEECORD_SIGN)) {
-            return;
-        }
+    public void handlePayload(ChannelBuf data, @NotNull RemoteConnection connection, @NotNull Platform.Type side) {
 
-        String sv = data.readUTF();
-        if (!sv.equals(XConomy.syncversion)) {
-            XConomy.getInstance().logger("收到不同版本插件的数据，无法同步，当前插件版本 ", 1, XConomy.syncversion);
-            return;
-        }
+        byte[] msgbytes = data.readBytes(data.available());
+        ByteArrayInputStream input = new ByteArrayInputStream(msgbytes);
+        try {
+            ObjectInputStream ios = new ObjectInputStream(input);
 
-        String type = data.readUTF();
-        if (type.equalsIgnoreCase("updateplayer")) {
-            UUID u = UUID.fromString(data.readUTF());
-            Cache.removefromCache(u);
-        } else if (type.equalsIgnoreCase("message")) {
-            User p = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(
-                    provide -> provide.get(UUID.fromString(data.readUTF()))).get();
-
-            String mess = data.readUTF();
-            if (p.isOnline()) {
-                p.getPlayer().get().sendMessage(Text.of(mess));
+            String sv = ios.readUTF();
+            if (!sv.equals(XConomy.syncversion)) {
+                XConomy.getInstance().logger("收到不同版本插件的数据，无法同步，当前插件版本 ", 1, XConomy.syncversion);
+                return;
             }
-        } else if (type.equalsIgnoreCase("balanceall")) {
-            String targettype = data.readUTF();
-            String amount = data.readUTF();
-            String isadds = data.readUTF();
-            if (targettype.equalsIgnoreCase("all")) {
-                Cache.clearCache();
-            } else if (targettype.equalsIgnoreCase("online")) {
-                Cache.clearCache();
-                Boolean isadd = null;
-                if (isadds.equalsIgnoreCase("add")) {
-                    isadd = true;
-                } else if (isadds.equalsIgnoreCase("subtract")) {
-                    isadd = false;
+
+            SyncData ob = (SyncData) ios.readObject();
+            if (!ob.getSign().equals(XConomy.Config.BUNGEECORD_SIGN)) {
+                return;
+            }
+
+            if (ob.getSyncType().equals(SyncType.UPDATEPLAYER)) {
+                SyncUpdatePlayer sd = (SyncUpdatePlayer) ob;
+                UUID u = sd.getUUID();
+                Cache.removefromCache(u);
+            } else if (ob.getSyncType().equals(SyncType.MESSAGE) || ob.getSyncType().equals(SyncType.MESSAGE_SEMI) ) {
+                SyncMessage sd = (SyncMessage) ob;
+                UUID muid = sd.getUUID();
+                User p = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(
+                        provide -> provide.get(muid)).get();
+
+                if (p.isOnline()) {
+                    p.getPlayer().get().sendMessage(Text.of(sd.getMessage()));
+                } else if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                    UUID suid = CacheSemiOnline.CacheSubUUID_getsubuuid(muid.toString());
+                    if (suid != null) {
+                        User sp = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(
+                                provide -> provide.get(suid)).get();
+                        if (sp.isOnline()) {
+                            sp.getPlayer().get().sendMessage(Text.of(sd.getMessage()));
+                        }
+                    }
                 }
-                DataLink.saveall("online", null, DataFormat.formatString(amount), isadd, null);
+            } else if (ob.getSyncType().equals(SyncType.BALANCEALL)) {
+                SyncBalanceAll sd = (SyncBalanceAll) ob;
+                Cache.clearCache();
+                if (sd.getisOnline()) {
+                    DataLink.saveall("online", null, sd.getAmount(), sd.getC(), null);
+                }
+            } else if (ob.getSyncType().equals(SyncType.BROADCAST)) {
+                SyncMessage sd = (SyncMessage) ob;
+                Sponge.getServer().getBroadcastChannel().send(Text.of(sd.getMessage()));
+            } else if (ob.getSyncType().equals(SyncType.SYNCONLINEUUID)) {
+                SyncUUID sd = (SyncUUID) ob;
+                Cache.syncOnlineUUIDCache(sd.getOldname(), sd.getNewname(), sd.getUUID());
             }
-        } else if (type.equalsIgnoreCase("broadcast")) {
-            String mess = data.readUTF();
-            Sponge.getServer().getBroadcastChannel().send(Text.of(mess));
-        } else if (type.equalsIgnoreCase("syncOnlineUUID")) {
-            String oldname = data.readUTF();
-            String newname = data.readUTF();
-            String newUUID = data.readUTF();
-            Cache.syncOnlineUUIDCache(oldname, newname, UUID.fromString(newUUID));
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }

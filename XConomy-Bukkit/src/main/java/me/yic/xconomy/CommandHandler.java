@@ -18,14 +18,14 @@
  */
 package me.yic.xconomy;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.syncdata.SyncMessage;
 import me.yic.xconomy.info.MessageConfig;
 import me.yic.xconomy.info.PermissionINFO;
+import me.yic.xconomy.info.SyncType;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.CompletableFutureTask;
 import me.yic.xconomy.utils.PlayerData;
@@ -37,6 +37,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,7 +133,7 @@ public class CommandHandler {
                     }
                     if (sender.isOp() || sender.hasPermission("xconomy.user.paytoggle")) {
                         PermissionINFO.setRPaymentPermission(((Player) sender).getUniqueId());
-                        if (PermissionINFO.getRPaymentPermission(((Player) sender).getUniqueId())){
+                        if (PermissionINFO.getRPaymentPermission(((Player) sender).getUniqueId())) {
                             sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_TRUE));
                         } else {
                             sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_FALSE));
@@ -153,7 +156,7 @@ public class CommandHandler {
                             if (PermissionINFO.getRPaymentPermission(((Player) sender).getUniqueId())) {
                                 sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_OTHER_TRUE)
                                         .replace("%player%", realname));
-                            }else{
+                            } else {
                                 sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_OTHER_FALSE)
                                         .replace("%player%", realname));
 
@@ -830,7 +833,6 @@ public class CommandHandler {
 
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     public static void broadcastSendMessage(boolean ispublic, UUID u, String message) {
         if (!XConomy.Config.BUNGEECORD_ENABLE) {
             return;
@@ -840,20 +842,22 @@ public class CommandHandler {
             return;
         }
 
-        ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF(XConomy.Config.BUNGEECORD_SIGN);
-        output.writeUTF(XConomy.syncversion);
-        if (!ispublic) {
-            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-                output.writeUTF("message#semi");
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(output);
+            oos.writeUTF(XConomy.syncversion);
+            if (!ispublic) {
+                if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                    oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE_SEMI, u, message));
+                } else {
+                    oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE, u, message));
+                }
             } else {
-                output.writeUTF("message");
+                oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.BROADCAST, null, message));
             }
-            output.writeUTF(u.toString());
-            output.writeUTF(message);
-        } else {
-            output.writeUTF("broadcast");
-            output.writeUTF(message);
+            oos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         SendPluginMessage.SendMessTask("xconomy:acb", output);
 
