@@ -2,6 +2,7 @@ name: XConomy
 version: ${project.version}
 main: me.yic.xconomy.XConomy
 author: YiC
+website: https://www.spigotmc.org/resources/xconomy.75669/
 load: STARTUP
 loadbefore:  [ PlotSquared ]
 softdepend: [ Vault, Enterprise, DatabaseDrivers, MPoints, PlaceholderAPI ]
@@ -32,6 +33,7 @@ commands:
   paypermission:
     usage: /<command>
     description: XConomy.
+    aliases: [ payperm ]
 
 permissions:
   xconomy.user.balance:

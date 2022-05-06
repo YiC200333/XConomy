@@ -129,6 +129,9 @@ public class XConomy extends JavaPlugin {
         this.getCommand("balancetop").setTabCompleter(new TabList());
         this.getCommand("pay").setTabCompleter(new TabList());
         this.getCommand("xconomy").setTabCompleter(new TabList());
+        this.getCommand("paytoggle").setTabCompleter(new TabList());
+        this.getCommand("paypermission").setTabCompleter(new TabList());
+        this.getCommand("paypermission").setPermission("xconomy.admin.permission");
 
         if (Config.ECO_COMMAND) {
             try {

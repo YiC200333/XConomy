@@ -67,7 +67,7 @@ import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-@Plugin(id = "xconomy", name = "XConomy", version = PluginINFO.VERSION, authors = {"YiC"})
+@Plugin(id = "xconomy", name = "XConomy", version = PluginINFO.VERSION, authors = {"YiC"}, url = "https://ore.spongepowered.org/YiC/XConomy")
 
 public class XConomy {
 
@@ -189,7 +189,7 @@ public class XConomy {
         }
         Sponge.getCommandManager().register(this, paycmd, "pay");
         Sponge.getCommandManager().register(this, xccmd, "xconomy", "xc");
-        Sponge.getCommandManager().register(this, paypr, "paypermission");
+        Sponge.getCommandManager().register(this, paypr, "paypermission", "payperm");
         Sponge.getCommandManager().register(this, paytog, "paytoggle");
 
 
