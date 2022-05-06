@@ -23,6 +23,7 @@ import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.syncdata.SyncMessage;
+import me.yic.xconomy.data.syncdata.SyncPermission;
 import me.yic.xconomy.info.MessageConfig;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.info.SyncType;
@@ -75,53 +76,52 @@ public class CommandHandler {
                     }
                     return true;
                 }
+                showVersion(sender);
+                break;
+            }
 
+            case "paypermission": {
                 if (sender.isOp() || sender.hasPermission("xconomy.admin.permission")) {
-                    if (args.length >= 4 && args[0].equalsIgnoreCase("permission")) {
-                        if (args.length == 5 && args[1].equalsIgnoreCase("set")) {
-                            if (args[2].equalsIgnoreCase("pay")) {
-                                if (args[4].equalsIgnoreCase("true") || args[4].equalsIgnoreCase("false")) {
-                                    boolean vv = !args[4].equalsIgnoreCase("false");
-                                    if (args[3].equalsIgnoreCase("*")) {
-                                        PermissionINFO.globalpayment = vv;
-                                        sendMessages(sender, translateColorCodes("global_permissions_change").replace("%permission%", "pay")
-                                                .replace("%value%", args[4]));
-                                    } else {
-                                        PlayerData pd = DataCon.getPlayerData(args[3]);
-                                        UUID targetUUID = pd.getUniqueId();
-                                        if (targetUUID == null) {
-                                            sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
-                                        } else {
-                                            String realname = pd.getName();
-                                            PermissionINFO.setPaymentPermission(targetUUID, vv);
-                                            sendMessages(sender, translateColorCodes("personal_permissions_change").replace("%permission%", "pay")
-                                                    .replace("%player%", realname).replace("%value%", args[4]));
-                                        }
-                                    }
-                                    return true;
-                                }
-
-                            }
-                        } else if (args.length == 4 && args[1].equalsIgnoreCase("remove")) {
-                            if (args[2].equalsIgnoreCase("pay")) {
-                                PlayerData pd = DataCon.getPlayerData(args[3]);
+                    if (args.length == 3 && args[0].equalsIgnoreCase("set")) {
+                        if (args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false")) {
+                            boolean vv = !args[2].equalsIgnoreCase("false");
+                            if (args[1].equalsIgnoreCase("*")) {
+                                PermissionINFO.globalpayment = vv;
+                                sendMessages(sender, translateColorCodes("global_permissions_change").replace("%permission%", "pay")
+                                        .replace("%value%", args[2]));
+                                syncpr(1, null, vv);
+                            }else{
+                                PlayerData pd = DataCon.getPlayerData(args[1]);
                                 UUID targetUUID = pd.getUniqueId();
                                 if (targetUUID == null) {
                                     sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                                 } else {
                                     String realname = pd.getName();
-                                    PermissionINFO.setPaymentPermission(targetUUID, null);
+                                    PermissionINFO.setPaymentPermission(targetUUID, vv);
                                     sendMessages(sender, translateColorCodes("personal_permissions_change").replace("%permission%", "pay")
-                                            .replace("%player%", realname).replace("%value%", "Default"));
+                                            .replace("%player%", realname).replace("%value%", args[2]));
+                                    syncpr(1, targetUUID, vv);
                                 }
-                                return true;
                             }
+                            return true;
                         }
-                        sendHelpMessage(sender, 1);
+                    } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
+                        PlayerData pd = DataCon.getPlayerData(args[1]);
+                        UUID targetUUID = pd.getUniqueId();
+                        if (targetUUID == null) {
+                            sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
+                        } else {
+                            String realname = pd.getName();
+                            PermissionINFO.setPaymentPermission(targetUUID, null);
+                            sendMessages(sender, translateColorCodes("personal_permissions_change").replace("%permission%", "pay")
+                                    .replace("%player%", realname).replace("%value%", "Default"));
+                            syncpr(1, targetUUID, null);
+                        }
                         return true;
                     }
+                    sendHelpMessage(sender, 1);
+                    return true;
                 }
-                showVersion(sender);
                 break;
             }
 
@@ -135,13 +135,19 @@ public class CommandHandler {
                         PermissionINFO.setRPaymentPermission(((Player) sender).getUniqueId());
                         if (PermissionINFO.getRPaymentPermission(((Player) sender).getUniqueId())) {
                             sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_TRUE));
+                            syncpr(2, ((Player) sender).getUniqueId(), true);
                         } else {
                             sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_FALSE));
+                            syncpr(2, ((Player) sender).getUniqueId(), false);
                         }
                     }
                     return true;
                 } else if (args.length == 1) {
                     if (sender.isOp() || sender.hasPermission("xconomy.admin.paytoggle")) {
+                        if (check()) {
+                            sendMessages(sender, PREFIX + MessagesManager.systemMessage("§cBungeeCord模式开启的情况下,无法在无人的服务器中使用OP命令"));
+                            return true;
+                        }
                         PlayerData pd = DataCon.getPlayerData(args[0]);
                         UUID targetUUID = pd.getUniqueId();
                         if (targetUUID == null) {
@@ -154,9 +160,11 @@ public class CommandHandler {
 
                             String mess = translateColorCodes(MessageConfig.PAYTOGGLE_TRUE);
                             if (PermissionINFO.getRPaymentPermission(((Player) sender).getUniqueId())) {
+                                syncpr(2, targetUUID, true);
                                 sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_OTHER_TRUE)
                                         .replace("%player%", realname));
                             } else {
+                                syncpr(2, targetUUID, false);
                                 sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_OTHER_FALSE)
                                         .replace("%player%", realname));
 
@@ -300,11 +308,16 @@ public class CommandHandler {
                 }
 
                 String realname = pd.getName();
-                if (XConomy.foundvaultOfflinePermManager) {
-                    if (!CompletableFutureTask.hasreceivepermission(target, targetUUID)) {
-                        sendMessages(sender, PREFIX + translateColorCodes("no_receive_permission"));
-                        return true;
+                if (PermissionINFO.getRPaymentPermission(targetUUID)) {
+                    if (XConomy.foundvaultOfflinePermManager) {
+                        if (!CompletableFutureTask.hasreceivepermission(target, targetUUID)) {
+                            sendMessages(sender, PREFIX + translateColorCodes("no_receive_permission"));
+                            return true;
+                        }
                     }
+                }else{
+                    sendMessages(sender, PREFIX + translateColorCodes("no_receive_permission"));
+                    return true;
                 }
 
                 //Cache.refreshFromCache(targetUUID);
@@ -781,6 +794,14 @@ public class CommandHandler {
         if (sender.isOp() | sender.hasPermission("xconomy.admin.balancetop")) {
             helplist.add(translateColorCodes("help10"));
         }
+        helplist.add(translateColorCodes("help11"));
+        if (sender.isOp() | sender.hasPermission("xconomy.admin.paytoggle")) {
+            helplist.add(translateColorCodes("help12"));
+        }
+        if (sender.isOp() | sender.hasPermission("xconomy.admin.permission")) {
+            helplist.add(translateColorCodes("help13"));
+            helplist.add(translateColorCodes("help14"));
+        }
         Integer maxipages;
         if (helplist.size() % XConomy.Config.LINES_PER_PAGE == 0) {
             maxipages = helplist.size() / XConomy.Config.LINES_PER_PAGE;
@@ -833,6 +854,7 @@ public class CommandHandler {
 
     }
 
+
     public static void broadcastSendMessage(boolean ispublic, UUID u, String message) {
         if (!XConomy.Config.BUNGEECORD_ENABLE) {
             return;
@@ -855,6 +877,28 @@ public class CommandHandler {
             } else {
                 oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.BROADCAST, null, message));
             }
+            oos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SendPluginMessage.SendMessTask("xconomy:acb", output);
+
+    }
+
+    public static void syncpr(int type, UUID u, Boolean value) {
+        if (!XConomy.Config.BUNGEECORD_ENABLE) {
+            return;
+        }
+
+        if (Bukkit.getOnlinePlayers().isEmpty()) {
+            return;
+        }
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(output);
+            oos.writeUTF(XConomy.syncversion);
+            oos.writeObject(new SyncPermission(XConomy.Config.BUNGEECORD_SIGN, u, type, value));
             oos.flush();
         } catch (IOException e) {
             e.printStackTrace();

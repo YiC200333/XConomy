@@ -73,6 +73,10 @@ public class Languages {
         ll.add("help8");
         ll.add("help9");
         ll.add("help10");
+        ll.add("help11");
+        ll.add("help12");
+        ll.add("help13");
+        ll.add("help14");
         return ll;
 
     }
@@ -123,6 +127,10 @@ public class Languages {
         mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  give <all/online player> <amount>");
         mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  take <amount> from <all/online player>");
         mess.put("help10", "&6balancetop hide/display <player>  -  Hide or display a <player>'s data from TOP10");
+        mess.put("help11", "&6paytoggle  -  Toggle accepting payments");
+        mess.put("help12", "&6paytoggle <player>  -  Toggle <player>'s accepting payments");
+        mess.put("help13", "&6paypermission set <player> True/False  -  Set <player>'s (* represents a global) pay permission");
+        mess.put("help14", "&6paypermission remove <player>  -  Set <player>'s pay permission to default");
     }
 
     public static void russian(HashMap<String, String> mess) {
@@ -172,6 +180,10 @@ public class Languages {
         mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  Выдать <всем/онлайн игрокам> <сумму>");
         mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  Забрать <сумму> у <всех/онлайн игроков>");
         mess.put("help10", "&6balancetop hide/display <player>  -  Hide or display a <player>'s data from TOP10");
+        mess.put("help11", "&6paytoggle  -  Toggle accepting payments");
+        mess.put("help12", "&6paytoggle <player>  -  Toggle <player>'s accepting payments");
+        mess.put("help13", "&6paypermission set <player> True/False  -  Set <player>'s (* represents a global) pay permission");
+        mess.put("help14", "&6paypermission remove <player>  -  Set <player>'s pay permission to default");
     }
 
     public static void spanish(HashMap<String, String> mess) {
@@ -220,6 +232,10 @@ public class Languages {
         mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  give <all/online player> <amount>");
         mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  take <amount> from <all/online player>");
         mess.put("help10", "&6balancetop hide/display <player>  -  Hide or display a <player>'s data from TOP10");
+        mess.put("help11", "&6paytoggle  -  Toggle accepting payments");
+        mess.put("help12", "&6paytoggle <player>  -  Toggle <player>'s accepting payments");
+        mess.put("help13", "&6paypermission set <player> True/False  -  Set <player>'s (* represents a global) pay permission");
+        mess.put("help14", "&6paypermission remove <player>  -  Set <player>'s pay permission to default");
     }
 
     public static void chinese(HashMap<String, String> mess) {
@@ -269,6 +285,10 @@ public class Languages {
         mess.put("help8", "&6balance/money give * <all/online> <金额> <理由>  -  给与<所有/在线玩家><金额>");
         mess.put("help9", "&6balance/money take * <all/online> <金额> <理由>  -  从<所有/在线玩家>取走<金额>");
         mess.put("help10", "&6balancetop hide/display <player>  -  将<玩家>的数据从Top10上隐藏或显示");
+        mess.put("help11", "&6paytoggle  -  切换是否接受转账");
+        mess.put("help12", "&6paytoggle <player>  -  切换<玩家>是否接受转账");
+        mess.put("help13", "&6paypermission set <player> True/False  -  设置<玩家>(*表示全局)转账权限");
+        mess.put("help14", "&6paypermission remove <player>  -  设置<玩家>转账权限为默认");
     }
 
     public static void chinesetw(HashMap<String, String> mess) {
@@ -317,6 +337,10 @@ public class Languages {
         mess.put("help8", "&6balance/money give * <all/online> <金額> <理由>  -  給與<所有/在綫玩家><金额>");
         mess.put("help9", "&6balance/money take * <all/online> <金額> <理由>  -  從<所有/在綫玩家>取走<金額>");
         mess.put("help10", "&6balancetop hide/display <player>  -  將<玩家>的數據從Top10上隱藏或顯示");
+        mess.put("help11", "&6paytoggle  -  切換是否接受轉帳");
+        mess.put("help12", "&6paytoggle <player>  -  切換<玩家>是否接受轉帳");
+        mess.put("help13", "&6paypermission set <player> True/False  -  設置<玩家>(*表示全局)轉帳權限");
+        mess.put("help14", "&6paypermission remove <player>  -  設置<玩家>轉帳權限為默認");
     }
 
     public static void french(HashMap<String, String> mess) {
@@ -366,6 +390,10 @@ public class Languages {
         mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  give <all/online player> <amount>");
         mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  take <amount> from <all/online player>");
         mess.put("help10", "&6balancetop hide/display <player>  -  Hide or display a <player>'s data from TOP10");
+        mess.put("help11", "&6paytoggle  -  Toggle accepting payments");
+        mess.put("help12", "&6paytoggle <player>  -  Toggle <player>'s accepting payments");
+        mess.put("help13", "&6paypermission set <player> True/False  -  Set <player>'s (* represents a global) pay permission");
+        mess.put("help14", "&6paypermission remove <player>  -  Set <player>'s pay permission to default");
     }
 
     public static void turkish(HashMap<String, String> mess) {
@@ -414,6 +442,10 @@ public class Languages {
         mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  give <all/online player> <amount>");
         mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  take <amount> from <all/online player>");
         mess.put("help10", "&6balancetop hide/display <player>  -  Hide or display a <player>'s data from TOP10");
+        mess.put("help11", "&6paytoggle  -  Toggle accepting payments");
+        mess.put("help12", "&6paytoggle <player>  -  Toggle <player>'s accepting payments");
+        mess.put("help13", "&6paypermission set <player> True/False  -  Set <player>'s (* represents a global) pay permission");
+        mess.put("help14", "&6paypermission remove <player>  -  Set <player>'s pay permission to default");
     }
 
     public static void japanese(HashMap<String, String> mess) {
@@ -462,6 +494,10 @@ public class Languages {
         mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  は<all/online player>に<金額>を与えた。");
         mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  は<all/online player>から<金額>を差し引きました。");
         mess.put("help10", "&6balancetop hide/display <player>  -  Hide or display a <player>'s data from TOP10");
+        mess.put("help11", "&6paytoggle  -  Toggle accepting payments");
+        mess.put("help12", "&6paytoggle <player>  -  Toggle <player>'s accepting payments");
+        mess.put("help13", "&6paypermission set <player> True/False  -  Set <player>'s (* represents a global) pay permission");
+        mess.put("help14", "&6paypermission remove <player>  -  Set <player>'s pay permission to default");
     }
 
 
@@ -511,6 +547,10 @@ public class Languages {
         mess.put("help8", "&6balance/money give * <all/online> <Betrag> <Grund>  -  gebe <Alle/Online Spieler> <Betrag>");
         mess.put("help9", "&6balance/money take * <all/online> <Betrag> <Grund>  -  nimmt <Betrag> von <Alle/Online Spieler>");
         mess.put("help10", "&6balancetop hide/display <Spieler>  -  Verstecke oder Zeige den Kontostand von <Spieler> in den TOP10");
+        mess.put("help11", "&6paytoggle  -  Toggle accepting payments");
+        mess.put("help12", "&6paytoggle <player>  -  Toggle <player>'s accepting payments");
+        mess.put("help13", "&6paypermission set <player> True/False  -  Set <player>'s (* represents a global) pay permission");
+        mess.put("help14", "&6paypermission remove <player>  -  Set <player>'s pay permission to default");
     }
 
     public static void indonesia(HashMap<String, String> mess) {
@@ -559,6 +599,10 @@ public class Languages {
         mess.put("help8", "&6balance/money give * <all/online> <jumlah> <alasan>  -  memberikan <all/online player> <jumlah>");
         mess.put("help9", "&6balance/money take * <all/online> <jumlah> <alasan>  -  mengambil <jumlah> dari <all/online player>");
         mess.put("help10", "&6balancetop hide/display <pemain>  -  Sembunyikan atau tampilkan data <pemain> dari TOP10");
+        mess.put("help11", "&6paytoggle  -  Toggle accepting payments");
+        mess.put("help12", "&6paytoggle <player>  -  Toggle <player>'s accepting payments");
+        mess.put("help13", "&6paypermission set <player> True/False  -  Set <player>'s (* represents a global) pay permission");
+        mess.put("help14", "&6paypermission remove <player>  -  Set <player>'s pay permission to default");
     }
 
     public static void portuguese(HashMap<String, String> mess) {
@@ -607,6 +651,10 @@ public class Languages {
         mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  dê para <all/online player> <amount>");
         mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  tire <amount> de <all/online player>");
         mess.put("help10", "&6balancetop hide/display <player>  -  Esconder ou mostrar a data de <player> do TOP10");
+        mess.put("help11", "&6paytoggle  -  Toggle accepting payments");
+        mess.put("help12", "&6paytoggle <player>  -  Toggle <player>'s accepting payments");
+        mess.put("help13", "&6paypermission set <player> True/False  -  Set <player>'s (* represents a global) pay permission");
+        mess.put("help14", "&6paypermission remove <player>  -  Set <player>'s pay permission to default");
     }
 
     public static void translateFile(String string, File file) {

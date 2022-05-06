@@ -131,6 +131,13 @@ public class XConomyAPI {
         PermissionINFO.setPaymentPermission(uid, vaule);
     }
 
+    public Boolean getpaytoggle(UUID uid) {
+        return PermissionINFO.getRPaymentPermission(uid);
+    }
+
+    public void setpaytoggle(UUID uid, boolean vaule) {
+        PermissionINFO.setRPaymentPermission(uid, vaule);
+    }
 
     @Deprecated
     public UUID translateUUID(String playername) {

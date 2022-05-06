@@ -20,10 +20,7 @@ package me.yic.xconomy;
 
 import com.google.inject.Inject;
 import me.yic.libs.bstats.sponge.Metrics2;
-import me.yic.xconomy.command.CommandBalance;
-import me.yic.xconomy.command.CommandBaltop;
-import me.yic.xconomy.command.CommandPay;
-import me.yic.xconomy.command.CommandSystem;
+import me.yic.xconomy.command.*;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
@@ -167,10 +164,18 @@ public class XConomy {
         CommandSpec xccmd = CommandSpec.builder()
                 .executor(new CommandSystem())
                 .arguments(GenericArguments.seq(GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg1"))),
+                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg2")))))
+                .build();
+        CommandSpec paypr = CommandSpec.builder()
+                .executor(new CommandPermission())
+                .arguments(GenericArguments.seq(GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg1"))),
                         GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg2"))),
-                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg3"))),
-                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg4"))),
-                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg5")))))
+                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg3")))))
+                .build();
+        CommandSpec paytog = CommandSpec.builder()
+                .executor(new CommandPaytoggle())
+                .arguments(GenericArguments.seq(GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg1"))),
+                        GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg2")))))
                 .build();
 
         if (Config.ECO_COMMAND) {
@@ -184,6 +189,8 @@ public class XConomy {
         }
         Sponge.getCommandManager().register(this, paycmd, "pay");
         Sponge.getCommandManager().register(this, xccmd, "xconomy", "xc");
+        Sponge.getCommandManager().register(this, paypr, "paypermission");
+        Sponge.getCommandManager().register(this, paytog, "paytoggle");
 
 
         if (Config.BUNGEECORD_ENABLE) {

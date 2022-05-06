@@ -42,14 +42,19 @@ public class PermissionINFO {
         }
     }
     public static boolean getRPaymentPermission(UUID u) {
-        if (rpayment.contains(u)){
-            return false;
-        }
-        return true;
+        return !rpayment.contains(u);
     }
 
     public static void setRPaymentPermission(UUID u) {
         if (rpayment.contains(u)){
+            rpayment.remove(u);
+        }else {
+            rpayment.add(u);
+        }
+    }
+
+    public static void setRPaymentPermission(UUID u, boolean value) {
+        if (value){
             rpayment.remove(u);
         }else {
             rpayment.add(u);

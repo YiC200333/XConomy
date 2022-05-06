@@ -24,7 +24,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 
-public class CommandSystem extends CommandCore implements CommandExecutor {
+public class CommandPaytoggle extends CommandCore implements CommandExecutor {
 
     @SuppressWarnings({"OptionalGetWithoutIsPresent", "NullableProblems"})
     @Override
@@ -33,14 +33,14 @@ public class CommandSystem extends CommandCore implements CommandExecutor {
             if (args.hasAny(Text.of("arg2"))) {
                 String[] cmd = {args.<String>getOne("arg1").get().trim(),
                         args.<String>getOne("arg2").get().trim()};
-                return onCommand(sender, "xconomy", cmd);
+                return onCommand(sender, "paytoggle", cmd);
             } else {
                 String[] cmd = {args.<String>getOne("arg1").get().trim()};
-                return onCommand(sender, "xconomy", cmd);
+                return onCommand(sender, "paytoggle", cmd);
             }
         } else {
             String[] cmd = {};
-            return onCommand(sender, "xconomy", cmd);
+            return onCommand(sender, "paytoggle", cmd);
         }
     }
 }

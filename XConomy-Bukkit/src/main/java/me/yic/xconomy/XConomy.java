@@ -122,6 +122,7 @@ public class XConomy extends JavaPlugin {
         Bukkit.getPluginCommand("pay").setExecutor(new Commands());
         Bukkit.getPluginCommand("xconomy").setExecutor(new Commands());
         Bukkit.getPluginCommand("paytoggle").setExecutor(new Commands());
+        Bukkit.getPluginCommand("paypermission").setExecutor(new Commands());
 
         this.getCommand("money").setTabCompleter(new TabList());
         this.getCommand("balance").setTabCompleter(new TabList());

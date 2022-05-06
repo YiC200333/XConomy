@@ -106,7 +106,7 @@ public class Placeholder extends PlaceholderExpansion {
             String index = identifier.substring(identifier.indexOf("top_balance_") + 12);
             if (identifier.contains("top_balance_value")) {
                 index = identifier.substring(identifier.indexOf("top_balance_value_") + 18);
-            }else if (identifier.contains("top_balance_formatted")) {
+            } else if (identifier.contains("top_balance_formatted")) {
                 index = identifier.substring(identifier.indexOf("top_balance_formatted_") + 22);
             }
             if (isNumber(index)) {
@@ -118,32 +118,37 @@ public class Placeholder extends PlaceholderExpansion {
                 BigDecimal bal = Cache.baltop.get(name);
                 if (identifier.contains("top_balance_value")) {
                     return bal.toString();
-                }else if (identifier.contains("top_balance_formatted")) {
+                } else if (identifier.contains("top_balance_formatted")) {
                     return DataFormat.PEshownf(bal);
                 }
                 return DataFormat.shown(bal);
             } else {
                 return "[XConomy]Invalid index";
             }
-        } else if (identifier.contains("permission_")) {
-            if (identifier.contains("permission_pay")) {
-                if (identifier.contains("global_permission")) {
-                    if (PermissionINFO.globalpayment) {
-                        return "1";
-                    }
-                    return "0";
-                }
-                if (player == null) {
-                    return "Error";
-                }
-                if (PermissionINFO.getPaymentPermission(player.getUniqueId()) == null){
-                    return "DEFAULT";
-                }else if (PermissionINFO.getPaymentPermission(player.getUniqueId())){
+        } else if (identifier.contains("paypermission")) {
+            if (identifier.contains("_global")) {
+                if (PermissionINFO.globalpayment) {
                     return "1";
                 }
                 return "0";
             }
-            return "Error";
+            if (player == null) {
+                return "Error";
+            }
+            if (PermissionINFO.getPaymentPermission(player.getUniqueId()) == null) {
+                return "DEFAULT";
+            } else if (PermissionINFO.getPaymentPermission(player.getUniqueId())) {
+                return "1";
+            }
+            return "0";
+        } else if (identifier.equals("paytoggle")) {
+            if (player == null) {
+                return "Error";
+            }
+            if (PermissionINFO.getRPaymentPermission(player.getUniqueId())) {
+                return "1";
+            }
+            return "0";
         } else if (identifier.contains("sum_balance")) {
             if (Cache.sumbalance == null) {
                 return "0.0";

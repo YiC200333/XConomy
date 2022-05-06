@@ -23,6 +23,7 @@ import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.syncdata.*;
+import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.info.SyncType;
 import me.yic.xconomy.utils.UUIDMode;
 import org.jetbrains.annotations.NotNull;
@@ -96,6 +97,17 @@ public class SPsync implements RawDataListener {
             } else if (ob.getSyncType().equals(SyncType.SYNCONLINEUUID)) {
                 SyncUUID sd = (SyncUUID) ob;
                 Cache.syncOnlineUUIDCache(sd.getOldname(), sd.getNewname(), sd.getUUID());
+            } else if (ob.getSyncType().equals(SyncType.PERMISSION)) {
+                SyncPermission sd = (SyncPermission) ob;
+                if (sd.getType() == 1){
+                    if (sd.getUUID() == null){
+                        PermissionINFO.globalpayment = sd.getValue();
+                    }else{
+                        PermissionINFO.setPaymentPermission(sd.getUUID(), sd.getValue());
+                    }
+                }else{
+                    PermissionINFO.setRPaymentPermission(sd.getUUID(), sd.getValue());
+                }
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

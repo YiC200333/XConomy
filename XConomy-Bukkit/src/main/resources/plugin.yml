@@ -29,6 +29,9 @@ commands:
   paytoggle:
     usage: /<command>
     description: XConomy.
+  paypermission:
+    usage: /<command>
+    description: XConomy.
 
 permissions:
   xconomy.user.balance:
