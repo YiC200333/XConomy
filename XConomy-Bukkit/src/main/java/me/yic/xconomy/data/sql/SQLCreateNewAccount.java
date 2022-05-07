@@ -222,7 +222,7 @@ public class SQLCreateNewAccount extends SQL {
                 user = rs.getString(2);
                 BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
                 if (cacheThisAmt != null && !XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-                    PlayerData bd = new PlayerData(UUID.fromString(u), user, cacheThisAmt);
+                    PlayerData bd = new PlayerData(XConomy.Config.BUNGEECORD_SIGN, UUID.fromString(u), user, cacheThisAmt);
                     Cache.insertIntoCache(UID, bd);
                 }
             } else {

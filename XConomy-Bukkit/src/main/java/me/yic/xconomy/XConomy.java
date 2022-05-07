@@ -70,6 +70,9 @@ public class XConomy extends JavaPlugin {
         MessagesManager.loadsysmess();
         MessagesManager.loadlangmess();
 
+        DConfig = new DataBaseConfig();
+        Config.setBungeecord();
+
         MCVersion.MCVersion = Bukkit.getBukkitVersion().toLowerCase();
         MCVersion.chatcolorcheck();
 
@@ -236,9 +239,6 @@ public class XConomy extends JavaPlugin {
             XConomy.getInstance().saveResource("database.yml", false);
         }
         DataBaseConfig.config = YamlConfiguration.loadConfiguration(file);
-        DConfig = new DataBaseConfig();
-
-        Config.setBungeecord();
     }
 
 

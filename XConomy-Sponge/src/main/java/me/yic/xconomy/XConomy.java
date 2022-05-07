@@ -112,6 +112,9 @@ public class XConomy {
         MessagesManager.loadsysmess();
         MessagesManager.loadlangmess();
 
+        DConfig = new DataBaseConfig();
+        Config.setBungeecord();
+
         Sponge.getServiceManager().setProvider(this, EconomyService.class, new XCService());
 
 
@@ -252,10 +255,6 @@ public class XConomy {
         Config = new DefaultConfig();
 
         DataBaseload();
-        DConfig = new DataBaseConfig();
-
-        Config.setBungeecord();
-
 
     }
 

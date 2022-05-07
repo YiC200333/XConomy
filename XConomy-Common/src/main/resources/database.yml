@@ -3,6 +3,7 @@ Settings:
   storage-type: SQLite
   #Use connection pool or not
   #Require 'slf4j' dependencies
+  #At least java version 11 is required
   usepool: false
   #Whether to disable saving data asynchronously(SQLite no such setting)
   disable-async: false

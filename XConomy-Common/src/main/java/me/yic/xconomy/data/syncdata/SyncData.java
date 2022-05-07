@@ -29,7 +29,7 @@ public class SyncData implements Serializable {
     final SyncType st;
     final UUID uuid;
 
-    SyncData(String sign, SyncType st, UUID uuid){
+    protected SyncData(String sign, SyncType st, UUID uuid){
         this.sign = sign;
         this.st = st;
         this.uuid = uuid;
@@ -40,7 +40,7 @@ public class SyncData implements Serializable {
         return sign;
     }
 
-    public UUID getUUID(){
+    public UUID getUniqueId(){
         return uuid;
     }
 

@@ -18,6 +18,7 @@
  */
 package me.yic.xconomy.info;
 
+import com.zaxxer.hikari.HikariDataSource;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.lang.MessagesManager;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -54,14 +55,22 @@ public class DataBaseConfig {
         if (config.getBoolean("Settings.usepool")) {
             try {
                 Class.forName("org.slf4j.Logger");
+                if (getStorageType() == 0 || getStorageType() == 1) {
+                    EnableConnectionPool = false;
+                }else {
+                    try {
+                        new HikariDataSource();
+                        EnableConnectionPool = !XConomy.foundvaultpe;
+                    } catch (UnsupportedClassVersionError e) {
+                        EnableConnectionPool = false;
+                        XConomy.getInstance().logger("connection-pool-unsupport", 1, null);
+                    }
+                }
             } catch (ClassNotFoundException e) {
                 XConomy.getInstance().logger("未找到 'org.slf4j.Logger'", 1, null);
                 EnableConnectionPool = false;
             }
-            if (getStorageType() == 0 || getStorageType() == 1) {
-                EnableConnectionPool = false;
-            }
-            EnableConnectionPool = !XConomy.foundvaultpe;
+
             if (!EnableConnectionPool){
                 XConomy.getInstance().logger("连接池未启用", 0, null);
             }

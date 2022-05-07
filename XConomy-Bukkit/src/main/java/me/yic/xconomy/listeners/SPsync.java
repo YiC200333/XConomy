@@ -25,6 +25,7 @@ import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.syncdata.*;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.info.SyncType;
+import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.UUIDMode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -60,13 +61,12 @@ public class SPsync implements PluginMessageListener {
             }
 
             if (ob.getSyncType().equals(SyncType.UPDATEPLAYER)) {
-                SyncUpdatePlayer sd = (SyncUpdatePlayer) ob;
-                UUID u = sd.getUUID();
-                Cache.removefromCache(u);
+                PlayerData pd = (PlayerData) ob;
+                Cache.insertIntoCache(pd.getUniqueId(), pd);
             } else if (ob.getSyncType().equals(SyncType.MESSAGE) || ob.getSyncType().equals(SyncType.MESSAGE_SEMI) ) {
                 SyncMessage sd = (SyncMessage) ob;
-                UUID muid = sd.getUUID();
-                Player p = Bukkit.getPlayer(sd.getUUID());
+                UUID muid = sd.getUniqueId();
+                Player p = Bukkit.getPlayer(sd.getUniqueId());
                 if (p != null) {
                     p.sendMessage(sd.getMessage());
                 } else if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
@@ -89,17 +89,17 @@ public class SPsync implements PluginMessageListener {
                 Bukkit.broadcastMessage(sd.getMessage());
             } else if (ob.getSyncType().equals(SyncType.SYNCONLINEUUID)) {
                 SyncUUID sd = (SyncUUID) ob;
-                Cache.syncOnlineUUIDCache(sd.getOldname(), sd.getNewname(), sd.getUUID());
+                Cache.syncOnlineUUIDCache(sd.getOldname(), sd.getNewname(), sd.getUniqueId());
             } else if (ob.getSyncType().equals(SyncType.PERMISSION)) {
                 SyncPermission sd = (SyncPermission) ob;
                 if (sd.getType() == 1){
-                    if (sd.getUUID() == null){
+                    if (sd.getUniqueId() == null){
                         PermissionINFO.globalpayment = sd.getValue();
                     }else{
-                        PermissionINFO.setPaymentPermission(sd.getUUID(), sd.getValue());
+                        PermissionINFO.setPaymentPermission(sd.getUniqueId(), sd.getValue());
                     }
                 }else{
-                    PermissionINFO.setRPaymentPermission(sd.getUUID(), sd.getValue());
+                    PermissionINFO.setRPaymentPermission(sd.getUniqueId(), sd.getValue());
                 }
             }
         } catch (IOException | ClassNotFoundException e) {

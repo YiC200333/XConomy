@@ -51,7 +51,7 @@ public class XCService implements EconomyService {
 
     @Override
     public boolean hasAccount(UUID uuid) {
-        return DataCon.getPlayerData(uuid).getUniqueId() != null;
+        return DataCon.getPlayerData(uuid) != null;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class XCService implements EconomyService {
         if (XCEconomyCommon.isNonPlayerAccount(identifier)) {
             return true;
         }
-        return DataCon.getPlayerData(identifier).getUniqueId() != null;
+        return DataCon.getPlayerData(identifier) != null;
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")

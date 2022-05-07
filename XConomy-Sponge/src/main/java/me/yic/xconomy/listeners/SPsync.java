@@ -25,6 +25,7 @@ import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.syncdata.*;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.info.SyncType;
+import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.UUIDMode;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.Platform;
@@ -64,12 +65,11 @@ public class SPsync implements RawDataListener {
             }
 
             if (ob.getSyncType().equals(SyncType.UPDATEPLAYER)) {
-                SyncUpdatePlayer sd = (SyncUpdatePlayer) ob;
-                UUID u = sd.getUUID();
-                Cache.removefromCache(u);
+                PlayerData pd = (PlayerData) ob;
+                Cache.insertIntoCache(pd.getUniqueId(), pd);
             } else if (ob.getSyncType().equals(SyncType.MESSAGE) || ob.getSyncType().equals(SyncType.MESSAGE_SEMI) ) {
                 SyncMessage sd = (SyncMessage) ob;
-                UUID muid = sd.getUUID();
+                UUID muid = sd.getUniqueId();
                 User p = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(
                         provide -> provide.get(muid)).get();
 
@@ -96,17 +96,17 @@ public class SPsync implements RawDataListener {
                 Sponge.getServer().getBroadcastChannel().send(Text.of(sd.getMessage()));
             } else if (ob.getSyncType().equals(SyncType.SYNCONLINEUUID)) {
                 SyncUUID sd = (SyncUUID) ob;
-                Cache.syncOnlineUUIDCache(sd.getOldname(), sd.getNewname(), sd.getUUID());
+                Cache.syncOnlineUUIDCache(sd.getOldname(), sd.getNewname(), sd.getUniqueId());
             } else if (ob.getSyncType().equals(SyncType.PERMISSION)) {
                 SyncPermission sd = (SyncPermission) ob;
                 if (sd.getType() == 1){
-                    if (sd.getUUID() == null){
+                    if (sd.getUniqueId() == null){
                         PermissionINFO.globalpayment = sd.getValue();
                     }else{
-                        PermissionINFO.setPaymentPermission(sd.getUUID(), sd.getValue());
+                        PermissionINFO.setPaymentPermission(sd.getUniqueId(), sd.getValue());
                     }
                 }else{
-                    PermissionINFO.setRPaymentPermission(sd.getUUID(), sd.getValue());
+                    PermissionINFO.setRPaymentPermission(sd.getUniqueId(), sd.getValue());
                 }
             }
         } catch (IOException | ClassNotFoundException e) {

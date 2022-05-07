@@ -25,7 +25,6 @@ import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.syncdata.SyncBalanceAll;
-import me.yic.xconomy.data.syncdata.SyncUpdatePlayer;
 import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.SendPluginMessage;
 import me.yic.xconomy.utils.UUIDMode;
@@ -69,9 +68,6 @@ public class DataCon {
         if (Bukkit.getOnlinePlayers().size() == 0) {
             Cache.clearCache();
         }
-        if (pd == null) {
-            return new PlayerData(null, "*", BigDecimal.ZERO);
-        }
         return pd;
     }
 
@@ -111,7 +107,7 @@ public class DataCon {
 
         Cache.updateIntoCache(u, pd, newvalue);
         if (XConomy.Config.BUNGEECORD_ENABLE) {
-            prepareudpmessage(type, u, pd, isAdd, amount, reason);
+            prepareudpmessage(type, pd, isAdd, amount, reason);
         } else {
             if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
                 Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.save(type, pd, isAdd, amount, reason));
@@ -188,22 +184,22 @@ public class DataCon {
         return mainp;
     }
 
-    public static void prepareudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd, BigDecimal amount, String reason) {
+    public static void prepareudpmessage(String type, PlayerData pd, Boolean isAdd, BigDecimal amount, String reason) {
         if (XConomy.Config.BUNGEECORD_ENABLE) {
             if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
-                Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> sendudpmessage(type, u, pd, isAdd, amount, reason));
+                Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> sendudpmessage(type, pd, isAdd, amount, reason));
             } else {
-                sendudpmessage(type, u, pd, isAdd, amount, reason);
+                sendudpmessage(type, pd, isAdd, amount, reason);
             }
         }
     }
 
-    public static void sendudpmessage(String type, UUID u, PlayerData pd, Boolean isAdd, BigDecimal amount, String command) {
+    public static void sendudpmessage(String type, PlayerData pd, Boolean isAdd, BigDecimal amount, String command) {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
             ObjectOutputStream oos = new ObjectOutputStream(output);
             oos.writeUTF(XConomy.syncversion);
-            oos.writeObject(new SyncUpdatePlayer(XConomy.Config.BUNGEECORD_SIGN, u));
+            oos.writeObject(pd);
             oos.flush();
         } catch (IOException e) {
             e.printStackTrace();

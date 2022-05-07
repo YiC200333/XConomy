@@ -127,7 +127,7 @@ public class Vault extends AbstractEconomy {
         }
 
         PlayerData pd = DataCon.getPlayerData(name);
-        if (pd.getUniqueId() == null) {
+        if (pd == null) {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
         }
 
@@ -187,7 +187,10 @@ public class Vault extends AbstractEconomy {
         if (isNonPlayerAccount(name)) {
             return DataCon.getAccountBalance(name).doubleValue();
         }
-        return DataCon.getPlayerData(name).getBalance().doubleValue();
+        if (hasAccount(name)){
+            return DataCon.getPlayerData(name).getBalance().doubleValue();
+        }
+        return 0;
     }
 
     @Override
@@ -243,7 +246,7 @@ public class Vault extends AbstractEconomy {
         if (isNonPlayerAccount(name)) {
             return true;
         }
-        return DataCon.getPlayerData(name).getUniqueId() != null;
+        return DataCon.getPlayerData(name) != null;
     }
 
     @Override
@@ -253,7 +256,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public boolean hasAccount(OfflinePlayer pp) {
-        return DataCon.getPlayerData(pp.getUniqueId()).isValid();
+        return DataCon.getPlayerData(pp.getUniqueId()) != null;
     }
 
     @Override
@@ -304,7 +307,7 @@ public class Vault extends AbstractEconomy {
         }
 
         PlayerData pd = DataCon.getPlayerData(name);
-        if (pd.getUniqueId() == null) {
+        if (pd == null) {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
         }
 
@@ -360,7 +363,7 @@ public class Vault extends AbstractEconomy {
                 return true;
             }
 
-            return DataCon.getPlayerData(name).getUniqueId() == null;
+            return DataCon.getPlayerData(name) == null;
         } else {
             return DataCon.containinfieldslist(name);
         }

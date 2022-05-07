@@ -28,10 +28,10 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Cache {
-    private static final Map<UUID, PlayerData> pds = new ConcurrentHashMap<>();
-    private static final Map<String, UUID> uuids = new ConcurrentHashMap<>();
-    private static final Map<UUID, UUID> sub_uuids = new ConcurrentHashMap<>();
-    public static Map<String, BigDecimal> baltop = new HashMap<>();
+    public static final ConcurrentHashMap<UUID, PlayerData> pds = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, UUID> uuids = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<UUID, UUID> sub_uuids = new ConcurrentHashMap<>();
+    public static LinkedHashMap<String, BigDecimal> baltop = new LinkedHashMap<>();
     public static List<String> baltop_papi = new ArrayList<>();
     public static BigDecimal sumbalance = BigDecimal.ZERO;
 

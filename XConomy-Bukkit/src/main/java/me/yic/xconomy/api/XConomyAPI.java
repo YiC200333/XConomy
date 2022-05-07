@@ -140,11 +140,6 @@ public class XConomyAPI {
     }
 
 
-    @Deprecated
-    public UUID translateUUID(String playername) {
-        return DataCon.getPlayerData(playername).getUniqueId();
-    }
-
 
     @Deprecated
     public BigDecimal getbalance(UUID uid) {

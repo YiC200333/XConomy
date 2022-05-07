@@ -38,7 +38,7 @@ public class XCEconomyCommon {
                 return true;
             }
 
-            return DataCon.getPlayerData(name).getUniqueId() == null;
+            return DataCon.getPlayerData(name) == null;
         }else{
             return DataCon.containinfieldslist(name);
         }

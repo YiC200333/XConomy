@@ -18,22 +18,20 @@
  */
 package me.yic.xconomy.utils;
 
+import me.yic.xconomy.data.syncdata.SyncData;
+import me.yic.xconomy.info.SyncType;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class PlayerData {
-    private final UUID u;
+public class PlayerData extends SyncData {
     private final String name;
     private BigDecimal balance;
 
-    public PlayerData(UUID u, String name, BigDecimal balance) {
-        this.u = u;
+    public PlayerData(String sign, UUID uuid, String name, BigDecimal balance) {
+        super(sign, SyncType.UPDATEPLAYER, uuid);
         this.name = name;
         this.balance = balance;
-    }
-
-    public UUID getUniqueId() {
-        return u;
     }
 
     public String getName() {
@@ -46,10 +44,6 @@ public class PlayerData {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
-    }
-
-    public boolean isValid() {
-        return this.u != null && this.balance != null;
     }
 
 }

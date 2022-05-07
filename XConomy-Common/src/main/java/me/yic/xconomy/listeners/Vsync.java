@@ -70,7 +70,7 @@ public class Vsync {
             if (ob instanceof SyncMessage) {
                 SyncMessage sd = (SyncMessage) ob;
                 if (sd.getSyncType().equals(SyncType.MESSAGE)) {
-                    ProxiedPlayer p = ProxyServer.getInstance().getPlayer(sd.getUUID());
+                    ProxiedPlayer p = ProxyServer.getInstance().getPlayer(sd.getUniqueId());
                     if (p == null) {
                         return;
                     }

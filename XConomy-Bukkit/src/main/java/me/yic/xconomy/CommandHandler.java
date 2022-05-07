@@ -92,10 +92,10 @@ public class CommandHandler {
                                 syncpr(1, null, vv);
                             }else{
                                 PlayerData pd = DataCon.getPlayerData(args[1]);
-                                UUID targetUUID = pd.getUniqueId();
-                                if (targetUUID == null) {
+                                if (pd == null) {
                                     sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                                 } else {
+                                    UUID targetUUID = pd.getUniqueId();
                                     String realname = pd.getName();
                                     PermissionINFO.setPaymentPermission(targetUUID, vv);
                                     sendMessages(sender, translateColorCodes("personal_permissions_change").replace("%permission%", "pay")
@@ -149,11 +149,10 @@ public class CommandHandler {
                             return true;
                         }
                         PlayerData pd = DataCon.getPlayerData(args[0]);
-                        UUID targetUUID = pd.getUniqueId();
-                        if (targetUUID == null) {
+                        if (pd == null) {
                             sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                         } else {
-
+                            UUID targetUUID = pd.getUniqueId();
                             Player target = DataCon.getplayer(args[0]);
                             String realname = pd.getName();
                             PermissionINFO.setRPaymentPermission(((Player) sender).getUniqueId());
@@ -220,13 +219,13 @@ public class CommandHandler {
                         }
 
                         PlayerData pd = DataCon.getPlayerData(args[1]);
-                        UUID targetUUID = pd.getUniqueId();
 
-                        if (targetUUID == null) {
+                        if (pd == null) {
                             sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                             return true;
                         }
 
+                        UUID targetUUID = pd.getUniqueId();
                         if (args[0].equalsIgnoreCase("hide")) {
                             DataLink.setTopBalHide(targetUUID, 1);
                             sendMessages(sender, PREFIX + translateColorCodes("top_hidden").replace("%player%", args[1]));
@@ -301,12 +300,12 @@ public class CommandHandler {
 
                 Player target = DataCon.getplayer(args[0]);
                 PlayerData pd = DataCon.getPlayerData(args[0]);
-                UUID targetUUID = pd.getUniqueId();
-                if (targetUUID == null) {
+                if (pd == null) {
                     sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                     return true;
                 }
 
+                UUID targetUUID = pd.getUniqueId();
                 String realname = pd.getName();
                 if (PermissionINFO.getRPaymentPermission(targetUUID)) {
                     if (XConomy.foundvaultOfflinePermManager) {
@@ -415,11 +414,11 @@ public class CommandHandler {
                         }
 
                         PlayerData pd = DataCon.getPlayerData(args[0]);
-                        UUID targetUUID = pd.getUniqueId();
-                        if (targetUUID == null) {
+                        if (pd == null) {
                             sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                             return true;
                         }
+                        UUID targetUUID = pd.getUniqueId();
                         String realname = pd.getName();
 
                         BigDecimal targetBalance = DataCon.getPlayerData(targetUUID).getBalance();
@@ -452,13 +451,13 @@ public class CommandHandler {
                         String amountFormatted = DataFormat.shown(amount);
                         Player target = DataCon.getplayer(args[1]);
                         PlayerData pd = DataCon.getPlayerData(args[1]);
-                        UUID targetUUID = pd.getUniqueId();
 
-                        if (targetUUID == null) {
+                        if (pd == null) {
                             sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                             return true;
                         }
 
+                        UUID targetUUID = pd.getUniqueId();
                         String realname = pd.getName();
 
                         String com = commandName + " " + args[0] + " " + args[1] + " " + amount;

@@ -96,12 +96,12 @@ public class XCVirtualAccount implements VirtualAccount {
                     DummyObjectProvider.createFor(TransactionType.class, "SET"));
         }
         PlayerData pd = DataCon.getPlayerData(account);
-        UUID playeruuid = pd.getUniqueId();
-        if (playeruuid == null) {
+        if (pd == null) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED,
                     DummyObjectProvider.createFor(TransactionType.class, "SET"));
         }
+        UUID playeruuid = pd.getUniqueId();
         DataCon.changeplayerdata("PLUGIN", playeruuid, amount, null, "SETBALANCE");
         return new XCTransactionResult(this,
                 currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS,
@@ -127,12 +127,12 @@ public class XCVirtualAccount implements VirtualAccount {
                     DummyObjectProvider.createFor(TransactionType.class, "RESET"));
         }
         PlayerData pd = DataCon.getPlayerData(account);
-        UUID playeruuid = pd.getUniqueId();
-        if (playeruuid == null) {
+        if (pd == null) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED,
                     DummyObjectProvider.createFor(TransactionType.class, "RESET"));
         }
+        UUID playeruuid = pd.getUniqueId();
         DataCon.changeplayerdata("PLUGIN", playeruuid, getDefaultBalance(currency), null, "RESETBALANCE");
         return new XCTransactionResult(this,
                 currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS,
@@ -161,11 +161,11 @@ public class XCVirtualAccount implements VirtualAccount {
                     currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.DEPOSIT);
         }
         PlayerData pd = DataCon.getPlayerData(account);
-        UUID playeruuid = pd.getUniqueId();
-        if (playeruuid == null) {
+        if (pd == null) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.DEPOSIT);
         }
+        UUID playeruuid = pd.getUniqueId();
         DataCon.changeplayerdata("PLUGIN", playeruuid, amountFormatted, true, "N/A");
         return new XCTransactionResult(this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.DEPOSIT);
@@ -192,11 +192,11 @@ public class XCVirtualAccount implements VirtualAccount {
                     currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.WITHDRAW);
         }
         PlayerData pd = DataCon.getPlayerData(account);
-        UUID playeruuid = pd.getUniqueId();
-        if (playeruuid == null) {
+        if (pd == null) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
         }
+        UUID playeruuid = pd.getUniqueId();
         DataCon.changeplayerdata("PLUGIN", playeruuid, amountFormatted, false, "N/A");
         return new XCTransactionResult(this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.WITHDRAW);

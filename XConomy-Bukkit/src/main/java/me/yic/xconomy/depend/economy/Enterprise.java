@@ -148,7 +148,7 @@ public class Enterprise implements AdvancedEconomy {
     @Override
     public Wallet getWallet(String name) {
         PlayerData pd = DataCon.getPlayerData(name);
-        if (pd.getUniqueId() != null) {
+        if (pd != null) {
             return getWallet(pd.getUniqueId());
         }
         return null;

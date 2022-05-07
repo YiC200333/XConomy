@@ -66,7 +66,7 @@ public class XCUniqueAccount implements UniqueAccount {
 
     @Override
     public BigDecimal getBalance(Currency currency, Set<Context> contexts) {
-        if (DataCon.getPlayerData(uuid).isValid()) {
+        if (DataCon.getPlayerData(uuid) != null) {
             return DataCon.getPlayerData(uuid).getBalance();
         } else {
             return BigDecimal.ZERO;

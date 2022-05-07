@@ -94,10 +94,10 @@ public class CommandCore {
                                 syncpr(1, null, vv);
                             }else{
                                 PlayerData pd = DataCon.getPlayerData(args[1]);
-                                UUID targetUUID = pd.getUniqueId();
-                                if (targetUUID == null) {
+                                if (pd == null) {
                                     sender.sendMessages(Text.of(PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT)));
                                 } else {
+                                    UUID targetUUID = pd.getUniqueId();
                                     String realname = pd.getName();
                                     PermissionINFO.setPaymentPermission(targetUUID, vv);
                                     sender.sendMessage(Text.of(translateColorCodes("personal_permissions_change").replace("%permission%", "pay")
@@ -109,10 +109,10 @@ public class CommandCore {
                         }
                     } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
                         PlayerData pd = DataCon.getPlayerData(args[1]);
-                        UUID targetUUID = pd.getUniqueId();
-                        if (targetUUID == null) {
+                        if (pd == null) {
                             sender.sendMessages(Text.of(PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT)));
                         } else {
+                            UUID targetUUID = pd.getUniqueId();
                             String realname = pd.getName();
                             PermissionINFO.setPaymentPermission(targetUUID, null);
                             sender.sendMessage(Text.of(translateColorCodes("personal_permissions_change").replace("%permission%", "pay")
@@ -151,11 +151,10 @@ public class CommandCore {
                             return CommandResult.success();
                         }
                         PlayerData pd = DataCon.getPlayerData(args[0]);
-                        UUID targetUUID = pd.getUniqueId();
-                        if (targetUUID == null) {
+                        if (pd == null) {
                             sender.sendMessages(Text.of(PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT)));
                         } else {
-
+                            UUID targetUUID = pd.getUniqueId();
                             User target = DataCon.getplayer(args[0]);
                             String realname = pd.getName();
                             PermissionINFO.setRPaymentPermission(((Player) sender).getUniqueId());
@@ -222,13 +221,13 @@ public class CommandCore {
                         }
 
                         PlayerData pd = DataCon.getPlayerData(args[1]);
-                        UUID targetUUID = pd.getUniqueId();
 
-                        if (targetUUID == null) {
+                        if (pd == null) {
                             sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_account")));
                             return CommandResult.success();
                         }
 
+                        UUID targetUUID = pd.getUniqueId();
                         if (args[0].equalsIgnoreCase("hide")) {
                             DataLink.setTopBalHide(targetUUID, 1);
                             sender.sendMessage(Text.of(PREFIX + translateColorCodes("top_hidden").replace("%player%", args[1])));
@@ -300,11 +299,11 @@ public class CommandCore {
 
                 User target = DataCon.getplayer(args[0]);
                 PlayerData pd = DataCon.getPlayerData(args[0]);
-                UUID targetUUID = pd.getUniqueId();
-                if (targetUUID == null) {
+                if (pd == null) {
                     sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_account")));
                     return CommandResult.success();
                 }
+                UUID targetUUID = pd.getUniqueId();
                 String realname = pd.getName();
 
                 if (target !=null && !target.hasPermission("xconomy.user.pay.receive")) {
@@ -373,11 +372,11 @@ public class CommandCore {
                         }
 
                         PlayerData pd = DataCon.getPlayerData(args[0]);
-                        UUID targetUUID = pd.getUniqueId();
-                        if (targetUUID == null) {
+                        if (pd == null) {
                             sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_account")));
                             return CommandResult.success();
                         }
+                        UUID targetUUID = pd.getUniqueId();
                         String realname = pd.getName();
 
                         BigDecimal targetBalance = DataCon.getPlayerData(targetUUID).getBalance();
@@ -410,12 +409,12 @@ public class CommandCore {
                         String amountFormatted = DataFormat.shown(amount);
                         User target = DataCon.getplayer(args[1]);
                         PlayerData pd = DataCon.getPlayerData(args[1]);
-                        UUID targetUUID = pd.getUniqueId();
-                        if (targetUUID == null) {
+                        if (pd == null) {
                             sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_account")));
                             return CommandResult.success();
                         }
 
+                        UUID targetUUID = pd.getUniqueId();
                         String realname = pd.getName();
 
                         String com = commandName + " " + args[0] + " " + args[1] + " " + amount;
