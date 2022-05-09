@@ -8,7 +8,7 @@ body:
       placeholder: What version of XConomy do you use?
     validations:
       required: true
-  - type: 'textarea'
+  - type: textarea
     attributes:
       label: Issues
       placeholder: 'Describe your issues'
