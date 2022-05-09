@@ -7,10 +7,10 @@ assignees: ''
 
 ---
 
-**What version of XConomy do you use?**  
+**Version of XConomy**  
 XConomy V2.0.0
 
-**What is your server version**  
+**Server version**  
 Spigot 1.17.1
 
 **Describe the issues**  
