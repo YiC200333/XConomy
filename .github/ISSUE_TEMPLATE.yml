@@ -1,7 +1,5 @@
----
 name: Issues Report
 about: Report issues with XConomy
----
 body:
   - type: input
     attributes:
