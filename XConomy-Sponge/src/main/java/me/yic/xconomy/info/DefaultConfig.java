@@ -48,8 +48,8 @@ public class DefaultConfig {
     public BigDecimal PAYMENT_TAX = BigDecimal.ZERO;
     public int RANKING_SIZE = getrankingsize();
     public int LINES_PER_PAGE = config.getNode("Settings", "lines-per-page").getInt();
-    //public boolean DISABLE_CACHE = config.getNode("Settings", "disable-cache").getBoolean();
-    public boolean DISABLE_CACHE = false;
+    public boolean DISABLE_CACHE = config.getNode("Settings", "disable-cache").getBoolean();
+
     public boolean TRANSACTION_RECORD = config.getNode("Settings", "transaction-record").getBoolean();
     public boolean PAY_TIPS = false;
     public boolean USERNAME_IGNORE_CASE = config.getNode("Settings", "username-ignore-case").getBoolean();
