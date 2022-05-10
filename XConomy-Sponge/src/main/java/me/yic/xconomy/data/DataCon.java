@@ -21,7 +21,6 @@ package me.yic.xconomy.data;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
-import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.syncdata.SyncBalanceAll;
 import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.SendPluginMessage;
@@ -39,7 +38,7 @@ import java.util.UUID;
 
 public class DataCon{
     public static PlayerData getPlayerData(UUID uuid) {
-        return getPlayerDatai(Cache.getSubUUID(uuid));
+        return getPlayerDatai(uuid);
     }
 
     public static PlayerData getPlayerData(String username) {
@@ -156,21 +155,16 @@ public class DataCon{
     }
 
 
-    public static User getplayer(String name) {
-        PlayerData pd = getPlayerData(name);
-        UUID u = pd.getUniqueId();
-        Optional<Object> mainp = Optional.empty();
-        if (u != null) {
-            mainp = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(u));
-            if (!mainp.isPresent() && XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-                UUID subu = CacheSemiOnline.CacheSubUUID_getsubuuid(u.toString());
-                if (subu != null) {
-                    Optional<Object> subp = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(subu));
-                    return (User) subp.orElse(null);
-                }
+    public static User getplayer(PlayerData pd) {
+        Optional<Object> p = Optional.empty();
+        if (pd != null) {
+            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)){
+                p = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(pd.getName()));
+            }else{
+                p = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(pd.getUniqueId()));
             }
         }
-        return (User) mainp.orElse(null);
+        return (User) p.orElse(null);
     }
 
 

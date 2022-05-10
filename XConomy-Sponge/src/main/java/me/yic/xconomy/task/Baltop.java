@@ -40,7 +40,7 @@ public class Baltop implements Runnable {
         }else{
             if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
                 for (Player pp : Sponge.getServer().getOnlinePlayers()) {
-                    DataLink.updatelogininfo(pp.getUniqueId().toString());
+                    DataLink.updatelogininfo(pp.getUniqueId());
                 }
             }
         }

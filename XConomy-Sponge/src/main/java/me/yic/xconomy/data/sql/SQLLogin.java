@@ -21,6 +21,7 @@ package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.command.CommandCore;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.utils.UUIDMode;
 import org.spongepowered.api.entity.living.player.Player;
@@ -35,7 +36,7 @@ import java.util.UUID;
 
 public class SQLLogin extends SQL {
 
-    public static void updatelogininfo(String uuid) {
+    public static void updatelogininfo(UUID uuid) {
         Connection connection = database.getConnectionAndCheck();
         Date dd = new Date();
         String sd = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(dd);
@@ -43,9 +44,9 @@ public class SQLLogin extends SQL {
             String sql = "INSERT INTO " + tableLoginName + " (UUID,last_time) values(?,?) ON DUPLICATE KEY UPDATE last_time = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-                statement.setString(1, Cache.getSubUUID(UUID.fromString(uuid)).toString());
+                statement.setString(1, DataCon.getPlayerData(uuid).getUniqueId().toString());
             }else{
-                statement.setString(1, uuid);
+                statement.setString(1, uuid.toString());
             }
             statement.setString(2, sd);
             statement.setString(3, sd);
@@ -67,7 +68,7 @@ public class SQLLogin extends SQL {
                     "where operation = 'WITHDRAW' and type = 'PLAYER_COMMAND' and command like('pay " + pp.getName() + "%') and datetime > " +
                     "(select last_time from xconomylogin where UUID = ?);");
             if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-                statement.setString(1, Cache.getSubUUID(UUID.fromString(pp.getUniqueId().toString())).toString());
+                statement.setString(1, DataCon.getPlayerData(pp.getUniqueId()).getUniqueId().toString());
             }else{
                 statement.setString(1, pp.getUniqueId().toString());
             }
@@ -76,7 +77,7 @@ public class SQLLogin extends SQL {
 
             while (rs.next()) {
                 String otherp = rs.getString(1);
-                String amount = rs.getString(2);
+                double amount = rs.getDouble(2);
                 CommandCore.sendMessages(pp, otherp, amount);
             }
 

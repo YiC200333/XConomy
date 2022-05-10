@@ -74,6 +74,13 @@ public class Vsync {
                     if (p == null) {
                         return;
                     }
+                }else if(sd.getSyncType().equals(SyncType.MESSAGE_SEMI)) {
+                    ProxiedPlayer p = ProxyServer.getInstance().getPlayer(sd.getName());
+                    if (p == null) {
+                        return;
+                    }else{
+                        sd.setRUniqueId(p.getUniqueId());
+                    }
                 }
             }
 

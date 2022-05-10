@@ -19,14 +19,11 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import me.yic.xconomy.data.sql.SQLLogin;
 import me.yic.xconomy.data.sql.SQLUpdateTable;
 import me.yic.xconomy.utils.PlayerData;
-import me.yic.xconomy.utils.UUIDMode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 
@@ -70,10 +67,6 @@ public class DataLink {
             return false;
         }
 
-        if (!CacheSemiOnline.createfile()) {
-            return false;
-        }
-
         XConomy.getInstance().logger("XConomy加载成功", 0, null);
         return true;
     }
@@ -86,7 +79,7 @@ public class DataLink {
         SQLCreateNewAccount.newPlayer(a);
     }
 
-    public static void updatelogininfo(String uid) {
+    public static void updatelogininfo(UUID uid) {
         if (XConomy.DConfig.canasync) {
             Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> SQLLogin.updatelogininfo(uid));
         } else {
@@ -159,6 +152,8 @@ public class DataLink {
             SQL.tableName = "xconomy_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
             SQL.tableNonPlayerName = "xconomynon_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
             SQL.tableRecordName = "xconomyrecord_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
+            SQL.tableLoginName = "xconomylogin_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
+            SQL.tableUUIDName = "xconomyuuid_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
         }
     }
 

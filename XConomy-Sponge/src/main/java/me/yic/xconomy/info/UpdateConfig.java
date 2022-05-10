@@ -32,8 +32,8 @@ public class UpdateConfig {
             XConomy.getInstance().logger(null, 1, "It is recommended to regenerate configuration file");
             XConomy.getInstance().logger(null, 1, "==================================================");
         }
-        //if (config.getNode("Settings","ranking-size").isVirtual()) {
-        //    config.getNode("Settings","ranking-size").setValue(10);
+        //if (config.getNode("force-mode").isVirtual()) {
+        //    config.getNode("force-mode").setValue(false);
         //    update = true;
         //}
         return update;

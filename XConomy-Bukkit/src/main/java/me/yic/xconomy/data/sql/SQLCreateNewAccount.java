@@ -23,7 +23,6 @@ import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.GetUUID;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.syncdata.SyncUUID;
 import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.SendPluginMessage;
@@ -147,7 +146,7 @@ public class SQLCreateNewAccount extends SQL {
                     if (!XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                         kickplayer(player, 0, uid);
                     } else {
-                        CacheSemiOnline.CacheSubUUID_checkUser(uid, uuid, player);
+                        createDUUIDLink(uuid.toString(), uid, connection);
                     }
                 }
             }
@@ -194,6 +193,29 @@ public class SQLCreateNewAccount extends SQL {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void createDUUIDLink(String UUID, String DUUID, Connection co_a) {
+        try {
+            String query;
+            if (XConomy.DConfig.isMySQL()) {
+                query = "INSERT INTO " + tableUUIDName + "(UUID,DUUID) values(?,?) ON DUPLICATE KEY UPDATE DUUID = ?";
+            }else{
+                query = "INSERT INTO " + tableUUIDName + "(UUID,DUUID) values(?,?)";
+            }
+            PreparedStatement statement = co_a.prepareStatement(query);
+            statement.setString(1, UUID);
+            statement.setString(2, DUUID);
+            if (XConomy.DConfig.isMySQL()) {
+                statement.setString(3, DUUID);
+            }
+
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private static void updateUser(String UID, String user, Connection co_a) {

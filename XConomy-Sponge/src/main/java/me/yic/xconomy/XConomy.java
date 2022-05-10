@@ -24,7 +24,6 @@ import me.yic.xconomy.command.*;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
-import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.depend.economyapi.XCService;
 import me.yic.xconomy.depend.economyapi.XCurrency;
@@ -232,7 +231,6 @@ public class XConomy {
         }
 
         refresherTask.shutdown();
-        CacheSemiOnline.save();
         SQL.close();
         logger("XConomy已成功卸载", 0, null);
     }

@@ -39,6 +39,7 @@ public class SQL {
     public static String tableName = "xconomy";
     public static String tableNonPlayerName = "xconomynon";
     public static String tableRecordName = "xconomyrecord";
+    public static String tableUUIDName = "xconomyuuid";
     public static String tableLoginName = "xconomylogin";
     public final static DatabaseConnection database = new DatabaseConnection();
     static final String encoding = XConomy.DConfig.ENCODING;
@@ -97,6 +98,7 @@ public class SQL {
                     + " primary key (id)) default charset = " + encoding + ";";
             String query4 = "create table if not exists " + tableLoginName
                     + "(UUID varchar(50) not null, last_time datetime not null, " + "primary key (UUID)) default charset = " + encoding + ";";
+            String query5;
             if (XConomy.DConfig.isMySQL()) {
                 query1 = "create table if not exists " + tableName
                         + "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, hidden int(5) not null, "
@@ -104,6 +106,9 @@ public class SQL {
                 query2 = "create table if not exists " + tableNonPlayerName
                         + "(account varchar(50) not null, balance double(20,2) not null, "
                         + "primary key (account)) default charset = " + encoding + ";";
+                query5 = "create table if not exists " + tableUUIDName
+                        + "(UUID varchar(50) not null, DUUID varchar(50) not null, " +
+                        "primary key (UUID)) default charset = " + encoding + ";";
             } else {
                 query1 = "create table if not exists " + tableName
                         + "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, hidden int(5) not null, "
@@ -111,11 +116,17 @@ public class SQL {
                 query2 = "create table if not exists " + tableNonPlayerName
                         + "(account varchar(50) not null, balance double(20,2) not null, "
                         + "primary key (account));";
+                query5 = "create table if not exists " + tableUUIDName
+                        + "(UUID varchar(50) not null, DUUID varchar(50) not null, " +
+                        "primary key (UUID));";
             }
 
             statement.executeUpdate(query1);
             if (XConomy.Config.NON_PLAYER_ACCOUNT) {
                 statement.executeUpdate(query2);
+            }
+            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                statement.executeUpdate(query5);
             }
             if (XConomy.DConfig.isMySQL() && XConomy.Config.TRANSACTION_RECORD) {
                 statement.executeUpdate(query3);
@@ -131,21 +142,33 @@ public class SQL {
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
+
     public static void getPlayerData(UUID uuid) {
         try {
             Connection connection = database.getConnectionAndCheck();
+
             PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
             statement.setString(1, uuid.toString());
 
             ResultSet rs = statement.executeQuery();
-
+            BigDecimal cacheThisAmt = null;
+            UUID duuid = uuid;
             if (rs.next()) {
-                BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
-                if (cacheThisAmt != null) {
-                    PlayerData bd = new PlayerData(XConomy.Config.BUNGEECORD_SIGN, uuid, rs.getString(2), cacheThisAmt);
-                    Cache.insertIntoCache(uuid, bd);
+                cacheThisAmt = DataFormat.formatString(rs.getString(3));
+            }else if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)){
+                rs.close();
+                statement = connection.prepareStatement("select * from " + tableName + " where UID = (select DUUID from " + tableUUIDName + " where UUID = ?)");
+                statement.setString(1, uuid.toString());
+                rs = statement.executeQuery();
+                if (rs.next()) {
+                    duuid = UUID.fromString(rs.getString(1));
+                    cacheThisAmt = DataFormat.formatString(rs.getString(3));
                 }
+            }
+
+            if (cacheThisAmt != null) {
+                PlayerData bd = new PlayerData(XConomy.Config.BUNGEECORD_SIGN, duuid, rs.getString(2), cacheThisAmt);
+                Cache.insertIntoCache(uuid, bd);
             }
 
             rs.close();

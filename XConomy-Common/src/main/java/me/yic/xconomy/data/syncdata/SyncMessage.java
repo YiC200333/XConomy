@@ -24,11 +24,33 @@ import java.util.UUID;
 
 public class SyncMessage extends SyncData{
 
+    private String name;
+    private UUID ruuid;
     private String message;
 
     public SyncMessage(String sign, SyncType st, UUID uuid, String message){
         super(sign, st, uuid);
         this.message = message;
+        this.name = null;
+        this.ruuid = null;
+    }
+
+    public SyncMessage(String sign, SyncType st, String name, String message){
+        super(sign, st, null);
+        this.message = message;
+        this.name = name;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public UUID getRUniqueId(){
+        return ruuid;
+    }
+
+    public void setRUniqueId(UUID ruuid){
+        this.ruuid = ruuid;
     }
 
     public String getMessage(){

@@ -155,7 +155,7 @@ public class CommandCore {
                             sender.sendMessages(Text.of(PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT)));
                         } else {
                             UUID targetUUID = pd.getUniqueId();
-                            User target = DataCon.getplayer(args[0]);
+                            User target = DataCon.getplayer(pd);
                             String realname = pd.getName();
                             PermissionINFO.setRPaymentPermission(((Player) sender).getUniqueId());
 
@@ -223,7 +223,7 @@ public class CommandCore {
                         PlayerData pd = DataCon.getPlayerData(args[1]);
 
                         if (pd == null) {
-                            sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_account")));
+                            sender.sendMessage(Text.of(PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT)));
                             return CommandResult.success();
                         }
 
@@ -297,12 +297,12 @@ public class CommandCore {
                     return CommandResult.success();
                 }
 
-                User target = DataCon.getplayer(args[0]);
                 PlayerData pd = DataCon.getPlayerData(args[0]);
                 if (pd == null) {
-                    sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_account")));
+                    sender.sendMessage(Text.of(PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT)));
                     return CommandResult.success();
                 }
+                User target = DataCon.getplayer(pd);
                 UUID targetUUID = pd.getUniqueId();
                 String realname = pd.getName();
 
@@ -311,7 +311,7 @@ public class CommandCore {
                     return CommandResult.success();
                 }
 
-                BigDecimal bal_target = DataCon.getPlayerData(targetUUID).getBalance();
+                BigDecimal bal_target = pd.getBalance();
                 if (DataFormat.isMAX(bal_target.add(amount))) {
                     sender.sendMessage(Text.of(PREFIX + translateColorCodes("over_maxnumber")));
                     return CommandResult.success();
@@ -373,13 +373,12 @@ public class CommandCore {
 
                         PlayerData pd = DataCon.getPlayerData(args[0]);
                         if (pd == null) {
-                            sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_account")));
+                            sender.sendMessage(Text.of(PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT)));
                             return CommandResult.success();
                         }
-                        UUID targetUUID = pd.getUniqueId();
                         String realname = pd.getName();
 
-                        BigDecimal targetBalance = DataCon.getPlayerData(targetUUID).getBalance();
+                        BigDecimal targetBalance = pd.getBalance();
                         sender.sendMessage(Text.of(PREFIX + translateColorCodes("balance_other")
                                 .replace("%player%", realname)
                                 .replace("%balance%", DataFormat.shown((targetBalance)))));
@@ -407,13 +406,13 @@ public class CommandCore {
 
                         BigDecimal amount = DataFormat.formatString(args[2]);
                         String amountFormatted = DataFormat.shown(amount);
-                        User target = DataCon.getplayer(args[1]);
                         PlayerData pd = DataCon.getPlayerData(args[1]);
                         if (pd == null) {
-                            sender.sendMessage(Text.of(PREFIX + translateColorCodes("no_account")));
+                            sender.sendMessage(Text.of(PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT)));
                             return CommandResult.success();
                         }
 
+                        User target = DataCon.getplayer(pd);
                         UUID targetUUID = pd.getUniqueId();
                         String realname = pd.getName();
 
@@ -436,7 +435,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                BigDecimal bal = DataCon.getPlayerData(targetUUID).getBalance();
+                                BigDecimal bal = pd.getBalance();
                                 if (DataFormat.isMAX(bal.add(amount))) {
                                     sender.sendMessage(Text.of(PREFIX + translateColorCodes("over_maxnumber")));
                                     if (target != null && target.isOnline()) {
@@ -482,7 +481,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                BigDecimal bal = DataCon.getPlayerData(targetUUID).getBalance();
+                                BigDecimal bal = pd.getBalance();
                                 if (bal.compareTo(amount) < 0) {
                                     sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_take_fail")
                                             .replace("%player%", realname)
@@ -698,10 +697,10 @@ public class CommandCore {
         return !MessagesManager.messageFile.getString(message).equals("");
     }
 
-    public static void sendMessages(Player sender, String name, String amount) {
+    public static void sendMessages(Player sender, String name, double amount) {
         String mess = PREFIX + translateColorCodes("pay_receive")
                 .replace("%player%", name)
-                .replace("%amount%", amount);
+                .replace("%amount%", DataFormat.shown(amount));
         sender.sendMessage(Text.of(mess));
     }
 
@@ -819,7 +818,7 @@ public class CommandCore {
                     oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE, u, message));
                 }
             } else {
-                oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.BROADCAST, null, message));
+                oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.BROADCAST, "", message));
             }
             oos.flush();
         } catch (IOException e) {

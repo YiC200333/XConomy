@@ -23,7 +23,6 @@ import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.Updater;
-import me.yic.xconomy.utils.UUIDMode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -44,7 +43,7 @@ public class ConnectionListeners implements Listener {
             TabList.PlayerList.remove(event.getPlayer().getName());
         }
         if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
-            DataLink.updatelogininfo(event.getPlayer().getUniqueId().toString());
+            DataLink.updatelogininfo(event.getPlayer().getUniqueId());
         }
     }
 
@@ -53,9 +52,9 @@ public class ConnectionListeners implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player a = event.getPlayer();
 
-        if (!XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-            Cache.removefromCache(a.getUniqueId());
-        }
+        //if (!XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+        //    Cache.removefromCache(a.getUniqueId());
+        //}
 
         if (XConomy.DConfig.canasync) {
             Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.newPlayer(a));

@@ -21,12 +21,10 @@ package me.yic.xconomy.listeners;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.syncdata.*;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.info.SyncType;
 import me.yic.xconomy.utils.PlayerData;
-import me.yic.xconomy.utils.UUIDMode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -66,17 +64,12 @@ public class SPsync implements PluginMessageListener {
             } else if (ob.getSyncType().equals(SyncType.MESSAGE) || ob.getSyncType().equals(SyncType.MESSAGE_SEMI) ) {
                 SyncMessage sd = (SyncMessage) ob;
                 UUID muid = sd.getUniqueId();
-                Player p = Bukkit.getPlayer(sd.getUniqueId());
+                if (ob.getSyncType().equals(SyncType.MESSAGE_SEMI)){
+                    muid = sd.getRUniqueId();
+                }
+                Player p = Bukkit.getPlayer(muid);
                 if (p != null) {
                     p.sendMessage(sd.getMessage());
-                } else if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-                    UUID suid = CacheSemiOnline.CacheSubUUID_getsubuuid(muid.toString());
-                    if (suid != null) {
-                        Player sp = Bukkit.getPlayer(suid);
-                        if (sp != null) {
-                            sp.sendMessage(sd.getMessage());
-                        }
-                    }
                 }
             } else if (ob.getSyncType().equals(SyncType.BALANCEALL)) {
                 SyncBalanceAll sd = (SyncBalanceAll) ob;

@@ -24,6 +24,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 
+@SuppressWarnings("unused")
 public class UpdateConfig {
 
     public static boolean update(FileConfiguration config, File cc) {
@@ -36,11 +37,11 @@ public class UpdateConfig {
             XConomy.getInstance().logger(null, 1, "It is recommended to regenerate configuration file");
             XConomy.getInstance().logger(null, 1, "==================================================");
         }
-        if (!ck.contains("Settings.offline-pay-transfer-tips")) {
-            config.createSection("Settings.offline-pay-transfer-tips");
-            config.set("Settings.offline-pay-transfer-tips", false);
-            update = true;
-        }
+        //if (!ck.contains("force-mode")) {
+        //    config.createSection("force-mode");
+        //    config.set("force-mode", false);
+        //    update = true;
+        //}
         return update;
     }
 }

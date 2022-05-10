@@ -39,7 +39,7 @@ public class ConnectionListeners {
             Cache.clearCache();
         }
         if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
-            DataLink.updatelogininfo(event.getTargetEntity().getUniqueId().toString());
+            DataLink.updatelogininfo(event.getTargetEntity().getUniqueId());
         }
     }
 

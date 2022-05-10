@@ -153,7 +153,7 @@ public class CommandHandler {
                             sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                         } else {
                             UUID targetUUID = pd.getUniqueId();
-                            Player target = DataCon.getplayer(args[0]);
+                            Player target = DataCon.getplayer(pd);
                             String realname = pd.getName();
                             PermissionINFO.setRPaymentPermission(((Player) sender).getUniqueId());
 
@@ -170,7 +170,7 @@ public class CommandHandler {
                                 mess = translateColorCodes(MessageConfig.PAYTOGGLE_FALSE);
                             }
                             if (target == null) {
-                                broadcastSendMessage(false, targetUUID, mess);
+                                broadcastSendMessage(false, pd, mess);
                                 return true;
                             }
 
@@ -298,13 +298,13 @@ public class CommandHandler {
                     return true;
                 }
 
-                Player target = DataCon.getplayer(args[0]);
                 PlayerData pd = DataCon.getPlayerData(args[0]);
                 if (pd == null) {
                     sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                     return true;
                 }
 
+                Player target = DataCon.getplayer(pd);
                 UUID targetUUID = pd.getUniqueId();
                 String realname = pd.getName();
                 if (PermissionINFO.getRPaymentPermission(targetUUID)) {
@@ -321,7 +321,7 @@ public class CommandHandler {
 
                 //Cache.refreshFromCache(targetUUID);
 
-                BigDecimal bal_target = DataCon.getPlayerData(targetUUID).getBalance();
+                BigDecimal bal_target = pd.getBalance();
                 if (DataFormat.isMAX(bal_target.add(amount))) {
                     sendMessages(sender, PREFIX + translateColorCodes("over_maxnumber"));
                     return true;
@@ -339,7 +339,7 @@ public class CommandHandler {
                         .replace("%amount%", amountFormatted);
 
                 if (target == null) {
-                    broadcastSendMessage(false, targetUUID, mess);
+                    broadcastSendMessage(false, pd, mess);
                     return true;
                 }
 
@@ -418,10 +418,9 @@ public class CommandHandler {
                             sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                             return true;
                         }
-                        UUID targetUUID = pd.getUniqueId();
                         String realname = pd.getName();
 
-                        BigDecimal targetBalance = DataCon.getPlayerData(targetUUID).getBalance();
+                        BigDecimal targetBalance = pd.getBalance();
                         sendMessages(sender, PREFIX + translateColorCodes("balance_other")
                                 .replace("%player%", realname)
                                 .replace("%balance%", DataFormat.shown((targetBalance))));
@@ -449,7 +448,6 @@ public class CommandHandler {
 
                         BigDecimal amount = DataFormat.formatString(args[2]);
                         String amountFormatted = DataFormat.shown(amount);
-                        Player target = DataCon.getplayer(args[1]);
                         PlayerData pd = DataCon.getPlayerData(args[1]);
 
                         if (pd == null) {
@@ -457,6 +455,7 @@ public class CommandHandler {
                             return true;
                         }
 
+                        Player target = DataCon.getplayer(pd);
                         UUID targetUUID = pd.getUniqueId();
                         String realname = pd.getName();
 
@@ -478,7 +477,7 @@ public class CommandHandler {
 
                                 //Cache.refreshFromCache(targetUUID);
 
-                                BigDecimal bal = DataCon.getPlayerData(targetUUID).getBalance();
+                                BigDecimal bal = pd.getBalance();
                                 if (DataFormat.isMAX(bal.add(amount))) {
                                     sendMessages(sender, PREFIX + translateColorCodes("over_maxnumber"));
                                     if (target != null) {
@@ -503,7 +502,7 @@ public class CommandHandler {
                                     }
 
                                     if (target == null) {
-                                        broadcastSendMessage(false, targetUUID, message);
+                                        broadcastSendMessage(false, pd, message);
                                         return true;
                                     }
 
@@ -525,7 +524,7 @@ public class CommandHandler {
                                 }
 
                                 //Cache.refreshFromCache(targetUUID);
-                                BigDecimal bal = DataCon.getPlayerData(targetUUID).getBalance();
+                                BigDecimal bal = pd.getBalance();
                                 if (bal.compareTo(amount) < 0) {
                                     sendMessages(sender, PREFIX + translateColorCodes("money_take_fail")
                                             .replace("%player%", realname)
@@ -548,7 +547,7 @@ public class CommandHandler {
                                     }
 
                                     if (target == null) {
-                                        broadcastSendMessage(false, targetUUID, mess);
+                                        broadcastSendMessage(false, pd, mess);
                                         return true;
                                     }
 
@@ -579,7 +578,7 @@ public class CommandHandler {
                                     }
 
                                     if (target == null) {
-                                        broadcastSendMessage(false, targetUUID, mess);
+                                        broadcastSendMessage(false, pd, mess);
                                         return true;
                                     }
 
@@ -739,10 +738,10 @@ public class CommandHandler {
         return !MessagesManager.messageFile.getString(message).equals("");
     }
 
-    public static void sendMessages(Player sender, String name, String amount) {
+    public static void sendMessages(Player sender, String name, double amount) {
         sendMessages(sender, PREFIX + translateColorCodes("pay_receive")
                 .replace("%player%", name)
-                .replace("%amount%", amount));
+                .replace("%amount%", DataFormat.shown(amount)));
     }
 
     private static void sendMessages(CommandSender sender, String message) {
@@ -854,7 +853,7 @@ public class CommandHandler {
     }
 
 
-    public static void broadcastSendMessage(boolean ispublic, UUID u, String message) {
+    public static void broadcastSendMessage(boolean ispublic, PlayerData pd, String message) {
         if (!XConomy.Config.BUNGEECORD_ENABLE) {
             return;
         }
@@ -868,13 +867,13 @@ public class CommandHandler {
             ObjectOutputStream oos = new ObjectOutputStream(output);
             oos.writeUTF(XConomy.syncversion);
             if (!ispublic) {
-                if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-                    oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE_SEMI, u, message));
+                if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE) ) {
+                    oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE_SEMI, pd.getName(), message));
                 } else {
-                    oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE, u, message));
+                    oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE, pd.getUniqueId(), message));
                 }
             } else {
-                oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.BROADCAST, null, message));
+                oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.BROADCAST, "", message));
             }
             oos.flush();
         } catch (IOException e) {

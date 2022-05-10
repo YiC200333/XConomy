@@ -21,16 +21,17 @@ package me.yic.xconomy.data.caches;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.GetUUID;
 import me.yic.xconomy.utils.PlayerData;
-import me.yic.xconomy.utils.UUIDMode;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Cache {
     public static final ConcurrentHashMap<UUID, PlayerData> pds = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, UUID> uuids = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<UUID, UUID> sub_uuids = new ConcurrentHashMap<>();
     public static LinkedHashMap<String, BigDecimal> baltop = new LinkedHashMap<>();
     public static List<String> baltop_papi = new ArrayList<>();
     public static BigDecimal sumbalance = BigDecimal.ZERO;
@@ -46,19 +47,6 @@ public class Cache {
                 }
             }
         }
-    }
-
-    public static void insertIntoSUUIDCache(final UUID uuid, final UUID suuid) {
-        sub_uuids.put(suuid, uuid);
-    }
-
-    public static UUID getSubUUID(final UUID uuid) {
-        if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-            if (sub_uuids.containsKey(uuid)) {
-                return sub_uuids.get(uuid);
-            }
-        }
-        return uuid;
     }
 
     public static <T> boolean CacheContainsKey(final T key) {

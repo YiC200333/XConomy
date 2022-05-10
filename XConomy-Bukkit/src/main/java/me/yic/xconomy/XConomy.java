@@ -21,7 +21,6 @@ package me.yic.xconomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
-import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.depend.LoadEconomy;
 import me.yic.xconomy.depend.Placeholder;
@@ -186,7 +185,6 @@ public class XConomy extends JavaPlugin {
         }
 
         refresherTask.cancel();
-        CacheSemiOnline.save();
         SQL.close();
         logger("XConomy已成功卸载", 0, null);
     }

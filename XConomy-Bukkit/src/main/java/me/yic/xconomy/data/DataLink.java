@@ -19,7 +19,6 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import me.yic.xconomy.data.sql.SQLLogin;
@@ -70,9 +69,7 @@ public class DataLink {
             return false;
         }
 
-        if (!CacheSemiOnline.createfile()) {
-            return false;
-        }
+        SemiCacheConvert.start();
 
         XConomy.getInstance().logger("XConomy加载成功", 0, null);
         return true;
@@ -86,7 +83,7 @@ public class DataLink {
         return SQLCreateNewAccount.newPlayer(uid, name, null);
     }
 
-    public static void updatelogininfo(String uid) {
+    public static void updatelogininfo(UUID uid) {
         if (XConomy.DConfig.canasync) {
             Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> SQLLogin.updatelogininfo(uid));
         } else {
@@ -162,6 +159,7 @@ public class DataLink {
             SQL.tableNonPlayerName = "xconomynon_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
             SQL.tableRecordName = "xconomyrecord_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
             SQL.tableLoginName = "xconomylogin_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
+            SQL.tableUUIDName = "xconomyuuid_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
         }
     }
 

@@ -23,7 +23,6 @@ import me.yic.xconomy.api.event.NonPlayerAccountEvent;
 import me.yic.xconomy.api.event.PlayerAccountEvent;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
-import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.syncdata.SyncBalanceAll;
 import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.SendPluginMessage;
@@ -39,7 +38,7 @@ import java.util.UUID;
 
 public class DataCon {
     public static PlayerData getPlayerData(UUID uuid) {
-        return getPlayerDatai(Cache.getSubUUID(uuid));
+        return getPlayerDatai(uuid);
     }
 
     public static PlayerData getPlayerData(String username) {
@@ -90,8 +89,8 @@ public class DataCon {
 
 
     public static void changeplayerdata(String type, UUID uid, BigDecimal amount, Boolean isAdd, String reason) {
-        UUID u = Cache.getSubUUID(uid);
-        PlayerData pd = getPlayerData(u);
+        PlayerData pd = getPlayerData(uid);
+        UUID u = pd.getUniqueId();
         BigDecimal newvalue = amount;
         BigDecimal bal = pd.getBalance();
 
@@ -165,23 +164,16 @@ public class DataCon {
     }
 
 
-    public static Player getplayer(String name) {
-        PlayerData pd = getPlayerData(name);
-        UUID u = pd.getUniqueId();
-        Player mainp = null;
-        if (u != null) {
-            mainp = Bukkit.getPlayer(u);
-            if (mainp == null && XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-                UUID subu = CacheSemiOnline.CacheSubUUID_getsubuuid(u.toString());
-                if (subu != null) {
-                    Player subp = Bukkit.getPlayer(subu);
-                    if (subp != null) {
-                        return subp;
-                    }
-                }
+    public static Player getplayer(PlayerData pd) {
+        Player p = null;
+        if (pd != null) {
+            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)){
+                p = Bukkit.getPlayer(pd.getName());
+            }else{
+                p = Bukkit.getPlayer(pd.getUniqueId());
             }
         }
-        return mainp;
+        return p;
     }
 
     public static void prepareudpmessage(String type, PlayerData pd, Boolean isAdd, BigDecimal amount, String reason) {

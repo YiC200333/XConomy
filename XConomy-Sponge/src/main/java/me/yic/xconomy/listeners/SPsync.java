@@ -21,12 +21,10 @@ package me.yic.xconomy.listeners;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.data.caches.CacheSemiOnline;
 import me.yic.xconomy.data.syncdata.*;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.info.SyncType;
 import me.yic.xconomy.utils.PlayerData;
-import me.yic.xconomy.utils.UUIDMode;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.Platform;
 import org.spongepowered.api.Sponge;
@@ -70,20 +68,15 @@ public class SPsync implements RawDataListener {
             } else if (ob.getSyncType().equals(SyncType.MESSAGE) || ob.getSyncType().equals(SyncType.MESSAGE_SEMI) ) {
                 SyncMessage sd = (SyncMessage) ob;
                 UUID muid = sd.getUniqueId();
+                if (ob.getSyncType().equals(SyncType.MESSAGE_SEMI)){
+                    muid = sd.getRUniqueId();
+                }
+                UUID finalMuid = muid;
                 User p = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(
-                        provide -> provide.get(muid)).get();
+                        provide -> provide.get(finalMuid)).get();
 
                 if (p.isOnline()) {
                     p.getPlayer().get().sendMessage(Text.of(sd.getMessage()));
-                } else if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-                    UUID suid = CacheSemiOnline.CacheSubUUID_getsubuuid(muid.toString());
-                    if (suid != null) {
-                        User sp = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(
-                                provide -> provide.get(suid)).get();
-                        if (sp.isOnline()) {
-                            sp.getPlayer().get().sendMessage(Text.of(sd.getMessage()));
-                        }
-                    }
                 }
             } else if (ob.getSyncType().equals(SyncType.BALANCEALL)) {
                 SyncBalanceAll sd = (SyncBalanceAll) ob;
