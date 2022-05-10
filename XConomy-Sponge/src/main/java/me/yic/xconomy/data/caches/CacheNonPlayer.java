@@ -39,9 +39,6 @@ public class CacheNonPlayer {
     }
 
     public static BigDecimal getBalanceFromCacheOrDB(final String u) {
-        if (XConomy.Config.DISABLE_CACHE){
-            DataLink.getBalNonPlayer(u);
-        }
         if (!bal.containsKey(u)) {
             DataLink.getBalNonPlayer(u);
         }

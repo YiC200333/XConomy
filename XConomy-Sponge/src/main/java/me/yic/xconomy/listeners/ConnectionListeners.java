@@ -48,10 +48,6 @@ public class ConnectionListeners {
     public void onJoin(ClientConnectionEvent.Join event) {
         Player a = event.getTargetEntity();
 
-        if (!XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-            Cache.removefromCache(a.getUniqueId());
-        }
-
         if (XConomy.DConfig.canasync) {
             Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataLink.newPlayer(a));
         } else {

@@ -49,8 +49,8 @@ public class DefaultConfig {
     public BigDecimal PAYMENT_TAX = BigDecimal.ZERO;
     public int RANKING_SIZE = getrankingsize();
     public int LINES_PER_PAGE = config.getInt("Settings.lines-per-page");
-    //public boolean DISABLE_CACHE = config.getBoolean("Settings.disable-cache");
-    public boolean DISABLE_CACHE = false;
+    public boolean DISABLE_CACHE = config.getBoolean("Settings.disable-cache");
+
     public boolean TRANSACTION_RECORD = config.getBoolean("Settings.transaction-record");
     public boolean PAY_TIPS = false;
     public boolean USERNAME_IGNORE_CASE = config.getBoolean("Settings.username-ignore-case");

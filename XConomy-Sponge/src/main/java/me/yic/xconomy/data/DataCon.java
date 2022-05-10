@@ -46,6 +46,10 @@ public class DataCon{
     }
 
     public static BigDecimal getAccountBalance(String account) {
+
+        if (XConomy.Config.DISABLE_CACHE){
+            DataLink.getBalNonPlayer(account);
+        }
         return CacheNonPlayer.getBalanceFromCacheOrDB(account);
     }
 

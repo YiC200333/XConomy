@@ -52,10 +52,6 @@ public class ConnectionListeners implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player a = event.getPlayer();
 
-        //if (!XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-        //    Cache.removefromCache(a.getUniqueId());
-        //}
-
         if (XConomy.DConfig.canasync) {
             Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.newPlayer(a));
         } else {

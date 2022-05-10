@@ -264,8 +264,21 @@ public class SQL {
         Connection connection = database.getConnectionAndCheck();
         try {
             String query = " set balance = ? where UID = ?";
+            if (XConomy.Config.DISABLE_CACHE){
+                if (isAdd != null){
+                    if (isAdd){
+                        query = " set balance = balance + ? where UID = ?";
+                    }else{
+                        query = " set balance = balance - ? where UID = ?";
+                    }
+                }
+            }
             PreparedStatement statement = connection.prepareStatement("update " + tableName + query);
-            statement.setDouble(1, pd.getBalance().doubleValue());
+            if (!XConomy.Config.DISABLE_CACHE) {
+                statement.setDouble(1, pd.getBalance().doubleValue());
+            }else{
+                statement.setDouble(1, amount.doubleValue());
+            }
             statement.setString(2, pd.getUniqueId().toString());
             statement.executeUpdate();
             statement.close();
@@ -362,12 +375,25 @@ public class SQL {
     }
 
     public static void saveNonPlayer(String type, String account, BigDecimal amount,
-                                     BigDecimal newbalance, boolean isAdd) {
+                                     BigDecimal newbalance, Boolean isAdd) {
         Connection connection = database.getConnectionAndCheck();
         try {
             String query = " set balance = ? where account = ?";
+            if (XConomy.Config.DISABLE_CACHE){
+                if (isAdd != null){
+                    if (isAdd){
+                        query = " set balance = balance + ? where account = ?";
+                    }else{
+                        query = " set balance = balance - ? where account = ?";
+                    }
+                }
+            }
             PreparedStatement statement = connection.prepareStatement("update " + tableNonPlayerName + query);
-            statement.setDouble(1, newbalance.doubleValue());
+            if (!XConomy.Config.DISABLE_CACHE) {
+                statement.setDouble(1, newbalance.doubleValue());
+            }else{
+                statement.setDouble(1, amount.doubleValue());
+            }
             statement.setString(2, account);
             statement.executeUpdate();
             statement.close();
