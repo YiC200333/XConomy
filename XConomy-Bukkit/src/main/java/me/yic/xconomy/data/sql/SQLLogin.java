@@ -63,9 +63,9 @@ public class SQLLogin extends SQL {
     public static void getPlayerlogin(Player pp) {
         try {
             Connection connection = database.getConnectionAndCheck();
-            PreparedStatement statement = connection.prepareStatement("select player, amount from xconomyrecord " +
-                    "where operation = 'WITHDRAW' and type = 'PLAYER_COMMAND' and command like('pay " + pp.getName() + "%') and datetime > " +
-                    "(select last_time from xconomylogin where UUID = ?);");
+            PreparedStatement statement = connection.prepareStatement("select player, amount from " + tableRecordName +
+                    " where operation = 'WITHDRAW' and type = 'PLAYER_COMMAND' and command like('pay " + pp.getName() + "%') and datetime > " +
+                    "(select last_time from " + tableLoginName + " where UUID = ?);");
             if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 statement.setString(1, DataCon.getPlayerData(pp.getUniqueId()).getUniqueId().toString());
             }else{

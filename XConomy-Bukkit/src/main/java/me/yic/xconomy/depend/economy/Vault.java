@@ -196,7 +196,11 @@ public class Vault extends AbstractEconomy {
     @Override
     public double getBalance(OfflinePlayer aa) {
         UUID uuid = aa.getUniqueId();
-        return DataCon.getPlayerData(uuid).getBalance().doubleValue();
+        PlayerData pd = DataCon.getPlayerData(uuid);
+        if (pd != null){
+            return pd.getBalance().doubleValue();
+        }
+        return 0;
     }
 
     @Override
