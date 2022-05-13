@@ -22,6 +22,7 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.GetUUID;
+import me.yic.xconomy.data.ImportData;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.syncdata.SyncUUID;
 import me.yic.xconomy.utils.PlayerData;
@@ -107,7 +108,7 @@ public class SQLCreateNewAccount extends SQL {
                     XConomy.getInstance().logger(" 名称已更改!", 0, "<#>" + name);
                 }
             } else {
-                createAccount(uid, name, XConomy.Config.INITIAL_BAL, connection);
+                createAccount(uid, name, connection);
             }
 
             rs.close();
@@ -160,7 +161,7 @@ public class SQLCreateNewAccount extends SQL {
     }
 
 
-    private static void createAccount(String UID, String user, double amount, Connection co_a) {
+    private static void createAccount(String UID, String user, Connection co_a) {
         try {
             String query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?)";
             //String query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
@@ -169,7 +170,11 @@ public class SQLCreateNewAccount extends SQL {
             PreparedStatement statement = co_a.prepareStatement(query);
             statement.setString(1, UID);
             statement.setString(2, user);
-            statement.setDouble(3, amount);
+            if (ImportData.hasImportFile) {
+                statement.setDouble(3, ImportData.getBalance(user, XConomy.Config.INITIAL_BAL).doubleValue());
+            }else {
+                statement.setDouble(3, XConomy.Config.INITIAL_BAL);
+            }
             statement.setInt(4, 0);
 
             statement.executeUpdate();
@@ -249,7 +254,7 @@ public class SQLCreateNewAccount extends SQL {
                 }
             } else {
                 user = name;
-                createAccount(UID.toString(), user, XConomy.Config.INITIAL_BAL, connection);
+                createAccount(UID.toString(), user, connection);
             }
             rs.close();
             statement.close();

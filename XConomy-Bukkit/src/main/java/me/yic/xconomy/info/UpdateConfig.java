@@ -24,7 +24,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 
-@SuppressWarnings("unused")
 public class UpdateConfig {
 
     public static boolean update(FileConfiguration config, File cc) {
@@ -37,11 +36,11 @@ public class UpdateConfig {
             XConomy.getInstance().logger(null, 1, "It is recommended to regenerate configuration file");
             XConomy.getInstance().logger(null, 1, "==================================================");
         }
-        //if (!ck.contains("force-mode")) {
-        //    config.createSection("force-mode");
-        //    config.set("force-mode", false);
-        //    update = true;
-        //}
+        if (!ck.contains("ImportData-mode")) {
+            config.createSection("ImportData-mode");
+            config.set("ImportData-mode", false);
+            update = true;
+        }
         return update;
     }
 }

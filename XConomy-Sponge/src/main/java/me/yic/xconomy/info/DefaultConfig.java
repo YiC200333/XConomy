@@ -64,7 +64,7 @@ public class DefaultConfig {
     public String DISPLAY_FORMAT = config.getNode("Currency", "display-format").getString();
     public String MAX_NUMBER = config.getNode("Currency", "max-number").getString();
     public List<Integer> FORMAT_BALANCE = null;
-    public HashMap<Integer, String> FORMAT_BALANCE_C = new HashMap<>();
+    public LinkedHashMap<Integer, String> FORMAT_BALANCE_C = new LinkedHashMap<>();
 
     public boolean BUNGEECORD_ENABLE = false;
     public String BUNGEECORD_SIGN = config.getNode("BungeeCord", "sign").getString();
@@ -92,14 +92,12 @@ public class DefaultConfig {
         FORMAT_BALANCE = new ArrayList<>();
         try {
             ConfigurationNode section = config.getNode("Currency", "format-balance");
-            for (Map.Entry<Object, ? extends ConfigurationNode> key : section.getChildrenMap().entrySet()) {
-                int x = Integer.parseInt(key.getKey().toString());
-                if (x > 0) {
-                    FORMAT_BALANCE.add(x);
-                    FORMAT_BALANCE_C.put(x, key.getValue().getString());
-                }
-            }
-            Collections.sort(FORMAT_BALANCE);
+            section.getChildrenMap().entrySet().stream().sorted(Comparator.comparingInt(key -> Integer.parseInt(key.getKey().toString())))
+                    .forEach(key -> {
+                        FORMAT_BALANCE.add(Integer.parseInt(key.getKey().toString()));
+                        FORMAT_BALANCE_C.put(Integer.parseInt(key.getKey().toString()), key.getValue().getString());});
+
+            //for (Map.Entry<Object, ? extends ConfigurationNode> key : section.getChildrenMap().entrySet())
         } catch (Exception ignored) {
             FORMAT_BALANCE = null;
             XConomy.getInstance().logger(null, 1, "Error getting balance custom format");

@@ -42,11 +42,21 @@ public class VaultHook{
         if (XConomy.Config.DISABLE_ESSENTIAL) {
             Collection<RegisteredServiceProvider<Economy>> econs = Bukkit.getPluginManager().getPlugin("Vault").getServer().getServicesManager().getRegistrations(Economy.class);
             for (RegisteredServiceProvider<Economy> econ : econs) {
-                if (econ.getProvider().getName().equalsIgnoreCase("Essentials Economy")) {
+                if (econ.getProvider().getName().equalsIgnoreCase("Essentials Economy")||
+                        econ.getProvider().getName().equalsIgnoreCase("EssentialsX Economy")) {
                     XConomy.getInstance().getServer().getServicesManager().unregister(econ.getProvider());
                 }
             }
         }
+    }
+
+    public static boolean loadcm() {
+        RegisteredServiceProvider<Economy> rsp = XConomy.getInstance().getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return true;
     }
 
     public static void unload() {

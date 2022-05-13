@@ -21,6 +21,7 @@ package me.yic.xconomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
+import me.yic.xconomy.data.ImportData;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.depend.LoadEconomy;
 import me.yic.xconomy.depend.Placeholder;
@@ -61,6 +62,8 @@ public class XConomy extends JavaPlugin {
     Metrics metrics = null;
     private Placeholder papiExpansion = null;
 
+    private ImportData itd = null;
+
     @SuppressWarnings("ConstantConditions")
     public void onEnable() {
         instance = this;
@@ -71,6 +74,14 @@ public class XConomy extends JavaPlugin {
 
         DConfig = new DataBaseConfig();
         Config.setBungeecord();
+
+
+        if (Config.IMPORTMODE){
+            itd = new ImportData(this);
+            itd.onEnable();
+            return;
+        }
+
 
         MCVersion.MCVersion = Bukkit.getBukkitVersion().toLowerCase();
         MCVersion.chatcolorcheck();
@@ -169,6 +180,12 @@ public class XConomy extends JavaPlugin {
     }
 
     public void onDisable() {
+
+        if (Config.IMPORTMODE){
+            itd.onDisable();
+            return;
+        }
+
         LoadEconomy.unload();
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null && papiExpansion != null) {
@@ -184,8 +201,9 @@ public class XConomy extends JavaPlugin {
             getServer().getMessenger().unregisterIncomingPluginChannel(this, "xconomy:global", new SPPsync());
         }
 
-        refresherTask.cancel();
         SQL.close();
+
+        refresherTask.cancel();
         logger("XConomy已成功卸载", 0, null);
     }
 

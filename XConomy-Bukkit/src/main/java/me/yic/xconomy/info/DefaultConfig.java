@@ -25,7 +25,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class DefaultConfig {
@@ -39,6 +38,7 @@ public class DefaultConfig {
     }
 
     public UUIDMode UUIDMODE = UUIDMode.DEFAULT;
+    public boolean IMPORTMODE = config.getBoolean("ImportData-mode");
 
     public String LANGUAGE = config.getString("Settings.language");
     public boolean CHECK_UPDATE = config.getBoolean("Settings.check-update");
@@ -82,7 +82,6 @@ public class DefaultConfig {
         } else if (config.getString("UUID-mode").equalsIgnoreCase("Offline")) {
             UUIDMODE = UUIDMode.OFFLINE;
             USERNAME_IGNORE_CASE = false;
-            //FORCEMODE = config.getBoolean("force-mode");
         } else if (config.getString("UUID-mode").equalsIgnoreCase("SemiOnline")) {
             UUIDMODE = UUIDMode.SEMIONLINE;
         }
@@ -94,13 +93,7 @@ public class DefaultConfig {
         FORMAT_BALANCE = new ArrayList<>();
         try {
             ConfigurationSection section = config.getConfigurationSection("Currency.format-balance");
-            for (String key : section.getKeys(false)) {
-                int x = Integer.parseInt(key);
-                if (x > 0) {
-                    FORMAT_BALANCE.add(x);
-                }
-            }
-            Collections.sort(FORMAT_BALANCE);
+            section.getKeys(false).stream().map(Integer::parseInt).sorted().forEach(FORMAT_BALANCE::add);
         } catch (Exception ignored) {
             FORMAT_BALANCE = null;
             XConomy.getInstance().logger(null, 1, "Error getting balance custom format");

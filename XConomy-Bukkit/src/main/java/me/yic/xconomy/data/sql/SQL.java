@@ -21,6 +21,7 @@ package me.yic.xconomy.data.sql;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.GetUUID;
+import me.yic.xconomy.data.ImportData;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.utils.DatabaseConnection;
@@ -41,6 +42,7 @@ public class SQL {
     public static String tableRecordName = "xconomyrecord";
     public static String tableUUIDName = "xconomyuuid";
     public static String tableLoginName = "xconomylogin";
+    public static String tableImportName = "xconomyimport";
     public final static DatabaseConnection database = new DatabaseConnection();
     static final String encoding = XConomy.DConfig.ENCODING;
 
@@ -98,6 +100,7 @@ public class SQL {
                     + " primary key (id)) default charset = " + encoding + ";";
             String query4 = "create table if not exists " + tableLoginName
                     + "(UUID varchar(50) not null, last_time datetime not null, " + "primary key (UUID)) default charset = " + encoding + ";";
+
             String query5;
             if (XConomy.DConfig.isMySQL()) {
                 query1 = "create table if not exists " + tableName
@@ -246,8 +249,12 @@ public class SQL {
             if (rs.next()) {
                 CacheNonPlayer.insertIntoCache(playerName, DataFormat.formatString(rs.getString(2)));
             } else {
-                SQLCreateNewAccount.createNonPlayerAccount(playerName, 0.0, connection);
-                CacheNonPlayer.insertIntoCache(playerName, BigDecimal.ZERO);
+                BigDecimal bal = BigDecimal.ZERO;
+                if (ImportData.hasImportFile) {
+                    bal = ImportData.getBalance(playerName, 0.0);
+                }
+                SQLCreateNewAccount.createNonPlayerAccount(playerName, bal.doubleValue(), connection);
+                CacheNonPlayer.insertIntoCache(playerName, bal);
             }
 
             rs.close();

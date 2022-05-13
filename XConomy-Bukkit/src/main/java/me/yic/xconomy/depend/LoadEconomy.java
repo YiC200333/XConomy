@@ -40,6 +40,15 @@ public class LoadEconomy{
         return haseco;
     }
 
+
+    public static boolean loadcm() {
+        if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
+            vault = true;
+            haseco = VaultHook.loadcm();
+        }
+        return haseco;
+    }
+
     public static void unload() {
         if (vault) {
             VaultHook.unload();
