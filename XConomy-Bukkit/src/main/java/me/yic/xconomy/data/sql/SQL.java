@@ -42,7 +42,6 @@ public class SQL {
     public static String tableRecordName = "xconomyrecord";
     public static String tableUUIDName = "xconomyuuid";
     public static String tableLoginName = "xconomylogin";
-    public static String tableImportName = "xconomyimport";
     public final static DatabaseConnection database = new DatabaseConnection();
     static final String encoding = XConomy.DConfig.ENCODING;
 

@@ -35,7 +35,6 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-@SuppressWarnings("ConstantConditions")
 public class ImportData implements CommandExecutor {
 
     public static File importdataf;
@@ -49,6 +48,7 @@ public class ImportData implements CommandExecutor {
         plugin = main;
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void onEnable() {
 
         if (!CreateFile()) {
@@ -105,6 +105,7 @@ public class ImportData implements CommandExecutor {
         return true;
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void ImportBalance() {
         for (OfflinePlayer op : Bukkit.getServer().getOfflinePlayers()) {
             if (!importdata.contains(op.getName())) {

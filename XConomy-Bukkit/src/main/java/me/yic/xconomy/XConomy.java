@@ -201,9 +201,9 @@ public class XConomy extends JavaPlugin {
             getServer().getMessenger().unregisterIncomingPluginChannel(this, "xconomy:global", new SPPsync());
         }
 
+        refresherTask.cancel();
         SQL.close();
 
-        refresherTask.cancel();
         logger("XConomy已成功卸载", 0, null);
     }
 
