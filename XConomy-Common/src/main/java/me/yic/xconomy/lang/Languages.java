@@ -193,19 +193,19 @@ public class Languages {
         mess.put("top_title", "&e========= TOP10 <Page %page%> =========");
         mess.put("sum_text", "&fServer Total - %balance%");
         mess.put("top_text", "&e%index%: %player% - %balance%");
-        mess.put("top_subtitle", "&7TOP10 refreshed every 5 minutes");
-        mess.put("top_nodata", "&cNo se encontro datos sobre TOP10");
-        mess.put("top_out", "&cOut of the TOP10");
+        mess.put("top_subtitle", "&7TOP 10 actualizado cada 5 minutos");
+        mess.put("top_nodata", "&cNo se ha encontrado datos sobre el TOP 10");
+        mess.put("top_out", "&cFuera del TOP 10");
         mess.put("top_hidden", "&a%player% is hidden");
         mess.put("top_displayed", "&a%player% is displayed");
         mess.put("pay", "&cle pagaste a %player% por %amount%");
         mess.put("pay_receive", "&aRecibiste %amount% de: %player%");
         mess.put("pay_fail", "&cTienes menos de %amount%");
         mess.put("pay_self", "&cNo puedes pagarte a ti mismo");
-        mess.put("paytoggle_true", "&aYou accept payment now");
-        mess.put("paytoggle_false", "&aYou refuse payment now");
-        mess.put("paytoggle_other_true", "&cYou set %player% accept payment");
-        mess.put("paytoggle_other_false", "&cYou set %player% refuse payment");
+        mess.put("paytoggle_true", "&aAcepta el pago ahora");
+        mess.put("paytoggle_false", "&aRechaza el pago ahora");
+        mess.put("paytoggle_other_true", "&cEstableciste %player% aceptar pago");
+        mess.put("paytoggle_other_false", "&cEstableciste %player% rechazar el pago");
         mess.put("no_account", "&cEsa cuenta no existe");
         mess.put("invalid_amount", "&cMonto invalido");
         mess.put("over_maxnumber", "&cLa cuenta del usuario supera la cantidad maxima!");
@@ -215,27 +215,27 @@ public class Languages {
         mess.put("money_take", "&cRecibiste %amount% de: %player%");
         mess.put("money_take_fail", "&c%player% su saldo es menor que %amount%");
         mess.put("money_take_receive", "&cUn Staff te quito %amount%");
-        mess.put("money_set", "&cLe seteaste el dinero a %player%, %amount%");
+        mess.put("money_set", "&cEstableciste el dinero a %player%, %amount%");
         mess.put("money_set_receive", "&cUn Staff te seteo el dinero a %amount%");
         mess.put("no_receive_permission", "&cEl usuario no tiene permisos para recibir dinero!");
         mess.put("no_permission", "&cNo tienes permisos para usar este comando");
-        mess.put("global_permissions_change", "&aThe global %permission% permissions has been set to %value%");
-        mess.put("personal_permissions_change", "&aThe %permission% permission of %player% has been set to %value%");
-        mess.put("help_title_full", "&6=============== [XConomy] HELP <Page %page%> ===============");
+        mess.put("global_permissions_change", "&aEl global %permission% los permisos se han establecido en %value%");
+        mess.put("personal_permissions_change", "&aEl %permission% permiso de %player% ha sido establecido a %value%");
+        mess.put("help_title_full", "&6=============== [XConomy] AYUDA <Page %page%> ===============");
         mess.put("help1", "&6balance/money  -  Muestra cuanto dinero tienes");
         mess.put("help2", "&6balance/money <Jugador>  -  Muestra el dinero de: <player>");
-        mess.put("help3", "&6pay <Jugador> <Monto>  -  Pay <Jugador> <Monto>");
+        mess.put("help3", "&6pay <Jugador> <Monto>  -  Paga <jugador> <cantidad>");
         mess.put("help4", "&6balancetop  -  Muestra el TOP10");
-        mess.put("help5", "&6balance/money give <Jugador> <Monto>  -  le das dinero a: <Jugador>, <Monto>");
-        mess.put("help6", "&6balance/money take <Jugador> <Monto>  -  le sacas <Monto> a: <Jugador>");
-        mess.put("help7", "&6balance/money set <Jugador> <Monto>  -  setea <Jugador> dinero a: <Monto>");
-        mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  give <all/online player> <amount>");
-        mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  take <amount> from <all/online player>");
-        mess.put("help10", "&6balancetop hide/display <player>  -  Hide or display a <player>'s data from TOP10");
-        mess.put("help11", "&6paytoggle  -  Toggle accepting payments");
-        mess.put("help12", "&6paytoggle <player>  -  Toggle <player>'s accepting payments");
-        mess.put("help13", "&6paypermission set <player> True/False  -  Set <player>'s (* represents a global) pay permission");
-        mess.put("help14", "&6paypermission remove <player>  -  Set <player>'s pay permission to default");
+        mess.put("help5", "&6balance/money give <Jugador> <Monto>  -  Le das dinero a <jugador>, <cantidad>");
+        mess.put("help6", "&6balance/money take <Jugador> <Monto>  -  Le sacas <Monto> a: <Jugador>");
+        mess.put("help7", "&6balance/money set <Jugador> <Monto>  -  Establece <Jugador> dinero a <cantidad>");
+        mess.put("help8", "&6balance/money give * <all/online> <amount> <reason>  -  Give <all/online player> <cantidad>");
+        mess.put("help9", "&6balance/money take * <all/online> <amount> <reason>  -  Take <cantidad> de <all/online player>");
+        mess.put("help10", "&6balancetop hide/display <player>  -  Ocultar o mostrar un <jugador> del TOP 10");
+        mess.put("help11", "&6paytoggle  -  Alternar la aceptación de pagos");
+        mess.put("help12", "&6paytoggle <player>  -  Alternar <jugador> aceptar pagos");
+        mess.put("help13", "&6paypermission set <player> True/False  -  Set <jugador> (* Representa un global) permiso de pago");
+        mess.put("help14", "&6paypermission remove <player>  -  Set <jugador> pagar permiso por defecto");
     }
 
     public static void chinese(HashMap<String, String> mess) {
@@ -671,7 +671,8 @@ public class Languages {
         if (lang.equalsIgnoreCase("French")) {
             translateFile("#============================== Translator - Xx_Fluoxe_xX ==============================", file);
         } else if (lang.equalsIgnoreCase("Spanish")) {
-            translateFile("#============================== Translator - gabyfig ==============================", file);
+            translateFile("#============================== Translator1 - gabyfig ==============================", file);
+            translateFile("#============================== Translator2 - Santysx ==============================", file);
         } else if (lang.equalsIgnoreCase("Russian")) {
             translateFile("#============================== Translator1 - Trimitor ==============================\n", file);
             translateFile("#============================== Translator2 - Dbarkovski ==============================", file);
