@@ -147,28 +147,18 @@ public class SQL {
     public static void getPlayerData(UUID uuid) {
         try {
             Connection connection = database.getConnectionAndCheck();
-
-            PreparedStatement statement = connection.prepareStatement("select * from " + tableName + " where UID = ?");
+            String sql = "select * from " + tableName + " where UID = ?";
+            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)){
+                sql = "select * from " + tableName + " where UID = ifnull((select DUUID from " + tableUUIDName + " where UUID = ?), ?)";
+            }
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, uuid.toString());
+            statement.setString(2, uuid.toString());
 
             ResultSet rs = statement.executeQuery();
-            BigDecimal cacheThisAmt = null;
-            UUID duuid = uuid;
             if (rs.next()) {
-                cacheThisAmt = DataFormat.formatString(rs.getString(3));
-            }else if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)){
-                rs.close();
-                statement = connection.prepareStatement("select * from " + tableName + " where UID = (select DUUID from " + tableUUIDName + " where UUID = ?)");
-                statement.setString(1, uuid.toString());
-                rs = statement.executeQuery();
-                if (rs.next()) {
-                    duuid = UUID.fromString(rs.getString(1));
-                    cacheThisAmt = DataFormat.formatString(rs.getString(3));
-                }
-            }
-
-            if (cacheThisAmt != null) {
-                PlayerData bd = new PlayerData(XConomy.Config.BUNGEECORD_SIGN, duuid, rs.getString(2), cacheThisAmt);
+                BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
+                PlayerData bd = new PlayerData(XConomy.Config.BUNGEECORD_SIGN, uuid, rs.getString(2), cacheThisAmt);
                 Cache.insertIntoCache(uuid, bd);
             }
 

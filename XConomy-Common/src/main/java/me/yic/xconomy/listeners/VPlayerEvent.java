@@ -22,7 +22,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
-import com.velocitypowered.api.event.player.ServerConnectedEvent;
+import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import me.yic.xconomy.XConomyVelocity;
 
@@ -30,7 +30,7 @@ public class VPlayerEvent{
 
     @SuppressWarnings(value = {"UnstableApiUsage", "unused"})
     @Subscribe
-    public void join(ServerConnectedEvent event) {
+    public void join(ServerPostConnectEvent event) {
         String playername = event.getPlayer().getUsername();
 
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
@@ -65,6 +65,9 @@ public class VPlayerEvent{
     }
 
     public static void SendMessTaskB(RegisteredServer s, ByteArrayDataOutput stream) {
-        s.sendPluginMessage(XConomyVelocity.global,stream.toByteArray());
+        try {
+            s.sendPluginMessage(XConomyVelocity.global, stream.toByteArray());
+        }catch (IllegalStateException ignored){
+        }
     }
 }
