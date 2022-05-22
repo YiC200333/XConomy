@@ -152,7 +152,9 @@ public class SQL {
             }
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, uuid.toString());
-            statement.setString(2, uuid.toString());
+            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                statement.setString(2, uuid.toString());
+            }
 
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
