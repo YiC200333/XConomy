@@ -22,10 +22,11 @@ import org.bukkit.event.HandlerList;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public class PlayerAccountEvent extends AccountEvent {
     private static final HandlerList HANDLERS = new HandlerList();
-    private UUID u;
-    private String reason;
+    private final UUID u;
+    private final String reason;
 
     public PlayerAccountEvent(UUID u, String account, BigDecimal balance, BigDecimal amount, Boolean isadd, String reason, String method) {
         super(account, balance, amount, isadd, method);

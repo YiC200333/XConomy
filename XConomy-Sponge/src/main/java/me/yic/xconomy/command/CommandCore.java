@@ -155,7 +155,7 @@ public class CommandCore {
                             sender.sendMessages(Text.of(PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT)));
                         } else {
                             UUID targetUUID = pd.getUniqueId();
-                            User target = DataCon.getplayer(pd);
+                            User target = DataLink.getplayer(pd);
                             String realname = pd.getName();
                             PermissionINFO.setRPaymentPermission(((Player) sender).getUniqueId());
 
@@ -302,7 +302,7 @@ public class CommandCore {
                     sender.sendMessage(Text.of(PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT)));
                     return CommandResult.success();
                 }
-                User target = DataCon.getplayer(pd);
+                User target = DataLink.getplayer(pd);
                 UUID targetUUID = pd.getUniqueId();
                 String realname = pd.getName();
 
@@ -318,12 +318,12 @@ public class CommandCore {
                 }
 
                 String com = commandName + " " + args[0] + " " + amount;
-                DataCon.changeplayerdata("PLAYER_COMMAND", ((Player) sender).getUniqueId(), taxamount, false, com);
+                DataCon.changeplayerdata("PLAYER_COMMAND", ((Player) sender).getUniqueId(), taxamount, false, com, null);
                 sender.sendMessage(Text.of(PREFIX + translateColorCodes("pay")
                         .replace("%player%", realname)
                         .replace("%amount%", amountFormatted)));
 
-                DataCon.changeplayerdata("PLAYER_COMMAND", targetUUID, amount, true, com);
+                DataCon.changeplayerdata("PLAYER_COMMAND", targetUUID, amount, true, com, null);
                 String mess = PREFIX + translateColorCodes("pay_receive")
                         .replace("%player%", sender.getName())
                         .replace("%amount%", amountFormatted);
@@ -412,14 +412,14 @@ public class CommandCore {
                             return CommandResult.success();
                         }
 
-                        User target = DataCon.getplayer(pd);
+                        User target = DataLink.getplayer(pd);
                         UUID targetUUID = pd.getUniqueId();
                         String realname = pd.getName();
 
                         String com = commandName + " " + args[0] + " " + args[1] + " " + amount;
-                        String reason = null;
+                        StringBuilder reason = null;
                         if (args.length == 4) {
-                            reason = args[3];
+                            reason = new StringBuilder(args[3]);
                             com += " " + reason;
                         }
 
@@ -444,7 +444,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, true, com);
+                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, true, com, reason);
                                 sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_give")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
@@ -490,7 +490,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, false, com);
+                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, false, com, reason);
                                 sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_take")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
@@ -520,7 +520,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, null, com);
+                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, null, com, reason);
                                 sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_set")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted)));
@@ -609,7 +609,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                DataCon.changeallplayerdata(args[2], "ADMIN_COMMAND", amount, true, com);
+                                DataCon.changeallplayerdata(args[2], "ADMIN_COMMAND", amount, true, com, new StringBuilder(args[4]));
                                 sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_give")
                                         .replace("%player%", target)
                                         .replace("%amount%", amountFormatted)));
@@ -626,7 +626,7 @@ public class CommandCore {
                                     return CommandResult.success();
                                 }
 
-                                DataCon.changeallplayerdata(args[2], "ADMIN_COMMAND", amount, false, com);
+                                DataCon.changeallplayerdata(args[2], "ADMIN_COMMAND", amount, false, com, new StringBuilder(args[4]));
                                 sender.sendMessage(Text.of(PREFIX + translateColorCodes("money_take")
                                         .replace("%player%", target)
                                         .replace("%amount%", amountFormatted)));
@@ -704,14 +704,12 @@ public class CommandCore {
         sender.sendMessage(Text.of(mess));
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static String translateColorCodes(String message) {
-        return MessagesManager.messageFile.getNode(message).getString().replace("&", "§");
+        return MessagesManager.messageFile.getString(message).replace("&", "§");
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static String translateColorCodes(MessageConfig message) {
-        return MessagesManager.messageFile.getNode(message.toString()).getString().replace("&", "§");
+        return MessagesManager.messageFile.getString(message.toString()).replace("&", "§");
     }
 
 

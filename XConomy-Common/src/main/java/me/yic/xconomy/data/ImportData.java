@@ -1,5 +1,5 @@
-package me.yic.xconomy.api.event;/*
- *  This file (NonPlayerAccountEvent.java) is a part of project XConomy
+/*
+ *  This file (ImportData.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -16,14 +16,16 @@ package me.yic.xconomy.api.event;/*
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package me.yic.xconomy.data;
 
 import java.math.BigDecimal;
 
+
 @SuppressWarnings("unused")
-public class NonPlayerAccountEvent extends AccountEvent {
+public class ImportData{
+    public static boolean hasImportFile = false;
 
-    public NonPlayerAccountEvent(String account, BigDecimal balance, BigDecimal amount, Boolean isadd, String method) {
-        super(account, balance, amount, isadd, method);
+    public static BigDecimal getBalance(String player, double inb) {
+        return BigDecimal.ZERO;
     }
-
 }

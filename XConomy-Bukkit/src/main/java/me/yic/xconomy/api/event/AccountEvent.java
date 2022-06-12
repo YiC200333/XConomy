@@ -23,13 +23,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 
+@SuppressWarnings("unused")
 public class AccountEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
-    private String account;
-    private BigDecimal balance;
-    private BigDecimal amount;
-    private Boolean isadd;
-    private String method;
+    private final String account;
+    private final BigDecimal balance;
+    private final BigDecimal amount;
+    private final Boolean isadd;
+    private final String method;
 
     public AccountEvent(String account, BigDecimal balance, BigDecimal amount, Boolean isadd, String method) {
         this.account = account;

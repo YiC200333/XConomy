@@ -38,6 +38,9 @@ Settings:
   ranking-size: 10
   #Rows per page of list (Ranking and help menu)
   lines-per-page: 5
+  #If you need to modify the data in the database directly, it is recommended to enable it
+  #Disabling caching will increase the pressure on the database
+  disable-cache: false
   #Dose save transaction record
   #Only MySQL is supported
   transaction-record: true

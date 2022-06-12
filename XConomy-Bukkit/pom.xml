@@ -5,7 +5,7 @@
     <parent>
         <artifactId>XConomy</artifactId>
         <groupId>me.yic</groupId>
-        <version>2.18.7</version>
+        <version>2.18.8</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -61,9 +61,19 @@
                                     </excludes>
                                 </filter>
                                 <filter>
+                                    <artifact>com.github.YiC200333:MComp</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
                                     <artifact>me.yic:XConomy-Common</artifact>
                                     <excludes>
                                         <exclude>META-INF/*</exclude>
+                                        <exclude>me/yic/xconomy/XConomy.class</exclude>
+                                        <exclude>me/yic/xconomy/data/ImportData.class</exclude>
+                                        <exclude>me/yic/xconomy/data/DataLink.class</exclude>
+                                        <exclude>me/yic/xconomy/comp/*</exclude>
                                     </excludes>
                                 </filter>
                             </filters>

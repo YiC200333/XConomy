@@ -56,7 +56,7 @@ public class XCUniqueAccount implements UniqueAccount {
 
     @Override
     public BigDecimal getDefaultBalance(Currency currency) {
-        return DataFormat.formatString(XConomy.Config.INITIAL_BAL);
+        return DataFormat.formatdouble(XConomy.Config.INITIAL_BAL);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class XCUniqueAccount implements UniqueAccount {
                     currency, amount, contexts, ResultType.FAILED,
                     DummyObjectProvider.createFor(TransactionType.class, "SET"));
         }
-        DataCon.changeplayerdata("PLUGIN", uuid, amount, null, "SETBALANCE");
+        DataCon.changeplayerdata("PLUGIN", uuid, amount, null, "SETBALANCE", null);
         return new XCTransactionResult(this,
                 currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS,
                 DummyObjectProvider.createFor(TransactionType.class, "SET"));
@@ -111,7 +111,7 @@ public class XCUniqueAccount implements UniqueAccount {
                     DummyObjectProvider.createFor(TransactionType.class, "RESET"));
         }
 
-        DataCon.changeplayerdata("PLUGIN", uuid, getDefaultBalance(currency), null, "RESETBALANCE");
+        DataCon.changeplayerdata("PLUGIN", uuid, getDefaultBalance(currency), null, "RESETBALANCE", null);
         return new XCTransactionResult(this,
                 currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS,
                 DummyObjectProvider.createFor(TransactionType.class, "RESET"));
@@ -132,7 +132,7 @@ public class XCUniqueAccount implements UniqueAccount {
                     currency, amount, contexts, ResultType.FAILED, TransactionTypes.DEPOSIT);
         }
 
-        DataCon.changeplayerdata("PLUGIN", uuid, amountFormatted, true, "N/A");
+        DataCon.changeplayerdata("PLUGIN", uuid, amountFormatted, true, "N/A", null);
         return new XCTransactionResult(this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.DEPOSIT);
 
@@ -153,7 +153,7 @@ public class XCUniqueAccount implements UniqueAccount {
                     currency, amount, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
         }
 
-        DataCon.changeplayerdata("PLUGIN", uuid, amountFormatted, false, "N/A");
+        DataCon.changeplayerdata("PLUGIN", uuid, amountFormatted, false, "N/A", null);
         return new XCTransactionResult(this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.WITHDRAW);
     }

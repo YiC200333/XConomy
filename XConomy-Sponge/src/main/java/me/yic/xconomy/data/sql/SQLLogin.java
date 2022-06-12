@@ -22,7 +22,6 @@ package me.yic.xconomy.data.sql;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.command.CommandCore;
 import me.yic.xconomy.data.DataCon;
-import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.utils.UUIDMode;
 import org.spongepowered.api.entity.living.player.Player;
 

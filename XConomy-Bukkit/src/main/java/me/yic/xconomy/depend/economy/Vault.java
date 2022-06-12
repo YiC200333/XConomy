@@ -22,6 +22,7 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
+import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import me.yic.xconomy.utils.PlayerData;
 import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -131,7 +132,7 @@ public class Vault extends AbstractEconomy {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
         }
 
-        DataCon.changeplayerdata("PLUGIN", pd.getUniqueId(), amountFormatted, true, "N/A");
+        DataCon.changeplayerdata("PLUGIN", pd.getUniqueId(), amountFormatted, true, null, null);
         return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
     }
 
@@ -155,7 +156,7 @@ public class Vault extends AbstractEconomy {
             return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Max balance!");
         }
 
-        DataCon.changeplayerdata("PLUGIN", pp.getUniqueId(), amountFormatted, true, "N/A");
+        DataCon.changeplayerdata("PLUGIN", pp.getUniqueId(), amountFormatted, true, null, null);
         return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
     }
 
@@ -315,7 +316,7 @@ public class Vault extends AbstractEconomy {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
         }
 
-        DataCon.changeplayerdata("PLUGIN", pd.getUniqueId(), amountFormatted, false, "N/A");
+        DataCon.changeplayerdata("PLUGIN", pd.getUniqueId(), amountFormatted, false, null, null);
         return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
     }
 
@@ -339,7 +340,7 @@ public class Vault extends AbstractEconomy {
             return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Insufficient balance!");
         }
 
-        DataCon.changeplayerdata("PLUGIN", pp.getUniqueId(), amountFormatted, false, "N/A");
+        DataCon.changeplayerdata("PLUGIN", pp.getUniqueId(), amountFormatted, false, null, null);
         return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
     }
 

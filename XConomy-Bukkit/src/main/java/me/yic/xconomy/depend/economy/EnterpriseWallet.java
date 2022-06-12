@@ -46,7 +46,7 @@ public class EnterpriseWallet extends PlayerWallet {
             return new EconomyAction(getHolder(), false,  "Max balance!");
         }
 
-        DataCon.changeplayerdata("PLUGIN", getPlayer().getUniqueId(), amount, null, "N/A");
+        DataCon.changeplayerdata("PLUGIN", getPlayer().getUniqueId(), amount, null, null ,null);
         return new EconomyAction(getHolder(), true,  "");
     }
 
@@ -57,19 +57,21 @@ public class EnterpriseWallet extends PlayerWallet {
 
     @Override
     public boolean exists() {
-        return true;
+        return DataCon.getPlayerData(getPlayer().getUniqueId()) != null;
     }
 
     @Override
     public boolean exists(String s) {
-        return true;
+        return exists();
     }
 
     @Override
     public @Nullable BigDecimal getBalance() {
         UUID uuid = getPlayer().getUniqueId();
-
-        return DataCon.getPlayerData(uuid).getBalance();
+        if (DataCon.getPlayerData(uuid) != null) {
+            return DataCon.getPlayerData(uuid).getBalance();
+        }
+        return BigDecimal.ZERO;
     }
 
     @Override
@@ -83,7 +85,7 @@ public class EnterpriseWallet extends PlayerWallet {
         if (bal == null){
             return false;
         }
-        return getBalance().compareTo(bigDecimal) > 0;
+        return getBalance().compareTo(getBalance()) > 0;
     }
 
     @Override
@@ -105,7 +107,7 @@ public class EnterpriseWallet extends PlayerWallet {
         }
 
         UUID playeruuid = getPlayer().getUniqueId();
-        DataCon.changeplayerdata("PLUGIN", playeruuid, amount, false, "N/A");
+        DataCon.changeplayerdata("PLUGIN", playeruuid, amount, false, null, null);
         return new EconomyAction(getHolder(), true, "");
     }
 
@@ -129,7 +131,7 @@ public class EnterpriseWallet extends PlayerWallet {
         }
 
         UUID playerUUID = getPlayer().getUniqueId();
-        DataCon.changeplayerdata("PLUGIN", playerUUID, amount, true, "N/A");
+        DataCon.changeplayerdata("PLUGIN", playerUUID, amount, true, null, null);
         return new EconomyAction(getHolder(), true,  "");
     }
 

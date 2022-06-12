@@ -21,7 +21,6 @@ package me.yic.xconomy.data.sql;
 import me.yic.xconomy.XConomy;
 
 import java.sql.*;
-import java.util.Date;
 
 public class SQLUpdateTable extends SQL {
 
@@ -55,15 +54,25 @@ public class SQLUpdateTable extends SQL {
         if (XConomy.DConfig.isMySQL() && XConomy.Config.TRANSACTION_RECORD) {
             Connection connection = database.getConnectionAndCheck();
             try {
-                PreparedStatement statementa = connection.prepareStatement("desc " + tableRecordName + " datetime");
+                //PreparedStatement statementa = connection.prepareStatement("desc " + tableRecordName + " datetime");
+                //ResultSet rs = statementa.executeQuery();
+                //if (!rs.next()) {
+                //    XConomy.getInstance().logger("升级数据库表格。。。", 0, tableRecordName);
+                //    Timestamp dd = new Timestamp((new Date()).getTime());
+                //    PreparedStatement statementb = connection.prepareStatement("alter table " + tableRecordName + " add column datetime datetime not null default ?");
+                //    statementb.setTimestamp(1, dd);
+                //    statementb.executeUpdate();
+                //    statementb.close();
+                //}
+
+                PreparedStatement statementa = connection.prepareStatement("desc " + tableRecordName + " date");
                 ResultSet rs = statementa.executeQuery();
-                if (!rs.next()) {
+                if (rs.next()) {
                     XConomy.getInstance().logger("升级数据库表格。。。", 0, tableRecordName);
-                    Timestamp dd = new Timestamp((new Date()).getTime());
-                    PreparedStatement statementb = connection.prepareStatement("alter table " + tableRecordName + " add column datetime datetime not null default ?");
-                    statementb.setTimestamp(1, dd);
+                    PreparedStatement statementb = connection.prepareStatement("alter table " + tableRecordName + " rename to " + tableRecordName + "_old");
                     statementb.executeUpdate();
                     statementb.close();
+                    createTable();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

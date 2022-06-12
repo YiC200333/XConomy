@@ -18,6 +18,7 @@
  */
 package me.yic.xconomy;
 
+import me.yic.xconomy.comp.CConfig;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
@@ -49,6 +50,8 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 
 public class XConomy extends JavaPlugin {
+
+    public final static String version = "Bukkit";
 
     private static XConomy instance;
     public static DataBaseConfig DConfig;
@@ -247,14 +250,14 @@ public class XConomy extends JavaPlugin {
         update_config();
         reloadConfig();
 
-        DefaultConfig.config = getConfig();
+        DefaultConfig.config = new CConfig(getConfig());
         Config = new DefaultConfig();
 
         File file = new File(XConomy.getInstance().getDataFolder(), "database.yml");
         if (!file.exists()) {
             XConomy.getInstance().saveResource("database.yml", false);
         }
-        DataBaseConfig.config = YamlConfiguration.loadConfiguration(file);
+        DataBaseConfig.config = new CConfig(YamlConfiguration.loadConfiguration(file));
     }
 
 
@@ -279,6 +282,9 @@ public class XConomy extends JavaPlugin {
         }
     }
 
+    public File getPDataFolder() {
+        return new File(XConomy.getInstance().getDataFolder(), "playerdata");
+    }
 
     private void coveress(CommandMap commandMap) {
         Command commanda = new EconomyCommand("economy");

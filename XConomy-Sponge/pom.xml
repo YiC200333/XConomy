@@ -58,6 +58,10 @@
                                     <artifact>me.yic:XConomy-Common</artifact>
                                     <excludes>
                                         <exclude>META-INF/*</exclude>
+                                        <exclude>me/yic/xconomy/XConomy.class</exclude>
+                                        <exclude>me/yic/xconomy/data/ImportData.class</exclude>
+                                        <exclude>me/yic/xconomy/data/DataLink.class</exclude>
+                                        <exclude>me/yic/xconomy/comp/*</exclude>
                                     </excludes>
                                 </filter>
                             </filters>

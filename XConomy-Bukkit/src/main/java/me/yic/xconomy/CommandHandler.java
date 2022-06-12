@@ -153,7 +153,7 @@ public class CommandHandler {
                             sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                         } else {
                             UUID targetUUID = pd.getUniqueId();
-                            Player target = DataCon.getplayer(pd);
+                            Player target = DataLink.getplayer(pd);
                             String realname = pd.getName();
                             PermissionINFO.setRPaymentPermission(((Player) sender).getUniqueId());
 
@@ -304,7 +304,7 @@ public class CommandHandler {
                     return true;
                 }
 
-                Player target = DataCon.getplayer(pd);
+                Player target = DataLink.getplayer(pd);
                 UUID targetUUID = pd.getUniqueId();
                 String realname = pd.getName();
                 if (PermissionINFO.getRPaymentPermission(targetUUID)) {
@@ -328,12 +328,12 @@ public class CommandHandler {
                 }
 
                 String com = commandName + " " + args[0] + " " + amount;
-                DataCon.changeplayerdata("PLAYER_COMMAND", ((Player) sender).getUniqueId(), taxamount, false, com);
+                DataCon.changeplayerdata("PLAYER_COMMAND", ((Player) sender).getUniqueId(), taxamount, false, com, null);
                 sendMessages(sender, PREFIX + translateColorCodes("pay")
                         .replace("%player%", realname)
                         .replace("%amount%", amountFormatted));
 
-                DataCon.changeplayerdata("PLAYER_COMMAND", targetUUID, amount, true, com);
+                DataCon.changeplayerdata("PLAYER_COMMAND", targetUUID, amount, true, com, null);
                 String mess = PREFIX + translateColorCodes("pay_receive")
                         .replace("%player%", sender.getName())
                         .replace("%amount%", amountFormatted);
@@ -455,7 +455,7 @@ public class CommandHandler {
                             return true;
                         }
 
-                        Player target = DataCon.getplayer(pd);
+                        Player target = DataLink.getplayer(pd);
                         UUID targetUUID = pd.getUniqueId();
                         String realname = pd.getName();
 
@@ -486,7 +486,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, true, com);
+                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, true, com, reasonmessages);
                                 sendMessages(sender, PREFIX + translateColorCodes("money_give")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
@@ -533,7 +533,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, false, com);
+                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, false, com, reasonmessages);
                                 sendMessages(sender, PREFIX + translateColorCodes("money_take")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
@@ -563,7 +563,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, null, com);
+                                DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, null, com, reasonmessages);
                                 sendMessages(sender, PREFIX + translateColorCodes("money_set")
                                         .replace("%player%", realname)
                                         .replace("%amount%", amountFormatted));
@@ -652,7 +652,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                DataCon.changeallplayerdata(args[2], "ADMIN_COMMAND", amount, true, com);
+                                DataCon.changeallplayerdata(args[2], "ADMIN_COMMAND", amount, true, com, reasonmessages);
                                 sendMessages(sender, PREFIX + translateColorCodes("money_give")
                                         .replace("%player%", target)
                                         .replace("%amount%", amountFormatted));
@@ -669,7 +669,7 @@ public class CommandHandler {
                                     return true;
                                 }
 
-                                DataCon.changeallplayerdata(args[2], "ADMIN_COMMAND", amount, false, com);
+                                DataCon.changeallplayerdata(args[2], "ADMIN_COMMAND", amount, false, com, reasonmessages);
                                 sendMessages(sender, PREFIX + translateColorCodes("money_take")
                                         .replace("%player%", target)
                                         .replace("%amount%", amountFormatted));
@@ -733,7 +733,6 @@ public class CommandHandler {
         return Bukkit.getOnlinePlayers().isEmpty() && XConomy.Config.BUNGEECORD_ENABLE && !XConomy.Config.DISABLE_CACHE;
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static boolean checkMessage(String message) {
         return !MessagesManager.messageFile.getString(message).equals("");
     }

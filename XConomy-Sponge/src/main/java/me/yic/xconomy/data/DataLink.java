@@ -19,18 +19,24 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.comp.CPlayer;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import me.yic.xconomy.data.sql.SQLLogin;
 import me.yic.xconomy.data.sql.SQLUpdateTable;
+import me.yic.xconomy.info.RecordInfo;
 import me.yic.xconomy.utils.PlayerData;
+import me.yic.xconomy.utils.UUIDMode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.service.user.UserStorageService;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class DataLink {
@@ -71,12 +77,24 @@ public class DataLink {
         return true;
     }
 
+    public static User getplayer(PlayerData pd) {
+        Optional<Object> p = Optional.empty();
+        if (pd != null) {
+            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)){
+                p = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(pd.getName()));
+            }else{
+                p = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(pd.getUniqueId()));
+            }
+        }
+        return (User) p.orElse(null);
+    }
+
     public static boolean newPlayer(UUID uid, String name) {
         return SQLCreateNewAccount.newPlayer(uid, name, null);
     }
 
     public static void newPlayer(Player a) {
-        SQLCreateNewAccount.newPlayer(a);
+        SQLCreateNewAccount.newPlayer(new CPlayer(a));
     }
 
     public static void updatelogininfo(UUID uid) {
@@ -122,29 +140,29 @@ public class DataLink {
         return SQL.sumBal();
     }
 
-    public static void save(String type, PlayerData pd, Boolean isAdd, BigDecimal amount, String command) {
-        SQL.save(type, pd, isAdd, amount, command);
+    public static void save(PlayerData pd, Boolean isAdd, BigDecimal amount, RecordInfo ri) {
+        SQL.save(pd, isAdd, amount, ri);
     }
 
 
-    public static void saveall(String targettype, String type, BigDecimal amount, Boolean isAdd, String reason) {
+    public static void saveall(String targettype, BigDecimal amount, Boolean isAdd, RecordInfo ri) {
         Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> {
                     if (targettype.equalsIgnoreCase("all")) {
-                        SQL.saveall(targettype, type, null, amount, isAdd, reason);
+                        SQL.saveall(targettype, null, amount, isAdd, ri);
                     } else if (targettype.equalsIgnoreCase("online")) {
                         List<UUID> ol = new ArrayList<>();
                         for (Player pp : Sponge.getServer().getOnlinePlayers()) {
                             ol.add(pp.getUniqueId());
                         }
-                        SQL.saveall(targettype, type, ol, amount, isAdd, reason);
+                        SQL.saveall(targettype, ol, amount, isAdd, ri);
                     }
                 }
         );
     }
 
-    public static void saveNonPlayer(String type, String account, BigDecimal amount,
-                                     BigDecimal newbalance, Boolean isAdd) {
-        SQL.saveNonPlayer(type, account, amount, newbalance, isAdd);
+    public static void saveNonPlayer(String account, BigDecimal amount,
+                                     BigDecimal newbalance, Boolean isAdd, RecordInfo ri) {
+        SQL.saveNonPlayer(account, amount, newbalance, isAdd, ri);
     }
 
     private static void setupMySqlTable() {

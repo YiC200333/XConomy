@@ -21,6 +21,7 @@ package me.yic.xconomy;
 import com.google.inject.Inject;
 import me.yic.libs.bstats.sponge.Metrics2;
 import me.yic.xconomy.command.*;
+import me.yic.xconomy.comp.CConfig;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
@@ -69,6 +70,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(id = "xconomy", name = "XConomy", version = PluginINFO.VERSION, authors = {"YiC"}, url = "https://ore.spongepowered.org/YiC/XConomy")
 
 public class XConomy {
+    public final static String version = "Sponge";
 
     private static XConomy instance;
     public static String PVersion = PluginINFO.VERSION;
@@ -256,6 +258,10 @@ public class XConomy {
 
     }
 
+    public File getPDataFolder() {
+        return new File(configDir.toFile(), "playerdata");
+    }
+
     private void configload() {
         File configpath = new File(configDir.toFile(), "config.yml");
 
@@ -274,13 +280,13 @@ public class XConomy {
         ConfigurationLoader<ConfigurationNode> loader =
                 YAMLConfigurationLoader.builder().setFlowStyle(DumperOptions.FlowStyle.BLOCK).setIndent(2).setFile(configpath).build();
         try {
-            DefaultConfig.config = loader.load();
+            DefaultConfig.config = new CConfig(loader.load());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (UpdateConfig.update(DefaultConfig.config)) {
+        if (UpdateConfig.update(DefaultConfig.config.getConfig())) {
             try {
-                loader.save(DefaultConfig.config);
+                loader.save(DefaultConfig.config.getConfig());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -301,7 +307,7 @@ public class XConomy {
 
         YAMLConfigurationLoader loader = YAMLConfigurationLoader.builder().setPath(configpath).build();
         try {
-            DataBaseConfig.config = loader.load();
+            DataBaseConfig.config = new CConfig(loader.load());
         } catch (IOException e) {
             e.printStackTrace();
         }

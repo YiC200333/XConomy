@@ -20,9 +20,9 @@ package me.yic.xconomy.depend;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
-import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.DataFormat;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.lang.MessagesManager;
 import org.bukkit.ChatColor;

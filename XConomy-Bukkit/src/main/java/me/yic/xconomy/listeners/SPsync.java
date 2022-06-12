@@ -75,7 +75,7 @@ public class SPsync implements PluginMessageListener {
                 SyncBalanceAll sd = (SyncBalanceAll) ob;
                 Cache.clearCache();
                 if (sd.getisOnline()) {
-                    DataLink.saveall("online", null, sd.getAmount(), sd.getC(), null);
+                    DataLink.saveall("online", sd.getAmount(), sd.getC(), null);
                 }
             } else if (ob.getSyncType().equals(SyncType.BROADCAST)) {
                 SyncMessage sd = (SyncMessage) ob;

@@ -18,10 +18,10 @@
  */
 package me.yic.xconomy.task;
 
-import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
-import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.sql.SQL;
+import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.DataLink;
 
 import me.yic.xconomy.data.caches.Cache;
 import org.spongepowered.api.Sponge;
