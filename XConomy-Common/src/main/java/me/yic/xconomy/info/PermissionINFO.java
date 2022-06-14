@@ -37,7 +37,7 @@ public class PermissionINFO {
     public static void setPaymentPermission(UUID u, Boolean b) {
         if (b == null){
             payment.remove(u);
-        }else {
+        } else {
             payment.put(u, b);
         }
     }

@@ -24,8 +24,8 @@ import java.util.UUID;
 
 public class SyncUUID extends SyncData{
 
-    private String newname;
-    private String oldname;
+    private final String newname;
+    private final String oldname;
 
     public SyncUUID(String sign, UUID newUUID, String newname, String oldname){
         super(sign, SyncType.SYNCONLINEUUID, newUUID);

@@ -77,6 +77,8 @@ public class XConomy {
     public static DataBaseConfig DConfig;
     public static DefaultConfig Config;
 
+    @SuppressWarnings("unused")
+    public static boolean foundvaultpe = false;
 
     public static String syncversion = SyncInfo.syncversion;
 
@@ -256,6 +258,11 @@ public class XConomy {
 
         DataBaseload();
 
+    }
+
+    @SuppressWarnings("unused")
+    public File getDataFolder() {
+        return configDir.toFile();
     }
 
     public File getPDataFolder() {

@@ -24,9 +24,9 @@ import java.util.UUID;
 
 public class SyncMessage extends SyncData{
 
-    private String name;
+    private final String name;
     private UUID ruuid;
-    private String message;
+    private final String message;
 
     public SyncMessage(String sign, SyncType st, UUID uuid, String message){
         super(sign, st, uuid);

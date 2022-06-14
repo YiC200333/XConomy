@@ -21,11 +21,9 @@ package me.yic.xconomy.data;
 import java.math.BigDecimal;
 
 
-@SuppressWarnings("unused")
 public class ImportData{
-    public static boolean hasImportFile = false;
-
+    @SuppressWarnings("unused")
     public static BigDecimal getBalance(String player, double inb) {
-        return BigDecimal.ZERO;
+        return DataFormat.formatdouble(inb);
     }
 }

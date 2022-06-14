@@ -21,44 +21,44 @@ public class CConfig {
 
     }
 
-    public boolean contains(String ... path){
+    public boolean contains(String path){
         return false;
     }
 
-    public void createSection(String ... path){
+    public void createSection(String path){
     }
 
-    public void set(Object value, String... path){
+    public void set(String path, Object value){
     }
 
     public void save(File f) throws IOException {
     }
 
-    public String getString(String ... path){
+    public String getString(String path){
         return "";
     }
 
-    public Integer getInt(String ... path){
+    public Integer getInt(String path){
         return 0;
     }
 
-    public boolean getBoolean(String ... path){
+    public boolean getBoolean(String path){
         return false;
     }
 
-    public double getDouble(String ... path){
+    public double getDouble(String path){
         return 0.0;
     }
 
-    public long getLong(String ... path){
+    public long getLong(String path){
         return 0L;
     }
 
-    public List<String> getStringList(String ... path){
+    public List<String> getStringList(String path){
         return null;
     }
 
-    public LinkedHashMap<BigDecimal, String> getConfigurationSectionSort(String ... path){
+    public LinkedHashMap<BigDecimal, String> getConfigurationSectionSort(String path){
         return null;
     }
 }

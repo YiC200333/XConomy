@@ -169,11 +169,9 @@ public class SQLCreateNewAccount extends SQL {
             PreparedStatement statement = co_a.prepareStatement(query);
             statement.setString(1, UID);
             statement.setString(2, user);
-            if (ImportData.hasImportFile) {
-                statement.setDouble(3, ImportData.getBalance(user, XConomy.Config.INITIAL_BAL).doubleValue());
-            }else {
-                statement.setDouble(3, XConomy.Config.INITIAL_BAL);
-            }
+
+            statement.setDouble(3, ImportData.getBalance(user, XConomy.Config.INITIAL_BAL).doubleValue());
+
             statement.setInt(4, 0);
 
             statement.executeUpdate();

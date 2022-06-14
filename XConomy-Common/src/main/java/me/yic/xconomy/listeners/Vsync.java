@@ -26,10 +26,9 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import me.yic.xconomy.XConomyVelocity;
 import me.yic.xconomy.data.syncdata.SyncMessage;
 import me.yic.xconomy.info.SyncType;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.io.*;
+import java.util.Optional;
 
 public class Vsync {
 
@@ -70,16 +69,16 @@ public class Vsync {
             if (ob instanceof SyncMessage) {
                 SyncMessage sd = (SyncMessage) ob;
                 if (sd.getSyncType().equals(SyncType.MESSAGE)) {
-                    ProxiedPlayer p = ProxyServer.getInstance().getPlayer(sd.getUniqueId());
-                    if (p == null) {
+                    Optional<Player> p = XConomyVelocity.getInstance().server.getPlayer(sd.getUniqueId());
+                    if (!p.isPresent()) {
                         return;
                     }
                 }else if(sd.getSyncType().equals(SyncType.MESSAGE_SEMI)) {
-                    ProxiedPlayer p = ProxyServer.getInstance().getPlayer(sd.getName());
-                    if (p == null) {
+                    Optional<Player> p = XConomyVelocity.getInstance().server.getPlayer(sd.getName());
+                    if (!p.isPresent()) {
                         return;
                     }else{
-                        sd.setRUniqueId(p.getUniqueId());
+                        sd.setRUniqueId(p.get().getUniqueId());
                     }
                 }
             }

@@ -19,6 +19,6 @@ public enum UUIDMode {
 
 
     public boolean equals(UUIDMode Other){
-        return this.value == Other.value;
+        return this.value.equals(Other.value);
     }
 }

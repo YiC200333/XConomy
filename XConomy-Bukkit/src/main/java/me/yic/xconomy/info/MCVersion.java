@@ -19,8 +19,6 @@
 package me.yic.xconomy.info;
 
 
-import net.md_5.bungee.api.ChatColor;
-
 public class MCVersion {
     //============================================================
     public static String MCVersion = "0.0.0";

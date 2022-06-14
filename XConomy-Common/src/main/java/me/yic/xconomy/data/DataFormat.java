@@ -19,6 +19,7 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.comp.CChat;
 import me.yic.xconomy.info.DefaultConfig;
 import net.md_5.bungee.api.ChatColor;
 
@@ -65,12 +66,12 @@ public class DataFormat {
 
     public static String shown(BigDecimal am) {
         if (am.compareTo(BigDecimal.ONE) == 0) {
-            return ChatColor.translateAlternateColorCodes('&', displayformat
+            return CChat.translateAlternateColorCodes('&', displayformat
                     .replace("%balance%", decimalFormat.format(am))
                     .replace("%format_balance%", getformatbalance(am))
                     .replace("%currencyname%", singularname));
         }
-        return ChatColor.translateAlternateColorCodes('&', displayformat
+        return CChat.translateAlternateColorCodes('&', displayformat
                 .replace("%balance%", decimalFormat.format(am))
                 .replace("%format_balance%", getformatbalance(am))
                 .replace("%currencyname%", pluralname));

@@ -19,6 +19,7 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.data.sql.SQL;
+import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import me.yic.xconomy.info.RecordInfo;
 import me.yic.xconomy.utils.PlayerData;
 
@@ -28,6 +29,10 @@ import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class DataLink {
+
+    public static boolean newPlayer(UUID uid, String name) {
+        return SQLCreateNewAccount.newPlayer(uid, name, null);
+    }
 
     public static void updatelogininfo(UUID uid) {
     }

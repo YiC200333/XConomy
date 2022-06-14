@@ -100,52 +100,52 @@ public class CConfig {
         fc = pfc;
     }
 
-    public boolean contains(String ... path){
-        return fc.contains(path[0]);
+    public boolean contains(String path){
+        return fc.contains(path);
     }
 
-    public void createSection(String ... path){
-        fc.createSection(path[0]);
+    public void createSection(String path){
+        fc.createSection(path);
     }
 
-    public void set(Object value, String... path){
-        fc.set(path[0], value);
+    public void set(String path, Object value){
+        fc.set(path, value);
     }
 
     public void save(File f) throws IOException {
         fc.save(f);
     }
 
-    public String getString(String ... path){
-        return fc.getString(path[0]);
+    public String getString(String path){
+        return fc.getString(path);
     }
 
-    public Integer getInt(String ... path){
-        return fc.getInt(path[0]);
+    public Integer getInt(String path){
+        return fc.getInt(path);
     }
 
-    public boolean getBoolean(String ... path){
-        return fc.getBoolean(path[0]);
+    public boolean getBoolean(String path){
+        return fc.getBoolean(path);
     }
 
-    public double getDouble(String ... path){
-        return fc.getDouble(path[0]);
+    public double getDouble(String path){
+        return fc.getDouble(path);
     }
 
-    public long getLong(String ... path){
-        return fc.getLong(path[0]);
+    public long getLong(String path){
+        return fc.getLong(path);
     }
 
-    public List<String> getStringList(String ... path){
-        return fc.getStringList(path[0]);
+    public List<String> getStringList(String path){
+        return fc.getStringList(path);
     }
 
     @SuppressWarnings("ConstantConditions")
-    public LinkedHashMap<BigDecimal, String> getConfigurationSectionSort(String ... path){
+    public LinkedHashMap<BigDecimal, String> getConfigurationSectionSort(String path){
         LinkedHashMap<BigDecimal, String> ks = new LinkedHashMap<>();
         try {
-            ConfigurationSection section = fc.getConfigurationSection(path[0]);
-            section.getKeys(false).stream().map(BigDecimal::new).sorted().forEach(key -> ks.put(key, getString(path[0] + "." + key)));
+            ConfigurationSection section = fc.getConfigurationSection(path);
+            section.getKeys(false).stream().map(BigDecimal::new).sorted().forEach(key -> ks.put(key, getString(path + "." + key)));
         } catch (Exception e) {
             return null;
         }

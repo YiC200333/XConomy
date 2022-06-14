@@ -19,13 +19,14 @@
 package me.yic.xconomy.api;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.comp.Comp;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.PermissionINFO;
+import me.yic.xconomy.info.SyncInfo;
 import me.yic.xconomy.utils.PlayerData;
-import org.bukkit.Bukkit;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -36,7 +37,7 @@ import java.util.UUID;
 public class XConomyAPI {
 
     public String getversion() {
-        return XConomy.getInstance().getDescription().getVersion();
+        return SyncInfo.syncversion;
     }
 
     public boolean isbungeecordmode() {
@@ -72,7 +73,7 @@ public class XConomyAPI {
     }
 
     public int changePlayerBalance(UUID u, String playername, BigDecimal amount, Boolean isadd) {
-        if (XConomy.Config.BUNGEECORD_ENABLE & Bukkit.getOnlinePlayers().isEmpty()) {
+        if (XConomy.Config.BUNGEECORD_ENABLE & Comp.getOnlinePlayersisEmpty()) {
             return 1;
         }
         BigDecimal bal = getPlayerData(u).getBalance();
@@ -148,7 +149,7 @@ public class XConomyAPI {
 
     @Deprecated
     public int changebalance(UUID u, String playername, BigDecimal amount, Boolean isadd) {
-        if (XConomy.Config.BUNGEECORD_ENABLE & Bukkit.getOnlinePlayers().isEmpty()) {
+        if (XConomy.Config.BUNGEECORD_ENABLE & Comp.getOnlinePlayersisEmpty()) {
             return 1;
         }
         BigDecimal bal = getbalance(u);

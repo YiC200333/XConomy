@@ -242,10 +242,8 @@ public class SQL {
             if (rs.next()) {
                 CacheNonPlayer.insertIntoCache(playerName, DataFormat.formatString(rs.getString(2)));
             } else {
-                BigDecimal bal = BigDecimal.ZERO;
-                if (ImportData.hasImportFile) {
-                    bal = ImportData.getBalance(playerName, 0.0);
-                }
+                BigDecimal bal = ImportData.getBalance(playerName, 0.0);
+
                 SQLCreateNewAccount.createNonPlayerAccount(playerName, bal.doubleValue(), connection);
                 CacheNonPlayer.insertIntoCache(playerName, bal);
             }

@@ -31,6 +31,7 @@ public class MessagesManager {
 
 
     public static void loadsysmess() {
+        XConomy.getInstance().logger(null,1,XConomy.Config.LANGUAGE.toLowerCase());
         langFile = new CConfig("!/lang/" + XConomy.Config.LANGUAGE.toLowerCase() + ".yml");
     }
 

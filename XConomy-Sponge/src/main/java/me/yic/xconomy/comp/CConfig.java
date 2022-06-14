@@ -80,55 +80,64 @@ public class CConfig {
     }
 
 
-    public boolean contains(String ... path){
-        return !fc.getNode(path).isVirtual();
+    public boolean contains(String path){
+        String[] a = path.split("\\.");
+        return !fc.getNode(a).isVirtual();
     }
 
-    public void createSection(String ... path){
+    public void createSection(String path){
     }
 
-    public void set(Object value, String... path){
-        fc.getNode(path).setValue(value);
+    public void set(String path, Object value){
+        String[] a = path.split("\\.");
+        fc.getNode(a).setValue(value);
     }
 
     public void save(File f) throws IOException {
         fcloader.save(fc);
     }
 
-    public String getString(String ... path){
-        return fc.getNode(path).getString();
+    public String getString(String path){
+        String[] a = path.split("\\.");
+        return fc.getNode(a).getString();
     }
 
-    public Integer getInt(String ... path){
-        return fc.getNode(path).getInt();
+    public Integer getInt(String path){
+        String[] a = path.split("\\.");
+        return fc.getNode(a).getInt();
     }
 
-    public boolean getBoolean(String ... path){
-        return fc.getNode(path).getBoolean();
+    public boolean getBoolean(String path){
+        String[] a = path.split("\\.");
+        return fc.getNode(a).getBoolean();
     }
 
-    public double getDouble(String ... path){
-        return fc.getNode(path).getDouble();
+    public double getDouble(String path){
+        String[] a = path.split("\\.");
+        return fc.getNode(a).getDouble();
     }
 
-    public long getLong(String ... path){
-        return fc.getNode(path).getLong();
+    public long getLong(String path){
+        String[] a = path.split("\\.");
+        return fc.getNode(a).getLong();
     }
 
     @SuppressWarnings("UnstableApiUsage")
-    public List<String> getStringList(String ... path){
+    public List<String> getStringList(String path){
+        String[] a = path.split("\\.");
         try {
-            return fc.getNode(path).getList(TypeToken.of(String.class));
+            return fc.getNode(a).getList(TypeToken.of(String.class));
         } catch (ObjectMappingException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public LinkedHashMap<BigDecimal, String> getConfigurationSectionSort(String ... path){
+    public LinkedHashMap<BigDecimal, String> getConfigurationSectionSort(String path){
         LinkedHashMap<BigDecimal, String> ks = new LinkedHashMap<>();
+        String[] a = path.split("\\.");
         try {
-            ConfigurationNode section = fc.getNode(path);
+            ConfigurationNode section = fc.getNode(a);
             section.getChildrenMap().entrySet().stream().sorted(Comparator.comparingInt(key -> Integer.parseInt(key.getKey().toString())))
                     .forEach(key -> ks.put(new BigDecimal(key.getKey().toString()), key.getValue().getString()));
 

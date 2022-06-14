@@ -136,8 +136,10 @@ public class ImportData implements CommandExecutor {
         }
     }
 
+
+    @SuppressWarnings("unused")
     public static BigDecimal getBalance(String player, double inb) {
-        if (importdata.contains(player)) {
+        if (hasImportFile && importdata.contains(player)) {
             return DataFormat.formatString(importdata.getString(player + ".balance"));
         }
         return DataFormat.formatdouble(inb);

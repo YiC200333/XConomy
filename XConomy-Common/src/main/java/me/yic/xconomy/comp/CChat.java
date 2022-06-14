@@ -3,7 +3,7 @@ package me.yic.xconomy.comp;
 
 @SuppressWarnings("unused")
 public class CChat {
-    public String translateAlternateColorCodes(Character cha, String str){
+    public static String translateAlternateColorCodes(Character cha, String str){
         return "";
     }
 

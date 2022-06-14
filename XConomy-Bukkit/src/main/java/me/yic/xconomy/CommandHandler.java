@@ -132,7 +132,7 @@ public class CommandHandler {
                         return true;
                     }
                     if (sender.isOp() || sender.hasPermission("xconomy.user.paytoggle")) {
-                        PermissionINFO.setRPaymentPermission(((Player) sender).getUniqueId());
+                        PermissionINFO.setRPaymentPermission(DataCon.getPlayerData(((Player) sender).getUniqueId()).getUniqueId());
                         if (PermissionINFO.getRPaymentPermission(((Player) sender).getUniqueId())) {
                             sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_TRUE));
                             syncpr(2, ((Player) sender).getUniqueId(), true);
