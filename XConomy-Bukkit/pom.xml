@@ -67,7 +67,7 @@
                                     </excludes>
                                 </filter>
                                 <filter>
-                                    <artifact>me.yic:XConomy-Common</artifact>
+                                    <artifact>me.yic:XConomy-Core</artifact>
                                     <excludes>
                                         <exclude>META-INF/*</exclude>
                                         <exclude>me/yic/xconomy/XConomy.class</exclude>
@@ -85,7 +85,7 @@
                         <includes>
                             <include>org.bstats:*</include>
                             <include>com.zaxxer:*</include>
-                            <include>me.yic:XConomy-Common</include>
+                            <include>me.yic:XConomy-Core</include>
                         </includes>
                     </artifactSet>
                     <relocations>
@@ -158,10 +158,10 @@
             <version>1.7</version>
             <scope>provided</scope>
         </dependency>
-        <!--XConomy-Common-->
+        <!--XConomy-Core-->
         <dependency>
             <groupId>me.yic</groupId>
-            <artifactId>XConomy-Common</artifactId>
+            <artifactId>XConomy-Core</artifactId>
             <version>2.18.1</version>
             <scope>compile</scope>
         </dependency>

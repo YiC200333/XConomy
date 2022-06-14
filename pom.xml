@@ -9,7 +9,7 @@
     <modules>
         <module>XConomy-Bukkit</module>
         <module>XConomy-Sponge</module>
-        <module>XConomy-Common</module>
+        <module>XConomy-Core</module>
     </modules>
     <packaging>pom</packaging>
 

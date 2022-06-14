@@ -19,7 +19,6 @@
 package me.yic.xconomy;
 
 import com.google.inject.Inject;
-import me.yic.libs.bstats.sponge.Metrics2;
 import me.yic.xconomy.command.*;
 import me.yic.xconomy.comp.CConfig;
 import me.yic.xconomy.data.DataCon;
@@ -41,6 +40,7 @@ import me.yic.xconomy.utils.PluginINFO;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
+import org.bstats.sponge.Metrics;
 import org.slf4j.Logger;
 import org.spongepowered.api.Platform;
 import org.spongepowered.api.Sponge;
@@ -84,7 +84,7 @@ public class XConomy {
 
     private SpongeExecutorService refresherTask;
     @SuppressWarnings({"FieldCanBeLocal", "unused"})
-    private final Metrics2 metrics;
+    private final Metrics metrics;
     private ChannelBinding.RawDataChannel channel;
     private RawDataListener channellistener;
 
@@ -98,7 +98,7 @@ public class XConomy {
     public Path configDir;
 
     @Inject
-    public XConomy(Metrics2.Factory metricsFactory, Logger inforation) {
+    public XConomy(Metrics.Factory metricsFactory, Logger inforation) {
         this.inforation = inforation;
         instance = this;
         metrics = metricsFactory.make(10142);
