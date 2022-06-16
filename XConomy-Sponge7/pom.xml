@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>XConomy-Sponge</artifactId>
+    <artifactId>XConomy-Sponge7</artifactId>
 
     <build>
         <defaultGoal>clean install</defaultGoal>

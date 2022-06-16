@@ -8,7 +8,8 @@
     <version>2.18.11</version>
     <modules>
         <module>XConomy-Bukkit</module>
-        <module>XConomy-Sponge</module>
+        <module>XConomy-Sponge7</module>
+        <module>XConomy-Sponge8</module>
         <module>XConomy-Core</module>
     </modules>
     <packaging>pom</packaging>
