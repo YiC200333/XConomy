@@ -132,7 +132,7 @@ public class XCUniqueAccount implements UniqueAccount {
                     currency, amount, contexts, ResultType.FAILED, TransactionTypes.DEPOSIT);
         }
 
-        DataCon.changeplayerdata("PLUGIN", uuid, amountFormatted, true, "N/A", null);
+        DataCon.changeplayerdata("PLUGIN", uuid, amountFormatted, true, null, null);
         return new XCTransactionResult(this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.DEPOSIT);
 
@@ -153,7 +153,7 @@ public class XCUniqueAccount implements UniqueAccount {
                     currency, amount, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
         }
 
-        DataCon.changeplayerdata("PLUGIN", uuid, amountFormatted, false, "N/A", null);
+        DataCon.changeplayerdata("PLUGIN", uuid, amountFormatted, false, null, null);
         return new XCTransactionResult(this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.WITHDRAW);
     }

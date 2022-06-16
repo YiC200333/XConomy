@@ -89,8 +89,7 @@ public class DataCon {
         return false;
     }
 
-
-    public static void changeplayerdata(String type, UUID uid, BigDecimal amount, Boolean isAdd, String command, StringBuilder comment) {
+    public static void changeplayerdata(final String type, final UUID uid, final BigDecimal amount, final Boolean isAdd, final String command, final Object comment) {
         PlayerData pd = getPlayerData(uid);
         UUID u = pd.getUniqueId();
         BigDecimal newvalue = amount;
@@ -122,11 +121,11 @@ public class DataCon {
 
 
     @SuppressWarnings("ConstantConditions")
-    public static void changeaccountdata(final String u, final BigDecimal amount, final Boolean isAdd, final String type) {
+    public static void changeaccountdata(final String type, final String u, final BigDecimal amount, final Boolean isAdd, final String command) {
         BigDecimal newvalue = amount;
         BigDecimal balance = CacheNonPlayer.getBalanceFromCacheOrDB(u);
 
-        RecordInfo ri = new RecordInfo(type, null, null);
+        RecordInfo ri = new RecordInfo(type, command, null);
 
         CallAPI.CallNonPlayerAccountEvent(u, balance, amount, isAdd, type);
         if (isAdd != null) {

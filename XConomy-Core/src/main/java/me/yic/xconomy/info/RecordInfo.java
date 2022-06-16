@@ -18,6 +18,8 @@
  */
 package me.yic.xconomy.info;
 
+import me.yic.xconomy.XConomy;
+
 public class RecordInfo {
     private final String type;
 
@@ -25,10 +27,10 @@ public class RecordInfo {
 
     private final String comment;
 
-    public RecordInfo(String type, String command, StringBuilder comment) {
+    public RecordInfo(String type, String command, Object comment) {
         if (command == null) {
             this.type = type;
-            this.command = "N/A";
+            this.command = Thread.currentThread().getStackTrace()[getindex()].getClassName();
             this.comment = "N/A";
         }else{
             if (comment == null) {
@@ -38,9 +40,20 @@ public class RecordInfo {
             }else{
                 this.type = type;
                 this.command = command;
-                this.comment = comment.toString();
+                if (comment instanceof StringBuilder){
+                    this.comment = comment.toString();
+                }else {
+                    this.comment = (String) comment;
+                }
             }
         }
+    }
+
+    private int getindex() {
+        if (XConomy.version.equals("Bukkit")) {
+            return 4;
+        }
+        return 5;
     }
 
     public String getType() {

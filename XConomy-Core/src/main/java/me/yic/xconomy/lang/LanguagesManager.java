@@ -65,7 +65,6 @@ public class LanguagesManager extends Languages {
                     MessagesManager.messageFile.save(f);
                 }
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }

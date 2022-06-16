@@ -53,8 +53,11 @@ import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.network.ChannelBinding;
 import org.spongepowered.api.network.RawDataListener;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 import org.spongepowered.api.service.economy.EconomyService;
+import org.spongepowered.api.service.permission.PermissionDescription;
+import org.spongepowered.api.service.permission.PermissionService;
 import org.spongepowered.api.text.Text;
 import org.yaml.snakeyaml.DumperOptions;
 
@@ -76,7 +79,8 @@ public class XConomy {
     public static String PVersion = PluginINFO.VERSION;
     public static DataBaseConfig DConfig;
     public static DefaultConfig Config;
-
+    public PermissionService permissionService;
+    public PermissionDescription.Builder permissionDescriptionBuilder;
     @SuppressWarnings("unused")
     public static boolean foundvaultpe = false;
 
@@ -110,6 +114,7 @@ public class XConomy {
     @SuppressWarnings(value = {"unused"})
     @Listener
     public void onEnable(GamePreInitializationEvent event) {
+        this.permissionService = Sponge.getServiceManager().provide(PermissionService.class).orElse(null);
         loadconfig();
 
         MessagesManager.loadsysmess();
@@ -183,6 +188,71 @@ public class XConomy {
                 .arguments(GenericArguments.seq(GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg1"))),
                         GenericArguments.optionalWeak(GenericArguments.string(Text.of("arg2")))))
                 .build();
+        if (permissionService != null) {
+            this.permissionDescriptionBuilder = this.permissionService.newDescriptionBuilder(this);
+
+            this.permissionDescriptionBuilder
+                    .id("xconomy.user.balance")
+                    .description(Text.of("xconomy command"))
+                    .assign(PermissionDescription.ROLE_USER, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.user.balance.other")
+                    .description(Text.of("xconomy command"))
+                    .assign(PermissionDescription.ROLE_USER, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.user.pay")
+                    .description(Text.of("xconomy command"))
+                    .assign(PermissionDescription.ROLE_USER, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.user.pay.receive")
+                    .description(Text.of("xconomy command"))
+                    .assign(PermissionDescription.ROLE_USER, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.user.balancetop")
+                    .description(Text.of("xconomy command"))
+                    .assign(PermissionDescription.ROLE_USER, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.user.paytoggle")
+                    .description(Text.of("xconomy command"))
+                    .assign(PermissionDescription.ROLE_USER, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.admin.give")
+                    .description(Text.of("xconomy command"))
+                    .assign(PermissionDescription.ROLE_ADMIN, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.admin.take")
+                    .description(Text.of("xconomy command"))
+                    .assign(PermissionDescription.ROLE_ADMIN, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.admin.set")
+                    .description(Text.of("xconomy command"))
+                    .assign(PermissionDescription.ROLE_ADMIN, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.admin.permission")
+                    .description(Text.of("xconomy command"))
+                    .assign(PermissionDescription.ROLE_ADMIN, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.admin.balancetop")
+                    .description(Text.of("xconomy command"))
+                    .assign(PermissionDescription.ROLE_ADMIN, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.admin.paytoggle")
+                    .description(Text.of("xconomy command"))
+                    .assign(PermissionDescription.ROLE_ADMIN, true)
+                    .register();
+        }
+
 
         if (Config.ECO_COMMAND) {
             Sponge.getCommandManager().register(this, balcmd,
@@ -200,15 +270,16 @@ public class XConomy {
 
 
         if (Config.BUNGEECORD_ENABLE) {
-            channel = Sponge.getChannelRegistrar().createRawChannel(this, "xconomy:aca");
-            channellistener = new SPsync();
-            channel.addListener(Platform.Type.SERVER, channellistener);
-            Sponge.getChannelRegistrar().createRawChannel(this, "xconomy:acb");
-            logger("已开启BungeeCord同步", 0, null);
-        } else if (DConfig.getStorageType() == 0 || DConfig.getStorageType() == 1) {
-            if (DConfig.gethost().equalsIgnoreCase("Default")) {
+            if ((DConfig.getStorageType() == 0 || DConfig.getStorageType() == 1)
+                    && (DConfig.gethost().equalsIgnoreCase("Default"))) {
                 logger("SQLite文件路径设置错误", 1, null);
                 logger("BungeeCord同步未开启", 1, null);
+            } else {
+                channel = Sponge.getChannelRegistrar().createRawChannel(this, "xconomy:aca");
+                channellistener = new SPsync();
+                channel.addListener(Platform.Type.SERVER, channellistener);
+                Sponge.getChannelRegistrar().createRawChannel(this, "xconomy:acb");
+                logger("已开启BungeeCord同步", 0, null);
             }
         }
 
@@ -220,7 +291,7 @@ public class XConomy {
         refresherTask.scheduleAtFixedRate(new Baltop(), time, time, TimeUnit.SECONDS);
         //Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(Baltop::new);
 
-                logger(null, 0, "===== YiC =====");
+        logger(null, 0, "===== YiC =====");
 
     }
 

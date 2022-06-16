@@ -52,6 +52,7 @@ import java.util.Collections;
 public class XConomy extends JavaPlugin {
 
     public final static String version = "Bukkit";
+    public static String PVersion;
 
     private static XConomy instance;
     public static DataBaseConfig DConfig;
@@ -70,6 +71,7 @@ public class XConomy extends JavaPlugin {
     @SuppressWarnings("ConstantConditions")
     public void onEnable() {
         instance = this;
+        PVersion = getInstance().getDescription().getVersion();
 
         load();
         MessagesManager.loadsysmess();
@@ -161,14 +163,15 @@ public class XConomy extends JavaPlugin {
         }
 
         if (Config.BUNGEECORD_ENABLE) {
+            if ((DConfig.getStorageType() == 0 || DConfig.getStorageType() == 1)
+                    && (DConfig.gethost().equalsIgnoreCase("Default"))) {
+                logger("SQLite文件路径设置错误", 1, null);
+                logger("BungeeCord同步未开启", 1, null);
+            } else {
                 getServer().getMessenger().registerIncomingPluginChannel(this, "xconomy:aca", new SPsync());
                 getServer().getMessenger().registerOutgoingPluginChannel(this, "xconomy:acb");
                 getServer().getMessenger().registerIncomingPluginChannel(this, "xconomy:global", new SPPsync());
                 logger("已开启BungeeCord同步", 0, null);
-            } else if (DConfig.getStorageType() == 0 || DConfig.getStorageType() == 1) {
-                if (DConfig.gethost().equalsIgnoreCase("Default")) {
-                    logger("SQLite文件路径设置错误", 1, null);
-                    logger("BungeeCord同步未开启", 1, null);
             }
         }
 

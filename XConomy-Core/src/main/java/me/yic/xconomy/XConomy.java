@@ -27,6 +27,7 @@ import java.io.File;
 @SuppressWarnings("unused")
 public class XConomy{
     public static String version;
+    public static String PVersion;
 
     private static XConomy instance;
     public static boolean foundvaultpe = false;

@@ -123,7 +123,7 @@ public class Vault extends AbstractEconomy {
         }
 
         if (isNonPlayerAccount(name)) {
-            DataCon.changeaccountdata(name, amountFormatted, true, "PLUGIN");
+            DataCon.changeaccountdata("PLUGIN", name, amountFormatted, true, null);
             return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
         }
 
@@ -307,7 +307,7 @@ public class Vault extends AbstractEconomy {
         }
 
         if (isNonPlayerAccount(name)) {
-            DataCon.changeaccountdata(name, amountFormatted, false, "PLUGIN");
+            DataCon.changeaccountdata("PLUGIN", name, amountFormatted, false, null);
             return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
         }
 

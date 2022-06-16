@@ -48,7 +48,7 @@ public class DataLink {
                 XConomy.getInstance().logger("数据保存方式", 0, " - SQLite");
                 setupSqLiteAddress();
 
-                File dataFolder = new File(XConomy.getInstance().getPDataFolder(), "playerdata");
+                File dataFolder = XConomy.getInstance().getPDataFolder();
                 if (!dataFolder.exists() && !dataFolder.mkdirs()) {
                     XConomy.getInstance().logger("文件夹创建异常", 1, null);
                     return false;

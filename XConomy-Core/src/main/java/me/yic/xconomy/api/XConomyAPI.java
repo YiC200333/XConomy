@@ -37,7 +37,7 @@ import java.util.UUID;
 public class XConomyAPI {
 
     public String getversion() {
-        return SyncInfo.syncversion;
+        return XConomy.PVersion;
     }
 
     public boolean isbungeecordmode() {
@@ -72,7 +72,12 @@ public class XConomyAPI {
         return DataFormat.isMAX(amount);
     }
 
+
     public int changePlayerBalance(UUID u, String playername, BigDecimal amount, Boolean isadd) {
+        return changePlayerBalance(u, playername, amount, isadd, null);
+    }
+
+    public int changePlayerBalance(UUID u, String playername, BigDecimal amount, Boolean isadd, String pluginname) {
         if (XConomy.Config.BUNGEECORD_ENABLE & Comp.getOnlinePlayersisEmpty()) {
             return 1;
         }
@@ -86,11 +91,15 @@ public class XConomyAPI {
                 return 2;
             }
         }
-        DataCon.changeplayerdata("PLUGIN_API", u, amount, isadd, null, null);
+        DataCon.changeplayerdata("PLUGIN_API", u, amount, isadd, pluginname, null);
         return 0;
     }
 
     public int changeAccountBalance(String account, BigDecimal amount, Boolean isadd) {
+        return changeAccountBalance(account, amount, isadd, null);
+    }
+
+    public int changeAccountBalance(String account, BigDecimal amount, Boolean isadd, String pluginname) {
         BigDecimal bal = getorcreateAccountBalance(account);
         if (isadd) {
             if (ismaxnumber(bal.add(amount))) {
@@ -101,7 +110,7 @@ public class XConomyAPI {
                 return 2;
             }
         }
-        DataCon.changeaccountdata("PLUGIN_API", amount, isadd, "N/A");
+        DataCon.changeaccountdata("PLUGIN_API", account, amount, isadd, pluginname);
         return 0;
     }
 
@@ -140,29 +149,4 @@ public class XConomyAPI {
         PermissionINFO.setRPaymentPermission(uid, vaule);
     }
 
-
-
-    @Deprecated
-    public BigDecimal getbalance(UUID uid) {
-        return DataCon.getPlayerData(uid).getBalance();
-    }
-
-    @Deprecated
-    public int changebalance(UUID u, String playername, BigDecimal amount, Boolean isadd) {
-        if (XConomy.Config.BUNGEECORD_ENABLE & Comp.getOnlinePlayersisEmpty()) {
-            return 1;
-        }
-        BigDecimal bal = getbalance(u);
-        if (isadd) {
-            if (ismaxnumber(bal.add(amount))) {
-                return 3;
-            }
-        } else {
-            if (bal.compareTo(amount) < 0) {
-                return 2;
-            }
-        }
-        DataCon.changeplayerdata("PLUGIN_API", u, amount, isadd, null, null);
-        return 0;
-    }
 }

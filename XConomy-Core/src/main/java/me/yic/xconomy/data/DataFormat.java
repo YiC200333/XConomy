@@ -168,7 +168,7 @@ public class DataFormat {
                 }
             }
             BigDecimal aa = bal.divide(x, 3, RoundingMode.DOWN);
-            return decimalFormatX.format(aa) + DefaultConfig.config.getString("Currency.format-balance." + x);
+            return decimalFormatX.format(aa) + XConomy.Config.FORMAT_BALANCE_C.get(x);
         } else {
             return decimalFormat.format(bal);
         }
