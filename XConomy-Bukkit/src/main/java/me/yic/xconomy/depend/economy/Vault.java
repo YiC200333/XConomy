@@ -22,7 +22,6 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
-import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import me.yic.xconomy.utils.PlayerData;
 import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -143,7 +142,7 @@ public class Vault extends AbstractEconomy {
                     "[BungeeCord] No player in server");
         }
 
-        if (DataCon.getPlayerData(pp.getUniqueId()).getUniqueId() == null) {
+        if (DataCon.getPlayerData(pp.getUniqueId()) == null) {
             if (!createPlayerAccount(pp)) {
                 return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
             }
@@ -327,7 +326,7 @@ public class Vault extends AbstractEconomy {
                     "[BungeeCord] No player in server");
         }
 
-        if (DataCon.getPlayerData(pp.getUniqueId()).getUniqueId() == null) {
+        if (DataCon.getPlayerData(pp.getUniqueId()) == null) {
             if (!createPlayerAccount(pp)) {
                 return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
             }

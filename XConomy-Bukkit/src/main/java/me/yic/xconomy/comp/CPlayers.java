@@ -1,22 +1,28 @@
 package me.yic.xconomy.comp;
 
 
-
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
 @SuppressWarnings("unused")
-public class CPlayer {
+public class CPlayers {
     private final Player player;
 
-    public CPlayer(Player player) {
+    public CPlayers(Player player) {
         this.player = player;
     }
 
     public void kickPlayer(String reason){
-        player.kick(Text.of(reason));
+        player.kickPlayer(reason);
+    }
+
+    public void sendMessage(String message){
+        player.sendMessage(message);
+    }
+
+    public void sendMessage(String[] message){
+        player.sendMessage(message);
     }
 
     public UUID getUniqueId(){

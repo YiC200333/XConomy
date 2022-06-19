@@ -19,11 +19,14 @@
 package me.yic.xconomy.data.sql;
 
 
-import me.yic.xconomy.CommandHandler;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.comp.CChat;
+import me.yic.xconomy.comp.CPlayer;
 import me.yic.xconomy.data.DataCon;
+import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.info.MessageConfig;
+import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.utils.UUIDMode;
-import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -60,7 +63,7 @@ public class SQLLogin extends SQL {
     }
 
 
-    public static void getPlayerlogin(Player pp) {
+    public static void getPlayerlogin(CPlayer pp) {
         try {
             Connection connection = database.getConnectionAndCheck();
             PreparedStatement statement = connection.prepareStatement("select player, amount from " + tableRecordName +
@@ -77,7 +80,7 @@ public class SQLLogin extends SQL {
             while (rs.next()) {
                 String otherp = rs.getString(1);
                 double amount = rs.getDouble(2);
-                CommandHandler.sendMessages(pp, otherp, amount);
+                sendMessages(pp, otherp, amount);
             }
 
             rs.close();
@@ -85,6 +88,20 @@ public class SQLLogin extends SQL {
             database.closeHikariConnection(connection);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void sendMessages(CPlayer sender, String name, double amount) {
+        String PREFIX = CChat.translateAlternateColorCodes('&', MessagesManager.messageFile.getString("prefix"));
+        String message = CChat.translateAlternateColorCodes('&', MessagesManager.messageFile.getString(MessageConfig.PAY_RECEIVE.toString()));
+        message = PREFIX + message.replace("%player%", name).replace("%amount%", DataFormat.shown(amount));
+        if (!message.replace(PREFIX, "").equalsIgnoreCase("")) {
+            if (message.contains("\\n")) {
+                String[] messs = message.split("\\\\n");
+                sender.sendMessage(messs);
+            } else {
+                sender.sendMessage(message);
+            }
         }
     }
 

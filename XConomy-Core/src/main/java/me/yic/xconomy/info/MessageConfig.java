@@ -21,6 +21,7 @@ package me.yic.xconomy.info;
 
 public enum MessageConfig {
     NO_ACCOUNT("no_account"),
+    PAY_RECEIVE("pay_receive"),
     PAYTOGGLE_TRUE("paytoggle_true"),
     PAYTOGGLE_FALSE("paytoggle_false"),
     PAYTOGGLE_OTHER_TRUE("paytoggle_other_true"),

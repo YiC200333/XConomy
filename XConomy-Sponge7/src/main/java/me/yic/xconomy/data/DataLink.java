@@ -108,9 +108,9 @@ public class DataLink {
 
     public static void selectlogininfo(Player pp) {
         if (XConomy.DConfig.canasync) {
-            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> SQLLogin.getPlayerlogin(pp));
+            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> SQLLogin.getPlayerlogin(new CPlayer(pp)));
         } else {
-            SQLLogin.getPlayerlogin(pp);
+            SQLLogin.getPlayerlogin(new CPlayer(pp));
         }
     }
 

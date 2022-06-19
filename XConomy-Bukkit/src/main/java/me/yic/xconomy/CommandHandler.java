@@ -737,12 +737,6 @@ public class CommandHandler {
         return !MessagesManager.messageFile.getString(message).equals("");
     }
 
-    public static void sendMessages(Player sender, String name, double amount) {
-        sendMessages(sender, PREFIX + translateColorCodes("pay_receive")
-                .replace("%player%", name)
-                .replace("%amount%", DataFormat.shown(amount)));
-    }
-
     private static void sendMessages(CommandSender sender, String message) {
         if (!message.replace(PREFIX, "").equalsIgnoreCase("")) {
             if (message.contains("\\n")) {

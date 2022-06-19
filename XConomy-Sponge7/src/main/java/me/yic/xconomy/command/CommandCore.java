@@ -697,13 +697,6 @@ public class CommandCore {
         return !MessagesManager.messageFile.getString(message).equals("");
     }
 
-    public static void sendMessages(Player sender, String name, double amount) {
-        String mess = PREFIX + translateColorCodes("pay_receive")
-                .replace("%player%", name)
-                .replace("%amount%", DataFormat.shown(amount));
-        sender.sendMessage(Text.of(mess));
-    }
-
     public static String translateColorCodes(String message) {
         return MessagesManager.messageFile.getString(message).replace("&", "§");
     }

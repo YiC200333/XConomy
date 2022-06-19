@@ -111,9 +111,9 @@ public class DataLink {
 
     public static void selectlogininfo(Player pp) {
         if (XConomy.DConfig.canasync) {
-            Bukkit.getScheduler().runTaskLaterAsynchronously(XConomy.getInstance(), () -> SQLLogin.getPlayerlogin(pp), 20L);
+            Bukkit.getScheduler().runTaskLaterAsynchronously(XConomy.getInstance(), () -> SQLLogin.getPlayerlogin(new CPlayer(pp)), 20L);
         } else {
-            SQLLogin.getPlayerlogin(pp);
+            SQLLogin.getPlayerlogin(new CPlayer(pp));
         }
     }
 
