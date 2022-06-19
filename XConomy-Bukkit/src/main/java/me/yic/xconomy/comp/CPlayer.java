@@ -17,6 +17,14 @@ public class CPlayer {
         player.kickPlayer(reason);
     }
 
+    public void sendMessage(String message){
+        player.sendMessage(message);
+    }
+
+    public void sendMessage(String[] message){
+        player.sendMessage(message);
+    }
+
     public UUID getUniqueId(){
         return player.getUniqueId();
     }

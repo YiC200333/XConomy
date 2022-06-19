@@ -19,6 +19,16 @@ public class CPlayer {
         player.kick(Text.of(reason));
     }
 
+    public void sendMessage(String message){
+        player.sendMessage(Text.of(message));
+    }
+
+    public void sendMessage(String[] message){
+        for (String mess : message) {
+            player.sendMessage(Text.of(mess));
+        }
+    }
+
     public UUID getUniqueId(){
         return player.getUniqueId();
     }
