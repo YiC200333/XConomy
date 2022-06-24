@@ -88,7 +88,7 @@ public class SQLCreateNewAccount extends SQL {
             }
             final String freason = reason;
             if (player.isOnline()) {
-                CScheduler.runTaskAsynchronously(() -> player.kickPlayer(freason));
+                player.kickPlayer(freason);
             }
         }
     }

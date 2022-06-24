@@ -53,7 +53,7 @@ public class GetUUID {
 
     private static void kickplayer(CPlayer pp) {
         if (pp != null && pp.isOnline()) {
-            CScheduler.runTaskAsynchronously(() -> pp.kickPlayer("Failed to Get profile"));
+            pp.kickPlayer("Failed to Get profile");
         }
     }
 

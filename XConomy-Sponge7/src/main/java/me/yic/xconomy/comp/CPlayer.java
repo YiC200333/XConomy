@@ -2,6 +2,8 @@ package me.yic.xconomy.comp;
 
 
 
+import me.yic.xconomy.XConomy;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
@@ -16,7 +18,7 @@ public class CPlayer {
     }
 
     public void kickPlayer(String reason){
-        player.kick(Text.of(reason));
+        Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> player.kick(Text.of(reason)));
     }
 
     public void sendMessage(String message){

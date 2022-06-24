@@ -1,6 +1,8 @@
 package me.yic.xconomy.comp;
 
 
+import me.yic.xconomy.XConomy;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -14,7 +16,7 @@ public class CPlayer {
     }
 
     public void kickPlayer(String reason){
-        player.kickPlayer(reason);
+        Bukkit.getScheduler().runTask(XConomy.getInstance(), ()->player.kickPlayer(reason));
     }
 
     public void sendMessage(String message){
