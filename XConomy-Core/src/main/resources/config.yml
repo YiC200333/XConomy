@@ -53,7 +53,11 @@ Settings:
   username-ignore-case: false
 
 
-#It can solve the problem that some plugins need to create non-player accounts, such as Factions,Towny
+#==========================================================================================
+#Plugins supported by default (no requirement to enable non-player-account)
+#Towny
+#==========================================================================================
+#It can solve the problem that some plugins need to create non-player accounts, such as Factions
 #Non-player account data is not synced with BC
 non-player-account:
   #Whether to enable non-player accounts.
@@ -66,8 +70,7 @@ non-player-account:
     #Whether to enable whitelist.
     enable: false
     fields-list:
-      - town-
-      - towny-
+      - tax
       - nation-
 
 

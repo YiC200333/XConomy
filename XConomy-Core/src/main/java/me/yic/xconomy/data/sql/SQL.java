@@ -46,6 +46,8 @@ public class SQL {
     public final static DatabaseConnection database = new DatabaseConnection();
     static final String encoding = XConomy.DConfig.ENCODING;
 
+    public static boolean hasnonplayerplugin = false;
+
 
     public static boolean con() {
         return database.setGlobalConnection();
@@ -126,7 +128,7 @@ public class SQL {
             }
 
             statement.executeUpdate(query1);
-            if (XConomy.Config.NON_PLAYER_ACCOUNT) {
+            if (hasnonplayerplugin || XConomy.Config.NON_PLAYER_ACCOUNT) {
                 statement.executeUpdate(query2);
             }
             if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {

@@ -25,6 +25,7 @@ import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.ImportData;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.depend.LoadEconomy;
+import me.yic.xconomy.depend.NonPlayerPlugin;
 import me.yic.xconomy.depend.Placeholder;
 import me.yic.xconomy.depend.economy.VaultHook;
 import me.yic.xconomy.info.*;
@@ -104,6 +105,8 @@ public class XConomy extends JavaPlugin {
             logger("发现 DatabaseDrivers", 0, null);
             DConfig.DDrivers = true;
         }
+
+        NonPlayerPlugin.load();
 
         if (!DataLink.create()) {
             logger("XConomy已成功卸载", 0, null);

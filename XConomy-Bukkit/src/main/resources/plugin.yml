@@ -5,7 +5,7 @@ author: YiC
 website: https://www.spigotmc.org/resources/xconomy.75669/
 load: STARTUP
 loadbefore:  [ PlotSquared ]
-softdepend: [ Vault, Enterprise, DatabaseDrivers, MPoints, PlaceholderAPI ]
+softdepend: [ Vault, Enterprise, DatabaseDrivers, MPoints, PlaceholderAPI, Towny ]
 api-version: "1.13"
 
 commands:

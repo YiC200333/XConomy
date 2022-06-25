@@ -22,6 +22,7 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
+import me.yic.xconomy.depend.NonPlayerPlugin;
 import me.yic.xconomy.utils.PlayerData;
 import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -354,6 +355,10 @@ public class Vault extends AbstractEconomy {
     }
 
     private boolean isNonPlayerAccount(String name) {
+        if (NonPlayerPlugin.containinfields(name)) {
+            return true;
+        }
+
         if (!XConomy.Config.NON_PLAYER_ACCOUNT) {
             return false;
         }
