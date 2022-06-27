@@ -28,8 +28,10 @@ public class DataBaseConfig {
     public static CConfig config;
 
     public DataBaseConfig() {
-        if (getStorageType() != 1) {
-            canasync = !config.getBoolean("Settings.disable-async");
+        if (!XConomy.Config.DISABLE_CACHE) {
+            if (getStorageType() != 1) {
+                canasync = !config.getBoolean("Settings.disable-async");
+            }
         }
 
         setHikariConnectionPooling();

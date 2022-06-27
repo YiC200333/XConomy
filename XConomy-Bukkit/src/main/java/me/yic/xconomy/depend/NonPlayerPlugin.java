@@ -36,7 +36,7 @@ public class NonPlayerPlugin {
 
     public static boolean containinfields(String accountname) {
         if (towny) {
-            return accountname.contains(Towny.getNationAccountPrefix()) || accountname.contains(Towny.getTownAccountPrefix());
+            return accountname.startsWith(Towny.getNationAccountPrefix()) || accountname.startsWith(Towny.getTownAccountPrefix());
         }
         return false;
     }

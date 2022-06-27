@@ -38,6 +38,7 @@ import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
 import me.yic.xconomy.utils.EconomyCommand;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
@@ -80,7 +81,6 @@ public class XConomy extends JavaPlugin {
 
         DConfig = new DataBaseConfig();
         Config.setBungeecord();
-
 
         if (Config.IMPORTMODE){
             itd = new ImportData(this);
@@ -136,6 +136,7 @@ public class XConomy extends JavaPlugin {
 
 
         metrics = new Metrics(this, 6588);
+        metrics.addCustomChart(new SimplePie("uuid-mode", () -> Config.UUIDMODE.toString().substring(11)));
 
         Bukkit.getPluginCommand("money").setExecutor(new Commands());
         Bukkit.getPluginCommand("balance").setExecutor(new Commands());
