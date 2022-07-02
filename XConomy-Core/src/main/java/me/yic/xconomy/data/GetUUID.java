@@ -21,7 +21,6 @@ package me.yic.xconomy.data;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.comp.CConfig;
 import me.yic.xconomy.comp.CPlayer;
-import me.yic.xconomy.comp.CScheduler;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
