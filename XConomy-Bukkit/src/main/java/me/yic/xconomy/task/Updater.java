@@ -39,6 +39,8 @@ public class Updater extends BukkitRunnable {
         try {
             URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=75669");
             URLConnection conn = url.openConnection();
+            conn.setConnectTimeout(15000); //15 seconds
+            conn.setReadTimeout(60000);
             InputStream is = conn.getInputStream();
             newVersion = new BufferedReader(new InputStreamReader(is)).readLine();
             is.close();

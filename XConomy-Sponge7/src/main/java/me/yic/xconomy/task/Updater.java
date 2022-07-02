@@ -43,6 +43,8 @@ public class Updater implements Runnable {
             URL url = new URL("https://ore.spongepowered.org/api/v1/projects/xconomy");
             URLConnection conn = url.openConnection();
             conn.addRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT)");
+            conn.setConnectTimeout(15000); //15 seconds
+            conn.setReadTimeout(60000);
             InputStream is = conn.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder()
