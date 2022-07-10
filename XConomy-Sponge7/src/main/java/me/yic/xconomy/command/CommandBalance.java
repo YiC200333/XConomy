@@ -24,7 +24,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 
-public class CommandBalance extends CommandCore implements CommandExecutor {
+public class CommandBalance extends CommandCoreP implements CommandExecutor {
 
     @SuppressWarnings({"OptionalGetWithoutIsPresent", "NullableProblems"})
     @Override
@@ -41,40 +41,40 @@ public class CommandBalance extends CommandCore implements CommandExecutor {
                                         amountortype,
                                         args.<String>getOne("arg4").get().trim(),
                                         args.<String>getOne("arg5").get().trim()};
-                                return onCommand(sender, "balance", cmd);
+                                return getResultonCommand(sender, "balance", cmd);
                             }else{
                                 String[] cmd = {args.<String>getOne("arg1").get().trim(),
                                         args.<String>getOne("arg2").get().trim(),
                                         amountortype,
                                         args.<String>getOne("arg4").get().trim() +
                                         args.<String>getOne("arg5").get().trim()};
-                                return onCommand(sender, "balance", cmd);
+                                return getResultonCommand(sender, "balance", cmd);
                             }
                         } else {
                             String[] cmd = {args.<String>getOne("arg1").get().trim(),
                                     args.<String>getOne("arg2").get().trim(),
                                     args.<String>getOne("arg3").get().trim(),
                                     args.<String>getOne("arg4").get().trim()};
-                            return onCommand(sender, "balance", cmd);
+                            return getResultonCommand(sender, "balance", cmd);
                         }
                     } else {
                         String[] cmd = {args.<String>getOne("arg1").get().trim(),
                                 args.<String>getOne("arg2").get().trim(),
                                 args.<String>getOne("arg3").get().trim()};
-                        return onCommand(sender, "balance", cmd);
+                        return getResultonCommand(sender, "balance", cmd);
                     }
                 } else {
                     String[] cmd = {args.<String>getOne("arg1").get().trim(),
                             args.<String>getOne("arg2").get().trim()};
-                    return onCommand(sender, "balance", cmd);
+                    return getResultonCommand(sender, "balance", cmd);
                 }
             } else {
                 String[] cmd = {args.<String>getOne("arg1").get().trim()};
-                return onCommand(sender, "balance", cmd);
+                return getResultonCommand(sender, "balance", cmd);
             }
         } else {
             String[] cmd = {};
-            return onCommand(sender, "balance", cmd);
+            return getResultonCommand(sender, "balance", cmd);
         }
     }
 }

@@ -17,6 +17,11 @@ public class CPlayer implements iPlayer {
     }
 
     @Override
+    public boolean isOp() {
+        return player.isOp();
+    }
+
+    @Override
     public void kickPlayer(String reason){
         Bukkit.getScheduler().runTask(XConomy.getInstance(), ()->player.kickPlayer(reason));
     }
@@ -29,6 +34,11 @@ public class CPlayer implements iPlayer {
     @Override
     public void sendMessage(String[] message){
         player.sendMessage(message);
+    }
+
+    @Override
+    public boolean hasPermission(String per) {
+        return player.hasPermission(per);
     }
 
     @Override

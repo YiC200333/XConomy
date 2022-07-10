@@ -1,5 +1,5 @@
 /*
- *  This file (CommandHandler.java) is a part of project XConomy
+ *  This file (CommandCore.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -18,9 +18,12 @@
  */
 package me.yic.xconomy;
 
+import me.yic.xconomy.adapter.comp.CChat;
+import me.yic.xconomy.adapter.comp.CPlayer;
+import me.yic.xconomy.adapter.comp.CSender;
+import me.yic.xconomy.adapter.comp.DataLink;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.syncdata.SyncMessage;
 import me.yic.xconomy.data.syncdata.SyncPermission;
@@ -30,13 +33,8 @@ import me.yic.xconomy.info.SyncType;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.CompletableFutureTask;
 import me.yic.xconomy.utils.PlayerData;
-import me.yic.xconomy.utils.RGBColor;
 import me.yic.xconomy.utils.SendPluginMessage;
 import me.yic.xconomy.utils.UUIDMode;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -46,10 +44,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class CommandHandler {
+public class CommandCore {
+    private static final DataLink DataLink = AdapterManager.DATALINK;
+
     private static String PREFIX = translateColorCodes("prefix");
 
-    public static boolean onCommand(CommandSender sender, String commandName, String[] args) {
+    public static boolean onCommand(CSender sender, String commandName, String[] args) {
         switch (commandName) {
             case "xconomy": {
                 if (sender.isOp()) {
@@ -127,18 +127,18 @@ public class CommandHandler {
 
             case "paytoggle": {
                 if (args.length == 0) {
-                    if (!(sender instanceof Player)) {
+                    if (!sender.isPlayer()) {
                         sendMessages(sender, PREFIX + MessagesManager.systemMessage("§6控制台无法使用该指令"));
                         return true;
                     }
                     if (sender.isOp() || sender.hasPermission("xconomy.user.paytoggle")) {
-                        PermissionINFO.setRPaymentPermission(DataCon.getPlayerData(((Player) sender).getUniqueId()).getUniqueId());
-                        if (PermissionINFO.getRPaymentPermission(((Player) sender).getUniqueId())) {
+                        PermissionINFO.setRPaymentPermission(DataCon.getPlayerData(sender.toPlayer().getUniqueId()).getUniqueId());
+                        if (PermissionINFO.getRPaymentPermission(sender.toPlayer().getUniqueId())) {
                             sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_TRUE));
-                            syncpr(2, ((Player) sender).getUniqueId(), true);
+                            syncpr(2, sender.toPlayer().getUniqueId(), true);
                         } else {
                             sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_FALSE));
-                            syncpr(2, ((Player) sender).getUniqueId(), false);
+                            syncpr(2, sender.toPlayer().getUniqueId(), false);
                         }
                     }
                     return true;
@@ -153,12 +153,12 @@ public class CommandHandler {
                             sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                         } else {
                             UUID targetUUID = pd.getUniqueId();
-                            Player target = DataLink.getplayer(pd);
+                            CPlayer target = DataLink.getplayer(pd);
                             String realname = pd.getName();
-                            PermissionINFO.setRPaymentPermission(((Player) sender).getUniqueId());
+                            PermissionINFO.setRPaymentPermission(sender.toPlayer().getUniqueId());
 
                             String mess = translateColorCodes(MessageConfig.PAYTOGGLE_TRUE);
-                            if (PermissionINFO.getRPaymentPermission(((Player) sender).getUniqueId())) {
+                            if (PermissionINFO.getRPaymentPermission(sender.toPlayer().getUniqueId())) {
                                 syncpr(2, targetUUID, true);
                                 sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_OTHER_TRUE)
                                         .replace("%player%", realname));
@@ -169,7 +169,7 @@ public class CommandHandler {
 
                                 mess = translateColorCodes(MessageConfig.PAYTOGGLE_FALSE);
                             }
-                            if (target == null) {
+                            if (target.isOnline()) {
                                 broadcastSendMessage(false, pd, mess);
                                 return true;
                             }
@@ -240,7 +240,7 @@ public class CommandHandler {
             }
 
             case "pay": {
-                if (!(sender instanceof Player)) {
+                if (!sender.isPlayer()) {
                     sendMessages(sender, PREFIX + MessagesManager.systemMessage("§6控制台无法使用该指令"));
                     return true;
                 }
@@ -251,12 +251,12 @@ public class CommandHandler {
                         return true;
                     }
 
-                    if (PermissionINFO.getPaymentPermission(((Player) sender).getUniqueId()) == null) {
+                    if (PermissionINFO.getPaymentPermission(sender.toPlayer().getUniqueId()) == null) {
                         if (!(sender.hasPermission("xconomy.user.pay"))) {
                             sendMessages(sender, PREFIX + translateColorCodes("no_permission"));
                             return true;
                         }
-                    } else if (!PermissionINFO.getPaymentPermission(((Player) sender).getUniqueId())) {
+                    } else if (!PermissionINFO.getPaymentPermission(sender.toPlayer().getUniqueId())) {
                         sendMessages(sender, PREFIX + translateColorCodes("no_permission"));
                         return true;
                     }
@@ -286,11 +286,11 @@ public class CommandHandler {
 
                 BigDecimal taxamount = amount.multiply(XConomy.Config.PAYMENT_TAX);
 
-                //Cache.refreshFromCache(((Player) sender).getUniqueId());
+                //Cache.refreshFromCache(sender.toPlayer().getUniqueId());
 
                 String amountFormatted = DataFormat.shown(amount);
                 String taxamountFormatted = DataFormat.shown(taxamount);
-                BigDecimal bal_sender = DataCon.getPlayerData(((Player) sender).getUniqueId()).getBalance();
+                BigDecimal bal_sender = DataCon.getPlayerData(sender.toPlayer().getUniqueId()).getBalance();
 
                 if (bal_sender.compareTo(taxamount) < 0) {
                     sendMessages(sender, PREFIX + translateColorCodes("pay_fail")
@@ -304,11 +304,11 @@ public class CommandHandler {
                     return true;
                 }
 
-                Player target = DataLink.getplayer(pd);
+                CPlayer target = DataLink.getplayer(pd);
                 UUID targetUUID = pd.getUniqueId();
                 String realname = pd.getName();
                 if (PermissionINFO.getRPaymentPermission(targetUUID)) {
-                    if (XConomy.foundvaultOfflinePermManager) {
+                    if (AdapterManager.foundvaultOfflinePermManager) {
                         if (!CompletableFutureTask.hasreceivepermission(target, targetUUID)) {
                             sendMessages(sender, PREFIX + translateColorCodes("no_receive_permission"));
                             return true;
@@ -328,7 +328,7 @@ public class CommandHandler {
                 }
 
                 String com = commandName + " " + args[0] + " " + amount;
-                DataCon.changeplayerdata("PLAYER_COMMAND", ((Player) sender).getUniqueId(), taxamount, false, com, null);
+                DataCon.changeplayerdata("PLAYER_COMMAND", sender.toPlayer().getUniqueId(), taxamount, false, com, null);
                 sendMessages(sender, PREFIX + translateColorCodes("pay")
                         .replace("%player%", realname)
                         .replace("%amount%", amountFormatted));
@@ -338,7 +338,7 @@ public class CommandHandler {
                         .replace("%player%", sender.getName())
                         .replace("%amount%", amountFormatted);
 
-                if (target == null) {
+                if (!target.isOnline()) {
                     broadcastSendMessage(false, pd, mess);
                     return true;
                 }
@@ -386,7 +386,7 @@ public class CommandHandler {
 
                 switch (commndlength) {
                     case 0: {
-                        if (!(sender instanceof Player)) {
+                        if (!sender.isPlayer()) {
                             sendMessages(sender, PREFIX + MessagesManager.systemMessage("§6控制台无法使用该指令"));
                             return true;
                         }
@@ -396,7 +396,7 @@ public class CommandHandler {
                             return true;
                         }
 
-                        Player player = (Player) sender;
+                        CPlayer player = sender.toPlayer();
 
                         //Cache.refreshFromCache(player.getUniqueId());
 
@@ -455,7 +455,7 @@ public class CommandHandler {
                             return true;
                         }
 
-                        Player target = DataLink.getplayer(pd);
+                        CPlayer target = DataLink.getplayer(pd);
                         UUID targetUUID = pd.getUniqueId();
                         String realname = pd.getName();
 
@@ -501,7 +501,7 @@ public class CommandHandler {
                                         message = PREFIX + reasonmessages;
                                     }
 
-                                    if (target == null) {
+                                    if (!target.isOnline()) {
                                         broadcastSendMessage(false, pd, message);
                                         return true;
                                     }
@@ -546,7 +546,7 @@ public class CommandHandler {
                                         mess = PREFIX + reasonmessages;
                                     }
 
-                                    if (target == null) {
+                                    if (!target.isOnline()) {
                                         broadcastSendMessage(false, pd, mess);
                                         return true;
                                     }
@@ -577,7 +577,7 @@ public class CommandHandler {
                                         mess = PREFIX + reasonmessages;
                                     }
 
-                                    if (target == null) {
+                                    if (!target.isOnline()) {
                                         broadcastSendMessage(false, pd, mess);
                                         return true;
                                     }
@@ -658,7 +658,7 @@ public class CommandHandler {
                                         .replace("%amount%", amountFormatted));
 
                                 String message = PREFIX + reasonmessages;
-                                Bukkit.broadcastMessage(message);
+                                AdapterManager.PLUGIN.broadcastMessage(message);
                                 broadcastSendMessage(true, null, message);
                                 break;
                             }
@@ -675,7 +675,7 @@ public class CommandHandler {
                                         .replace("%amount%", amountFormatted));
 
                                 String message = PREFIX + reasonmessages;
-                                Bukkit.broadcastMessage(message);
+                                AdapterManager.PLUGIN.broadcastMessage(message);
                                 broadcastSendMessage(true, null, message);
 
                                 break;
@@ -710,7 +710,7 @@ public class CommandHandler {
         return true;
     }
 
-    private static boolean isDouble(String s) {
+    protected static boolean isDouble(String s) {
         if (s.matches(".*[a-zA-Z].*")) {
             return false;
         }
@@ -730,14 +730,25 @@ public class CommandHandler {
     }
 
     public static boolean check() {
-        return Bukkit.getOnlinePlayers().isEmpty() && XConomy.Config.BUNGEECORD_ENABLE && !XConomy.Config.DISABLE_CACHE;
+        return AdapterManager.PLUGIN.getOnlinePlayersisEmpty() && XConomy.Config.BUNGEECORD_ENABLE && !XConomy.Config.DISABLE_CACHE;
     }
 
     public static boolean checkMessage(String message) {
         return !MessagesManager.messageFile.getString(message).equals("");
     }
 
-    private static void sendMessages(CommandSender sender, String message) {
+    private static void sendMessages(CPlayer sender, String message) {
+        if (!message.replace(PREFIX, "").equalsIgnoreCase("")) {
+            if (message.contains("\\n")) {
+                String[] messs = message.split("\\\\n");
+                sender.sendMessage(messs);
+            } else {
+                sender.sendMessage(message);
+            }
+        }
+    }
+
+    private static void sendMessages(CSender sender, String message) {
         if (!message.replace(PREFIX, "").equalsIgnoreCase("")) {
             if (message.contains("\\n")) {
                 String[] messs = message.split("\\\\n");
@@ -749,23 +760,23 @@ public class CommandHandler {
     }
 
     public static String translateColorCodes(MessageConfig message) {
-        return ChatColor.translateAlternateColorCodes('&', RGBColor.translateHexColorCodes(MessagesManager.messageFile.getString(message.toString())));
+        return CChat.translateAlternateColorCodes('&', MessagesManager.messageFile.getString(message.toString()));
     }
 
     public static String translateColorCodes(String message) {
-        return ChatColor.translateAlternateColorCodes('&', RGBColor.translateHexColorCodes(MessagesManager.messageFile.getString(message)));
+        return CChat.translateAlternateColorCodes('&', MessagesManager.messageFile.getString(message));
     }
 
-    public static void showVersion(CommandSender sender) {
+    public static void showVersion(CSender sender) {
         sender.sendMessage(PREFIX + "§6 XConomy §f(Version: "
-                + XConomy.getInstance().getDescription().getVersion() + ") §6|§7 Author: §f" + MessagesManager.getAuthor());
+                + XConomy.PVersion + ") §6|§7 Author: §f" + MessagesManager.getAuthor());
         String trs = MessagesManager.getTranslatorS();
         if (trs != null) {
             sender.sendMessage(PREFIX + "§7 Translator (system): §f" + trs);
         }
     }
 
-    private static void sendHelpMessage(CommandSender sender, Integer num) {
+    private static void sendHelpMessage(CSender sender, Integer num) {
         List<String> helplist = new ArrayList<>();
         helplist.add(translateColorCodes("help1"));
         helplist.add(translateColorCodes("help2"));
@@ -812,7 +823,7 @@ public class CommandHandler {
         }
     }
 
-    private static void sendRankingMessage(CommandSender sender, Integer num) {
+    private static void sendRankingMessage(CSender sender, Integer num) {
         Integer maxipages;
         int listsize = Cache.baltop_papi.size();
         if (listsize % XConomy.Config.LINES_PER_PAGE == 0) {
@@ -851,7 +862,7 @@ public class CommandHandler {
             return;
         }
 
-        if (Bukkit.getOnlinePlayers().isEmpty()) {
+        if (AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
             return;
         }
 
@@ -881,7 +892,7 @@ public class CommandHandler {
             return;
         }
 
-        if (Bukkit.getOnlinePlayers().isEmpty()) {
+        if (AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
             return;
         }
 

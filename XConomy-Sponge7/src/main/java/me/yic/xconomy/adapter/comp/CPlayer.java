@@ -6,6 +6,7 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.adapter.iPlayer;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.text.Text;
 
 import java.util.UUID;
@@ -16,6 +17,25 @@ public class CPlayer implements iPlayer {
 
     public CPlayer(Player player) {
         this.player = player;
+    }
+
+    public CPlayer(User player) {
+        Player pl;
+        if (player != null){
+            if (player.getPlayer().isPresent()) {
+                pl = player.getPlayer().get();
+            }else{
+                pl = null;
+            }
+        }else {
+            pl = null;
+        }
+        this.player = pl;
+    }
+
+    @Override
+    public boolean isOp() {
+        return player.hasPermission("xconomy.op");
     }
 
     @Override
@@ -33,6 +53,11 @@ public class CPlayer implements iPlayer {
         for (String mess : message) {
             player.sendMessage(Text.of(mess));
         }
+    }
+
+    @Override
+    public boolean hasPermission(String per) {
+        return player.hasPermission(per);
     }
 
     @Override

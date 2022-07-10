@@ -1,5 +1,5 @@
 /*
- *  This file (Commands.java) is a part of project XConomy
+ *  This file (CommandPay.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -16,20 +16,18 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy;
+package me.yic.xconomy.command;
 
+import me.yic.xconomy.CommandCore;
 import me.yic.xconomy.adapter.comp.CSender;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
 
-public class Commands implements CommandExecutor {
-
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
-        String commandName = cmd.getName().toLowerCase();
-        return CommandCore.onCommand(new CSender(sender), commandName, args);
+public class CommandCoreP extends CommandCore {
+    public CommandResult getResultonCommand(CommandSource sender, String commandName, String[] args) {
+        if (onCommand(new CSender(sender), commandName, args)){
+            return CommandResult.success();
+        }
+        return CommandResult.empty();
     }
-
 }

@@ -59,7 +59,6 @@
                                     <excludes>
                                         <exclude>META-INF/*</exclude>
                                         <exclude>me/yic/xconomy/XConomy.class</exclude>
-                                        <exclude>me/yic/xconomy/data/DataLink.class</exclude>
                                         <exclude>me/yic/xconomy/adapter/comp/*</exclude>
                                     </excludes>
                                 </filter>

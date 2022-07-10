@@ -18,10 +18,11 @@
  */
 package me.yic.xconomy.depend.economy;
 
+import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.DataLink;
+import me.yic.xconomy.adapter.comp.DataLink;
 import me.yic.xconomy.depend.NonPlayerPlugin;
 import me.yic.xconomy.utils.PlayerData;
 import net.milkbowl.vault.economy.AbstractEconomy;
@@ -81,7 +82,7 @@ public class Vault extends AbstractEconomy {
             return false;
         }
         try {
-            return DataLink.newPlayer(pp.getUniqueId(), pp.getName());
+            return AdapterManager.DATALINK.newPlayer(pp.getUniqueId(), pp.getName());
         } catch (Exception e) {
             return false;
         }

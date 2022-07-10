@@ -18,13 +18,14 @@
  */
 package me.yic.xconomy.listeners;
 
+import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.DataLink;
+import me.yic.xconomy.adapter.comp.CPlayer;
+import me.yic.xconomy.adapter.comp.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.Updater;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -32,6 +33,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class ConnectionListeners implements Listener {
+
+    private static final DataLink DataLink = AdapterManager.DATALINK;
 
     @SuppressWarnings("unused")
     @EventHandler
@@ -50,7 +53,7 @@ public class ConnectionListeners implements Listener {
     @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent event) {
-        Player a = event.getPlayer();
+        CPlayer a = new CPlayer(event.getPlayer());
 
         if (XConomy.DConfig.canasync) {
             Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.newPlayer(a));
@@ -72,7 +75,7 @@ public class ConnectionListeners implements Listener {
     }
 
 
-    private void notifyUpdate(Player player) {
+    private void notifyUpdate(CPlayer player) {
         if (!(XConomy.Config.CHECK_UPDATE & Updater.old)) {
             return;
         }

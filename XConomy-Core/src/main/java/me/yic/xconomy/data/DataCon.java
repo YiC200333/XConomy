@@ -18,10 +18,11 @@
  */
 package me.yic.xconomy.data;
 
+import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.adapter.comp.CPlugin;
 import me.yic.xconomy.adapter.comp.CallAPI;
-import me.yic.xconomy.adapter.comp.CScheduler;
-import me.yic.xconomy.adapter.comp.Comp;
+import me.yic.xconomy.adapter.comp.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.data.syncdata.SyncBalanceAll;
@@ -36,6 +37,9 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public class DataCon {
+    private static final DataLink DataLink = AdapterManager.DATALINK;
+    private static final CPlugin plu = AdapterManager.PLUGIN;
+
     public static PlayerData getPlayerData(UUID uuid) {
         return getPlayerDatai(uuid);
     }
@@ -66,7 +70,7 @@ public class DataCon {
                 pd = Cache.getDataFromCache(u);
             }
         }
-        if (Comp.getOnlinePlayersisEmpty()) {
+        if (plu.getOnlinePlayersisEmpty()) {
             Cache.clearCache();
         }
         return pd;
@@ -112,7 +116,7 @@ public class DataCon {
             prepareudpmessage(pd, isAdd, amount, ri);
         } else {
             if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
-                CScheduler.runTaskAsynchronously(() -> DataLink.save(pd, isAdd, amount, ri));
+                plu.runTaskAsynchronously(() -> DataLink.save(pd, isAdd, amount, ri));
             } else {
                 DataLink.save(pd, isAdd, amount, ri);
             }
@@ -139,7 +143,7 @@ public class DataCon {
 
         if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
             final BigDecimal fnewvalue = newvalue;
-            CScheduler.runTaskAsynchronously(() -> DataLink.saveNonPlayer(u, amount, fnewvalue, isAdd, ri));
+            plu.runTaskAsynchronously(() -> DataLink.saveNonPlayer(u, amount, fnewvalue, isAdd, ri));
         } else {
             DataLink.saveNonPlayer(u, amount, newvalue, isAdd, ri);
         }
@@ -151,7 +155,7 @@ public class DataCon {
         RecordInfo ri = new RecordInfo(type, command, comment);
 
         if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
-            CScheduler.runTaskAsynchronously(() -> DataLink.saveall(targettype, amount, isAdd, ri));
+            plu.runTaskAsynchronously(() -> DataLink.saveall(targettype, amount, isAdd, ri));
         } else {
             DataLink.saveall(targettype, amount, isAdd, ri);
         }
@@ -177,7 +181,7 @@ public class DataCon {
     public static void prepareudpmessage(PlayerData pd, Boolean isAdd, BigDecimal amount, RecordInfo ri) {
         if (XConomy.Config.BUNGEECORD_ENABLE) {
             if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
-                CScheduler.runTaskAsynchronously(() -> sendudpmessage(pd, isAdd, amount, ri));
+                plu.runTaskAsynchronously(() -> sendudpmessage(pd, isAdd, amount, ri));
             } else {
                 sendudpmessage(pd, isAdd, amount, ri);
             }

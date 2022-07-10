@@ -24,7 +24,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 
-public class CommandPermission extends CommandCore implements CommandExecutor {
+public class CommandPermission extends CommandCoreP implements CommandExecutor {
 
     @SuppressWarnings({"OptionalGetWithoutIsPresent", "NullableProblems"})
     @Override
@@ -35,19 +35,19 @@ public class CommandPermission extends CommandCore implements CommandExecutor {
                     String[] cmd = {args.<String>getOne("arg1").get().trim(),
                             args.<String>getOne("arg2").get().trim(),
                             args.<String>getOne("arg3").get().trim()};
-                    return onCommand(sender, "paypermission", cmd);
+                    return getResultonCommand(sender, "paypermission", cmd);
                 } else {
                     String[] cmd = {args.<String>getOne("arg1").get().trim(),
                             args.<String>getOne("arg2").get().trim()};
-                    return onCommand(sender, "paypermission", cmd);
+                    return getResultonCommand(sender, "paypermission", cmd);
                 }
             } else {
                 String[] cmd = {args.<String>getOne("arg1").get().trim()};
-                return onCommand(sender, "paypermission", cmd);
+                return getResultonCommand(sender, "paypermission", cmd);
             }
         } else {
             String[] cmd = {};
-            return onCommand(sender, "paypermission", cmd);
+            return getResultonCommand(sender, "paypermission", cmd);
         }
     }
 }

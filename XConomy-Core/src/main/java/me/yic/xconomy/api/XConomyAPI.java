@@ -18,11 +18,10 @@
  */
 package me.yic.xconomy.api;
 
+import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.adapter.comp.Comp;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.utils.PlayerData;
@@ -52,7 +51,7 @@ public class XConomyAPI {
     }
 
     public boolean createPlayerData(UUID uid, String name) {
-        return DataLink.newPlayer(uid, name);
+        return AdapterManager.DATALINK.newPlayer(uid, name);
     }
 
     public PlayerData getPlayerData(UUID uid) {
@@ -77,7 +76,7 @@ public class XConomyAPI {
     }
 
     public int changePlayerBalance(UUID u, String playername, BigDecimal amount, Boolean isadd, String pluginname) {
-        if (XConomy.Config.BUNGEECORD_ENABLE & Comp.getOnlinePlayersisEmpty()) {
+        if (XConomy.Config.BUNGEECORD_ENABLE & AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
             return 1;
         }
         BigDecimal bal = getPlayerData(u).getBalance();

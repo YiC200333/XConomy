@@ -8,6 +8,11 @@ import java.util.UUID;
 @SuppressWarnings("unused")
 public class CPlayer implements iPlayer {
     @Override
+    public boolean isOp() {
+        return false;
+    }
+
+    @Override
     public void kickPlayer(String reason) {
 
     }
@@ -20,6 +25,11 @@ public class CPlayer implements iPlayer {
     @Override
     public void sendMessage(String[] message) {
 
+    }
+
+    @Override
+    public boolean hasPermission(String per) {
+        return false;
     }
 
     @Override

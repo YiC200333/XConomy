@@ -24,7 +24,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 
-public class CommandPay extends CommandCore implements CommandExecutor {
+public class CommandPay extends CommandCoreP implements CommandExecutor {
 
     @SuppressWarnings({"OptionalGetWithoutIsPresent", "NullableProblems"})
     @Override
@@ -33,14 +33,14 @@ public class CommandPay extends CommandCore implements CommandExecutor {
             if (args.hasAny(Text.of("arg2"))) {
                     String[] cmd = {args.<String>getOne("arg1").get().trim(),
                             args.<String>getOne("arg2").get().trim()};
-                    return onCommand(sender, "pay", cmd);
+                    return getResultonCommand(sender, "pay", cmd);
             } else {
                 String[] cmd = {args.<String>getOne("arg1").get().trim()};
-                return onCommand(sender, "pay", cmd);
+                return getResultonCommand(sender, "pay", cmd);
             }
         } else {
             String[] cmd = {};
-            return onCommand(sender, "pay", cmd);
+            return getResultonCommand(sender, "pay", cmd);
         }
     }
 }

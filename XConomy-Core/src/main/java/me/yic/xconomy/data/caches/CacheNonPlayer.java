@@ -18,7 +18,8 @@
  */
 package me.yic.xconomy.data.caches;
 
-import me.yic.xconomy.data.DataLink;
+import me.yic.xconomy.AdapterManager;
+import me.yic.xconomy.adapter.comp.DataLink;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class CacheNonPlayer {
 
     public static BigDecimal getBalanceFromCacheOrDB(final String u) {
         if (!bal.containsKey(u)) {
-            DataLink.getBalNonPlayer(u);
+            AdapterManager.DATALINK.getBalNonPlayer(u);
         }
         return bal.get(u);
 

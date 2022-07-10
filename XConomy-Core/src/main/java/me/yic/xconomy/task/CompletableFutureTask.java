@@ -19,29 +19,12 @@
 package me.yic.xconomy.task;
 
 import me.yic.xconomy.adapter.comp.CPlayer;
-import me.yic.xconomy.depend.economy.VaultHook;
-import org.bukkit.Bukkit;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 public class CompletableFutureTask {
 
     public static boolean hasreceivepermission(CPlayer target, UUID targetUUID) {
-            if (!target.isOnline()) {
-                CompletableFuture<Boolean> future = new CompletableFuture<>();
-                new Thread(() -> future.complete(VaultHook.vaultPerm.playerHas(null,
-                        Bukkit.getOfflinePlayer(targetUUID), "xconomy.user.pay.receive"))).start();
-
-                try {
-                    return future.get();
-
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
-
-            } else return target.hasPermission("xconomy.user.pay.receive");
         return false;
     }
 }

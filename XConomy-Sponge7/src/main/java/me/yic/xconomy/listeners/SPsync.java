@@ -18,8 +18,8 @@
  */
 package me.yic.xconomy.listeners;
 
+import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.syncdata.*;
 import me.yic.xconomy.info.PermissionINFO;
@@ -82,7 +82,7 @@ public class SPsync implements RawDataListener {
                 SyncBalanceAll sd = (SyncBalanceAll) ob;
                 Cache.clearCache();
                 if (sd.getisOnline()) {
-                    DataLink.saveall("online", sd.getAmount(), sd.getC(), null);
+                    AdapterManager.DATALINK.saveall("online", sd.getAmount(), sd.getC(), null);
                 }
             } else if (ob.getSyncType().equals(SyncType.BROADCAST)) {
                 SyncMessage sd = (SyncMessage) ob;

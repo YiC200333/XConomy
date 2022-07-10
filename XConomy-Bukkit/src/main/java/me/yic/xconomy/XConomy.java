@@ -21,7 +21,6 @@ package me.yic.xconomy;
 import me.yic.xconomy.adapter.comp.CConfig;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.ImportData;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.depend.LoadEconomy;
@@ -62,8 +61,6 @@ public class XConomy extends JavaPlugin {
 
 
     public static String syncversion = SyncInfo.syncversion;
-    public static boolean foundvaultpe = false;
-    public static boolean foundvaultOfflinePermManager = false;
     private BukkitTask refresherTask = null;
     Metrics metrics = null;
     private Placeholder papiExpansion = null;
@@ -99,7 +96,7 @@ public class XConomy extends JavaPlugin {
             return;
         }
 
-        foundvaultOfflinePermManager = checkVaultOfflinePermManager();
+        AdapterManager.foundvaultOfflinePermManager = checkVaultOfflinePermManager();
 
         if (Bukkit.getPluginManager().getPlugin("DatabaseDrivers") != null) {
             logger("发现 DatabaseDrivers", 0, null);
@@ -108,7 +105,7 @@ public class XConomy extends JavaPlugin {
 
         NonPlayerPlugin.load();
 
-        if (!DataLink.create()) {
+        if (!AdapterManager.DATALINK.create()) {
             logger("XConomy已成功卸载", 0, null);
             return;
         }
@@ -127,7 +124,7 @@ public class XConomy extends JavaPlugin {
                 logger("vault-baltop-tips-a", 0, null);
                 logger("vault-baltop-tips-b", 0, null);
                 logger(null, 0, String.join("", Collections.nCopies(70, "=")));
-                foundvaultpe = true;
+                AdapterManager.foundvaultpe = true;
             }
             setupPlaceHolderAPI();
         }

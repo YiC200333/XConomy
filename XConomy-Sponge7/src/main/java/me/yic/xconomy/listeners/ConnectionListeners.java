@@ -18,18 +18,19 @@
  */
 package me.yic.xconomy.listeners;
 
+import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.DataLink;
+import me.yic.xconomy.adapter.comp.CPlayer;
+import me.yic.xconomy.adapter.comp.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.Updater;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.text.Text;
 
 public class ConnectionListeners {
+    private static final DataLink DataLink = AdapterManager.DATALINK;
 
     @SuppressWarnings("unused")
     @Listener
@@ -45,7 +46,7 @@ public class ConnectionListeners {
     @SuppressWarnings("unused")
     @Listener
     public void onJoin(ClientConnectionEvent.Join event) {
-        Player a = event.getTargetEntity();
+        CPlayer a = new CPlayer(event.getTargetEntity());
 
         if (XConomy.DConfig.canasync) {
             Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataLink.newPlayer(a));
@@ -64,16 +65,16 @@ public class ConnectionListeners {
     }
 
 
-    private void notifyUpdate(Player player) {
+    private void notifyUpdate(CPlayer player) {
         if (!(XConomy.Config.CHECK_UPDATE & Updater.old)) {
             return;
         }
-        player.sendMessage(Text.of("§f[XConomy]§b" + MessagesManager.systemMessage("发现新版本 ") + Updater.newVersion));
-        player.sendMessage(Text.of("§f[XConomy]§ahttps://ore.spongepowered.org/YiC/XConomy"));
+        player.sendMessage("§f[XConomy]§b" + MessagesManager.systemMessage("发现新版本 ") + Updater.newVersion);
+        player.sendMessage("§f[XConomy]§ahttps://ore.spongepowered.org/YiC/XConomy");
 
         if (XConomy.Config.LANGUAGE.equalsIgnoreCase("Chinese")
                 | XConomy.Config.LANGUAGE.equalsIgnoreCase("ChineseTW")) {
-            player.sendMessage(Text.of("§f[XConomy]§ahttps://www.mcbbs.net/thread-962904-1-1.html"));
+            player.sendMessage("§f[XConomy]§ahttps://www.mcbbs.net/thread-962904-1-1.html");
         }
 
     }

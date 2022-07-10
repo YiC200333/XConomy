@@ -16,14 +16,11 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.data;
+package me.yic.xconomy.adapter.comp;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.adapter.comp.CPlayer;
-import me.yic.xconomy.data.sql.SQL;
-import me.yic.xconomy.data.sql.SQLCreateNewAccount;
-import me.yic.xconomy.data.sql.SQLLogin;
-import me.yic.xconomy.data.sql.SQLUpdateTable;
+import me.yic.xconomy.adapter.iDataLink;
+import me.yic.xconomy.data.sql.*;
 import me.yic.xconomy.info.RecordInfo;
 import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.UUIDMode;
@@ -40,13 +37,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
-public class DataLink {
+public class DataLink implements iDataLink {
 
-    public static boolean create() {
+    @Override
+    public boolean create() {
         switch (XConomy.DConfig.getStorageType()) {
             case 1:
                 XConomy.getInstance().logger("数据保存方式", 0, " - SQLite");
-                setupSqLiteAddress();
+                SQLSetup.setupSqLiteAddress();
 
                 File dataFolder = XConomy.getInstance().getPDataFolder();
                 if (!dataFolder.exists() && !dataFolder.mkdirs()) {
@@ -57,7 +55,7 @@ public class DataLink {
 
             case 2:
                 XConomy.getInstance().logger("数据保存方式", 0, " - MySQL");
-                setupMySqlTable();
+                SQLSetup.setupMySqlTable();
                 break;
 
         }
@@ -78,7 +76,8 @@ public class DataLink {
         return true;
     }
 
-    public static User getplayer(PlayerData pd) {
+    @Override
+    public CPlayer getplayer(PlayerData pd) {
         Optional<Object> p = Optional.empty();
         if (pd != null) {
             if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)){
@@ -87,18 +86,21 @@ public class DataLink {
                 p = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(pd.getUniqueId()));
             }
         }
-        return (User) p.orElse(null);
+        return new CPlayer((User) p.orElse(null));
     }
 
-    public static boolean newPlayer(UUID uid, String name) {
+    @Override
+    public boolean newPlayer(UUID uid, String name) {
         return SQLCreateNewAccount.newPlayer(uid, name, null);
     }
 
-    public static void newPlayer(Player a) {
-        SQLCreateNewAccount.newPlayer(new CPlayer(a));
+    @Override
+    public void newPlayer(CPlayer a) {
+        SQLCreateNewAccount.newPlayer(a);
     }
 
-    public static void updatelogininfo(UUID uid) {
+    @Override
+    public void updatelogininfo(UUID uid) {
         if (XConomy.DConfig.canasync) {
             Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> SQLLogin.updatelogininfo(uid));
         } else {
@@ -106,15 +108,17 @@ public class DataLink {
         }
     }
 
-    public static void selectlogininfo(Player pp) {
+    @Override
+    public void selectlogininfo(CPlayer pp) {
         if (XConomy.DConfig.canasync) {
-            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> SQLLogin.getPlayerlogin(new CPlayer(pp)));
+            Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> SQLLogin.getPlayerlogin(pp));
         } else {
-            SQLLogin.getPlayerlogin(new CPlayer(pp));
+            SQLLogin.getPlayerlogin(pp);
         }
     }
 
-    public static <T> void getPlayerData(T key) {
+    @Override
+    public <T> void getPlayerData(T key) {
         if (key instanceof UUID) {
             SQL.getPlayerData((UUID) key);
         } else if (key instanceof String) {
@@ -122,31 +126,37 @@ public class DataLink {
         }
     }
 
-    public static void getBalNonPlayer(String u) {
+    @Override
+    public void getBalNonPlayer(String u) {
         SQL.getNonPlayerData(u);
     }
 
-    public static void getTopBal() {
+    @Override
+    public void getTopBal() {
         SQL.getBaltop();
     }
 
-    public static void setTopBalHide(UUID u, int type) {
+    @Override
+    public void setTopBalHide(UUID u, int type) {
         SQL.hidetop(u, type);
     }
 
-    public static String getBalSum() {
+    @Override
+    public String getBalSum() {
         if (SQL.sumBal() == null) {
             return "0.0";
         }
         return SQL.sumBal();
     }
 
-    public static void save(PlayerData pd, Boolean isAdd, BigDecimal amount, RecordInfo ri) {
+    @Override
+    public void save(PlayerData pd, Boolean isAdd, BigDecimal amount, RecordInfo ri) {
         SQL.save(pd, isAdd, amount, ri);
     }
 
 
-    public static void saveall(String targettype, BigDecimal amount, Boolean isAdd, RecordInfo ri) {
+    @Override
+    public void saveall(String targettype, BigDecimal amount, Boolean isAdd, RecordInfo ri) {
         Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> {
                     if (targettype.equalsIgnoreCase("all")) {
                         SQL.saveall(targettype, null, amount, isAdd, ri);
@@ -161,32 +171,10 @@ public class DataLink {
         );
     }
 
-    public static void saveNonPlayer(String account, BigDecimal amount,
+    @Override
+    public void saveNonPlayer(String account, BigDecimal amount,
                                      BigDecimal newbalance, Boolean isAdd, RecordInfo ri) {
         SQL.saveNonPlayer(account, amount, newbalance, isAdd, ri);
     }
 
-    private static void setupMySqlTable() {
-        if (XConomy.DConfig.gettablesuffix() != null & !XConomy.DConfig.gettablesuffix().equals("")) {
-            SQL.tableName = "xconomy_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
-            SQL.tableNonPlayerName = "xconomynon_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
-            SQL.tableRecordName = "xconomyrecord_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
-            SQL.tableLoginName = "xconomylogin_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
-            SQL.tableUUIDName = "xconomyuuid_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
-        }
-    }
-
-    private static void setupSqLiteAddress() {
-        if (XConomy.DConfig.gethost().equalsIgnoreCase("Default")) {
-            return;
-        }
-
-        File folder = new File(XConomy.DConfig.gethost());
-        if (folder.exists()) {
-            SQL.database.userdata = new File(folder, "data.db");
-        } else {
-            XConomy.getInstance().logger("自定义文件夹路径不存在", 1, null);
-        }
-
-    }
 }

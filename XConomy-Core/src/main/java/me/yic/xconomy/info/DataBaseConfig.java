@@ -19,6 +19,7 @@
 package me.yic.xconomy.info;
 
 import com.zaxxer.hikari.HikariDataSource;
+import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.adapter.comp.CConfig;
 import me.yic.xconomy.lang.MessagesManager;
@@ -61,7 +62,7 @@ public class DataBaseConfig {
                 }else {
                     try {
                         new HikariDataSource();
-                        EnableConnectionPool = !XConomy.foundvaultpe;
+                        EnableConnectionPool = !AdapterManager.foundvaultpe;
                     } catch (UnsupportedClassVersionError e) {
                         EnableConnectionPool = false;
                         XConomy.getInstance().logger("connection-pool-unsupport", 1, null);

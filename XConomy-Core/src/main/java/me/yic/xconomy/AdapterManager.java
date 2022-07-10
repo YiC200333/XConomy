@@ -18,35 +18,14 @@
  */
 package me.yic.xconomy;
 
-import me.yic.xconomy.info.DataBaseConfig;
-import me.yic.xconomy.info.DefaultConfig;
-import me.yic.xconomy.info.SyncInfo;
+import me.yic.xconomy.adapter.comp.CPlugin;
+import me.yic.xconomy.adapter.comp.DataLink;
 
-import java.io.File;
+public class AdapterManager {
+    public static boolean foundvaultpe = false;
+    public static boolean foundvaultOfflinePermManager = false;
 
-@SuppressWarnings("unused")
-public class XConomy{
-    public static String version;
-    public static String PVersion;
+    public final static CPlugin PLUGIN = new CPlugin();
 
-    private static XConomy instance;
-
-    public static DataBaseConfig DConfig;
-    public static DefaultConfig Config;
-    public static String syncversion = SyncInfo.syncversion;
-
-
-    public static XConomy getInstance() {
-        return instance;
-    }
-
-    public void logger(String tag, int type, String message) {
-    }
-
-    public File getDataFolder() {
-        return new File("");
-    }
-    public File getPDataFolder() {
-        return new File("");
-    }
+    public final static DataLink DATALINK = new DataLink();
 }

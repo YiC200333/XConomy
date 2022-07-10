@@ -18,7 +18,8 @@
  */
 package me.yic.xconomy.utils;
 
-import me.yic.xconomy.CommandHandler;
+import me.yic.xconomy.CommandCore;
+import me.yic.xconomy.adapter.comp.CSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +36,7 @@ public class EconomyCommand extends Command {
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String s, @NotNull String[] args) {
-        return CommandHandler.onCommand(sender, name, args);
+        return CommandCore.onCommand(new CSender(sender), name, args);
     }
 
 }
