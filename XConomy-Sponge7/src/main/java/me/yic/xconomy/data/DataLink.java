@@ -19,7 +19,7 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.comp.CPlayer;
+import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import me.yic.xconomy.data.sql.SQLLogin;

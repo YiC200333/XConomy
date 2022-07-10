@@ -19,7 +19,7 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.comp.CChat;
+import me.yic.xconomy.adapter.comp.CChat;
 import me.yic.xconomy.info.DefaultConfig;
 import net.md_5.bungee.api.ChatColor;
 

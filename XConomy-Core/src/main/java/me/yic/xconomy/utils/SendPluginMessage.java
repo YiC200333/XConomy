@@ -1,6 +1,7 @@
 package me.yic.xconomy.utils;
 
-import me.yic.xconomy.comp.Comp;
+import me.yic.xconomy.adapter.comp.Comp;
+
 import java.io.ByteArrayOutputStream;
 
 public class SendPluginMessage {

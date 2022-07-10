@@ -19,7 +19,7 @@
 package me.yic.xconomy.lang;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.comp.CConfig;
+import me.yic.xconomy.adapter.comp.CConfig;
 
 import java.io.*;
 

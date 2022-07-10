@@ -19,13 +19,12 @@
 package me.yic.xconomy.api;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.comp.Comp;
+import me.yic.xconomy.adapter.comp.Comp;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.PermissionINFO;
-import me.yic.xconomy.info.SyncInfo;
 import me.yic.xconomy.utils.PlayerData;
 
 import java.math.BigDecimal;

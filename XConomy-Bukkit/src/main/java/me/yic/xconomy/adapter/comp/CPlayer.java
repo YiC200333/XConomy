@@ -1,44 +1,47 @@
-package me.yic.xconomy.comp;
-
+package me.yic.xconomy.adapter.comp;
 
 
 import me.yic.xconomy.XConomy;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
+import me.yic.xconomy.adapter.iPlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
 @SuppressWarnings("unused")
-public class CPlayer {
+public class CPlayer implements iPlayer {
     private final Player player;
 
     public CPlayer(Player player) {
         this.player = player;
     }
 
+    @Override
     public void kickPlayer(String reason){
-        Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> player.kick(Text.of(reason)));
+        Bukkit.getScheduler().runTask(XConomy.getInstance(), ()->player.kickPlayer(reason));
     }
 
+    @Override
     public void sendMessage(String message){
-        player.sendMessage(Text.of(message));
+        player.sendMessage(message);
     }
 
+    @Override
     public void sendMessage(String[] message){
-        for (String mess : message) {
-            player.sendMessage(Text.of(mess));
-        }
+        player.sendMessage(message);
     }
 
+    @Override
     public UUID getUniqueId(){
         return player.getUniqueId();
     }
 
+    @Override
     public String getName(){
         return player.getName();
     }
 
+    @Override
     public boolean isOnline(){
         if (player == null){
             return false;

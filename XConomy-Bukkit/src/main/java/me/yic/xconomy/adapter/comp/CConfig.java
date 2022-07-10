@@ -1,6 +1,7 @@
-package me.yic.xconomy.comp;
+package me.yic.xconomy.adapter.comp;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.adapter.iConfig;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,7 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class CConfig {
+public class CConfig implements iConfig {
     private final FileConfiguration fc;
 
     public CConfig(FileConfiguration fc){
@@ -100,46 +101,62 @@ public class CConfig {
         fc = pfc;
     }
 
+    @Override
+    public FileConfiguration getConfig() {
+        return fc;
+    }
+
+    @Override
     public boolean contains(String path){
         return fc.contains(path);
     }
 
+    @Override
     public void createSection(String path){
         fc.createSection(path);
     }
 
+    @Override
     public void set(String path, Object value){
         fc.set(path, value);
     }
 
+    @Override
     public void save(File f) throws IOException {
         fc.save(f);
     }
 
+    @Override
     public String getString(String path){
         return fc.getString(path);
     }
 
+    @Override
     public Integer getInt(String path){
         return fc.getInt(path);
     }
 
+    @Override
     public boolean getBoolean(String path){
         return fc.getBoolean(path);
     }
 
+    @Override
     public double getDouble(String path){
         return fc.getDouble(path);
     }
 
+    @Override
     public long getLong(String path){
         return fc.getLong(path);
     }
 
+    @Override
     public List<String> getStringList(String path){
         return fc.getStringList(path);
     }
 
+    @Override
     @SuppressWarnings("ConstantConditions")
     public LinkedHashMap<BigDecimal, String> getConfigurationSectionSort(String path){
         LinkedHashMap<BigDecimal, String> ks = new LinkedHashMap<>();

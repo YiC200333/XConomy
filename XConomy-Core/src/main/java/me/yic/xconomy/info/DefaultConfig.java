@@ -19,7 +19,7 @@
 package me.yic.xconomy.info;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.comp.CConfig;
+import me.yic.xconomy.adapter.comp.CConfig;
 import me.yic.xconomy.utils.UUIDMode;
 
 import java.math.BigDecimal;

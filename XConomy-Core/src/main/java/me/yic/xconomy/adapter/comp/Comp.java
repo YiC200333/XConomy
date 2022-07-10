@@ -1,4 +1,4 @@
-package me.yic.xconomy.comp;
+package me.yic.xconomy.adapter.comp;
 
 
 import java.io.ByteArrayOutputStream;

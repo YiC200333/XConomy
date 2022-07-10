@@ -1,7 +1,8 @@
-package me.yic.xconomy.comp;
+package me.yic.xconomy.adapter.comp;
 
 import com.google.common.reflect.TypeToken;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.adapter.iConfig;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -18,7 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 @SuppressWarnings({"unused", "ConfusingArgumentToVarargsMethod"})
-public class CConfig {
+public class CConfig implements iConfig {
     private final ConfigurationNode fc;
     private ConfigurationLoader<ConfigurationNode> fcloader;
 
@@ -75,53 +76,64 @@ public class CConfig {
         fc = pfc;
     }
 
+    @Override
     public ConfigurationNode getConfig(){
         return fc;
     }
 
 
+    @Override
     public boolean contains(String path){
         String[] a = path.split("\\.");
         return !fc.getNode(a).isVirtual();
     }
 
+    @Override
     public void createSection(String path){
     }
 
+    @Override
     public void set(String path, Object value){
         String[] a = path.split("\\.");
         fc.getNode(a).setValue(value);
     }
 
+    @Override
     public void save(File f) throws IOException {
         fcloader.save(fc);
     }
 
+    @Override
     public String getString(String path){
         String[] a = path.split("\\.");
         return fc.getNode(a).getString();
     }
 
+    @Override
     public Integer getInt(String path){
         String[] a = path.split("\\.");
         return fc.getNode(a).getInt();
     }
 
+    @Override
     public boolean getBoolean(String path){
         String[] a = path.split("\\.");
         return fc.getNode(a).getBoolean();
     }
 
+    @Override
     public double getDouble(String path){
         String[] a = path.split("\\.");
         return fc.getNode(a).getDouble();
     }
 
+    @Override
     public long getLong(String path){
         String[] a = path.split("\\.");
         return fc.getNode(a).getLong();
     }
 
+    @Override
     @SuppressWarnings("UnstableApiUsage")
     public List<String> getStringList(String path){
         String[] a = path.split("\\.");
@@ -133,6 +145,7 @@ public class CConfig {
         return null;
     }
 
+    @Override
     public LinkedHashMap<BigDecimal, String> getConfigurationSectionSort(String path){
         LinkedHashMap<BigDecimal, String> ks = new LinkedHashMap<>();
         String[] a = path.split("\\.");

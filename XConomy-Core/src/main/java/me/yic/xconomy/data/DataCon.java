@@ -19,9 +19,9 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.comp.CScheduler;
-import me.yic.xconomy.comp.CallAPI;
-import me.yic.xconomy.comp.Comp;
+import me.yic.xconomy.adapter.comp.CallAPI;
+import me.yic.xconomy.adapter.comp.CScheduler;
+import me.yic.xconomy.adapter.comp.Comp;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.data.syncdata.SyncBalanceAll;

@@ -1,4 +1,4 @@
-package me.yic.xconomy.comp;
+package me.yic.xconomy.adapter.comp;
 
 import me.yic.xconomy.info.RecordInfo;
 
@@ -13,5 +13,4 @@ public class CallAPI {
 
     public static void CallNonPlayerAccountEvent(String u, BigDecimal bal, BigDecimal amount, boolean isAdd, String type){
     }
-
 }

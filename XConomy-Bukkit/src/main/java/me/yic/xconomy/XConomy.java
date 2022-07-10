@@ -18,7 +18,7 @@
  */
 package me.yic.xconomy;
 
-import me.yic.xconomy.comp.CConfig;
+import me.yic.xconomy.adapter.comp.CConfig;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.DataLink;

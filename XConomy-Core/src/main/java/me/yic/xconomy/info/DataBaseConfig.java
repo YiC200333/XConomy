@@ -20,7 +20,7 @@ package me.yic.xconomy.info;
 
 import com.zaxxer.hikari.HikariDataSource;
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.comp.CConfig;
+import me.yic.xconomy.adapter.comp.CConfig;
 import me.yic.xconomy.lang.MessagesManager;
 
 public class DataBaseConfig {

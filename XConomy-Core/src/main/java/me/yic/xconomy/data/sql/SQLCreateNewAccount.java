@@ -19,7 +19,7 @@
 package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.comp.CPlayer;
+import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.GetUUID;
