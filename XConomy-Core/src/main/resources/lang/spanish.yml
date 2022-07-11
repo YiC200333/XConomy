@@ -1,35 +1,52 @@
-translation-author: "gabyfig | Santysx"
-enable-success: "XConomy está habilitado"
-disable-success: "XConomy está deshabilitado"
-saving-mode: "Modo de guardado"
-connect-success: "Conectado con %type%"
-connect-fail: "Fallo al conectar con %type%"
-disconnect-fail: "La desconexión con %type% ha fallado"
-reconnect-success: "Reconectado con %type%"
-no-custom-path: "La ruta de la carpeta personalizada no existe"
-custom-path-error: "Error de configuración de la ruta del archivo SQLite"
-create-folder-fail: "Excepción de creación de carpetas"
-unable-connect: "Incapaz de conectar a la base de datos -----"
-jdbc-fail: "Fallo al cargar el controlador JDBC"
-cache-file-creation-exception: "Excepción de creación de archivo de caché"
-upgrade-database: "Actualizar tabla de base de datos..."
-enable-bungeecord: "Modo BungeeCord habilitado"
-not-enable-bungeecord: "Modo BungeeCord deshabilitado"
-create-language-file-success: "El nuevo archivo de lenguaje ha sido creado"
-create-language-file-fail: "Excepcion al crear archivo de lenguaje"
-found-placeholderapi: "Encontrado PlaceholderAPI"
-found-databasedrivers: "Controladores de base de datos encontrados"
-is-new-version: "Es la version mas nueva"
-check-version-fail: "Fallo al buscar actualizaciones"
-found-version: "Nueva versión encontrada"
-messege-reload: "El archivo §amessage.yml se ha recargado con éxito"
-vault-baltop-tips-a: "No se recomienda habilitar la función baltop de vault papi"
-vault-baltop-tips-b: "Establezca 'expansions.vault.baltop.enabled' en false en la config.yml de PlaceholderAPI"
-username-modified: " El nombre de usuario ha sido cambiado"
-no-player-tips: "§cCuando el modo BC esta habilitado, el comando op no puede ser utilizado en el servidor sin jugadores"
-semi-mode-ban-commands: "§c Este comando no se puede usar en el modo semi-online"
-console-ban-commands: "§6Este comando no puede ser utilizado por la consola"
-pool-disable: "El grupo de conexiones no está habilitado"
-slf4j-unfound: "Error al cargar la clase 'org.slf4j.Logger'"
-different-version: "Datos recibidos de diferentes versiones del complemento, no se puede sincronizar, versión actual del complemento "
-connection-pool-unsupport: "La agrupación de conexiones requiere al menos la versión 11 de Java"
+translation_authors: "gabyfig | Santysx"
+prefix: '&6[XConomy]'
+balance: '&aDinero: %balance%'
+balance_other: '&a%player% dinero: %balance%'
+top_title: '&e========= TOP10 <Page %page%> ========='
+sum_text: '&fServer Total - %balance%'
+top_text: '&e%index%: %player% - %balance%'
+top_subtitle: '&7TOP 10 actualizado cada 5 minutos'
+top_nodata: '&cNo se ha encontrado datos sobre el TOP 10'
+top_out: '&cFuera del TOP 10'
+top_hidden: '&a%player% is hidden'
+top_displayed: '&a%player% is displayed'
+pay: '&cle pagaste a %player% por %amount%'
+pay_receive: '&aRecibiste %amount% de: %player%'
+pay_fail: '&cTienes menos de %amount%'
+pay_self: '&cNo puedes pagarte a ti mismo'
+paytoggle_true: '&aAcepta el pago ahora'
+paytoggle_false: '&aRechaza el pago ahora'
+paytoggle_other_true: '&cEstableciste %player% aceptar pago'
+paytoggle_other_false: '&cEstableciste %player% rechazar el pago'
+no_account: '&cEsa cuenta no existe'
+invalid_amount: '&cMonto invalido'
+over_maxnumber: '&cLa cuenta del usuario supera la cantidad maxima!'
+over_maxnumber_receive: '&cYour amount has reached the limit'
+money_give: '&cRecibiste %player% %amount%'
+money_give_receive: '&aUn Staff te dio %amount%'
+money_take: '&cRecibiste %amount% de: %player%'
+money_take_fail: '&c%player% su saldo es menor que %amount%'
+money_take_receive: '&cUn Staff te quito %amount%'
+money_set: '&cEstableciste el dinero a %player%, %amount%'
+money_set_receive: '&cUn Staff te seteo el dinero a %amount%'
+no_receive_permission: '&cEl usuario no tiene permisos para recibir dinero!'
+no_permission: '&cNo tienes permisos para usar este comando'
+delete_data: '&aYour data is being updated, please login again'
+delete_data_admin: '&cYou delete %player%''s data'
+global_permissions_change: '&aEl global %permission% los permisos se han establecido en %value%'
+personal_permissions_change: '&aEl %permission% permiso de %player% ha sido establecido a %value%'
+help_title_full: '&6=============== [XConomy] AYUDA <Page %page%> ==============='
+help1: '&6balance/money  -  Muestra cuanto dinero tienes'
+help2: '&6balance/money <Jugador>  -  Muestra el dinero de: <player>'
+help3: '&6pay <Jugador> <Monto>  -  Paga <jugador> <cantidad>'
+help4: '&6balancetop  -  Muestra el TOP10'
+help5: '&6balance/money give <Jugador> <Monto>  -  Le das dinero a <jugador>, <cantidad>'
+help6: '&6balance/money take <Jugador> <Monto>  -  Le sacas <Monto> a: <Jugador>'
+help7: '&6balance/money set <Jugador> <Monto>  -  Establece <Jugador> dinero a <cantidad>'
+help8: '&6balance/money give * <all/online> <amount> <reason>  -  Give <all/online player> <cantidad>'
+help9: '&6balance/money take * <all/online> <amount> <reason>  -  Take <cantidad> de <all/online player>'
+help10: '&6balancetop hide/display <player>  -  Ocultar o mostrar un <jugador> del TOP 10'
+help11: '&6paytoggle  -  Alternar la aceptación de pagos'
+help12: '&6paytoggle <player>  -  Alternar <jugador> aceptar pagos'
+help13: '&6paypermission set <player> True/False  -  Set <jugador> (* Representa un global) permiso de pago'
+help14: '&6paypermission remove <player>  -  Set <jugador> pagar permiso por defecto'

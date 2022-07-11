@@ -27,7 +27,7 @@ import com.github.sanctum.economy.construct.implement.AdvancedEconomy;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.utils.PlayerData;
+import me.yic.xconomy.data.syncdata.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;

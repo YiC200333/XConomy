@@ -18,6 +18,8 @@
  */
 package me.yic.xconomy.data.syncdata;
 
+import me.yic.xconomy.AdapterManager;
+import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.SyncType;
 
 import java.math.BigDecimal;
@@ -45,5 +47,13 @@ public class SyncBalanceAll extends SyncData{
 
     public BigDecimal getAmount(){
         return amount;
+    }
+
+    @Override
+    public void SyncStart() {
+        Cache.clearCache();
+        if (getisOnline()) {
+            AdapterManager.DATALINK.saveall("online", getAmount(), getC(), null);
+        }
     }
 }

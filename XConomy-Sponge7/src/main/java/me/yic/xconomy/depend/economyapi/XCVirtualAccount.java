@@ -22,7 +22,7 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
-import me.yic.xconomy.utils.PlayerData;
+import me.yic.xconomy.data.syncdata.PlayerData;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.service.context.Context;

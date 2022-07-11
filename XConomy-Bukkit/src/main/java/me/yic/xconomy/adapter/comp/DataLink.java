@@ -23,8 +23,8 @@ import me.yic.xconomy.adapter.iDataLink;
 import me.yic.xconomy.data.ImportData;
 import me.yic.xconomy.data.SemiCacheConvert;
 import me.yic.xconomy.data.sql.*;
+import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.info.RecordInfo;
-import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.UUIDMode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -81,16 +81,6 @@ public class DataLink implements iDataLink {
     }
 
     @Override
-    public void newPlayer(CPlayer a) {
-        SQLCreateNewAccount.newPlayer(a);
-    }
-
-    @Override
-    public boolean newPlayer(UUID uid, String name) {
-        return SQLCreateNewAccount.newPlayer(uid, name, null);
-    }
-
-    @Override
     public CPlayer getplayer(PlayerData pd) {
         Player p = null;
         if (pd != null) {
@@ -122,44 +112,6 @@ public class DataLink implements iDataLink {
     }
 
     @Override
-    public <T> void getPlayerData(T key) {
-        if (key instanceof UUID) {
-            SQL.getPlayerData((UUID) key);
-        } else if (key instanceof String) {
-            SQL.getPlayerData((String) key);
-        }
-    }
-
-    @Override
-    public void getBalNonPlayer(String u) {
-        SQL.getNonPlayerData(u);
-    }
-
-    @Override
-    public void getTopBal() {
-        SQL.getBaltop();
-    }
-
-    @Override
-    public void setTopBalHide(UUID u, int type) {
-        SQL.hidetop(u, type);
-    }
-
-    @Override
-    public String getBalSum() {
-        if (SQL.sumBal() == null) {
-            return "0.0";
-        }
-        return SQL.sumBal();
-    }
-
-    @Override
-    public void save(PlayerData pd, Boolean isAdd, BigDecimal amount, RecordInfo ri) {
-        SQL.save(pd, isAdd, amount, ri);
-    }
-
-
-    @Override
     public void saveall(String targettype, BigDecimal amount, Boolean isAdd, RecordInfo ri) {
         new BukkitRunnable() {
             @Override
@@ -175,11 +127,5 @@ public class DataLink implements iDataLink {
                 }
             }
         }.runTaskAsynchronously(XConomy.getInstance());
-    }
-
-    @Override
-    public void saveNonPlayer(String account, BigDecimal amount,
-                                     BigDecimal newbalance, Boolean isAdd, RecordInfo ri) {
-        SQL.saveNonPlayer(account, amount, newbalance, isAdd, ri);
     }
 }

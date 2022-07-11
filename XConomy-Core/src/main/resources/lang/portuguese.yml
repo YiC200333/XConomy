@@ -1,35 +1,52 @@
-translation-author: "richaard5"
-enable-success: "XConomy foi habilidado com sucesso"
-disable-success: "XConomy foi desabilidado com sucesso"
-saving-mode: "Método de salvamento"
-connect-success: "%type% conectado com sucesso"
-connect-fail: "%type% conectado sem sucesso"
-disconnect-fail: "%type% falhou na desconexão"
-reconnect-success: "%type% reconectado com sucesso"
-no-custom-path: "O caminho da pasta personalizada não existe"
-custom-path-error: "Erro de configuração de caminho de arquivo SQLite"
-create-folder-fail: "Erro na criação de pasta"
-unable-connect: "Não foi possivel se conectar ao banco de dados -----"
-jdbc-fail: "JDBC driver falhou no carregamento"
-cache-file-creation-exception: "Erro na criação de arquivo de cache"
-upgrade-database: "Atualize as tabela do banco de dados..."
-enable-bungeecord: "Modo BungeeCord ativado"
-not-enable-bungeecord: "Modo BungeeCord desativado"
-create-language-file-success: "O novo arquivo de idioma foi criado"
-create-language-file-fail: "Erro na criação do arquivo de idioma"
-found-placeholderapi: "PlaceholderAPI Encontrado"
-found-databasedrivers: "DatabaseDrivers Encontrado"
-is-new-version: "É a versão mais recente"
-check-version-fail: "A verificação de atualização falhou"
-found-version: "Foi encontrado uma versão mais recente "
-messege-reload: "recarregado com sucesso"
-vault-baltop-tips-a: "Não é recomendado habilitar a função baltop do vault papi"
-vault-baltop-tips-b: "Defina 'expansions.vault.baltop.enabled' como false no config.yml do PlaceholderAPI"
-username-modified: " username foi alterado"
-no-player-tips: "o modo BC está habilitado, o comando op não pode ser usado no servidor sem o jogador"
-semi-mode-ban-commands: "comando não pode ser usado no semi-online-mode"
-console-ban-commands: "o comando não pode ser usado pelo console"
-pool-disable: "Connection pool is not enabled"
-slf4j-unfound: "Failed to load class 'org.slf4j.Logger'"
-different-version: "Received data from different versions of plugin, unable to synchronize, current plugin version "
-connection-pool-unsupport: "Connection pooling requires at least java version 11"
+translation_authors: "richaard5"
+prefix: '&6[XConomy]'
+balance: '&aSaldo: %balance%'
+balance_other: '&aSaldo de %player%: %balance%'
+top_title: '&e========= TOP10 <Página %page%> ========='
+sum_text: '&fTotal do servidor - %balance%%'
+top_text: '&e%index%: %player% - %balance%'
+top_subtitle: '&7TOP10 recarregado á cada 5 minutos'
+top_nodata: '&cSem dados do TOP10'
+top_out: '&cFora do TOP10'
+top_hidden: '&a%player% está escondido'
+top_displayed: '&a%player% está exibido'
+pay: '&cVocê pagou para %player% %amount%'
+pay_receive: '&aVocê recebeu %amount% de %player%'
+pay_fail: '&cSeu saldo é menor que %amount%'
+pay_self: '&cVocê não pode pagar para você mesmo'
+paytoggle_true: '&aYou accept payment now'
+paytoggle_false: '&aYou refuse payment now'
+paytoggle_other_true: '&cYou set %player% accept payment'
+paytoggle_other_false: '&cYou set %player% refuse payment'
+no_account: '&cA conta de destino não existe'
+invalid_amount: '&cQuantidade inválida'
+over_maxnumber: '&cO saldo da conta de destino está acima do saldo máxim'
+over_maxnumber_receive: '&cYour amount has reached the limit'
+money_give: '&cVocê deu para %player% %amount%'
+money_give_receive: '&aO administrador te deu %amount%'
+money_take: '&cVocê pegou %amount% de %player%'
+money_take_fail: '&cO saldo de %player% é menor que %amount%'
+money_take_receive: '&cO administrador pegou %amount% de sua conta'
+money_set: '&cVocê setou o saldo de %player% para %amount%'
+money_set_receive: '&cO administrador setou o seu saldo para %amount%'
+no_receive_permission: '&cO usuário não pode receber o seu pagamento!'
+no_permission: '&cVocê não tem permissão para executar esse comando!'
+delete_data: '&aYour data is being updated, please login again'
+delete_data_admin: '&cYou delete %player%''s data'
+global_permissions_change: '&aThe global %permission% permissions has been set to %value%'
+personal_permissions_change: '&aThe %permission% permission of %player% has been set to %value%'
+help_title_full: '&6=============== [XConomy] Ajuda <Página %page%> ==============='
+help1: '&6balance/money  -  Mostra o seu saldo'
+help2: '&6balance/money <player>  -  Mostra o saldo de <player>'
+help3: '&6pay <player> <amount>  -  Paga para <player> <amount>'
+help4: '&6balancetop  -  Mostra o TOP10'
+help5: '&6balance/money give <player> <amount>  -  dê para <player> <amount>'
+help6: '&6balance/money take <player> <amount>  -  tire <amount> de <player>'
+help7: '&6balance/money set <player> <amount>  -  define o saldo de <player> para <amount>'
+help8: '&6balance/money give * <all/online> <amount> <reason>  -  dê para <all/online player> <amount>'
+help9: '&6balance/money take * <all/online> <amount> <reason>  -  tire <amount> de <all/online player>'
+help10: '&6balancetop hide/display <player>  -  Esconder ou mostrar a data de <player> do TOP10'
+help11: '&6paytoggle  -  Toggle accepting payments'
+help12: '&6paytoggle <player>  -  Toggle <player>''s accepting payments'
+help13: '&6paypermission set <player> True/False  -  Set <player>''s (* represents a global) pay permission'
+help14: '&6paypermission remove <player>  -  Set <player>''s pay permission to default'

@@ -45,6 +45,7 @@ public class TabList implements TabCompleter {
                     COMMANDS_xc.add("help");
                     if (commandSender.isOp()) {
                         COMMANDS_xc.add("reload");
+                        COMMANDS_xc.add("deldata");
                     }
                     StringUtil.copyPartialMatches(args[0], COMMANDS_xc, completions);
                 }

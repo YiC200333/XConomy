@@ -20,14 +20,17 @@ package me.yic.xconomy.data;
 
 import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.adapter.comp.CPlugin;
 import me.yic.xconomy.adapter.comp.CallAPI;
 import me.yic.xconomy.adapter.comp.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
+import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.data.syncdata.SyncBalanceAll;
+import me.yic.xconomy.data.syncdata.SyncDelData;
+import me.yic.xconomy.info.MessageConfig;
 import me.yic.xconomy.info.RecordInfo;
-import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.SendPluginMessage;
 
 import java.io.ByteArrayOutputStream;
@@ -76,6 +79,19 @@ public class DataCon {
         return pd;
     }
 
+    public static void deletePlayerData(PlayerData pd) {
+        DataLink.deletePlayerData(pd.getUniqueId());
+        Cache.removefromCache(pd.getUniqueId());
+
+        if (!(pd instanceof SyncDelData) && XConomy.Config.BUNGEECORD_ENABLE) {
+            sendudpmessage(new SyncDelData(XConomy.Config.BUNGEECORD_SIGN, pd), null, BigDecimal.ZERO, null);
+        }
+
+        CPlayer cp = DataLink.getplayer(pd);
+        if(cp.isOnline()){
+            cp.kickPlayer("[XConomy] " + AdapterManager.translateColorCodes(MessageConfig.DELETE_DATA));
+        }
+    }
 
     public static boolean hasaccountdatacache(String name) {
         return CacheNonPlayer.CacheContainsKey(name);
@@ -222,7 +238,7 @@ public class DataCon {
     private static void SendMessTask(ByteArrayOutputStream stream, PlayerData pd, Boolean isAdd, BigDecimal amount, RecordInfo ri) {
 
         SendPluginMessage.SendMessTask("xconomy:acb", stream);
-        if (pd != null) {
+        if (pd != null && !(pd instanceof SyncDelData)) {
             DataLink.save(pd, isAdd, amount, ri);
         }
     }

@@ -26,7 +26,7 @@ import me.yic.xconomy.data.GetUUID;
 import me.yic.xconomy.data.ImportData;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.syncdata.SyncUUID;
-import me.yic.xconomy.utils.PlayerData;
+import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.utils.SendPluginMessage;
 import me.yic.xconomy.utils.UUIDMode;
 

@@ -18,5 +18,5 @@ package me.yic.xconomy.info;/*
  */
 
 public class SyncInfo {
-    public static String syncversion = "2.18";
+    public static String syncversion = "2.19";
 }

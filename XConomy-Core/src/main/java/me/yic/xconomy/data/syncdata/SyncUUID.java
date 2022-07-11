@@ -18,6 +18,7 @@
  */
 package me.yic.xconomy.data.syncdata;
 
+import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.SyncType;
 
 import java.util.UUID;
@@ -39,5 +40,10 @@ public class SyncUUID extends SyncData{
 
     public String getOldname(){
         return oldname;
+    }
+
+    @Override
+    public void SyncStart() {
+        Cache.syncOnlineUUIDCache(getOldname(), getNewname(), getUniqueId());
     }
 }

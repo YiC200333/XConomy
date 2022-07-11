@@ -32,7 +32,7 @@ public class MessagesManager {
 
     public static void loadsysmess() {
         XConomy.getInstance().logger(null,0, "Language: " + XConomy.Config.LANGUAGE.toUpperCase());
-        langFile = new CConfig("!/lang/" + XConomy.Config.LANGUAGE.toLowerCase() + ".yml");
+        langFile = new CConfig("/lang/sys", "/" + XConomy.Config.LANGUAGE.toLowerCase() + ".yml");
     }
 
 
@@ -55,7 +55,7 @@ public class MessagesManager {
         messageFile = new CConfig(mfile);
         LanguagesManager.compare(XConomy.Config.LANGUAGE, mfile);
         if (translate) {
-            Languages.translatorName(XConomy.Config.LANGUAGE, mfile);
+            LanguagesManager.translatorName(XConomy.Config.LANGUAGE, mfile);
         }
     }
 

@@ -13,7 +13,8 @@ importdata-mode: false
 
 #Settings
 Settings:
-  #Chinese ChineseTW English French Spanish Russian Turkish Japanese German Indonesia Portuguese
+  #Chinese ChineseTW English French Spanish Russian Turkish Japanese German
+  #Indonesia Portuguese Italian
   language: English
   #Whether to check for new version
   check-update: true

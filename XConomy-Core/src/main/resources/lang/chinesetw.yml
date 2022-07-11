@@ -1,35 +1,52 @@
-translation-author: "None"
-enable-success: "XConomy加載成功"
-disable-success: "XConomy已成功卸載"
-saving-mode: "數據保存方式"
-connect-success: "%type%連接正常"
-connect-fail: "%type%連接異常"
-disconnect-fail: "%type%連接斷開失敗"
-reconnect-success: "%type%重新連接成功"
-no-custom-path: "自定義文件夾路徑不存在"
-custom-path-error: "SQLite文件路徑設置錯誤"
-create-folder-fail: "文件夾創建異常"
-unable-connect: "無法連接到數據庫-----"
-jdbc-fail: "JBDC驅動加載失敗"
-cache-file-creation-exception: "緩存文檔創建異常"
-upgrade-database: "升級數據庫表格。。。"
-enable-bungeecord: "已開啟BungeeCord同步"
-not-enable-bungeecord: "BungeeCord同步未開啓"
-create-language-file-success: "已創建一個新的語言檔案"
-create-language-file-fail: "語言檔案創建异常"
-found-placeholderapi: "發現 PlaceholderAPI"
-found-databasedrivers: "發現 DatabaseDrivers"
-is-new-version: "已是最新版本"
-check-version-fail: "檢查更新失敗"
-found-version: "發現新版本 "
-messege-reload: "§amessage.yml重載成功"
-vault-baltop-tips-a: "不推薦開啓 Vault 中 baltop 變量的功能"
-vault-baltop-tips-b: "請在 PlaceholderAPI 的 config.yml 中設定 expansions.vault.baltop.enabled 為 false"
-username-modified: " 名稱已更改！"
-no-player-tips: "§cBungeeCord模式開啟的情况下，無法在無人的服務器中使用OP命令"
-semi-mode-ban-commands: "§c該指令不支援在半正版模式中使用"
-console-ban-commands: "§6控制台無法使用該指令"
-pool-disable: "連接池未啓用"
-slf4j-unfound: "未找到 'org.slf4j.Logger'"
-different-version: "收到不同版本插件的數據，無法同步，當前插件版本 "
-connection-pool-unsupport: "連接池最低需要JAVA 11版本"
+translation_authors: "None"
+prefix: '&6[XConomy]'
+balance: '&a你的餘額： %balance%'
+balance_other: '&a%player% 的餘額： %balance%'
+top_title: '&e========= TOP10 <第 %page% 頁> ========='
+sum_text: '&f伺服器總金額 - %balance%'
+top_text: '&e%index%： %player% - %balance%'
+top_subtitle: '&7TOP10每五分鐘刷新一次'
+top_nodata: '&c無玩家經濟資料'
+top_out: '&c在 TOP10 以外'
+top_hidden: '&a%player% 已隱藏'
+top_displayed: '&a%player% 已顯示'
+pay: '&c你轉帳給 %player% 餘額 %amount%'
+pay_receive: '&a你從 %player% 收到轉帳 %amount%'
+pay_fail: '&c你的餘額不足 %amount%'
+pay_self: '&c你不能向自己轉帳'
+paytoggle_true: '&a你現在接受轉帳'
+paytoggle_false: '&a你現在拒絕轉帳'
+paytoggle_other_true: '&c你設置 %player% 接受轉帳'
+paytoggle_other_false: '&c你設置 %player% 拒絕轉帳'
+no_account: '&c目標帳號不存在'
+invalid_amount: '&c輸入的金額無效'
+over_maxnumber: '&c目標賬號金額超出最大值'
+over_maxnumber_receive: '&c你的金額已達到上限'
+money_give: '&c你給予了 %player% %amount%'
+money_give_receive: '&a管理員給予你 %amount% 餘額'
+money_take: '&c你從 %player% 收取了 %amount%'
+money_take_fail: '&c%player% 的餘額不足 %amount%'
+money_take_receive: '&c管理員扣除了 %amount% 餘額'
+money_set: '&c你將 %player% 的金額設定為 %amount%'
+money_set_receive: '&c管理員設定你的餘額為 %amount%'
+no_receive_permission: '&c目標賬號沒有權限接收轉賬!'
+no_permission: '&c你沒有許可權使用這個指令'
+delete_data: '&a你的數據已經更新，請重新登錄'
+delete_data_admin: '&c你刪除了 %player% 的數據'
+global_permissions_change: '&a%permission% 指令的全域許可權已被設定為 %value%'
+personal_permissions_change: '&a%player% 的 %permission% 許可權已被設定為 %value%'
+help_title_full: '&6=============== [XConomy]幫助 <第 %page% 頁> ==============='
+help1: '&6balance/money  -  查詢餘額'
+help2: '&6balance/money <玩家>  -  査詢<玩家>餘額'
+help3: '&6pay <玩家> <金額>  -  轉帳給<玩家><金額>'
+help4: '&6balancetop  -  查詢餘額排行榜'
+help5: '&6balance/money give <玩家> <金額>  -  給與<玩家><金額>'
+help6: '&6balance/money take <玩家> <金額>  -  從<玩家>取走<金額>'
+help7: '&6balance/money set <玩家> <金額>  -  設定<玩家>金額為<金額>'
+help8: '&6balance/money give * <all/online> <金額> <理由>  -  給與<所有/在綫玩家><金额>'
+help9: '&6balance/money take * <all/online> <金額> <理由>  -  從<所有/在綫玩家>取走<金額>'
+help10: '&6balancetop hide/display <player>  -  將<玩家>的數據從Top10上隱藏或顯示'
+help11: '&6paytoggle  -  切換是否接受轉帳'
+help12: '&6paytoggle <player>  -  切換<玩家>是否接受轉帳'
+help13: '&6paypermission set <player> True/False  -  設置<玩家>(*表示全局)轉帳權限'
+help14: '&6paypermission remove <player>  -  設置<玩家>轉帳權限為默認'

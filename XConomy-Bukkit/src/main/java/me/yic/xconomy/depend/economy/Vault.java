@@ -22,9 +22,8 @@ import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.adapter.comp.DataLink;
 import me.yic.xconomy.depend.NonPlayerPlugin;
-import me.yic.xconomy.utils.PlayerData;
+import me.yic.xconomy.data.syncdata.PlayerData;
 import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
@@ -82,7 +81,10 @@ public class Vault extends AbstractEconomy {
             return false;
         }
         try {
-            return AdapterManager.DATALINK.newPlayer(pp.getUniqueId(), pp.getName());
+            if (!AdapterManager.DATALINK.newPlayer(pp.getUniqueId(), pp.getName())){
+                return false;
+            }
+            return DataCon.getPlayerData(pp.getUniqueId()) != null;
         } catch (Exception e) {
             return false;
         }
@@ -189,7 +191,7 @@ public class Vault extends AbstractEconomy {
         if (isNonPlayerAccount(name)) {
             return DataCon.getAccountBalance(name).doubleValue();
         }
-        if (hasAccount(name)){
+        if (hasAccount(name)) {
             return DataCon.getPlayerData(name).getBalance().doubleValue();
         }
         return 0;
@@ -199,7 +201,7 @@ public class Vault extends AbstractEconomy {
     public double getBalance(OfflinePlayer aa) {
         UUID uuid = aa.getUniqueId();
         PlayerData pd = DataCon.getPlayerData(uuid);
-        if (pd != null){
+        if (pd != null) {
             return pd.getBalance().doubleValue();
         }
         return 0;

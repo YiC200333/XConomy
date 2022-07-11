@@ -66,19 +66,19 @@ public class CConfig implements iConfig {
         fc = pfc;
     }
 
-    public CConfig(String path){
+    public CConfig(String path, String subpath){
         FileConfiguration pfc = null;
 
         String jarPath = "jar:file:" + XConomy.getInstance().getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
         Reader reader = null;
         InputStream is = null;
         try {
-            URL url = new URL(jarPath + path);
+            URL url = new URL(jarPath + "!" + path + subpath);
             is = url.openStream();
             reader = new InputStreamReader(is, StandardCharsets.UTF_8);
         } catch (IOException e) {
             try {
-                URL url = new URL(jarPath + "!/lang/english.yml");
+                URL url = new URL(jarPath + "!" + path + "/english.yml");
                 is = url.openStream();
                 reader = new InputStreamReader(is, StandardCharsets.UTF_8);
             } catch (IOException ioException) {

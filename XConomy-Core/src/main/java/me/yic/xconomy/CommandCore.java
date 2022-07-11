@@ -18,13 +18,13 @@
  */
 package me.yic.xconomy;
 
-import me.yic.xconomy.adapter.comp.CChat;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.adapter.comp.CSender;
 import me.yic.xconomy.adapter.comp.DataLink;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.data.syncdata.SyncMessage;
 import me.yic.xconomy.data.syncdata.SyncPermission;
 import me.yic.xconomy.info.MessageConfig;
@@ -32,7 +32,6 @@ import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.info.SyncType;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.CompletableFutureTask;
-import me.yic.xconomy.utils.PlayerData;
 import me.yic.xconomy.utils.SendPluginMessage;
 import me.yic.xconomy.utils.UUIDMode;
 
@@ -57,6 +56,25 @@ public class CommandCore {
                         MessagesManager.loadlangmess();
                         PREFIX = translateColorCodes("prefix");
                         sendMessages(sender, PREFIX + MessagesManager.systemMessage("§amessage.yml重载成功"));
+                        return true;
+                    }
+                    if (args.length == 2 && args[0].equalsIgnoreCase("deldata")) {
+
+                        if (check()) {
+                            sendMessages(sender, PREFIX + MessagesManager.systemMessage("§cBungeeCord模式开启的情况下,无法在无人的服务器中使用OP命令"));
+                            return true;
+                        }
+
+                        PlayerData pd = DataCon.getPlayerData(args[1]);
+                        if (pd == null) {
+                            sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
+                            return true;
+                        }
+
+                        DataCon.deletePlayerData(pd);
+
+                        sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.DELETE_DATA_ADMIN).replace("%player%", pd.getName()));
+
                         return true;
                     }
                 }
@@ -90,7 +108,7 @@ public class CommandCore {
                                 sendMessages(sender, translateColorCodes("global_permissions_change").replace("%permission%", "pay")
                                         .replace("%value%", args[2]));
                                 syncpr(1, null, vv);
-                            }else{
+                            } else {
                                 PlayerData pd = DataCon.getPlayerData(args[1]);
                                 if (pd == null) {
                                     sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
@@ -314,7 +332,7 @@ public class CommandCore {
                             return true;
                         }
                     }
-                }else{
+                } else {
                     sendMessages(sender, PREFIX + translateColorCodes("no_receive_permission"));
                     return true;
                 }
@@ -759,12 +777,12 @@ public class CommandCore {
         }
     }
 
-    public static String translateColorCodes(MessageConfig message) {
-        return CChat.translateAlternateColorCodes('&', MessagesManager.messageFile.getString(message.toString()));
+    private static String translateColorCodes(MessageConfig message) {
+        return AdapterManager.translateColorCodes(message);
     }
 
-    public static String translateColorCodes(String message) {
-        return CChat.translateAlternateColorCodes('&', MessagesManager.messageFile.getString(message));
+    private static String translateColorCodes(String message) {
+        return AdapterManager.translateColorCodes(message);
     }
 
     public static void showVersion(CSender sender) {
@@ -871,7 +889,7 @@ public class CommandCore {
             ObjectOutputStream oos = new ObjectOutputStream(output);
             oos.writeUTF(XConomy.syncversion);
             if (!ispublic) {
-                if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE) ) {
+                if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                     oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE_SEMI, pd.getName(), message));
                 } else {
                     oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE, pd.getUniqueId(), message));

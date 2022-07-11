@@ -1,35 +1,52 @@
-translation-author: "erkutay007"
-enable-success: "XConomy aktif edildi"
-disable-success: "XConomy devredışı bırakıldı"
-saving-mode: "Method Kaydediliyor"
-connect-success: "%type% bağlantısı başarılı"
-connect-fail: "%type% tekrar bağlantı başarılı"
-disconnect-fail: "%type% bağlantısı kesilemedi"
-reconnect-success: "%type% bağlantısı başarısız"
-no-custom-path: "The custom folder path does not exist"
-custom-path-error: "SQLite file path setting error"
-create-folder-fail: "Folder creation exception"
-unable-connect: "Veritabanına bağlanılamıyor -----"
-jdbc-fail: "JDBC sürücüsü yüklenemedi"
-cache-file-creation-exception: "Cache file creation exception"
-upgrade-database: "Upgrade database table..."
-enable-bungeecord: "BungeeCord modu aktif edildi"
-not-enable-bungeecord: "BungeeCord modu kapatıldı"
-create-language-file-success: "Yeni dil dosyası oluşturuldu"
-create-language-file-fail: "Dil dosyası oluşturulurken hata oluştu"
-found-placeholderapi: "Found PlaceholderAPI"
-found-databasedrivers: "Found DatabaseDrivers"
-is-new-version: "En son sürüm"
-check-version-fail: "Güncelleme kontrol edilemedi"
-found-version: "Found new version "
-messege-reload: "§amessage.yml reloaded successfully"
-vault-baltop-tips-a: "It is not recommended to enable the baltop function of vault papi"
-vault-baltop-tips-b: "Please set 'expansions.vault.baltop.enabled' to false in the config.yml of PlaceholderAPI"
-username-modified: " kullanıcı adı değiştirildi"
-no-player-tips: "§cBungeeCord modu etkinleştirildiğinde, op komutları oyuncu sunucuda değilse kullanılamaz"
-semi-mode-ban-commands: "§cThis command cannot be used in the semi-online-mode"
-console-ban-commands: "§6Bu komut sadece konsoldan uygulanabilir"
-pool-disable: "Connection pool is not enabled"
-slf4j-unfound: "Failed to load class 'org.slf4j.Logger'"
-different-version: "Received data from different versions of plugin, unable to synchronize, current plugin version "
-connection-pool-unsupport: "Connection pooling requires at least java version 11"
+translation_authors: "erkutay007"
+prefix: '&6[XConomy]'
+balance: '&aBakiye: %balance%'
+balance_other: '&a%player% adlı oyuncunun bakiyesi: %balance%'
+top_title: '&e========= EN IYI 10 <Page %page%> ========='
+sum_text: '&fServer Total - %balance%'
+top_text: '&e%index%: %player% - %balance%'
+top_subtitle: '&7TOP10 refreshed every 5 minutes'
+top_nodata: '&cEn iyi ilk 10 listesine ait veri bulunamadı'
+top_out: '&cOut of the TOP10'
+top_hidden: '&a%player% is hidden'
+top_displayed: '&a%player% is displayed'
+pay: '&c%player% adlı oyuncuya %amount% gönderildi'
+pay_receive: '&a%player% adlı oyuncudan %amount% aldın'
+pay_fail: '&cBakiyen %amount%''''dan az'
+pay_self: '&cKendine para gönderemezsin'
+paytoggle_true: '&aYou accept payment now'
+paytoggle_false: '&aYou refuse payment now'
+paytoggle_other_true: '&cYou set %player% accept payment'
+paytoggle_other_false: '&cYou set %player% refuse payment'
+no_account: '&cBelirtilen hesap mevcut değil'
+invalid_amount: '&cGeçersiz miktar'
+over_maxnumber: '&cThe target account amount over the maximum amount'
+over_maxnumber_receive: '&cYour amount has reached the limit'
+money_give: '&c%player% adlı oyuncuya %amount% verildi'
+money_give_receive: '&aBir yönetici sana %amount% verdi'
+money_take: '&c%player% adlı oyuncunun bakiyesinden %amount% alındı'
+money_take_fail: '&c%player% adlı oyuncunun bakiyesi %amount%''''dan az'
+money_take_receive: '&cBir yönetici senden %amount% aldı'
+money_set: '&c%player% adlı oyuncunun bakiyesi %amount% olarak ayarlandı'
+money_set_receive: '&cBir yönetici bakiyeni %amount% olarak ayarladı'
+no_receive_permission: '&cThe target user can''t receive your payment!'
+no_permission: '&cBu komutu kullanabilmek için yetkin yok.'
+delete_data: '&aYour data is being updated, please login again'
+delete_data_admin: '&cYou delete %player%''s data'
+global_permissions_change: '&aThe global %permission% permissions has been set to %value%'
+personal_permissions_change: '&aThe %permission% permission of %player% has been set to %value%'
+help_title_full: '&6=============== [XConomy] YARDIM <Page %page%> ==============='
+help1: '&6balance/money  -  Bakiyeni gösterir'
+help2: '&6balance/money <player>  -  Belirtilen oyuncunun bakiyesini gösterir'
+help3: '&6pay <player> <amount>  -  Belirtilen oyuncuya belirtilen miktarı gönderir'
+help4: '&6balancetop  -  En İyi 10''''u gösterir'
+help5: '&6balance/money give <player> <amount>  -  Belirtilen oyuncuya belirtilen miktarda para verir'
+help6: '&6balance/money take <player> <amount>  -  Belirtilen oyuncudan belirtilen miktarda para alır'
+help7: '&6balance/money set <player> <amount>  -  Belirtilen oyuncunun bakiyesini belirtilen miktar olarak ayarlar'
+help8: '&6balance/money give * <all/online> <amount> <reason>  -  give <all/online player> <amount>'
+help9: '&6balance/money take * <all/online> <amount> <reason>  -  take <amount> from <all/online player>'
+help10: '&6balancetop hide/display <player>  -  Hide or display a <player>''s data from TOP10'
+help11: '&6paytoggle  -  Toggle accepting payments'
+help12: '&6paytoggle <player>  -  Toggle <player>''s accepting payments'
+help13: '&6paypermission set <player> True/False  -  Set <player>''s (* represents a global) pay permission'
+help14: '&6paypermission remove <player>  -  Set <player>''s pay permission to default'

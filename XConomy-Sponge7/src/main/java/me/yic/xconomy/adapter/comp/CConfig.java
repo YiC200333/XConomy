@@ -52,18 +52,18 @@ public class CConfig implements iConfig {
         fc = pfc;
     }
 
-    public CConfig(String path){
+    public CConfig(String path, String subpath){
         ConfigurationNode pfc = null;
 
         try {
-            URL url = new URL(XConomy.jarPath + path);
+            URL url = new URL(XConomy.jarPath + "!" + path + subpath);
             InputStream is = url.openStream();
             is.close();
             YAMLConfigurationLoader sysloader = YAMLConfigurationLoader.builder().setURL(url).build();
             pfc = sysloader.load();
         } catch (IOException e) {
             try {
-                URL url = new URL(XConomy.jarPath + "!/lang/english.yml");
+                URL url = new URL(XConomy.jarPath + "!" + path + "/english.yml");
                 InputStream is = url.openStream();
                 is.close();
                 YAMLConfigurationLoader sysloader = YAMLConfigurationLoader.builder().setURL(url).build();

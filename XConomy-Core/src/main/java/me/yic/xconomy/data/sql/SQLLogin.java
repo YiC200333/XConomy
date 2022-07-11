@@ -19,13 +19,12 @@
 package me.yic.xconomy.data.sql;
 
 
+import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.adapter.comp.CChat;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.info.MessageConfig;
-import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.utils.UUIDMode;
 
 import java.sql.Connection;
@@ -92,8 +91,8 @@ public class SQLLogin extends SQL {
     }
 
     private static void sendMessages(CPlayer sender, String name, double amount) {
-        String PREFIX = CChat.translateAlternateColorCodes('&', MessagesManager.messageFile.getString("prefix"));
-        String message = CChat.translateAlternateColorCodes('&', MessagesManager.messageFile.getString(MessageConfig.PAY_RECEIVE.toString()));
+        String PREFIX = AdapterManager.translateColorCodes("prefix");
+        String message = AdapterManager.translateColorCodes(MessageConfig.PAY_RECEIVE);
         message = PREFIX + message.replace("%player%", name).replace("%amount%", DataFormat.shown(amount));
         if (!message.replace(PREFIX, "").equalsIgnoreCase("")) {
             if (message.contains("\\n")) {

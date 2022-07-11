@@ -18,8 +18,11 @@
  */
 package me.yic.xconomy;
 
+import me.yic.xconomy.adapter.comp.CChat;
 import me.yic.xconomy.adapter.comp.CPlugin;
 import me.yic.xconomy.adapter.comp.DataLink;
+import me.yic.xconomy.info.MessageConfig;
+import me.yic.xconomy.lang.MessagesManager;
 
 public class AdapterManager {
     public static boolean foundvaultpe = false;
@@ -28,4 +31,12 @@ public class AdapterManager {
     public final static CPlugin PLUGIN = new CPlugin();
 
     public final static DataLink DATALINK = new DataLink();
+
+    public static String translateColorCodes(MessageConfig message) {
+        return CChat.translateAlternateColorCodes('&', MessagesManager.messageFile.getString(message.toString()));
+    }
+
+    public static String translateColorCodes(String message) {
+        return CChat.translateAlternateColorCodes('&', MessagesManager.messageFile.getString(message));
+    }
 }

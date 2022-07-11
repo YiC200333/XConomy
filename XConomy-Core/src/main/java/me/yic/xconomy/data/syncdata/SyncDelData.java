@@ -1,5 +1,5 @@
 /*
- *  This file (PlayerData.java) is a part of project XConomy
+ *  This file (SyncData.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -16,34 +16,19 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.utils;
+package me.yic.xconomy.data.syncdata;
 
-import me.yic.xconomy.data.syncdata.SyncData;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.info.SyncType;
 
-import java.math.BigDecimal;
-import java.util.UUID;
+public class SyncDelData extends PlayerData {
 
-public class PlayerData extends SyncData {
-    private final String name;
-    private BigDecimal balance;
-
-    public PlayerData(String sign, UUID uuid, String name, BigDecimal balance) {
-        super(sign, SyncType.UPDATEPLAYER, uuid);
-        this.name = name;
-        this.balance = balance;
+    public SyncDelData(String sign, PlayerData pd){
+        super(sign, SyncType.DELETEDATA, pd.getUniqueId(), pd.getName(), pd.getBalance());
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public void SyncStart() {
+        DataCon.deletePlayerData(this);
     }
-
-    public BigDecimal getBalance() {
-        return balance;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
-
 }

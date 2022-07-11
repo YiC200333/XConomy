@@ -19,7 +19,7 @@ public class CConfig implements iConfig {
     public CConfig(URL url){
     }
 
-    public CConfig(String path){
+    public CConfig(String path, String subpath){
     }
 
     @Override

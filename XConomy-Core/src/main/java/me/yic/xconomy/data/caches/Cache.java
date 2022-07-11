@@ -20,7 +20,7 @@ package me.yic.xconomy.data.caches;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.GetUUID;
-import me.yic.xconomy.utils.PlayerData;
+import me.yic.xconomy.data.syncdata.PlayerData;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

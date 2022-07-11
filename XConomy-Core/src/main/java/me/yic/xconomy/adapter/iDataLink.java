@@ -1,5 +1,5 @@
 /*
- *  This file (DataLink.java) is a part of project XConomy
+ *  This file (iDataLink.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -20,8 +20,10 @@ package me.yic.xconomy.adapter;
 
 
 import me.yic.xconomy.adapter.comp.CPlayer;
+import me.yic.xconomy.data.sql.SQL;
+import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import me.yic.xconomy.info.RecordInfo;
-import me.yic.xconomy.utils.PlayerData;
+import me.yic.xconomy.data.syncdata.PlayerData;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -31,9 +33,13 @@ public interface iDataLink {
 
     boolean create();
 
-    void newPlayer(CPlayer a);
+    default void newPlayer(CPlayer a) {
+        SQLCreateNewAccount.newPlayer(a);
+    }
 
-    boolean newPlayer(UUID uid, String name);
+    default boolean newPlayer(UUID uid, String name) {
+        return SQLCreateNewAccount.newPlayer(uid, name, null);
+    }
 
     CPlayer getplayer(PlayerData pd);
 
@@ -41,21 +47,46 @@ public interface iDataLink {
 
     void selectlogininfo(CPlayer pp);
 
-    <T> void getPlayerData(T key);
+    default <T> void getPlayerData(T key) {
+        if (key instanceof UUID) {
+            SQL.getPlayerData((UUID) key);
+        } else if (key instanceof String) {
+            SQL.getPlayerData((String) key);
+        }
+    }
 
-    void getBalNonPlayer(String u);
+    default void deletePlayerData(UUID u) {
+        SQL.deletePlayerData(u.toString());
+    }
 
-    void getTopBal();
+    default void getBalNonPlayer(String u) {
+        SQL.getNonPlayerData(u);
+    }
 
-    void setTopBalHide(UUID u, int type);
+    default void getTopBal() {
+        SQL.getBaltop();
+    }
 
-    String getBalSum();
+    default void setTopBalHide(UUID u, int type) {
+        SQL.hidetop(u, type);
+    }
 
-    void save(PlayerData pd, Boolean isAdd, BigDecimal amount, RecordInfo ri);
+    default String getBalSum() {
+        if (SQL.sumBal() == null) {
+            return "0.0";
+        }
+        return SQL.sumBal();
+    }
+
+    default void save(PlayerData pd, Boolean isAdd, BigDecimal amount, RecordInfo ri) {
+        SQL.save(pd, isAdd, amount, ri);
+    }
 
 
     void saveall(String targettype, BigDecimal amount, Boolean isAdd, RecordInfo ri);
 
-    void saveNonPlayer(String account, BigDecimal amount,
-                                     BigDecimal newbalance, Boolean isAdd, RecordInfo ri);
+    default void saveNonPlayer(String account, BigDecimal amount,
+                       BigDecimal newbalance, Boolean isAdd, RecordInfo ri){
+        SQL.saveNonPlayer(account, amount, newbalance, isAdd, ri);
+    }
 }

@@ -23,7 +23,7 @@ import me.yic.xconomy.info.SyncType;
 import java.io.Serializable;
 import java.util.UUID;
 
-public class SyncData implements Serializable {
+public abstract class SyncData implements Serializable {
 
     final String sign;
     final SyncType st;
@@ -47,4 +47,6 @@ public class SyncData implements Serializable {
     public SyncType getSyncType(){
         return st;
     }
+
+    public abstract void SyncStart();
 }

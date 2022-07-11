@@ -5,7 +5,7 @@
 
     <groupId>me.yic</groupId>
     <artifactId>XConomy</artifactId>
-    <version>2.18.15</version>
+    <version>2.19.1</version>
     <modules>
         <module>XConomy-Bukkit</module>
         <module>XConomy-Sponge7</module>

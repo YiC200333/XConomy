@@ -26,7 +26,7 @@ import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.info.RecordInfo;
 import me.yic.xconomy.utils.DatabaseConnection;
-import me.yic.xconomy.utils.PlayerData;
+import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.utils.UUIDMode;
 
 import java.math.BigDecimal;
@@ -152,7 +152,7 @@ public class SQL {
         try {
             Connection connection = database.getConnectionAndCheck();
             String sql = "select * from " + tableName + " where UID = ?";
-            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)){
+            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 sql = "select * from " + tableName + " where UID = ifnull((select DUUID from " + tableUUIDName + " where UUID = ?), ?)";
             }
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -262,11 +262,11 @@ public class SQL {
         Connection connection = database.getConnectionAndCheck();
         try {
             String query = " set balance = ? where UID = ?";
-            if (XConomy.Config.DISABLE_CACHE){
-                if (isAdd != null){
-                    if (isAdd){
+            if (XConomy.Config.DISABLE_CACHE) {
+                if (isAdd != null) {
+                    if (isAdd) {
                         query = " set balance = balance + ? where UID = ?";
-                    }else{
+                    } else {
                         query = " set balance = balance - ? where UID = ?";
                     }
                 }
@@ -274,7 +274,7 @@ public class SQL {
             PreparedStatement statement = connection.prepareStatement("update " + tableName + query);
             if (!XConomy.Config.DISABLE_CACHE) {
                 statement.setDouble(1, pd.getBalance().doubleValue());
-            }else{
+            } else {
                 statement.setDouble(1, amount.doubleValue());
             }
             statement.setString(2, pd.getUniqueId().toString());
@@ -377,11 +377,11 @@ public class SQL {
         Connection connection = database.getConnectionAndCheck();
         try {
             String query = " set balance = ? where account = ?";
-            if (XConomy.Config.DISABLE_CACHE){
-                if (isAdd != null){
-                    if (isAdd){
+            if (XConomy.Config.DISABLE_CACHE) {
+                if (isAdd != null) {
+                    if (isAdd) {
                         query = " set balance = balance + ? where account = ?";
-                    }else{
+                    } else {
                         query = " set balance = balance - ? where account = ?";
                     }
                 }
@@ -389,7 +389,7 @@ public class SQL {
             PreparedStatement statement = connection.prepareStatement("update " + tableNonPlayerName + query);
             if (!XConomy.Config.DISABLE_CACHE) {
                 statement.setDouble(1, newbalance.doubleValue());
-            }else{
+            } else {
                 statement.setDouble(1, amount.doubleValue());
             }
             statement.setString(2, account);
@@ -402,6 +402,28 @@ public class SQL {
         database.closeHikariConnection(connection);
     }
 
+
+    public static void deletePlayerData(String UUID) {
+        Connection connection = database.getConnectionAndCheck();
+        try {
+            String query = "delete from " + tableName + " where UID = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, UUID);
+            statement.executeUpdate();
+            statement.close();
+            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                query = "delete from " + tableName + " where DUUID = ?";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, UUID);
+                statement.executeUpdate();
+                statement.close();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        database.closeHikariConnection(connection);
+    }
 
     public static void getBaltop() {
         try {

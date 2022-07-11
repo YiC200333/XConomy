@@ -1,5 +1,5 @@
 /*
- *  This file (SyncMessage.java) is a part of project XConomy
+ *  This file (PlayerData.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -18,41 +18,42 @@
  */
 package me.yic.xconomy.data.syncdata;
 
-import me.yic.xconomy.info.PermissionINFO;
+import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.SyncType;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
-public class SyncPermission extends SyncData{
+public class PlayerData extends SyncData {
+    private final String name;
+    private BigDecimal balance;
 
-    //1 - pay 2 - paytoggle
-    private final int type;
-    private final Boolean value;
-
-    public SyncPermission(String sign, UUID uuid, int type, Boolean value){
-        super(sign, SyncType.PERMISSION, uuid);
-        this.type = type;
-        this.value = value;
+    public PlayerData(String sign, UUID uuid, String name, BigDecimal balance) {
+        super(sign, SyncType.UPDATEPLAYER, uuid);
+        this.name = name;
+        this.balance = balance;
     }
 
-    public int getType(){
-        return type;
+    protected PlayerData(String sign, SyncType sycn, UUID uuid, String name, BigDecimal balance) {
+        super(sign, sycn, uuid);
+        this.name = name;
+        this.balance = balance;
     }
 
-    public Boolean getValue(){
-        return value;
+    public String getName() {
+        return name;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
     @Override
     public void SyncStart() {
-        if (getType() == 1){
-            if (getUniqueId() == null){
-                PermissionINFO.globalpayment = getValue();
-            }else{
-                PermissionINFO.setPaymentPermission(getUniqueId(), getValue());
-            }
-        }else{
-            PermissionINFO.setRPaymentPermission(getUniqueId(), getValue());
-        }
+        Cache.insertIntoCache(getUniqueId(), this);
     }
 }

@@ -26,7 +26,8 @@ public enum SyncType {
     MESSAGE_SEMI("message#semi"),
     BROADCAST("broadcast"),
     SYNCONLINEUUID("syncOnlineUUID"),
-    PERMISSION("permission");
+    PERMISSION("permission"),
+    DELETEDATA("deletedata");
 
     final String value;
 

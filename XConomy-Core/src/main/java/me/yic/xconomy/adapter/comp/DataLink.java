@@ -19,10 +19,8 @@
 package me.yic.xconomy.adapter.comp;
 
 import me.yic.xconomy.adapter.iDataLink;
-import me.yic.xconomy.data.sql.SQL;
-import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import me.yic.xconomy.info.RecordInfo;
-import me.yic.xconomy.utils.PlayerData;
+import me.yic.xconomy.data.syncdata.PlayerData;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -30,20 +28,8 @@ import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class DataLink implements iDataLink {
-
-
     @Override
     public boolean create() {
-        return false;
-    }
-
-    @Override
-    public void newPlayer(CPlayer a) {
-
-    }
-
-    @Override
-    public boolean newPlayer(UUID uid, String name) {
         return false;
     }
 
@@ -63,42 +49,7 @@ public class DataLink implements iDataLink {
     }
 
     @Override
-    public <T> void getPlayerData(T key) {
-
-    }
-
-    @Override
-    public void getBalNonPlayer(String u) {
-
-    }
-
-    @Override
-    public void getTopBal() {
-
-    }
-
-    @Override
-    public void setTopBalHide(UUID u, int type) {
-
-    }
-
-    @Override
-    public String getBalSum() {
-        return null;
-    }
-
-    @Override
-    public void save(PlayerData pd, Boolean isAdd, BigDecimal amount, RecordInfo ri) {
-
-    }
-
-    @Override
     public void saveall(String targettype, BigDecimal amount, Boolean isAdd, RecordInfo ri) {
-
-    }
-
-    @Override
-    public void saveNonPlayer(String account, BigDecimal amount, BigDecimal newbalance, Boolean isAdd, RecordInfo ri) {
 
     }
 }
