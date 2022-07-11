@@ -19,7 +19,6 @@
 package me.yic.xconomy.data.syncdata;
 
 import me.yic.xconomy.AdapterManager;
-import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.info.SyncType;
 
 import java.util.UUID;
