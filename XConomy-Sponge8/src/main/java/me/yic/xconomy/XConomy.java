@@ -20,6 +20,7 @@ package me.yic.xconomy;
 
 import com.google.inject.Inject;
 import me.yic.xconomy.adapter.comp.CConfig;
+import me.yic.xconomy.command.*;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.sql.SQL;
@@ -34,13 +35,18 @@ import me.yic.xconomy.listeners.SPsync;
 import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
 import me.yic.xconomy.utils.PluginINFO;
+import net.kyori.adventure.text.Component;
 import org.apache.logging.log4j.Logger;
 import org.bstats.sponge.Metrics;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.Command;
+import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.lifecycle.ProvideServiceEvent;
+import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 import org.spongepowered.api.event.lifecycle.StoppingEngineEvent;
 import org.spongepowered.api.network.channel.raw.RawDataChannel;
@@ -105,11 +111,7 @@ public class XConomy {
         metrics = metricsFactory.make(10142);
     }
 
-
-    @SuppressWarnings(value = {"unused"})
-    @Listener
-    public void onEnable(final StartedEngineEvent<Server> event) {
-        this.permissionService = Sponge.server().serviceProvider().permissionService();
+    private void firstStart() {
         loadconfig();
 
         MessagesManager.loadsysmess();
@@ -117,7 +119,11 @@ public class XConomy {
 
         DConfig = new DataBaseConfig();
         Config.setBungeecord();
+    }
 
+    @SuppressWarnings(value = {"unused"})
+    @Listener
+    public void onEnable(final StartedEngineEvent<Server> event) {
 
         //Optional<EconomyService> serviceOpt = Sponge.getServiceManager().provide(EconomyService.class);
         //if (!serviceOpt.isPresent()) {
@@ -143,9 +149,75 @@ public class XConomy {
         }
         // 检查更新
 
-
         Sponge.eventManager().registerListeners(plugincontainer, new ConnectionListeners());
 
+
+        this.permissionService = Sponge.server().serviceProvider().permissionService();
+
+        if (permissionService != null) {
+            this.permissionDescriptionBuilder = this.permissionService.newDescriptionBuilder(plugincontainer);
+
+            this.permissionDescriptionBuilder
+                    .id("xconomy.user.balance")
+                    .description(Component.text("xconomy command"))
+                    .assign(PermissionDescription.ROLE_USER, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.user.balance.other")
+                    .description(Component.text("xconomy command"))
+                    .assign(PermissionDescription.ROLE_USER, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.user.pay")
+                    .description(Component.text("xconomy command"))
+                    .assign(PermissionDescription.ROLE_USER, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.user.pay.receive")
+                    .description(Component.text("xconomy command"))
+                    .assign(PermissionDescription.ROLE_USER, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.user.balancetop")
+                    .description(Component.text("xconomy command"))
+                    .assign(PermissionDescription.ROLE_USER, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.user.paytoggle")
+                    .description(Component.text("xconomy command"))
+                    .assign(PermissionDescription.ROLE_USER, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.admin.give")
+                    .description(Component.text("xconomy command"))
+                    .assign(PermissionDescription.ROLE_ADMIN, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.admin.take")
+                    .description(Component.text("xconomy command"))
+                    .assign(PermissionDescription.ROLE_ADMIN, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.admin.set")
+                    .description(Component.text("xconomy command"))
+                    .assign(PermissionDescription.ROLE_ADMIN, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.admin.permission")
+                    .description(Component.text("xconomy command"))
+                    .assign(PermissionDescription.ROLE_ADMIN, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.admin.balancetop")
+                    .description(Component.text("xconomy command"))
+                    .assign(PermissionDescription.ROLE_ADMIN, true)
+                    .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.admin.paytoggle")
+                    .description(Component.text("xconomy command"))
+                    .assign(PermissionDescription.ROLE_ADMIN, true)
+                    .register();
+        }
 
 
         if (Config.BUNGEECORD_ENABLE) {
@@ -191,6 +263,47 @@ public class XConomy {
     @Listener
     public void onRegisterService(final ProvideServiceEvent<EconomyService> event){
         event.suggest(XCService::new);
+    }
+
+
+    @SuppressWarnings("unused")
+    @Listener
+    public void onRegisterCommand(final RegisterCommandEvent<Command.Parameterized> event){
+        firstStart();
+
+        final Command.Parameterized balcmd = Command.builder()
+                .executor(new CommandBalance())
+                .addParameters(Parameter.seq(CommandBalance.arg1, CommandBalance.arg2, CommandBalance.arg3,
+                        CommandBalance.arg4, CommandBalance.arg5)).build();
+        final Command.Parameterized paycmd = Command.builder()
+                .executor(new CommandPay())
+                .addParameters(Parameter.seq(CommandPay.arg1, CommandPay.arg2)).build();
+        final Command.Parameterized baltopcmd = Command.builder()
+                .executor(new CommandBaltop())
+                .addParameters(Parameter.seq(CommandBaltop.arg1, CommandBaltop.arg2)).build();
+        final Command.Parameterized xccmd = Command.builder()
+                .executor(new CommandSystem())
+                .addParameters(Parameter.seq(CommandSystem.arg1, CommandSystem.arg2)).build();
+        final Command.Parameterized paypr = Command.builder()
+                .executor(new CommandPermission())
+                .addParameters(Parameter.seq(CommandPermission.arg1, CommandPermission.arg2, CommandPermission.arg3)).build();
+        final Command.Parameterized paytog = Command.builder()
+                .executor(new CommandPaytoggle())
+                .addParameters(Parameter.seq(CommandPaytoggle.arg1, CommandPaytoggle.arg2)).build();
+
+        if (Config.ECO_COMMAND) {
+            event.register(plugincontainer, balcmd,
+                    "balance", "bal", "money", "economy", "eeconomy", "eco");
+            event.register(plugincontainer, baltopcmd,
+                    "balancetop", "baltop", "ebalancetop", "ebaltop");
+        } else {
+            event.register(plugincontainer, balcmd, "balance", "bal", "money");
+            event.register(plugincontainer, baltopcmd, "balancetop", "baltop");
+        }
+        event.register(plugincontainer, paycmd, "pay");
+        event.register(plugincontainer, xccmd, "xconomy", "xc");
+        event.register(plugincontainer, paypr, "paypermission", "payperm");
+        event.register(plugincontainer, paytog, "paytoggle");
     }
 
 
