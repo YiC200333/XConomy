@@ -71,9 +71,10 @@ import java.util.concurrent.TimeUnit;
 @Plugin(id = "xconomy", name = "XConomy", version = PluginINFO.VERSION, authors = {"YiC"}, url = "https://ore.spongepowered.org/YiC/XConomy")
 
 public class XConomy {
-    public final static String version = "Sponge";
+    public final static String version = "Sponge7";
 
     private static XConomy instance;
+    @SuppressWarnings("unused")
     public static String PVersion = PluginINFO.VERSION;
     public static DataBaseConfig DConfig;
     public static DefaultConfig Config;

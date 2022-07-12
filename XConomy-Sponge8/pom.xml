@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>XConomy-Sponge7</artifactId>
+    <artifactId>XConomy-Sponge8</artifactId>
 
     <build>
         <defaultGoal>clean install</defaultGoal>
@@ -23,7 +23,8 @@
                 <targetPath>META-INF</targetPath>
             </resource>
             <resource>
-                <directory>../XConomy-Sponge8/src/main/resources</directory>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <targetPath>META-INF</targetPath>
                 <filtering>true</filtering>
             </resource>
         </resources>
@@ -54,6 +55,19 @@
                                     </excludes>
                                 </filter>
                                 <filter>
+                                    <artifact>mysql:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.xerial:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                        <exclude>META-INF/services/java.sql.Driver</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
                                     <artifact>me.yic:XConomy-Core</artifact>
                                     <excludes>
                                         <exclude>META-INF/*</exclude>
@@ -70,12 +84,18 @@
                         <includes>
                             <include>org.bstats:*</include>
                             <include>me.yic:XConomy-Core</include>
+                            <include>mysql:*</include>
+                            <include>org.xerial:*</include>
                         </includes>
                     </artifactSet>
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>me.yic.libs.bstats</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.mysql</pattern>
+                            <shadedPattern>me.yic.libs.mysql</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -105,16 +125,16 @@
         <repository>
             <id>sponge-repo</id>
             <name>Sponge Maven Repository</name>
-            <url>https://repo.spongepowered.org/maven</url>
+            <url>https://repo.spongepowered.org/repository/maven-public/</url>
         </repository>
     </repositories>
 
     <dependencies>
-        <!--SpongeAPI 7.2-->
+        <!--SpongeAPI 8.0-->
         <dependency>
             <groupId>org.spongepowered</groupId>
             <artifactId>spongeapi</artifactId>
-            <version>7.2.0</version>
+            <version>8.0.0</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
@@ -122,7 +142,7 @@
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-sponge</artifactId>
-            <version>2.2.1</version>
+            <version>3.0.0</version>
             <scope>compile</scope>
         </dependency>
         <!--XConomy-Core-->
@@ -131,6 +151,18 @@
             <artifactId>XConomy-Core</artifactId>
             <version>2.19.1</version>
             <scope>compile</scope>
+        </dependency>
+        <!--MySQL-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.21</version>
+        </dependency>
+        <!-- SQLite -->
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.35.0.1</version>
         </dependency>
     </dependencies>
 

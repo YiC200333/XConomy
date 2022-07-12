@@ -1,0 +1,296 @@
+/*
+ *  This file (XConomy.java) is a part of project XConomy
+ *  Copyright (C) YiC and contributors
+ *
+ *  This program is free software: you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ *  for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package me.yic.xconomy;
+
+import com.google.inject.Inject;
+import me.yic.xconomy.adapter.comp.CConfig;
+import me.yic.xconomy.data.DataCon;
+import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.sql.SQL;
+import me.yic.xconomy.depend.economyapi.XCService;
+import me.yic.xconomy.info.DataBaseConfig;
+import me.yic.xconomy.info.DefaultConfig;
+import me.yic.xconomy.info.SyncInfo;
+import me.yic.xconomy.info.UpdateConfig;
+import me.yic.xconomy.lang.MessagesManager;
+import me.yic.xconomy.listeners.ConnectionListeners;
+import me.yic.xconomy.listeners.SPsync;
+import me.yic.xconomy.task.Baltop;
+import me.yic.xconomy.task.Updater;
+import me.yic.xconomy.utils.PluginINFO;
+import org.apache.logging.log4j.Logger;
+import org.bstats.sponge.Metrics;
+import org.spongepowered.api.Server;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.lifecycle.ProvideServiceEvent;
+import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
+import org.spongepowered.api.event.lifecycle.StoppingEngineEvent;
+import org.spongepowered.api.network.channel.raw.RawDataChannel;
+import org.spongepowered.api.network.channel.raw.play.RawPlayDataHandler;
+import org.spongepowered.api.scheduler.TaskExecutorService;
+import org.spongepowered.api.service.economy.Currency;
+import org.spongepowered.api.service.economy.EconomyService;
+import org.spongepowered.api.service.permission.PermissionDescription;
+import org.spongepowered.api.service.permission.PermissionService;
+import org.spongepowered.api.sql.SqlManager;
+import org.spongepowered.configurate.yaml.NodeStyle;
+import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
+import org.spongepowered.plugin.PluginContainer;
+import org.spongepowered.plugin.builtin.jvm.Plugin;
+import org.yaml.snakeyaml.DumperOptions;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.concurrent.TimeUnit;
+
+@Plugin("xconomy")
+public class XConomy {
+    public final static String version = "Sponge8";
+
+    private static XConomy instance;
+    public PluginContainer plugincontainer ;
+
+    @SuppressWarnings("unused")
+    public static String PVersion = PluginINFO.VERSION;
+
+    public static DataBaseConfig DConfig;
+    public static DefaultConfig Config;
+    public PermissionService permissionService;
+    public PermissionDescription.Builder permissionDescriptionBuilder;
+
+    public static String syncversion = SyncInfo.syncversion;
+
+    private TaskExecutorService refresherTask;
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
+    private final Metrics metrics;
+    private RawDataChannel channel;
+    private RawPlayDataHandler channellistener;
+
+    public static final Currency xc = null;
+    //public static final Currency xc = new XCurrency();
+
+    @Inject
+    private final Logger inforation;
+
+    @Inject
+    @ConfigDir(sharedRoot = false)
+    public Path configDir;
+
+    @Inject
+    public XConomy(final PluginContainer container, final Logger inforation, final Metrics.Factory metricsFactory) {
+        this.inforation = inforation;
+        instance = this;
+        this.plugincontainer = container;
+        metrics = metricsFactory.make(10142);
+    }
+
+
+    @SuppressWarnings(value = {"unused"})
+    @Listener
+    public void onEnable(final StartedEngineEvent<Server> event) {
+        this.permissionService = Sponge.server().serviceProvider().permissionService();
+        loadconfig();
+
+        MessagesManager.loadsysmess();
+        MessagesManager.loadlangmess();
+
+        DConfig = new DataBaseConfig();
+        Config.setBungeecord();
+
+
+        //Optional<EconomyService> serviceOpt = Sponge.getServiceManager().provide(EconomyService.class);
+        //if (!serviceOpt.isPresent()) {
+        //    logger(null, 1, "EconomyService is null");
+        //    logger("XConomy已成功卸载", 0, null);
+        //    return;
+        //}
+        //serviceOpt.get().getCurrencies().add(xc);
+
+        //if (Sponge.getPluginManager().getPlugin("DatabaseDrivers").isPresent()) {
+        //logger("发现 DatabaseDrivers", null);
+        //}
+
+        if (!AdapterManager.DATALINK.create()) {
+            logger("XConomy已成功卸载", 0, null);
+            return;
+        }
+
+        DataCon.baltop();
+
+        if (Config.CHECK_UPDATE) {
+            Sponge.asyncScheduler().executor(plugincontainer).execute(new Updater());
+        }
+        // 检查更新
+
+
+        Sponge.eventManager().registerListeners(plugincontainer, new ConnectionListeners());
+
+
+
+        if (Config.BUNGEECORD_ENABLE) {
+            if ((DConfig.getStorageType() == 0 || DConfig.getStorageType() == 1)
+                    && (DConfig.gethost().equalsIgnoreCase("Default"))) {
+                logger("SQLite文件路径设置错误", 1, null);
+                logger("BungeeCord同步未开启", 1, null);
+            } else {
+                //channel = Sponge.channelManager().createRawChannel(this, "xconomy:aca");
+                channellistener = new SPsync();
+                //channel.addListener(Platform.Type.SERVER, channellistener);
+                //Sponge.getChannelRegistrar().createRawChannel(this, "xconomy:acb");
+                logger("已开启BungeeCord同步", 0, null);
+            }
+        }
+
+        DataFormat.load();
+
+        int time = Config.REFRESH_TIME;
+
+        refresherTask = Sponge.asyncScheduler().executor(plugincontainer);
+        refresherTask.scheduleAtFixedRate(new Baltop(), time, time, TimeUnit.SECONDS);
+        //Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(Baltop::new);
+
+        logger(null, 0, "===== YiC =====");
+
+    }
+
+    @SuppressWarnings("unused")
+    @Listener
+    public void onDisable(StoppingEngineEvent<Server> event) {
+        if (Config.BUNGEECORD_ENABLE) {
+            //channel..removeListener(channellistener);
+        }
+
+        refresherTask.shutdown();
+        SQL.close();
+        logger("XConomy已成功卸载", 0, null);
+    }
+
+
+    @SuppressWarnings("unused")
+    @Listener
+    public void onRegisterService(final ProvideServiceEvent<EconomyService> event){
+        event.suggest(XCService::new);
+    }
+
+
+    public static XConomy getInstance() {
+        return instance;
+    }
+
+    private void loadconfig() {
+        if (!Files.exists(configDir)) {
+            try {
+                Files.createDirectories(configDir);
+
+            } catch (IOException io) {
+                io.printStackTrace();
+            }
+        }
+
+        configload();
+        Config = new DefaultConfig();
+
+        DataBaseload();
+
+    }
+
+    @SuppressWarnings("unused")
+    public File getDataFolder() {
+        return configDir.toFile();
+    }
+
+    public File getPDataFolder() {
+        return new File(configDir.toFile(), "playerdata");
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void configload() {
+        File configpath = new File(configDir.toFile(), "config.yml");
+
+        if (!configpath.exists()) {
+            try {
+                Files.copy(this.getClass().getClassLoader().getResourceAsStream("config.yml"), Paths.get(configpath.toURI()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        YamlConfigurationLoader loader =
+                YamlConfigurationLoader.builder().nodeStyle(NodeStyle.BLOCK).indent(2).file(configpath).build();
+        try {
+            DefaultConfig.config = new CConfig(loader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (UpdateConfig.update(DefaultConfig.config.getConfig())) {
+            try {
+                loader.save(DefaultConfig.config.getConfig());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void DataBaseload() {
+        Path configpath = Paths.get(XConomy.getInstance().configDir + System.getProperty("file.separator") + "database.yml");
+        if (!Files.exists(configpath)) {
+            try {
+                Files.copy(this.getClass().getClassLoader().getResourceAsStream("database.yml"), configpath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        YamlConfigurationLoader loader = YamlConfigurationLoader.builder().path(configpath).build();
+        try {
+            DataBaseConfig.config = new CConfig(loader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void logger(String tag, int type, String message) {
+        String mess = message;
+        if (tag != null) {
+            if (message == null) {
+                mess = MessagesManager.systemMessage(tag);
+            } else {
+                if (message.startsWith("<#>")) {
+                    mess = message.substring(3) + MessagesManager.systemMessage(tag);
+                } else {
+                    mess = MessagesManager.systemMessage(tag) + message;
+                }
+            }
+        }
+        if (type == 1) {
+            inforation.warn(mess);
+        } else {
+            inforation.info(mess);
+        }
+    }
+
+}

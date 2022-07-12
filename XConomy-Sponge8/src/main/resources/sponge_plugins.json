@@ -1,0 +1,33 @@
+{
+  "loader": {
+    "name": "java_plain",
+    "version": "1.0"
+  },
+  "license": "MIT",
+  "plugins": [
+    {
+      "id": "xconomy",
+      "entrypoint": "me.yic.xconomy.XConomy",
+      "name": "XConomy",
+      "version": "1.1",
+      "branding": {},
+      "links": {
+        "homepage": "https://ore.spongepowered.org/YiC/XConomy"
+      },
+      "contributors": [
+        {
+          "name": "YiC",
+          "description": "Author"
+        }
+      ],
+      "dependencies": [
+        {
+          "id": "spongeapi",
+          "version": "8.0.0-SNAPSHOT",
+          "load-order": "after",
+          "optional": false
+        }
+      ]
+    }
+  ]
+}

@@ -59,7 +59,7 @@ public class DatabaseConnection {
         hikari.addDataSourceProperty("prepStmtCacheSize", "250");
         hikari.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         hikari.addDataSourceProperty("userServerPrepStmts", "true");
-        if (XConomy.DConfig.DDrivers) {
+        if (XConomy.DConfig.DDrivers || XConomy.version.equals("Sponge8")) {
             hikari.setDriverClassName(driver);
         }
         if (hikari.getMinimumIdle() < hikari.getMaximumPoolSize()) {
@@ -70,11 +70,11 @@ public class DatabaseConnection {
     }
 
     private void setDriver() {
-        if (XConomy.version.equals("Bukkit")) {
-            if (XConomy.DConfig.DDrivers) {
+        if (XConomy.version.equals("Bukkit") || XConomy.version.equals("Sponge8")) {
+            if (XConomy.DConfig.DDrivers || XConomy.version.equals("Sponge8")) {
                 switch (XConomy.DConfig.getStorageType()) {
                     case 1:
-                        driver = ("me.yic.libs.sqlite.JDBC");
+                        driver = ("org.sqlite.JDBC");
                         break;
                     case 2:
                         driver = ("me.yic.libs.mysql.cj.jdbc.Driver");
@@ -96,7 +96,7 @@ public class DatabaseConnection {
                         break;
                 }
             }
-        }else if (XConomy.version.equals("Sponge")) {
+        }else if (XConomy.version.equals("Sponge7")) {
             driver = ("org.spongepowered.api.service.sql.SqlService");
         }
     }
