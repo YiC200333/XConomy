@@ -1,5 +1,5 @@
 /*
- *  This file (XConomy.java) is a part of project XConomy
+ *  This file (AdapterManager.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it

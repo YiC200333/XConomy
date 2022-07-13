@@ -25,6 +25,7 @@ import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.depend.economyapi.XCService;
+import me.yic.xconomy.depend.economyapi.XCurrency;
 import me.yic.xconomy.info.DataBaseConfig;
 import me.yic.xconomy.info.DefaultConfig;
 import me.yic.xconomy.info.SyncInfo;
@@ -34,7 +35,6 @@ import me.yic.xconomy.listeners.ConnectionListeners;
 import me.yic.xconomy.listeners.SPsync;
 import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
-import me.yic.xconomy.utils.PluginINFO;
 import net.kyori.adventure.text.Component;
 import org.apache.logging.log4j.Logger;
 import org.bstats.sponge.Metrics;
@@ -44,7 +44,6 @@ import org.spongepowered.api.command.Command;
 import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.lifecycle.ProvideServiceEvent;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
@@ -56,12 +55,10 @@ import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.service.permission.PermissionService;
-import org.spongepowered.api.sql.SqlManager;
 import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.builtin.jvm.Plugin;
-import org.yaml.snakeyaml.DumperOptions;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,10 +72,10 @@ public class XConomy {
     public final static String version = "Sponge8";
 
     private static XConomy instance;
-    public PluginContainer plugincontainer ;
+    public PluginContainer plugincontainer;
 
     @SuppressWarnings("unused")
-    public static String PVersion = PluginINFO.VERSION;
+    public static String PVersion;
 
     public static DataBaseConfig DConfig;
     public static DefaultConfig Config;
@@ -93,8 +90,7 @@ public class XConomy {
     private RawDataChannel channel;
     private RawPlayDataHandler channellistener;
 
-    public static final Currency xc = null;
-    //public static final Currency xc = new XCurrency();
+    public static final Currency xc = new XCurrency();
 
     @Inject
     private final Logger inforation;
@@ -108,6 +104,7 @@ public class XConomy {
         this.inforation = inforation;
         instance = this;
         this.plugincontainer = container;
+        PVersion = plugincontainer.metadata().version().toString();
         metrics = metricsFactory.make(10142);
     }
 
@@ -124,14 +121,6 @@ public class XConomy {
     @SuppressWarnings(value = {"unused"})
     @Listener
     public void onEnable(final StartedEngineEvent<Server> event) {
-
-        //Optional<EconomyService> serviceOpt = Sponge.getServiceManager().provide(EconomyService.class);
-        //if (!serviceOpt.isPresent()) {
-        //    logger(null, 1, "EconomyService is null");
-        //    logger("XConomy已成功卸载", 0, null);
-        //    return;
-        //}
-        //serviceOpt.get().getCurrencies().add(xc);
 
         //if (Sponge.getPluginManager().getPlugin("DatabaseDrivers").isPresent()) {
         //logger("发现 DatabaseDrivers", null);

@@ -18,6 +18,7 @@
  */
 package me.yic.xconomy.command;
 
+import me.yic.xconomy.XConomy;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandExecutor;
 import org.spongepowered.api.command.CommandResult;

@@ -30,6 +30,7 @@ import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.api.service.economy.account.VirtualAccount;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
 public class XCService implements EconomyService {
@@ -88,21 +89,25 @@ public class XCService implements EconomyService {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
     public Optional<UniqueAccount> findOrCreateAccount(UUID uuid) {
-        //if (!hasAccount(uuid)) {
-            //if (!AdapterManager.DATALINK.newPlayer(uuid, Sponge.server().player(uuid).get().getName())){
-            //    return Optional.empty();
-           // }
-        //}
+        if (!hasAccount(uuid)) {
+            if (!AdapterManager.DATALINK.newPlayer(uuid, Sponge.server().player(uuid).get().name())){
+                return Optional.empty();
+            }
+        }
+        try {
+            return Optional.of(new XCUniqueAccount(
+                    Sponge.server().userManager().load(uuid).get().get()));
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
         return Optional.empty();
-        //return Optional.of(new XCUniqueAccount(
-                //Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(uuid)).get()));
     }
 
     @Override
     public Optional<Account> findOrCreateAccount(String identifier) {
-        //if (hasAccount(identifier)) {
-            //return Optional.of(new XCVirtualAccount(identifier));
-        //}
+        if (hasAccount(identifier)) {
+            return Optional.of(new XCVirtualAccount(identifier));
+        }
         return Optional.empty();
     }
 
