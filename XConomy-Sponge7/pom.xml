@@ -23,7 +23,7 @@
                 <targetPath>META-INF</targetPath>
             </resource>
             <resource>
-                <directory>../XConomy-Sponge8/src/main/resources</directory>
+                <directory>${project.basedir}/src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>
