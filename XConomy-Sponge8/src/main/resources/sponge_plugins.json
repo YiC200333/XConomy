@@ -3,7 +3,7 @@
     "name": "java_plain",
     "version": "1.0"
   },
-  "license": "MIT",
+  "license": "GPL-3.0",
   "plugins": [
     {
       "id": "xconomy",
