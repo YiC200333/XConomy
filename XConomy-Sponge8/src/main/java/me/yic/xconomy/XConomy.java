@@ -38,6 +38,7 @@ import me.yic.xconomy.task.Updater;
 import net.kyori.adventure.text.Component;
 import org.apache.logging.log4j.Logger;
 import org.bstats.sponge.Metrics;
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command;
@@ -48,6 +49,8 @@ import org.spongepowered.api.event.lifecycle.ProvideServiceEvent;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 import org.spongepowered.api.event.lifecycle.StoppingEngineEvent;
+import org.spongepowered.api.network.EngineConnectionSide;
+import org.spongepowered.api.network.ServerSideConnection;
 import org.spongepowered.api.network.channel.raw.RawDataChannel;
 import org.spongepowered.api.network.channel.raw.play.RawPlayDataHandler;
 import org.spongepowered.api.scheduler.TaskExecutorService;
@@ -88,7 +91,7 @@ public class XConomy {
     @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private final Metrics metrics;
     private RawDataChannel channel;
-    private RawPlayDataHandler channellistener;
+    private RawPlayDataHandler<ServerSideConnection> channellistener;
 
     public static final Currency xc = new XCurrency();
 
@@ -215,10 +218,10 @@ public class XConomy {
                 logger("SQLite文件路径设置错误", 1, null);
                 logger("BungeeCord同步未开启", 1, null);
             } else {
-                //channel = Sponge.channelManager().createRawChannel(this, "xconomy:aca");
+                channel = Sponge.channelManager().ofType(ResourceKey.resolve("xconomy:aca"), RawDataChannel.class);
                 channellistener = new SPsync();
-                //channel.addListener(Platform.Type.SERVER, channellistener);
-                //Sponge.getChannelRegistrar().createRawChannel(this, "xconomy:acb");
+                channel.play().addHandler(EngineConnectionSide.SERVER, channellistener);
+                Sponge.channelManager().ofType(ResourceKey.resolve("xconomy:acb"), RawDataChannel.class);
                 logger("已开启BungeeCord同步", 0, null);
             }
         }
@@ -239,7 +242,7 @@ public class XConomy {
     @Listener
     public void onDisable(StoppingEngineEvent<Server> event) {
         if (Config.BUNGEECORD_ENABLE) {
-            //channel..removeListener(channellistener);
+            channel.play().removeHandler(channellistener);
         }
 
         refresherTask.shutdown();
