@@ -75,7 +75,7 @@ public class XConomy {
 
     private static XConomy instance;
     @SuppressWarnings("unused")
-    public static String PVersion = PluginINFO.VERSION;
+    public static String PVersion = PluginINFO.VERSION.substring(0, PluginINFO.VERSION.length() - 8);
     public static DataBaseConfig DConfig;
     public static DefaultConfig Config;
     public PermissionService permissionService;
@@ -121,7 +121,6 @@ public class XConomy {
         Config.setBungeecord();
 
         Sponge.getServiceManager().setProvider(this, EconomyService.class, new XCService());
-
 
         Optional<EconomyService> serviceOpt = Sponge.getServiceManager().provide(EconomyService.class);
         if (!serviceOpt.isPresent()) {

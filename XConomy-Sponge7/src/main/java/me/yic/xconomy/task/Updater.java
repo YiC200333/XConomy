@@ -19,7 +19,6 @@
 package me.yic.xconomy.task;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.utils.PluginINFO;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -50,10 +49,13 @@ public class Updater implements Runnable {
             ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder()
                     .setSource(() -> reader).build();
             newVersion = loader.load().getNode("recommended", "name").getString();
+            if (newVersion != null && newVersion.contains("-Sponge")){
+                newVersion = newVersion.substring(0, newVersion.length() - 8);
+            }
             is.close();
 
             List<String> versionList = Arrays.asList(newVersion.split("\\."));
-            List<String> newVersionList = Arrays.asList(PluginINFO.VERSION.split("\\."));
+            List<String> newVersionList = Arrays.asList(XConomy.PVersion.split("\\."));
 
             if (!compare(versionList, newVersionList)) {
                 XConomy.getInstance().logger("已是最新版本", 0, null);

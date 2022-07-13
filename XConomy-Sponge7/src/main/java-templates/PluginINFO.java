@@ -20,5 +20,5 @@ package me.yic.xconomy.utils;
 
 public class PluginINFO {
 
-    public final static String VERSION = "${project.version}";
+    public final static String VERSION = "${project.version}-Sponge7";
 }

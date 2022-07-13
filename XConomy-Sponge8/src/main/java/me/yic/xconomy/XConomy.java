@@ -107,7 +107,8 @@ public class XConomy {
         this.inforation = inforation;
         instance = this;
         this.plugincontainer = container;
-        PVersion = plugincontainer.metadata().version().toString();
+        String v = plugincontainer.metadata().version().toString();
+        PVersion = v.substring(0, v.length() - 8);
         metrics = metricsFactory.make(10142);
     }
 

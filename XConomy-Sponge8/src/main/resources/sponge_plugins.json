@@ -9,7 +9,7 @@
       "id": "xconomy",
       "entrypoint": "me.yic.xconomy.XConomy",
       "name": "XConomy",
-      "version": "${project.version}",
+      "version": "${project.version}-Sponge8",
       "branding": {},
       "links": {
         "homepage": "https://ore.spongepowered.org/YiC/XConomy"
