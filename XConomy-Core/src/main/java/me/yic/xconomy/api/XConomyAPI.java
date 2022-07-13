@@ -80,13 +80,15 @@ public class XConomyAPI {
             return 1;
         }
         BigDecimal bal = getPlayerData(u).getBalance();
-        if (isadd) {
-            if (ismaxnumber(bal.add(amount))) {
-                return 3;
-            }
-        } else {
-            if (bal.compareTo(amount) < 0) {
-                return 2;
+        if (isadd != null) {
+            if (isadd) {
+                if (ismaxnumber(bal.add(amount))) {
+                    return 3;
+                }
+            } else {
+                if (bal.compareTo(amount) < 0) {
+                    return 2;
+                }
             }
         }
         DataCon.changeplayerdata("PLUGIN_API", u, amount, isadd, pluginname, null);
@@ -99,13 +101,15 @@ public class XConomyAPI {
 
     public int changeAccountBalance(String account, BigDecimal amount, Boolean isadd, String pluginname) {
         BigDecimal bal = getorcreateAccountBalance(account);
-        if (isadd) {
-            if (ismaxnumber(bal.add(amount))) {
-                return 3;
-            }
-        } else {
-            if (bal.compareTo(amount) < 0) {
-                return 2;
+        if (isadd != null) {
+            if (isadd) {
+                if (ismaxnumber(bal.add(amount))) {
+                    return 3;
+                }
+            } else {
+                if (bal.compareTo(amount) < 0) {
+                    return 2;
+                }
             }
         }
         DataCon.changeaccountdata("PLUGIN_API", account, amount, isadd, pluginname);
