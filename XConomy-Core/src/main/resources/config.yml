@@ -2,6 +2,7 @@
 #Default mode will automatically detect the player's UUID(support GeyserMC)
 #Online mode is better for servers that enable online-mode(support Yggdrasil)
 #Offline mode does not support ignoring username case
+#If you use floodgate(GeyserMC) and the option 'username-prefix' is set to empty, Please use SemiOnline mode
 UUID-mode: Default
 #In convertion mode, can use command '/xconomy' import data from other plugins based on Vault
 #Conflicting data will be skipped, The imported data will be saved in XConomy/importdata/data.yml

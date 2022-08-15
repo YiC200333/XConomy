@@ -46,8 +46,8 @@ public class CConfig implements iConfig {
         try {
             YAMLConfigurationLoader proloader = YAMLConfigurationLoader.builder().setURL(url).build();
             pfc = proloader.load();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
+            //e.printStackTrace();
         }
         fc = pfc;
     }

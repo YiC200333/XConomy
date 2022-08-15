@@ -5,7 +5,7 @@
     <parent>
         <artifactId>XConomy</artifactId>
         <groupId>me.yic</groupId>
-        <version>2.19.2</version>
+        <version>2.19.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -58,6 +58,7 @@
                                     <artifact>mysql:*</artifact>
                                     <excludes>
                                         <exclude>META-INF/MANIFEST.MF</exclude>
+                                        <exclude>META-INF/LICENSE</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>

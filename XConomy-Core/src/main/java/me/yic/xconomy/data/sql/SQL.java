@@ -163,8 +163,13 @@ public class SQL {
 
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
+                UUID fuuid = uuid;
+                if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                    fuuid = UUID.fromString(rs.getString(1));
+                    Cache.insertIntoMultiUUIDCache(fuuid, uuid);
+                }
                 BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
-                PlayerData bd = new PlayerData(XConomy.Config.BUNGEECORD_SIGN, uuid, rs.getString(2), cacheThisAmt);
+                PlayerData bd = new PlayerData(XConomy.Config.BUNGEECORD_SIGN, fuuid, rs.getString(2), cacheThisAmt);
                 Cache.insertIntoCache(uuid, bd);
             }
 

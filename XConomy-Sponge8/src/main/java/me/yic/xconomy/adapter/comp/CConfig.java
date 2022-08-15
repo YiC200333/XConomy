@@ -44,8 +44,8 @@ public class CConfig implements iConfig {
         try {
             YamlConfigurationLoader proloader = YamlConfigurationLoader.builder().url(url).build();
             pfc = proloader.load();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
+            //e.printStackTrace();
         }
         fc = pfc;
     }
@@ -137,7 +137,6 @@ public class CConfig implements iConfig {
     }
 
     @Override
-    @SuppressWarnings("UnstableApiUsage")
     public List<String> getStringList(String path){
         String[] a = path.split("\\.");
         try {

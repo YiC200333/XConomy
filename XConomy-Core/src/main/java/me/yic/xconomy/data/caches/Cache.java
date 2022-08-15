@@ -32,6 +32,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Cache {
     public static final ConcurrentHashMap<UUID, PlayerData> pds = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, UUID> uuids = new ConcurrentHashMap<>();
+
+    private static final ConcurrentHashMap<UUID, List<UUID>> m_uuids = new ConcurrentHashMap<>();
+
     public static LinkedHashMap<String, BigDecimal> baltop = new LinkedHashMap<>();
     public static List<String> baltop_papi = new ArrayList<>();
     public static BigDecimal sumbalance = BigDecimal.ZERO;
@@ -45,6 +48,22 @@ public class Cache {
                 } else {
                     uuids.put(pd.getName(), uuid);
                 }
+            }
+        }
+    }
+
+    public static void insertIntoMultiUUIDCache(final UUID uuid, final UUID luuid) {
+        if (uuid != null && luuid != null && !uuid.toString().equals(luuid.toString())) {
+            if (m_uuids.containsKey(uuid)){
+                List<UUID> listuuid= m_uuids.get(uuid);
+                if (!listuuid.contains(luuid)){
+                    listuuid.add(luuid);
+                    m_uuids.put(uuid, listuuid);
+                }
+            }else{
+                List<UUID> listuuid = new ArrayList<>();
+                listuuid.add(luuid);
+                m_uuids.put(uuid, listuuid);
             }
         }
     }
@@ -72,6 +91,14 @@ public class Cache {
             }
         }
         return pds.get(u);
+    }
+
+
+    public static List<UUID> getMultiUUIDCache(final UUID uuid) {
+        if (m_uuids.containsKey(uuid)){
+            return m_uuids.get(uuid);
+        }
+        return null;
     }
 
     public static void updateIntoCache(final UUID uuid, final PlayerData pd, final BigDecimal newbalance) {

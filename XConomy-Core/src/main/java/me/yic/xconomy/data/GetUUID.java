@@ -46,6 +46,7 @@ public class GetUUID {
             }
         }catch (Exception e){
             kickplayer(pp);
+            XConomy.getInstance().logger(null, 1, "Failed to connect to the authentication server");
         }
         return uuid.toString();
     }
@@ -69,8 +70,8 @@ public class GetUUID {
 
                 try {
                     u = UUID.fromString(doGetUUID(pp, name));
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
+                } catch (IllegalArgumentException ignored) {
+                    //e.printStackTrace();
                 }
 
                 if (u != null) {

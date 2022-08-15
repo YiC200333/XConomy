@@ -46,8 +46,8 @@ public class CConfig implements iConfig {
             } else {
                 throw new Exception("ResponseCode is an error code:" + conn.getResponseCode());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
+            //e.printStackTrace();
         } finally {
             try {
                 if (br != null) {

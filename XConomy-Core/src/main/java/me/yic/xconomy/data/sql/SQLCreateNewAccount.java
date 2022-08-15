@@ -51,7 +51,11 @@ public class SQLCreateNewAccount extends SQL {
         switch (XConomy.Config.UUIDMODE) {
             case ONLINE:
             case OFFLINE:
-                String ouid = GetUUID.getUUID(player, name).toString();
+                UUID oouid = GetUUID.getUUID(player, name);
+                if (oouid == null){
+                    return false;
+                }
+                String ouid = oouid.toString();
                 if (ouid.equalsIgnoreCase(uid.toString())) {
                     checkUserOnline(ouid, name, connection);
                 } else {
@@ -85,9 +89,8 @@ public class SQLCreateNewAccount extends SQL {
             } else if (x == 2) {
                 reason = "[XConomy] Username does not mismatch requirements";
             }
-            final String freason = reason;
             if (player.isOnline()) {
-                player.kickPlayer(freason);
+                player.kickPlayer(reason);
             }
         }
     }
