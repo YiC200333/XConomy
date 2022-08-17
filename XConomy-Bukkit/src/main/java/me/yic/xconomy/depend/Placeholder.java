@@ -18,11 +18,13 @@
  */
 package me.yic.xconomy.depend;
 
+import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.info.MessageConfig;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.lang.MessagesManager;
 import org.bukkit.ChatColor;
@@ -76,7 +78,7 @@ public class Placeholder extends PlaceholderExpansion {
             String index = identifier.substring(identifier.indexOf("top_player_") + 11);
             if (isNumber(index)) {
                 if (outindex(index)) {
-                    return "NO DATA";
+                    return AdapterManager.translateColorCodes(MessageConfig.NO_DATA);
                 }
                 int ii = Integer.parseInt(index) - 1;
                 return Cache.baltop_papi.get(ii);
@@ -111,7 +113,7 @@ public class Placeholder extends PlaceholderExpansion {
             }
             if (isNumber(index)) {
                 if (outindex(index)) {
-                    return "NO DATA";
+                    return AdapterManager.translateColorCodes(MessageConfig.NO_DATA);
                 }
                 int indexInt = Integer.parseInt(index) - 1;
                 String name = Cache.baltop_papi.get(indexInt);

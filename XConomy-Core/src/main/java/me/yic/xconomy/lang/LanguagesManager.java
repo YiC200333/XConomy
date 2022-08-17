@@ -85,6 +85,7 @@ public class LanguagesManager {
         ll.add("money_set_receive");
         ll.add("no_receive_permission");
         ll.add("no_permission");
+        ll.add("no_data");
         ll.add("delete_data");
         ll.add("delete_data_admin");
         ll.add("global_permissions_change");
@@ -118,7 +119,7 @@ public class LanguagesManager {
         }
     }
 
-    public static void translatorName(String lang, File file) {
+    public static void translatorName(File file) {
         String ta = messageFile.getString("translation_authors");
         if (!ta.equalsIgnoreCase("") && !ta.equalsIgnoreCase("none")) {
             translateFile("#========== Translation_authors - " + ta + " ==========", file);

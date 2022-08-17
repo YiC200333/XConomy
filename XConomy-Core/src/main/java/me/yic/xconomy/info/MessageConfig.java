@@ -27,7 +27,9 @@ public enum MessageConfig {
     PAYTOGGLE_TRUE("paytoggle_true"),
     PAYTOGGLE_FALSE("paytoggle_false"),
     PAYTOGGLE_OTHER_TRUE("paytoggle_other_true"),
-    PAYTOGGLE_OTHER_FALSE("paytoggle_other_false");
+    PAYTOGGLE_OTHER_FALSE("paytoggle_other_false"),
+
+    NO_DATA("no_data");
 
     final String value;
 
