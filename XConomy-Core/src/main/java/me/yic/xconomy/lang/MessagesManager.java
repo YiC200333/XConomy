@@ -55,7 +55,7 @@ public class MessagesManager {
         messageFile = new CConfig(mfile);
         LanguagesManager.compare(XConomy.Config.LANGUAGE, mfile);
         if (translate) {
-            LanguagesManager.translatorName(XConomy.Config.LANGUAGE, mfile);
+            LanguagesManager.translatorName(mfile);
         }
     }
 
