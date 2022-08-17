@@ -18,10 +18,8 @@
  */
 package me.yic.xconomy.data.syncdata;
 
-import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.SyncType;
-import me.yic.xconomy.utils.UUIDMode;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -55,16 +53,8 @@ public class PlayerData extends SyncData {
     }
 
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void SyncStart() {
         Cache.insertIntoCache(getUniqueId(), this);
-        if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-            if (Cache.getMultiUUIDCache(getUniqueId()) != null) {
-                for (UUID u : Cache.getMultiUUIDCache(getUniqueId())) {
-                    Cache.insertIntoCache(u, this);
-                }
-            }
-        }
     }
 }

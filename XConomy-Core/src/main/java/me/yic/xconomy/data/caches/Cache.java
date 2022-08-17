@@ -21,6 +21,7 @@ package me.yic.xconomy.data.caches;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.GetUUID;
 import me.yic.xconomy.data.syncdata.PlayerData;
+import me.yic.xconomy.utils.UUIDMode;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class Cache {
     public static final ConcurrentHashMap<UUID, PlayerData> pds = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, UUID> uuids = new ConcurrentHashMap<>();
 
-    private static final ConcurrentHashMap<UUID, List<UUID>> m_uuids = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<UUID, UUID> m_uuids = new ConcurrentHashMap<>();
 
     public static LinkedHashMap<String, BigDecimal> baltop = new LinkedHashMap<>();
     public static List<String> baltop_papi = new ArrayList<>();
@@ -54,23 +55,24 @@ public class Cache {
 
     public static void insertIntoMultiUUIDCache(final UUID uuid, final UUID luuid) {
         if (uuid != null && luuid != null && !uuid.toString().equals(luuid.toString())) {
-            if (m_uuids.containsKey(uuid)){
-                List<UUID> listuuid= m_uuids.get(uuid);
-                if (!listuuid.contains(luuid)){
-                    listuuid.add(luuid);
-                    m_uuids.put(uuid, listuuid);
-                }
-            }else{
-                List<UUID> listuuid = new ArrayList<>();
-                listuuid.add(luuid);
-                m_uuids.put(uuid, listuuid);
-            }
+            m_uuids.put(luuid, uuid);
         }
     }
 
     public static <T> boolean CacheContainsKey(final T key) {
         if (key instanceof UUID) {
-            return pds.containsKey((UUID) key);
+            if (pds.containsKey((UUID) key)){
+                return true;
+            }
+            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                UUID luuid = getMultiUUIDCache((UUID) key);
+                if (luuid == null) {
+                    return false;
+                }else {
+                    return pds.containsKey(luuid);
+                }
+            }
+            return false;
         }
         if (XConomy.Config.USERNAME_IGNORE_CASE) {
             return uuids.containsKey(((String) key).toLowerCase());
@@ -83,6 +85,11 @@ public class Cache {
         UUID u;
         if (key instanceof UUID) {
             u = (UUID) key;
+            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                if (!pds.containsKey((UUID) key) && getMultiUUIDCache((UUID) key) != null){
+                    u = getMultiUUIDCache((UUID) key);
+                }
+            }
         } else {
             if (XConomy.Config.USERNAME_IGNORE_CASE) {
                 u = uuids.get(((String) key).toLowerCase());
@@ -94,9 +101,9 @@ public class Cache {
     }
 
 
-    public static List<UUID> getMultiUUIDCache(final UUID uuid) {
-        if (m_uuids.containsKey(uuid)){
-            return m_uuids.get(uuid);
+    public static UUID getMultiUUIDCache(final UUID luuid) {
+        if (m_uuids.containsKey(luuid)){
+            return m_uuids.get(luuid);
         }
         return null;
     }
@@ -115,6 +122,7 @@ public class Cache {
         }
     }
 
+
     @SuppressWarnings("all")
     public static void syncOnlineUUIDCache(final String oldname, final String newname, final UUID uuid) {
         if (uuids.containsKey(newname)) {
@@ -131,6 +139,7 @@ public class Cache {
     public static void clearCache() {
         pds.clear();
         uuids.clear();
+        m_uuids.clear();
     }
 
 

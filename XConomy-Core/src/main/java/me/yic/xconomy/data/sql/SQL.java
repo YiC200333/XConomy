@@ -170,7 +170,7 @@ public class SQL {
                 }
                 BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
                 PlayerData bd = new PlayerData(XConomy.Config.BUNGEECORD_SIGN, fuuid, rs.getString(2), cacheThisAmt);
-                Cache.insertIntoCache(uuid, bd);
+                Cache.insertIntoCache(fuuid, bd);
             }
 
             rs.close();
