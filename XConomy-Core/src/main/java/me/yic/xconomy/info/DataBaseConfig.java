@@ -38,6 +38,17 @@ public class DataBaseConfig {
         setHikariConnectionPooling();
     }
 
+    public String CacheType(){
+        String cachetype = config.getString("Settings.cache-type");
+        if (cachetype == null){
+            return "Default";
+        }
+        if (cachetype.equalsIgnoreCase("Redis")){
+            return "Redis";
+        }
+        return "Default";
+    }
+
     public boolean EnableConnectionPool = false;
     public boolean DDrivers = false;
     public boolean canasync = false;

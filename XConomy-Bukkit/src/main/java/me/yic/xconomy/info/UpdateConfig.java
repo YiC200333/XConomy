@@ -36,9 +36,9 @@ public class UpdateConfig {
             XConomy.getInstance().logger(null, 1, "It is recommended to regenerate configuration file");
             XConomy.getInstance().logger(null, 1, "==================================================");
         }
-        if (!ck.contains("importdata-mode")) {
-            config.createSection("importdata-mode");
-            config.set("importdata-mode", false);
+        if (!ck.contains("Importdata-mode")) {
+            config.createSection("Importdata-mode");
+            config.set("Importdata-mode", false);
             update = true;
         }
         return update;

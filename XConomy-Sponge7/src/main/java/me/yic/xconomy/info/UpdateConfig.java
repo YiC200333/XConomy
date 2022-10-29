@@ -32,10 +32,11 @@ public class UpdateConfig {
             XConomy.getInstance().logger(null, 1, "It is recommended to regenerate configuration file");
             XConomy.getInstance().logger(null, 1, "==================================================");
         }
-        //if (config.getNode("force-mode").isVirtual()) {
-        //    config.getNode("force-mode").setValue(false);
-        //    update = true;
-        //}
+
+        if (!config.getNode("Importdata-mode").isVirtual()) {
+            config.getNode("Importdata-mode").setValue(false);
+            update = true;
+        }
         return update;
     }
 }

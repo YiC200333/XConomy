@@ -36,7 +36,7 @@ public class RedisConnection {
     private static final String url = DataBaseConfig.config.getString("Redis.host");
     private static final int port = DataBaseConfig.config.getInt("Redis.port");
     private static final int dbindex = DataBaseConfig.config.getInt("Redis.db-index");
-    private static final int duration = DataBaseConfig.config.getInt("Redis.duration");
+    public static final int duration = DataBaseConfig.config.getInt("Redis.duration");
 
     private static final String user = DataBaseConfig.config.getString("Redis.auth.user");
     private static final String password = DataBaseConfig.config.getString("Redis.auth.pass");
@@ -51,8 +51,7 @@ public class RedisConnection {
     }
 
     public static boolean connectredis() {
-        String cachetype = DataBaseConfig.config.getString("Settings.cache-type");
-        if (cachetype != null && cachetype.equalsIgnoreCase("Redis")) {
+        if (XConomy.DConfig.CacheType().equalsIgnoreCase("Redis")) {
             JedisPoolConfig jedisconfig = new JedisPoolConfig();
             jedisconfig.setMaxTotal(maxtotal);
             jedisconfig.setMaxIdle(maxidle);
@@ -83,35 +82,5 @@ public class RedisConnection {
         }
         jr.select(dbindex);
         return jr;
-    }
-
-    public static void insertdata(UUID uid, PlayerData pd) {
-        try (Jedis jr = getResource()) {
-            jr.setex(uid.toString().getBytes(), 10, pd.toByteArray(XConomy.syncversion).toByteArray());
-        }
-    }
-
-
-    public static boolean containsKey(UUID uid) {
-        try (Jedis jr = getResource()) {
-            return jr.exists(uid.toString().getBytes());
-        }
-    }
-
-    public static PlayerData getPlayerData(UUID uid) {
-        try (Jedis jr = getResource()) {
-            ByteArrayInputStream input = new ByteArrayInputStream(jr.get(uid.toString().getBytes()));
-            ObjectInputStream ios = new ObjectInputStream(input);
-
-            String sv = ios.readUTF();
-            if (!sv.equals(XConomy.syncversion)) {
-                XConomy.getInstance().logger("收到不同版本插件的数据，无法同步，当前插件版本 ", 1, XConomy.syncversion);
-                return null;
-            }
-
-            return (PlayerData) ios.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

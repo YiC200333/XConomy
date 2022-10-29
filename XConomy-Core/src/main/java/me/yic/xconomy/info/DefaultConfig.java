@@ -38,7 +38,7 @@ public class DefaultConfig {
     }
 
     public UUIDMode UUIDMODE = UUIDMode.DEFAULT;
-    public boolean IMPORTMODE = config.getBoolean("importdata-mode");
+    public boolean IMPORTMODE = config.getBoolean("Importdata-mode");
 
     public String LANGUAGE = config.getString("Settings.language");
     public boolean CHECK_UPDATE = config.getBoolean("Settings.check-update");

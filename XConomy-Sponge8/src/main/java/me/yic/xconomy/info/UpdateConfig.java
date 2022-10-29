@@ -20,6 +20,7 @@ package me.yic.xconomy.info;
 
 import me.yic.xconomy.XConomy;
 import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 public class UpdateConfig {
 
@@ -32,10 +33,15 @@ public class UpdateConfig {
             XConomy.getInstance().logger(null, 1, "It is recommended to regenerate configuration file");
             XConomy.getInstance().logger(null, 1, "==================================================");
         }
-        //if (config.getNode("force-mode").isVirtual()) {
-        //    config.getNode("force-mode").setValue(false);
-        //    update = true;
-        //}
+
+        try {
+            if (!config.node("Importdata-mode").virtual()) {
+                config.node("Importdata-mode").set(false);
+                update = true;
+            }
+        } catch (SerializationException e) {
+            throw new RuntimeException(e);
+        }
         return update;
     }
 }
