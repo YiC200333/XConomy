@@ -5,7 +5,7 @@
     <parent>
         <artifactId>XConomy</artifactId>
         <groupId>me.yic</groupId>
-        <version>2.19.5</version>
+        <version>2.20.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -69,6 +69,18 @@
                                     </excludes>
                                 </filter>
                                 <filter>
+                                    <artifact>redis.clients:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.apache.commons:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
                                     <artifact>me.yic:XConomy-Core</artifact>
                                     <excludes>
                                         <exclude>META-INF/*</exclude>
@@ -84,9 +96,11 @@
                     <artifactSet>
                         <includes>
                             <include>org.bstats:*</include>
-                            <include>me.yic:XConomy-Core</include>
                             <include>mysql:*</include>
                             <include>org.xerial:*</include>
+                            <include>redis.clients:jedis</include>
+                            <include>org.apache.commons:commons-pool2</include>
+                            <include>me.yic:XConomy-Core</include>
                         </includes>
                     </artifactSet>
                     <relocations>
@@ -97,6 +111,14 @@
                         <relocation>
                             <pattern>com.mysql</pattern>
                             <shadedPattern>me.yic.libs.mysql</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>redis.clients</pattern>
+                            <shadedPattern>me.yic.libs.redis</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.apache.commons</pattern>
+                            <shadedPattern>me.yic.libs.pool2</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

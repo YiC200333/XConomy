@@ -7,6 +7,9 @@ Settings:
   usepool: false
   #Whether to disable saving data asynchronously(SQLite no such setting)
   disable-async: false
+  #Default Redis
+  #Only applicable to player data
+  cache-type: Default
 
 
 #SQLite settings
@@ -37,3 +40,18 @@ Pool-Settings:
   minimum-idle: 10
   maximum-lifetime: 180000
   idle-timeout: 60000
+
+
+#Redis settings
+Redis:
+  host: localhost
+  port: 6379
+  db-index: 1
+  duration: 1000
+  pool-settings:
+    max-total: 10
+    max-idle: 10
+    min-idle: 0
+  auth:
+    user: ''
+    pass: ''

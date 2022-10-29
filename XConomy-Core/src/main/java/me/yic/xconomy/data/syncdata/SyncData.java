@@ -18,8 +18,12 @@
  */
 package me.yic.xconomy.data.syncdata;
 
+import me.yic.xconomy.XConomy;
 import me.yic.xconomy.info.SyncType;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -29,23 +33,37 @@ public abstract class SyncData implements Serializable {
     final SyncType st;
     final UUID uuid;
 
-    protected SyncData(String sign, SyncType st, UUID uuid){
+    protected SyncData(String sign, SyncType st, UUID uuid) {
         this.sign = sign;
         this.st = st;
         this.uuid = uuid;
     }
 
 
-    public String getSign(){
+    public String getSign() {
         return sign;
     }
 
-    public UUID getUniqueId(){
+    public UUID getUniqueId() {
         return uuid;
     }
 
-    public SyncType getSyncType(){
+    public SyncType getSyncType() {
         return st;
+    }
+
+    @SuppressWarnings("unused")
+    public ByteArrayOutputStream toByteArray(String syncversion) {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(output);
+            oos.writeUTF(XConomy.syncversion);
+            oos.writeObject(this);
+            oos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return output;
     }
 
     public abstract void SyncStart();

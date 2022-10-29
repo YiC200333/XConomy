@@ -25,14 +25,11 @@ import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.GetUUID;
 import me.yic.xconomy.data.ImportData;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.data.syncdata.SyncUUID;
 import me.yic.xconomy.data.syncdata.PlayerData;
+import me.yic.xconomy.data.syncdata.SyncUUID;
 import me.yic.xconomy.utils.SendPluginMessage;
 import me.yic.xconomy.utils.UUIDMode;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -283,16 +280,8 @@ public class SQLCreateNewAccount extends SQL {
     private static void syncOnlineUUID(String oldname, String newname, UUID newUUID) {
         Cache.syncOnlineUUIDCache(oldname, newname, newUUID);
         if (XConomy.Config.BUNGEECORD_ENABLE) {
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            try {
-                ObjectOutputStream oos = new ObjectOutputStream(output);
-                oos.writeUTF(XConomy.syncversion);
-                oos.writeObject(new SyncUUID(XConomy.Config.BUNGEECORD_SIGN, newUUID, newname, oldname));
-                oos.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            SendPluginMessage.SendMessTask("xconomy:acb", output);
+            SyncUUID su = new SyncUUID(XConomy.Config.BUNGEECORD_SIGN, newUUID, newname, oldname);
+            SendPluginMessage.SendMessTask("xconomy:acb", su);
         }
     }
 }

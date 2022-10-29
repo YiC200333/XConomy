@@ -35,9 +35,6 @@ import me.yic.xconomy.task.CompletableFutureTask;
 import me.yic.xconomy.utils.SendPluginMessage;
 import me.yic.xconomy.utils.UUIDMode;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -884,24 +881,17 @@ public class CommandCore {
             return;
         }
 
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try {
-            ObjectOutputStream oos = new ObjectOutputStream(output);
-            oos.writeUTF(XConomy.syncversion);
-            if (!ispublic) {
-                if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-                    oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE_SEMI, pd.getName(), message));
-                } else {
-                    oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE, pd.getUniqueId(), message));
-                }
+        SyncMessage sm;
+        if (!ispublic) {
+            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                sm = new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE_SEMI, pd.getName(), message);
             } else {
-                oos.writeObject(new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.BROADCAST, "", message));
+                sm = new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE, pd.getUniqueId(), message);
             }
-            oos.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            sm = new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.BROADCAST, "", message);
         }
-        SendPluginMessage.SendMessTask("xconomy:acb", output);
+        SendPluginMessage.SendMessTask("xconomy:acb", sm);
 
     }
 
@@ -914,15 +904,7 @@ public class CommandCore {
             return;
         }
 
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try {
-            ObjectOutputStream oos = new ObjectOutputStream(output);
-            oos.writeUTF(XConomy.syncversion);
-            oos.writeObject(new SyncPermission(XConomy.Config.BUNGEECORD_SIGN, u, type, value));
-            oos.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SyncPermission output = new SyncPermission(XConomy.Config.BUNGEECORD_SIGN, u, type, value);
         SendPluginMessage.SendMessTask("xconomy:acb", output);
 
     }

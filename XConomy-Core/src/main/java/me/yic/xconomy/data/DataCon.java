@@ -28,14 +28,12 @@ import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.data.syncdata.SyncBalanceAll;
+import me.yic.xconomy.data.syncdata.SyncData;
 import me.yic.xconomy.data.syncdata.SyncDelData;
 import me.yic.xconomy.info.MessageConfig;
 import me.yic.xconomy.info.RecordInfo;
 import me.yic.xconomy.utils.SendPluginMessage;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -84,7 +82,7 @@ public class DataCon {
         Cache.removefromCache(pd.getUniqueId());
 
         if (!(pd instanceof SyncDelData) && XConomy.Config.BUNGEECORD_ENABLE) {
-            sendudpmessage(new SyncDelData(XConomy.Config.BUNGEECORD_SIGN, pd), null, BigDecimal.ZERO, null);
+            SendMessTask(new SyncDelData(XConomy.Config.BUNGEECORD_SIGN, pd));
         }
 
         CPlayer cp = DataLink.getplayer(pd);
@@ -128,14 +126,15 @@ public class DataCon {
         }
 
         Cache.updateIntoCache(u, pd, newvalue);
-        if (XConomy.Config.BUNGEECORD_ENABLE) {
-            prepareudpmessage(pd, isAdd, amount, ri);
+
+        if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+            plu.runTaskAsynchronously(() -> DataLink.save(pd, isAdd, amount, ri));
         } else {
-            if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
-                plu.runTaskAsynchronously(() -> DataLink.save(pd, isAdd, amount, ri));
-            } else {
-                DataLink.save(pd, isAdd, amount, ri);
-            }
+            DataLink.save(pd, isAdd, amount, ri);
+        }
+
+        if (XConomy.Config.BUNGEECORD_ENABLE) {
+            SendMessTask(pd);
         }
     }
 
@@ -176,8 +175,12 @@ public class DataCon {
             DataLink.saveall(targettype, amount, isAdd, ri);
         }
 
+        boolean isallbool = targettype.equals("all");
+        //if (targettype.equals("all")) {
+        //} else
+
         if (XConomy.Config.BUNGEECORD_ENABLE) {
-            sendallpdmessage(targettype, amount, isAdd);
+            SendMessTask(new SyncBalanceAll(XConomy.Config.BUNGEECORD_SIGN, isallbool, isAdd, amount));
         }
     }
 
@@ -194,53 +197,8 @@ public class DataCon {
     }
 
 
-    public static void prepareudpmessage(PlayerData pd, Boolean isAdd, BigDecimal amount, RecordInfo ri) {
-        if (XConomy.Config.BUNGEECORD_ENABLE) {
-            if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
-                plu.runTaskAsynchronously(() -> sendudpmessage(pd, isAdd, amount, ri));
-            } else {
-                sendudpmessage(pd, isAdd, amount, ri);
-            }
-        }
-    }
-
-    public static void sendudpmessage(PlayerData pd, Boolean isAdd, BigDecimal amount, RecordInfo ri) {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try {
-            ObjectOutputStream oos = new ObjectOutputStream(output);
-            oos.writeUTF(XConomy.syncversion);
-            oos.writeObject(pd);
-            oos.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        SendMessTask(output, pd, isAdd, amount, ri);
-    }
-
-    public static void sendallpdmessage(String targettype, BigDecimal amount, Boolean isAdd) {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try {
-            ObjectOutputStream oos = new ObjectOutputStream(output);
-            oos.writeUTF(XConomy.syncversion);
-            if (targettype.equals("all")) {
-                oos.writeObject(new SyncBalanceAll(XConomy.Config.BUNGEECORD_SIGN, true, isAdd, amount));
-            } else if (targettype.equals("online")) {
-                oos.writeObject(new SyncBalanceAll(XConomy.Config.BUNGEECORD_SIGN, false, isAdd, amount));
-            }
-            oos.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        SendMessTask(output, null, isAdd, null, null);
-
-    }
-
-    private static void SendMessTask(ByteArrayOutputStream stream, PlayerData pd, Boolean isAdd, BigDecimal amount, RecordInfo ri) {
-
-        SendPluginMessage.SendMessTask("xconomy:acb", stream);
-        if (pd != null && !(pd instanceof SyncDelData)) {
-            DataLink.save(pd, isAdd, amount, ri);
-        }
+    private static void SendMessTask(SyncData pd) {
+        SendPluginMessage.SendMessTask("xconomy:acb", pd);
     }
 
 }

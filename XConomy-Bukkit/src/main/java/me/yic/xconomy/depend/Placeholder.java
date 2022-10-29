@@ -24,6 +24,7 @@ import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.info.MessageConfig;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.lang.MessagesManager;
@@ -55,23 +56,26 @@ public class Placeholder extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, String identifier) {
         if (identifier.equals("balance")) {
-            if (player == null) {
+            PlayerData pd = checkplayerdata(player);
+            if (pd == null) {
                 return "0.0";
             }
-            BigDecimal a = DataCon.getPlayerData(player.getUniqueId()).getBalance();
+            BigDecimal a = pd.getBalance();
             return DataFormat.shown(a);
         } else if (identifier.equals("balance_value")) {
-            if (player == null) {
+            PlayerData pd = checkplayerdata(player);
+            if (pd == null) {
                 return "0.0";
             }
-            BigDecimal bal = DataCon.getPlayerData(player.getUniqueId()).getBalance();
+            BigDecimal bal = pd.getBalance();
             return bal.toString();
 
         } else if (identifier.equals("balance_formatted")) {
-            if (player == null) {
+            PlayerData pd = checkplayerdata(player);
+            if (pd == null) {
                 return "0.0";
             }
-            BigDecimal a = DataCon.getPlayerData(player.getUniqueId()).getBalance();
+            BigDecimal a = pd.getBalance();
             return DataFormat.PEshownf(a);
 
         } else if (identifier.contains("top_player_")) {
@@ -191,5 +195,12 @@ public class Placeholder extends PlaceholderExpansion {
 
     private boolean outindex(String str) {
         return Integer.parseInt(str) > Cache.baltop_papi.size();
+    }
+
+    private PlayerData checkplayerdata(OfflinePlayer player) {
+        if (player == null) {
+            return null;
+        }
+        return DataCon.getPlayerData(player.getUniqueId());
     }
 }

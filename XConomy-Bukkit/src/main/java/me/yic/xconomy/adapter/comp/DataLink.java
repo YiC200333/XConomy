@@ -25,6 +25,7 @@ import me.yic.xconomy.data.SemiCacheConvert;
 import me.yic.xconomy.data.sql.*;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.info.RecordInfo;
+import me.yic.xconomy.utils.RedisConnection;
 import me.yic.xconomy.utils.UUIDMode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -69,6 +70,11 @@ public class DataLink implements iDataLink {
             XConomy.DConfig.loggersysmess("连接正常");
         } else {
             XConomy.DConfig.loggersysmess("连接异常");
+            return false;
+        }
+
+
+        if (!RedisConnection.connectredis()) {
             return false;
         }
 
