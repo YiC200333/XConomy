@@ -9,7 +9,7 @@ UUID-mode: Default
 #In this mode, XConomy will not start normally
 #After the conversion, please check data and turn off this mode
 #Sponge version does not have this function
-importdata-mode: false
+Importdata-mode: false
 
 
 #Settings
