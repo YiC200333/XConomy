@@ -18,11 +18,6 @@ public class CPlugin implements iPlugin {
     }
 
     @Override
-    public void runTaskAsynchronously(Runnable runnable) {
-
-    }
-
-    @Override
     public void sendPluginMessage(String channel, ByteArrayOutputStream stream) {
 
     }

@@ -9,7 +9,5 @@ public interface iPlugin {
 
     void broadcastMessage(String message);
 
-    void runTaskAsynchronously(Runnable runnable);
-
     void sendPluginMessage(String channel, ByteArrayOutputStream stream);
 }

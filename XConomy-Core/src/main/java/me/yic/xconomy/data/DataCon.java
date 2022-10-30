@@ -21,7 +21,6 @@ package me.yic.xconomy.data;
 import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.adapter.comp.CPlayer;
-import me.yic.xconomy.adapter.comp.CPlugin;
 import me.yic.xconomy.adapter.comp.CallAPI;
 import me.yic.xconomy.adapter.comp.DataLink;
 import me.yic.xconomy.data.caches.Cache;
@@ -39,7 +38,6 @@ import java.util.UUID;
 
 public class DataCon {
     private static final DataLink DataLink = AdapterManager.DATALINK;
-    private static final CPlugin plu = AdapterManager.PLUGIN;
 
     public static PlayerData getPlayerData(UUID uuid) {
         return getPlayerDatai(uuid);
@@ -71,7 +69,7 @@ public class DataCon {
                 pd = Cache.getDataFromCache(u);
             }
         }
-        if (plu.getOnlinePlayersisEmpty()) {
+        if (AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
             Cache.clearCache(false);
         }
         return pd;
@@ -128,7 +126,7 @@ public class DataCon {
         Cache.updateIntoCache(u, pd, newvalue);
 
         if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
-            plu.runTaskAsynchronously(() -> DataLink.save(pd, isAdd, amount, ri));
+            AdapterManager.runTaskAsynchronously(() -> DataLink.save(pd, isAdd, amount, ri));
         } else {
             DataLink.save(pd, isAdd, amount, ri);
         }
@@ -158,7 +156,7 @@ public class DataCon {
 
         if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
             final BigDecimal fnewvalue = newvalue;
-            plu.runTaskAsynchronously(() -> DataLink.saveNonPlayer(u, amount, fnewvalue, isAdd, ri));
+            AdapterManager.runTaskAsynchronously(() -> DataLink.saveNonPlayer(u, amount, fnewvalue, isAdd, ri));
         } else {
             DataLink.saveNonPlayer(u, amount, newvalue, isAdd, ri);
         }
@@ -170,7 +168,7 @@ public class DataCon {
         RecordInfo ri = new RecordInfo(type, command, comment);
 
         if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
-            plu.runTaskAsynchronously(() -> DataLink.saveall(targettype, amount, isAdd, ri));
+            AdapterManager.runTaskAsynchronously(() -> DataLink.saveall(targettype, amount, isAdd, ri));
         } else {
             DataLink.saveall(targettype, amount, isAdd, ri);
         }

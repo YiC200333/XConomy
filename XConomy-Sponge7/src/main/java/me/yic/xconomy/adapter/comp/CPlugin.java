@@ -22,11 +22,6 @@ public class CPlugin implements iPlugin {
     }
 
     @Override
-    public void runTaskAsynchronously(Runnable runnable) {
-        Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(runnable);
-    }
-
-    @Override
     public void sendPluginMessage(String channel, ByteArrayOutputStream stream){
         Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), channel).sendTo(
                 Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> buf.writeBytes(stream.toByteArray()));

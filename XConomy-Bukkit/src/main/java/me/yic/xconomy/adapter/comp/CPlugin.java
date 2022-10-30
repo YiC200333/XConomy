@@ -19,12 +19,6 @@ public class CPlugin implements iPlugin {
         Bukkit.broadcastMessage(message);
     }
 
-
-    @Override
-    public void runTaskAsynchronously(Runnable runnable){
-        Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), runnable);
-    }
-
     @Override
     public void sendPluginMessage(String channel, ByteArrayOutputStream stream){
         Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), channel, stream.toByteArray());

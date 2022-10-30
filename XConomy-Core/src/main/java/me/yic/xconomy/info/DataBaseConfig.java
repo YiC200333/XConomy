@@ -31,10 +31,16 @@ public class DataBaseConfig {
     public DataBaseConfig() {
         if (!XConomy.Config.DISABLE_CACHE) {
             if (getStorageType() != 1) {
-                canasync = !config.getBoolean("Settings.disable-async");
+                canasync = true;
             }
         }
         setHikariConnectionPooling();
+        if (config.contains("Settings.max-threads")) {
+            maxthread = config.getInt("Settings.max-threads");
+            if (maxthread <= 1){
+                maxthread = 1;
+            }
+        }
     }
 
     public String CacheType(){
@@ -54,6 +60,8 @@ public class DataBaseConfig {
     public boolean EnableConnectionPool = false;
     public boolean DDrivers = false;
     public boolean canasync = false;
+
+    public int maxthread = 10;
 
 
     public final String ENCODING = config.getString("MySQL.property.encoding");

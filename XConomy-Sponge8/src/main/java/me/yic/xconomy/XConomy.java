@@ -247,6 +247,7 @@ public class XConomy {
         }
 
         refresherTask.shutdown();
+        AdapterManager.FixedThreadPool.shutdown();
         SQL.close();
         logger("XConomy已成功卸载", 0, null);
     }

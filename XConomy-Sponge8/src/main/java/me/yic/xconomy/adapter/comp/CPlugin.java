@@ -1,7 +1,6 @@
 package me.yic.xconomy.adapter.comp;
 
 
-import me.yic.xconomy.XConomy;
 import me.yic.xconomy.adapter.iPlugin;
 import net.kyori.adventure.text.Component;
 import org.spongepowered.api.Sponge;
@@ -19,11 +18,6 @@ public class CPlugin implements iPlugin {
     @Override
     public void broadcastMessage(String message) {
         Sponge.server().broadcastAudience().sendMessage(Component.text(message));
-    }
-
-    @Override
-    public void runTaskAsynchronously(Runnable runnable) {
-        Sponge.asyncScheduler().executor(XConomy.getInstance().plugincontainer).execute(runnable);
     }
 
     @Override
