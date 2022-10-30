@@ -19,17 +19,11 @@
 package me.yic.xconomy.utils;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.info.DataBaseConfig;
 import me.yic.xconomy.lang.MessagesManager;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.UUID;
 
 public class RedisConnection {
 
@@ -51,6 +45,16 @@ public class RedisConnection {
     }
 
     public static boolean connectredis() {
+
+        try {
+            Class.forName("org.slf4j.Logger");
+        } catch (ClassNotFoundException e) {
+            XConomy.getInstance().logger("未找到 'org.slf4j.Logger'", 1, null);
+            XConomy.getInstance().logger(null, 0,
+                    MessagesManager.systemMessage("连接异常").replace("%type%", "Redis"));
+            return false;
+        }
+
         if (XConomy.DConfig.CacheType().equalsIgnoreCase("Redis")) {
             JedisPoolConfig jedisconfig = new JedisPoolConfig();
             jedisconfig.setMaxTotal(maxtotal);

@@ -8,6 +8,7 @@ Settings:
   #Whether to disable saving data asynchronously(SQLite no such setting)
   disable-async: false
   #Default Redis
+  #Redis(Require 'slf4j' dependencies)
   #Only applicable to player data
   cache-type: Default
 
