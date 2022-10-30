@@ -35,7 +35,7 @@ public class Baltop implements Runnable {
         SQL.getBaltop();
         DataCon.sumbal();
         if (Sponge.server().onlinePlayers().isEmpty()) {
-            Cache.clearCache();
+            Cache.clearCache(false);
         }else{
             if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
                 for (Player pp : Sponge.server().onlinePlayers()) {

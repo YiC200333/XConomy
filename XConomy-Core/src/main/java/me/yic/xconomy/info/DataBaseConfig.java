@@ -34,13 +34,15 @@ public class DataBaseConfig {
                 canasync = !config.getBoolean("Settings.disable-async");
             }
         }
-
         setHikariConnectionPooling();
     }
 
     public String CacheType(){
         String cachetype = config.getString("Settings.cache-type");
         if (cachetype == null){
+            return "Default";
+        }
+        if (XConomy.Config.DISABLE_CACHE){
             return "Default";
         }
         if (cachetype.equalsIgnoreCase("Redis")){

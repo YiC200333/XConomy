@@ -136,9 +136,9 @@ public class Cache {
     }
 
 
-    public static void clearCache() {
-        PDatas.clear();
-        UUIDs.clear();
+    public static void clearCache(boolean redis) {
+        PDatas.clear(redis);
+        UUIDs.clear(redis);
         m_uuids.clear();
     }
 

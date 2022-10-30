@@ -1,13 +1,9 @@
 package me.yic.xconomy.data.caches.data;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.utils.RedisConnection;
 import redis.clients.jedis.Jedis;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,7 +15,7 @@ public class UUIDs {
     public static void put(String name, UUID uuid) {
         if (XConomy.DConfig.CacheType().equalsIgnoreCase("Redis")) {
             try (Jedis jr = RedisConnection.getResource()) {
-                jr.setex((prefix + XConomy.Config.BUNGEECORD_SIGN + " " + name), RedisConnection.duration, uuids.toString());
+                jr.setex((prefix + XConomy.Config.BUNGEECORD_SIGN + " " + name), RedisConnection.duration, uuid.toString());
             }
         } else {
             uuids.put(name, uuid);
@@ -29,12 +25,11 @@ public class UUIDs {
     public static boolean containsKey(String name) {
         if (XConomy.DConfig.CacheType().equalsIgnoreCase("Redis")) {
             try (Jedis jr = RedisConnection.getResource()) {
-                jr.exists(prefix + XConomy.Config.BUNGEECORD_SIGN + " " + name);
+                return jr.exists(prefix + XConomy.Config.BUNGEECORD_SIGN + " " + name);
             }
         } else {
             return uuids.containsKey(name);
         }
-        return false;
     }
 
     public static void remove(String name) {
@@ -58,7 +53,15 @@ public class UUIDs {
         }
     }
 
-    public static void clear() {
-        uuids.clear();
+    public static void clear(boolean redis) {
+        if (XConomy.DConfig.CacheType().equalsIgnoreCase("Redis") && redis) {
+            try (Jedis jr = RedisConnection.getResource()) {
+                for (String key: jr.keys(prefix + XConomy.Config.BUNGEECORD_SIGN + "*")){
+                    jr.del(key);
+                }
+            }
+        }else {
+            uuids.clear();
+        }
     }
 }

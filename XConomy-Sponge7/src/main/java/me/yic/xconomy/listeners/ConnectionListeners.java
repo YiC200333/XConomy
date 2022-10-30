@@ -36,7 +36,7 @@ public class ConnectionListeners {
     @Listener
     public void onQuit(ClientConnectionEvent.Disconnect event) {
         if (Sponge.getServer().getOnlinePlayers().size() == 1) {
-            Cache.clearCache();
+            Cache.clearCache(false);
         }
         if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
             DataLink.updatelogininfo(event.getTargetEntity().getUniqueId());

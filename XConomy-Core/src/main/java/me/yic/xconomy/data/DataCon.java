@@ -72,7 +72,7 @@ public class DataCon {
             }
         }
         if (plu.getOnlinePlayersisEmpty()) {
-            Cache.clearCache();
+            Cache.clearCache(false);
         }
         return pd;
     }
@@ -165,7 +165,7 @@ public class DataCon {
     }
 
     public static void changeallplayerdata(String targettype, String type, BigDecimal amount, Boolean isAdd, String command, StringBuilder comment) {
-        Cache.clearCache();
+        Cache.clearCache(true);
 
         RecordInfo ri = new RecordInfo(type, command, comment);
 
@@ -198,7 +198,9 @@ public class DataCon {
 
 
     private static void SendMessTask(SyncData pd) {
-        SendPluginMessage.SendMessTask("xconomy:acb", pd);
+        if (!XConomy.DConfig.CacheType().equalsIgnoreCase("Redis")) {
+            SendPluginMessage.SendMessTask("xconomy:acb", pd);
+        }
     }
 
 }

@@ -19,7 +19,7 @@ public class PDatas {
     public static void put(UUID uuid, PlayerData pd) {
         if (XConomy.DConfig.CacheType().equalsIgnoreCase("Redis")) {
             try (Jedis jr = RedisConnection.getResource()) {
-                jr.setex((prefix + XConomy.Config.BUNGEECORD_SIGN + " " + uuid.toString()).getBytes() , RedisConnection.duration, pd.toByteArray(XConomy.syncversion).toByteArray());
+                jr.setex((prefix + XConomy.Config.BUNGEECORD_SIGN + " " + uuid.toString()).getBytes(), RedisConnection.duration, pd.toByteArray(XConomy.syncversion).toByteArray());
             }
         } else {
             pds.put(uuid, pd);
@@ -29,12 +29,11 @@ public class PDatas {
     public static boolean containsKey(UUID uuid) {
         if (XConomy.DConfig.CacheType().equalsIgnoreCase("Redis")) {
             try (Jedis jr = RedisConnection.getResource()) {
-                jr.exists((prefix + XConomy.Config.BUNGEECORD_SIGN + " " + uuid.toString()).getBytes());
+                return jr.exists((prefix + XConomy.Config.BUNGEECORD_SIGN + " " + uuid.toString()).getBytes());
             }
         } else {
             return pds.containsKey(uuid);
         }
-        return false;
     }
 
     public static void remove(UUID uuid) {
@@ -50,7 +49,7 @@ public class PDatas {
     public static PlayerData get(UUID uuid) {
         if (XConomy.DConfig.CacheType().equalsIgnoreCase("Redis")) {
             try (Jedis jr = RedisConnection.getResource()) {
-                byte[] ba =  jr.get((prefix + XConomy.Config.BUNGEECORD_SIGN + " " + uuid.toString()).getBytes());
+                byte[] ba = jr.get((prefix + XConomy.Config.BUNGEECORD_SIGN + " " + uuid.toString()).getBytes());
                 ByteArrayInputStream input = new ByteArrayInputStream(ba);
                 ObjectInputStream ios = new ObjectInputStream(input);
 
@@ -69,7 +68,15 @@ public class PDatas {
         }
     }
 
-    public static void clear() {
-        pds.clear();
+    public static void clear(boolean redis) {
+        if (XConomy.DConfig.CacheType().equalsIgnoreCase("Redis") && redis) {
+            try (Jedis jr = RedisConnection.getResource()) {
+                for (String key : jr.keys(prefix + XConomy.Config.BUNGEECORD_SIGN + "*")) {
+                    jr.del(key);
+                }
+            }
+        } else {
+            pds.clear();
+        }
     }
 }

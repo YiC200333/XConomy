@@ -21,7 +21,6 @@ package me.yic.xconomy.task;
 import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
-import me.yic.xconomy.adapter.comp.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.sql.SQL;
 import org.bukkit.Bukkit;
@@ -37,7 +36,7 @@ public class Baltop extends BukkitRunnable {
         SQL.getBaltop();
         DataCon.sumbal();
         if (Bukkit.getOnlinePlayers().isEmpty()) {
-            Cache.clearCache();
+            Cache.clearCache(false);
         }else{
             if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
                 for (Player pp : Bukkit.getOnlinePlayers()) {

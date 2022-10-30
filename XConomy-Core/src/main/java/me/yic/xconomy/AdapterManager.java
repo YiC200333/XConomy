@@ -39,4 +39,17 @@ public class AdapterManager {
     public static String translateColorCodes(String message) {
         return CChat.translateAlternateColorCodes('&', MessagesManager.messageFile.getString(message));
     }
+
+    public static boolean BanModiftyBalance() {
+        if (!XConomy.Config.BUNGEECORD_ENABLE){
+            return false;
+        }
+        if (!PLUGIN.getOnlinePlayersisEmpty()){
+            return false;
+        }
+        if (XConomy.Config.DISABLE_CACHE){
+            return false;
+        }
+        return !XConomy.DConfig.CacheType().equalsIgnoreCase("Redis");
+    }
 }

@@ -40,7 +40,7 @@ public class ConnectionListeners implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         if (Bukkit.getOnlinePlayers().size() == 1) {
-            Cache.clearCache();
+            Cache.clearCache(false);
         }
         if (!XConomy.Config.BUNGEECORD_ENABLE) {
             TabList.PlayerList.remove(event.getPlayer().getName());

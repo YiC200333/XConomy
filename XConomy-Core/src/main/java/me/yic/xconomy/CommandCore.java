@@ -745,7 +745,7 @@ public class CommandCore {
     }
 
     public static boolean check() {
-        return AdapterManager.PLUGIN.getOnlinePlayersisEmpty() && XConomy.Config.BUNGEECORD_ENABLE && !XConomy.Config.DISABLE_CACHE;
+        return AdapterManager.BanModiftyBalance();
     }
 
     public static boolean checkMessage(String message) {

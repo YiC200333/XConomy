@@ -22,11 +22,10 @@ import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.depend.NonPlayerPlugin;
 import me.yic.xconomy.data.syncdata.PlayerData;
+import me.yic.xconomy.depend.NonPlayerPlugin;
 import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import java.math.BigDecimal;
@@ -113,7 +112,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse depositPlayer(String name, double amount) {
-        if (XConomy.Config.BUNGEECORD_ENABLE && Bukkit.getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
+        if (AdapterManager.BanModiftyBalance()) {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
                     "[BungeeCord] No player in server");
         }
@@ -141,7 +140,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer pp, double amount) {
-        if (XConomy.Config.BUNGEECORD_ENABLE && Bukkit.getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
+        if (AdapterManager.BanModiftyBalance()) {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
                     "[BungeeCord] No player in server");
         }
@@ -297,7 +296,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse withdrawPlayer(String name, double amount) {
-        if (XConomy.Config.BUNGEECORD_ENABLE && Bukkit.getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
+        if (AdapterManager.BanModiftyBalance()) {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
                     "[BungeeCord] No player in server");
         }
@@ -325,7 +324,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer pp, double amount) {
-        if (XConomy.Config.BUNGEECORD_ENABLE && Bukkit.getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
+        if (AdapterManager.BanModiftyBalance()) {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
                     "[BungeeCord] No player in server");
         }

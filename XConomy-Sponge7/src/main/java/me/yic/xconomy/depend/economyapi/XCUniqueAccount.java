@@ -18,10 +18,10 @@
  */
 package me.yic.xconomy.depend.economyapi;
 
+import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.service.context.Context;
@@ -81,7 +81,7 @@ public class XCUniqueAccount implements UniqueAccount {
 
     @Override
     public TransactionResult setBalance(Currency currency, BigDecimal amount, Cause cause, Set<Context> contexts) {
-        if (XConomy.Config.BUNGEECORD_ENABLE && Sponge.getServer().getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
+        if (AdapterManager.BanModiftyBalance()) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED,
                     DummyObjectProvider.createFor(TransactionType.class, "SET"));
@@ -105,7 +105,7 @@ public class XCUniqueAccount implements UniqueAccount {
 
     @Override
     public TransactionResult resetBalance(Currency currency, Cause cause, Set<Context> contexts) {
-        if (XConomy.Config.BUNGEECORD_ENABLE && Sponge.getServer().getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
+        if (AdapterManager.BanModiftyBalance()) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED,
                     DummyObjectProvider.createFor(TransactionType.class, "RESET"));
@@ -119,7 +119,7 @@ public class XCUniqueAccount implements UniqueAccount {
 
     @Override
     public TransactionResult deposit(Currency currency, BigDecimal amount, Cause cause, Set<Context> contexts) {
-        if (XConomy.Config.BUNGEECORD_ENABLE && Sponge.getServer().getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
+        if (AdapterManager.BanModiftyBalance()) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.DEPOSIT);
         }
@@ -140,7 +140,7 @@ public class XCUniqueAccount implements UniqueAccount {
 
     @Override
     public TransactionResult withdraw(Currency currency, BigDecimal amount, Cause cause, Set<Context> contexts) {
-        if (XConomy.Config.BUNGEECORD_ENABLE && Sponge.getServer().getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
+        if (AdapterManager.BanModiftyBalance()) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
         }
@@ -160,7 +160,7 @@ public class XCUniqueAccount implements UniqueAccount {
 
     @Override
     public TransferResult transfer(Account to, Currency currency, BigDecimal amount, Cause cause, Set<Context> contexts) {
-        if (XConomy.Config.BUNGEECORD_ENABLE && Sponge.getServer().getOnlinePlayers().isEmpty() && !XConomy.Config.DISABLE_CACHE) {
+        if (AdapterManager.BanModiftyBalance()) {
             return new XCTransferResult(to, this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.TRANSFER);
         }
