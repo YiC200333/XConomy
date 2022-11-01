@@ -24,6 +24,8 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.adapter.comp.CConfig;
 import me.yic.xconomy.lang.MessagesManager;
 
+import java.util.concurrent.Executors;
+
 public class DataBaseConfig {
 
     public static CConfig config;
@@ -41,6 +43,7 @@ public class DataBaseConfig {
                 maxthread = 1;
             }
         }
+        AdapterManager.FixedThreadPool = Executors.newFixedThreadPool(maxthread);
     }
 
     public String CacheType(){

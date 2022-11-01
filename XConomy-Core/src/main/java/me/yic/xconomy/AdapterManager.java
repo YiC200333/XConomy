@@ -25,10 +25,9 @@ import me.yic.xconomy.info.MessageConfig;
 import me.yic.xconomy.lang.MessagesManager;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class AdapterManager {
-    static ExecutorService FixedThreadPool = Executors.newFixedThreadPool(XConomy.DConfig.maxthread);
+    public static ExecutorService FixedThreadPool;
     public static boolean foundvaultpe = false;
     public static boolean foundvaultOfflinePermManager = false;
 
