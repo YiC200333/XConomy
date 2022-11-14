@@ -69,6 +69,14 @@ public class DatabaseConnection {
         }
     }
 
+    public void setHikariValidationTimeout() {
+        if (XConomy.DConfig.EnableConnectionPool) {
+            if (hikari.getValidationTimeout() > waittimeout) {
+                hikari.setValidationTimeout(waittimeout);
+            }
+        }
+    }
+
     private void setDriver() {
         if (XConomy.version.equals("Bukkit") || XConomy.version.equals("Sponge8")) {
             if (XConomy.DConfig.DDrivers || XConomy.version.equals("Sponge8")) {

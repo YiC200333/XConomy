@@ -58,7 +58,7 @@ public class SQL {
     }
 
     public static void getwaittimeout() {
-        if (XConomy.DConfig.isMySQL() && !XConomy.DConfig.EnableConnectionPool) {
+        if (XConomy.DConfig.isMySQL()) {
             try {
                 Connection connection = database.getConnectionAndCheck();
 
@@ -83,6 +83,9 @@ public class SQL {
                 XConomy.getInstance().logger("Get 'wait_timeout' error", 1, null);
             }
         }
+
+        database.setHikariValidationTimeout();
+
     }
 
     public static void createTable() {
