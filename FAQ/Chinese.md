@@ -8,7 +8,7 @@ A - 1 在 BungeeCord 或 Velocity 端安装 XConomy。
 &nbsp; &nbsp; &nbsp; 3 在 config.yml 中设置 bungeecord.enable 为 true。  
 &nbsp; &nbsp; &nbsp; 4 保证需要同步的子服务器中，XConomy的配置文件全部一样。 (推荐直接复制配置文件)
 
-Q - config.yml 中 bungeecord.sign 是什么意思? 
+Q - config.yml 中 bungeecord.sign 是什么意思?  
 A - 对需要同步数据的服务器进行分组，只有sign相同的服务器才会同步数据。
 
 Q - 我完成了同步配置，但仍然无法同步数据   
