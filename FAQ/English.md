@@ -1,6 +1,5 @@
 ![img.png](../img.png)
 ## FAQ
-***
 For 2.19 version
 ***
 Q - How to sync data?  
