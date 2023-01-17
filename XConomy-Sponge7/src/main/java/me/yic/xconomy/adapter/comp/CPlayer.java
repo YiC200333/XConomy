@@ -19,6 +19,14 @@ public class CPlayer implements iPlayer {
         this.player = player;
     }
 
+    public CPlayer(UUID uuid) {
+        Player player = null;
+        if (Sponge.getServer().getPlayer(uuid).isPresent()) {
+            player = Sponge.getServer().getPlayer(uuid).get();
+        }
+        this.player = player;
+    }
+
     public CPlayer(User player) {
         Player pl;
         if (player != null){

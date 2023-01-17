@@ -24,9 +24,13 @@ import me.yic.xconomy.adapter.comp.DataLink;
 import me.yic.xconomy.info.MessageConfig;
 import me.yic.xconomy.lang.MessagesManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 public class AdapterManager {
+
+    public static List<String> Tab_PlayerList = new ArrayList<>();
     public static ExecutorService FixedThreadPool;
     public static boolean foundvaultpe = false;
     public static boolean foundvaultOfflinePermManager = false;

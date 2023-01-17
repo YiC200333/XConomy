@@ -1,5 +1,5 @@
 /*
- *  This file (SPsync.java) is a part of project XConomy
+ *  This file (RedisSubscriber.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -16,22 +16,30 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.listeners;
+package me.yic.xconomy.data.redis;
 
+import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.ProcessSyncData;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.messaging.PluginMessageListener;
-import org.jetbrains.annotations.NotNull;
+import redis.clients.jedis.BinaryJedisPubSub;
 
-public class SPsync implements PluginMessageListener {
+public class RedisSubscriber extends BinaryJedisPubSub {
 
     @Override
-    public void onPluginMessageReceived(String channel, @NotNull Player arg1, byte[] message) {
-        if (!channel.equals("xconomy:aca")) {
-            return;
-        }
-
+    public void onMessage(byte[] channel, byte[] message) {
         ProcessSyncData.process(message);
     }
 
+    @Override
+    public void onSubscribe(byte[] channel, int subscribedChannels) {
+        XConomy.getInstance().logger(null, 0, "Subscribe redis channel success, channel " + new String(channel));
+    }
+
+    @Override
+    public void onUnsubscribe(byte[] channel, int subscribedChannels) {
+        XConomy.getInstance().logger(null, 0, "Unsubscribe redis channel");
+    }
+
+    public void close() {
+        this.unsubscribe();
+    }
 }

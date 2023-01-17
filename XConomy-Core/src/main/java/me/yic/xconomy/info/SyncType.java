@@ -27,7 +27,11 @@ public enum SyncType {
     BROADCAST("broadcast"),
     SYNCONLINEUUID("syncOnlineUUID"),
     PERMISSION("permission"),
-    DELETEDATA("deletedata");
+    DELETEDATA("deletedata"),
+
+    //==================== Tab ====================
+    TAB_JOIN("tab_join"),
+    TAB_QUIT("tab_quit");
 
     final String value;
 

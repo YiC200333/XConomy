@@ -1,5 +1,5 @@
 /*
- *  This file (SPsync.java) is a part of project XConomy
+ *  This file (SyncTabQuit.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -16,22 +16,27 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.listeners;
+package me.yic.xconomy.data.syncdata.tab;
 
-import me.yic.xconomy.data.ProcessSyncData;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.messaging.PluginMessageListener;
-import org.jetbrains.annotations.NotNull;
+import me.yic.xconomy.AdapterManager;
+import me.yic.xconomy.data.syncdata.SyncData;
+import me.yic.xconomy.info.SyncType;
 
-public class SPsync implements PluginMessageListener {
+public class SyncTabQuit extends SyncData {
 
-    @Override
-    public void onPluginMessageReceived(String channel, @NotNull Player arg1, byte[] message) {
-        if (!channel.equals("xconomy:aca")) {
-            return;
-        }
+    private final String name;
 
-        ProcessSyncData.process(message);
+    public SyncTabQuit(String name){
+        super(SyncType.TAB_QUIT, null);
+        this.name = name;
     }
 
+    public String getName(){
+        return name;
+    }
+
+    @Override
+    public void SyncStart() {
+        AdapterManager.Tab_PlayerList.remove(name);
+    }
 }

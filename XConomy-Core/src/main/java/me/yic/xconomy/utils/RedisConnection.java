@@ -19,18 +19,23 @@
 package me.yic.xconomy.utils;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.data.redis.RedisSubscriber;
 import me.yic.xconomy.info.DataBaseConfig;
 import me.yic.xconomy.lang.MessagesManager;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.nio.charset.StandardCharsets;
+
 public class RedisConnection {
+
+    public static final byte[] channelname = "XConomy_Sync".getBytes(StandardCharsets.UTF_8);
+    public static final RedisSubscriber subscriber = new RedisSubscriber();
 
     private static final String url = DataBaseConfig.config.getString("Redis.host");
     private static final int port = DataBaseConfig.config.getInt("Redis.port");
     private static final int dbindex = DataBaseConfig.config.getInt("Redis.db-index");
-    public static final int duration = DataBaseConfig.config.getInt("Redis.duration");
 
     private static final String user = DataBaseConfig.config.getString("Redis.auth.user");
     private static final String password = DataBaseConfig.config.getString("Redis.auth.pass");
@@ -41,6 +46,7 @@ public class RedisConnection {
     public static JedisPool jedis;
 
     public static void close() {
+        subscriber.close();
         jedis.close();
     }
 

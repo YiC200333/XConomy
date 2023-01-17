@@ -22,7 +22,10 @@ import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.adapter.comp.DataLink;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.syncdata.tab.SyncTabJoin;
+import me.yic.xconomy.data.syncdata.tab.SyncTabQuit;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.Updater;
 import org.spongepowered.api.Sponge;
@@ -36,8 +39,17 @@ public class ConnectionListeners {
     @Listener
     public void onQuit(ServerSideConnectionEvent.Disconnect event) {
         if (Sponge.server().onlinePlayers().size() == 1) {
-            Cache.clearCache(false);
+            Cache.clearCache();
         }
+
+        if (event.player().profile().name().isPresent()) {
+            if (XConomy.Config.BUNGEECORD_ENABLE) {
+                DataCon.SendMessTask(new SyncTabQuit(event.player().profile().name().get()));
+            }
+            AdapterManager.Tab_PlayerList.remove(event.player().profile().name().get());
+
+        }
+
         if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
             DataLink.updatelogininfo(event.player().profile().uuid());
         }
@@ -52,6 +64,16 @@ public class ConnectionListeners {
             Sponge.asyncScheduler().executor(XConomy.getInstance().plugincontainer).execute(() -> DataLink.newPlayer(a));
         } else {
             DataLink.newPlayer(a);
+        }
+
+        if (event.player().profile().name().isPresent()) {
+            if (XConomy.Config.BUNGEECORD_ENABLE) {
+                DataCon.SendMessTask(new SyncTabJoin(event.player().profile().name().get()));
+            }
+            if (!AdapterManager.Tab_PlayerList.contains(event.player().profile().name().get())) {
+                AdapterManager.Tab_PlayerList.add(event.player().profile().name().get());
+            }
+
         }
 
         if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {

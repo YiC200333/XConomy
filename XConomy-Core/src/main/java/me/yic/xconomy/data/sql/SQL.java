@@ -172,7 +172,7 @@ public class SQL {
                     Cache.insertIntoMultiUUIDCache(fuuid, uuid);
                 }
                 BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
-                PlayerData bd = new PlayerData(XConomy.Config.BUNGEECORD_SIGN, fuuid, rs.getString(2), cacheThisAmt);
+                PlayerData bd = new PlayerData(fuuid, rs.getString(2), cacheThisAmt);
                 Cache.insertIntoCache(fuuid, bd);
             }
 
@@ -218,7 +218,7 @@ public class SQL {
                     String username = rs.getString(2);
                     BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
                     if (cacheThisAmt != null) {
-                        PlayerData bd = new PlayerData(XConomy.Config.BUNGEECORD_SIGN, uuid, username, cacheThisAmt);
+                        PlayerData bd = new PlayerData(uuid, username, cacheThisAmt);
                         Cache.insertIntoCache(uuid, bd);
                     }
                     break;
@@ -406,7 +406,7 @@ public class SQL {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        record(connection, new PlayerData(XConomy.Config.BUNGEECORD_SIGN, null, account, null), isAdd, amount, newbalance, ri);
+        record(connection, new PlayerData(null, account, null), isAdd, amount, newbalance, ri);
         database.closeHikariConnection(connection);
     }
 

@@ -36,7 +36,7 @@ public class Baltop extends BukkitRunnable {
         SQL.getBaltop();
         DataCon.sumbal();
         if (Bukkit.getOnlinePlayers().isEmpty()) {
-            Cache.clearCache(false);
+            Cache.clearCache();
         }else{
             if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
                 for (Player pp : Bukkit.getOnlinePlayers()) {

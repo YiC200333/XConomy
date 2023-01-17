@@ -30,7 +30,6 @@ import me.yic.xconomy.depend.economy.VaultHook;
 import me.yic.xconomy.info.*;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.listeners.ConnectionListeners;
-import me.yic.xconomy.listeners.SPPsync;
 import me.yic.xconomy.listeners.SPsync;
 import me.yic.xconomy.listeners.TabList;
 import me.yic.xconomy.task.Baltop;
@@ -171,7 +170,6 @@ public class XConomy extends JavaPlugin {
             } else {
                 getServer().getMessenger().registerIncomingPluginChannel(this, "xconomy:aca", new SPsync());
                 getServer().getMessenger().registerOutgoingPluginChannel(this, "xconomy:acb");
-                getServer().getMessenger().registerIncomingPluginChannel(this, "xconomy:global", new SPPsync());
                 logger("已开启BungeeCord同步", 0, null);
             }
         }
@@ -205,7 +203,6 @@ public class XConomy extends JavaPlugin {
         if (Config.BUNGEECORD_ENABLE) {
             getServer().getMessenger().unregisterIncomingPluginChannel(this, "xconomy:aca", new SPsync());
             getServer().getMessenger().unregisterOutgoingPluginChannel(this, "xconomy:acb");
-            getServer().getMessenger().unregisterIncomingPluginChannel(this, "xconomy:global", new SPPsync());
         }
 
         refresherTask.cancel();

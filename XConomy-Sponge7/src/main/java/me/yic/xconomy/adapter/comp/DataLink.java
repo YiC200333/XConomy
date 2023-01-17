@@ -20,9 +20,11 @@ package me.yic.xconomy.adapter.comp;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.adapter.iDataLink;
+import me.yic.xconomy.data.redis.RedisThread;
 import me.yic.xconomy.data.sql.*;
 import me.yic.xconomy.info.RecordInfo;
 import me.yic.xconomy.data.syncdata.PlayerData;
+import me.yic.xconomy.utils.RedisConnection;
 import me.yic.xconomy.utils.UUIDMode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -70,6 +72,16 @@ public class DataLink implements iDataLink {
         } else {
             XConomy.DConfig.loggersysmess("连接异常");
             return false;
+        }
+
+
+        if (XConomy.DConfig.CacheType().equalsIgnoreCase("Redis")) {
+            if (RedisConnection.connectredis()) {
+                RedisThread rThread = new RedisThread();
+                rThread.start();
+            } else {
+                return false;
+            }
         }
 
         XConomy.getInstance().logger("XConomy加载成功", 0, null);

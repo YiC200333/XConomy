@@ -28,8 +28,8 @@ public class SyncUUID extends SyncData{
     private final String newname;
     private final String oldname;
 
-    public SyncUUID(String sign, UUID newUUID, String newname, String oldname){
-        super(sign, SyncType.SYNCONLINEUUID, newUUID);
+    public SyncUUID(UUID newUUID, String newname, String oldname){
+        super(SyncType.SYNCONLINEUUID, newUUID);
         this.newname = newname;
         this.oldname = oldname;
     }

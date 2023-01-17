@@ -30,8 +30,8 @@ public class SyncBalanceAll extends SyncData{
     private final Boolean c;
     private final BigDecimal amount;
 
-    public SyncBalanceAll(String sign, boolean isall, Boolean c, BigDecimal amount){
-        super(sign, SyncType.BALANCEALL, null);
+    public SyncBalanceAll(boolean isall, Boolean c, BigDecimal amount){
+        super(SyncType.BALANCEALL, null);
         this.isall = isall;
         this.c = c;
         this.amount = amount;
@@ -51,7 +51,7 @@ public class SyncBalanceAll extends SyncData{
 
     @Override
     public void SyncStart() {
-        Cache.clearCache(false);
+        Cache.clearCache();
         if (getisOnline()) {
             AdapterManager.DATALINK.saveall("online", getAmount(), getC(), null);
         }

@@ -16,6 +16,10 @@ public class CPlayer implements iPlayer {
         this.player = player;
     }
 
+    public CPlayer(UUID uuid) {
+        this.player = Bukkit.getPlayer(uuid);
+    }
+
     @Override
     public boolean isOp() {
         return player.isOp();

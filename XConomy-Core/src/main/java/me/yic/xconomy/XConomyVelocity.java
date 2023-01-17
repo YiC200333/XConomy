@@ -26,7 +26,6 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import me.yic.xconomy.info.SyncInfo;
-import me.yic.xconomy.listeners.VPlayerEvent;
 import me.yic.xconomy.listeners.Vsync;
 import org.slf4j.Logger;
 
@@ -39,7 +38,6 @@ public class XConomyVelocity{
 
     public static final ChannelIdentifier aca = MinecraftChannelIdentifier.create("xconomy", "aca");
     public static final ChannelIdentifier acb = MinecraftChannelIdentifier.create("xconomy", "acb");
-    public static final ChannelIdentifier global = MinecraftChannelIdentifier.create("xconomy", "global");
 
     @SuppressWarnings("unused")
     @Inject
@@ -52,7 +50,6 @@ public class XConomyVelocity{
 
         server.getChannelRegistrar().register(aca);
         server.getChannelRegistrar().register(acb);
-        server.getChannelRegistrar().register(global);
 
         logger.info("XConomy successfully enabled!");
         logger.info("===== YiC =====");
@@ -63,7 +60,6 @@ public class XConomyVelocity{
     @Subscribe
     public void onInitialize(ProxyInitializeEvent event) {
         server.getEventManager().register(this, new Vsync());
-        server.getEventManager().register(this, new VPlayerEvent());
     }
 
 

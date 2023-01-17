@@ -7,6 +7,9 @@ import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class CPlayer implements iPlayer {
+    public CPlayer(UUID uuid) {
+    }
+
     @Override
     public boolean isOp() {
         return false;

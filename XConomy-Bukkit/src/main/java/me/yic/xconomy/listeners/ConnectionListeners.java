@@ -22,7 +22,10 @@ import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.adapter.comp.DataLink;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.syncdata.tab.SyncTabJoin;
+import me.yic.xconomy.data.syncdata.tab.SyncTabQuit;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.Updater;
 import org.bukkit.Bukkit;
@@ -40,11 +43,13 @@ public class ConnectionListeners implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         if (Bukkit.getOnlinePlayers().size() == 1) {
-            Cache.clearCache(false);
+            Cache.clearCache();
         }
-        if (!XConomy.Config.BUNGEECORD_ENABLE) {
-            TabList.PlayerList.remove(event.getPlayer().getName());
+        if (XConomy.Config.BUNGEECORD_ENABLE) {
+            DataCon.SendMessTask(new SyncTabQuit(event.getPlayer().getName()));
         }
+        AdapterManager.Tab_PlayerList.remove(event.getPlayer().getName());
+
         if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
             DataLink.updatelogininfo(event.getPlayer().getUniqueId());
         }
@@ -61,8 +66,11 @@ public class ConnectionListeners implements Listener {
             DataLink.newPlayer(a);
         }
 
-        if (!TabList.PlayerList.contains(a.getName())) {
-            TabList.PlayerList.add(a.getName());
+        if (XConomy.Config.BUNGEECORD_ENABLE) {
+            DataCon.SendMessTask(new SyncTabJoin(event.getPlayer().getName()));
+        }
+        if (!AdapterManager.Tab_PlayerList.contains(a.getName())) {
+            AdapterManager.Tab_PlayerList.add(a.getName());
         }
 
         if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {

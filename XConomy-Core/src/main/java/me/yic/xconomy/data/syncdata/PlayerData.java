@@ -28,14 +28,14 @@ public class PlayerData extends SyncData {
     private final String name;
     private BigDecimal balance;
 
-    public PlayerData(String sign, UUID uuid, String name, BigDecimal balance) {
-        super(sign, SyncType.UPDATEPLAYER, uuid);
+    public PlayerData(UUID uuid, String name, BigDecimal balance) {
+        super(SyncType.UPDATEPLAYER, uuid);
         this.name = name;
         this.balance = balance;
     }
 
-    protected PlayerData(String sign, SyncType sycn, UUID uuid, String name, BigDecimal balance) {
-        super(sign, sycn, uuid);
+    protected PlayerData(SyncType sycn, UUID uuid, String name, BigDecimal balance) {
+        super(sycn, uuid);
         this.name = name;
         this.balance = balance;
     }

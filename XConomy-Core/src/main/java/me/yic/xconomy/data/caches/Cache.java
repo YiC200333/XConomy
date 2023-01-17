@@ -20,8 +20,6 @@ package me.yic.xconomy.data.caches;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.GetUUID;
-import me.yic.xconomy.data.caches.data.PDatas;
-import me.yic.xconomy.data.caches.data.UUIDs;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.utils.UUIDMode;
 
@@ -33,6 +31,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Cache {
+    public static final ConcurrentHashMap<UUID, PlayerData> pds = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, UUID> uuids = new ConcurrentHashMap<>();
 
     private static final ConcurrentHashMap<UUID, UUID> m_uuids = new ConcurrentHashMap<>();
 
@@ -43,11 +43,11 @@ public class Cache {
     public static void insertIntoCache(final UUID uuid, final PlayerData pd) {
         if (pd != null) {
             if (pd.getName() != null && pd.getBalance() != null) {
-                PDatas.put(uuid, pd);
+                pds.put(uuid, pd);
                 if (XConomy.Config.USERNAME_IGNORE_CASE) {
-                    UUIDs.put(pd.getName().toLowerCase(), uuid);
+                    uuids.put(pd.getName().toLowerCase(), uuid);
                 } else {
-                    UUIDs.put(pd.getName(), uuid);
+                    uuids.put(pd.getName(), uuid);
                 }
             }
         }
@@ -61,7 +61,7 @@ public class Cache {
 
     public static <T> boolean CacheContainsKey(final T key) {
         if (key instanceof UUID) {
-            if (PDatas.containsKey((UUID) key)){
+            if (pds.containsKey((UUID) key)){
                 return true;
             }
             if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
@@ -69,15 +69,15 @@ public class Cache {
                 if (luuid == null) {
                     return false;
                 }else {
-                    return PDatas.containsKey(luuid);
+                    return pds.containsKey(luuid);
                 }
             }
             return false;
         }
         if (XConomy.Config.USERNAME_IGNORE_CASE) {
-            return UUIDs.containsKey(((String) key).toLowerCase());
+            return uuids.containsKey(((String) key).toLowerCase());
         }
-        return UUIDs.containsKey((String) key);
+        return uuids.containsKey((String) key);
     }
 
 
@@ -86,18 +86,18 @@ public class Cache {
         if (key instanceof UUID) {
             u = (UUID) key;
             if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-                if (!PDatas.containsKey((UUID) key) && getMultiUUIDCache((UUID) key) != null){
+                if (!pds.containsKey((UUID) key) && getMultiUUIDCache((UUID) key) != null){
                     u = getMultiUUIDCache((UUID) key);
                 }
             }
         } else {
             if (XConomy.Config.USERNAME_IGNORE_CASE) {
-                u = UUIDs.get(((String) key).toLowerCase());
+                u = uuids.get(((String) key).toLowerCase());
             } else {
-                u = UUIDs.get(((String) key));
+                u = uuids.get(((String) key));
             }
         }
-        return PDatas.get(u);
+        return pds.get(u);
     }
 
 
@@ -110,25 +110,25 @@ public class Cache {
 
     public static void updateIntoCache(final UUID uuid, final PlayerData pd, final BigDecimal newbalance) {
         pd.setBalance(newbalance);
-        PDatas.put(uuid, pd);
+        pds.put(uuid, pd);
     }
 
     @SuppressWarnings("all")
     public static void removefromCache(final UUID uuid) {
-        if (PDatas.containsKey(uuid)) {
-            String name = PDatas.get(uuid).getName();
-            PDatas.remove(uuid);
-            UUIDs.remove(name);
+        if (pds.containsKey(uuid)) {
+            String name = pds.get(uuid).getName();
+            pds.remove(uuid);
+            uuids.remove(name);
         }
     }
 
 
     @SuppressWarnings("all")
     public static void syncOnlineUUIDCache(final String oldname, final String newname, final UUID uuid) {
-        if (UUIDs.containsKey(newname)) {
-            UUID u = UUIDs.get(newname);
-            PDatas.remove(u);
-            UUIDs.remove(newname);
+        if (uuids.containsKey(newname)) {
+            UUID u = uuids.get(newname);
+            pds.remove(u);
+            uuids.remove(newname);
         }
         GetUUID.removeUUIDFromCache(oldname);
         GetUUID.removeUUIDFromCache(newname);
@@ -136,9 +136,9 @@ public class Cache {
     }
 
 
-    public static void clearCache(boolean redis) {
-        PDatas.clear(redis);
-        UUIDs.clear(redis);
+    public static void clearCache() {
+        pds.clear();
+        uuids.clear();
         m_uuids.clear();
     }
 

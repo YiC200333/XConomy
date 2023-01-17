@@ -19,6 +19,7 @@
 package me.yic.xconomy.data.syncdata;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.info.SyncInfo;
 import me.yic.xconomy.info.SyncType;
 
 import java.io.ByteArrayOutputStream;
@@ -29,16 +30,21 @@ import java.util.UUID;
 
 public abstract class SyncData implements Serializable {
 
+    final String server_key;
     final String sign;
     final SyncType st;
     final UUID uuid;
 
-    protected SyncData(String sign, SyncType st, UUID uuid) {
-        this.sign = sign;
+    protected SyncData(SyncType st, UUID uuid) {
+        this.sign = XConomy.Config.BUNGEECORD_SIGN;
+        this.server_key = SyncInfo.server_key;
         this.st = st;
         this.uuid = uuid;
     }
 
+    public boolean isSammServer(String key) {
+        return this.server_key.equals(key);
+    }
 
     public String getSign() {
         return sign;

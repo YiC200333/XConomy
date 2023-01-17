@@ -25,6 +25,7 @@ import me.yic.xconomy.adapter.comp.CallAPI;
 import me.yic.xconomy.adapter.comp.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
+import me.yic.xconomy.data.redis.RedisPublisher;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.data.syncdata.SyncBalanceAll;
 import me.yic.xconomy.data.syncdata.SyncData;
@@ -70,7 +71,7 @@ public class DataCon {
             }
         }
         if (AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
-            Cache.clearCache(false);
+            Cache.clearCache();
         }
         return pd;
     }
@@ -80,7 +81,7 @@ public class DataCon {
         Cache.removefromCache(pd.getUniqueId());
 
         if (!(pd instanceof SyncDelData) && XConomy.Config.BUNGEECORD_ENABLE) {
-            SendMessTask(new SyncDelData(XConomy.Config.BUNGEECORD_SIGN, pd));
+            SendMessTask(new SyncDelData(pd));
         }
 
         CPlayer cp = DataLink.getplayer(pd);
@@ -163,7 +164,7 @@ public class DataCon {
     }
 
     public static void changeallplayerdata(String targettype, String type, BigDecimal amount, Boolean isAdd, String command, StringBuilder comment) {
-        Cache.clearCache(true);
+        Cache.clearCache();
 
         RecordInfo ri = new RecordInfo(type, command, comment);
 
@@ -178,7 +179,7 @@ public class DataCon {
         //} else
 
         if (XConomy.Config.BUNGEECORD_ENABLE) {
-            SendMessTask(new SyncBalanceAll(XConomy.Config.BUNGEECORD_SIGN, isallbool, isAdd, amount));
+            SendMessTask(new SyncBalanceAll(isallbool, isAdd, amount));
         }
     }
 
@@ -195,8 +196,11 @@ public class DataCon {
     }
 
 
-    private static void SendMessTask(SyncData pd) {
-        if (!XConomy.DConfig.CacheType().equalsIgnoreCase("Redis")) {
+    public static void SendMessTask(SyncData pd) {
+        if (XConomy.DConfig.CacheType().equalsIgnoreCase("Redis")) {
+            RedisPublisher publisher = new RedisPublisher(pd.toByteArray(XConomy.syncversion).toByteArray());
+            publisher.start();
+        }else{
             SendPluginMessage.SendMessTask("xconomy:acb", pd);
         }
     }

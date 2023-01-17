@@ -32,7 +32,6 @@ import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.info.SyncType;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.CompletableFutureTask;
-import me.yic.xconomy.utils.SendPluginMessage;
 import me.yic.xconomy.utils.UUIDMode;
 
 import java.math.BigDecimal;
@@ -48,6 +47,7 @@ public class CommandCore {
     public static boolean onCommand(CSender sender, String commandName, String[] args) {
         switch (commandName) {
             case "xconomy": {
+
                 if (sender.isOp()) {
                     if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
                         MessagesManager.loadlangmess();
@@ -884,15 +884,15 @@ public class CommandCore {
         SyncMessage sm;
         if (!ispublic) {
             if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-                sm = new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE_SEMI, pd.getName(), message);
+                sm = new SyncMessage(SyncType.MESSAGE_SEMI, pd.getName(), message);
             } else {
-                sm = new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.MESSAGE, pd.getUniqueId(), message);
+                sm = new SyncMessage(SyncType.MESSAGE, pd.getUniqueId(), message);
             }
         } else {
-            sm = new SyncMessage(XConomy.Config.BUNGEECORD_SIGN, SyncType.BROADCAST, "", message);
+            sm = new SyncMessage(SyncType.BROADCAST, "", message);
         }
-        SendPluginMessage.SendMessTask("xconomy:acb", sm);
 
+       DataCon.SendMessTask(sm);
     }
 
     public static void syncpr(int type, UUID u, Boolean value) {
@@ -904,9 +904,9 @@ public class CommandCore {
             return;
         }
 
-        SyncPermission output = new SyncPermission(XConomy.Config.BUNGEECORD_SIGN, u, type, value);
-        SendPluginMessage.SendMessTask("xconomy:acb", output);
+        SyncPermission output = new SyncPermission(u, type, value);
 
+        DataCon.SendMessTask(output);
     }
 
 }

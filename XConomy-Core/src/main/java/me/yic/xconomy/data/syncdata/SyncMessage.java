@@ -29,15 +29,15 @@ public class SyncMessage extends SyncData{
     private UUID ruuid;
     private final String message;
 
-    public SyncMessage(String sign, SyncType st, UUID uuid, String message){
-        super(sign, st, uuid);
+    public SyncMessage(SyncType st, UUID uuid, String message){
+        super(st, uuid);
         this.message = message;
         this.name = null;
         this.ruuid = null;
     }
 
-    public SyncMessage(String sign, SyncType st, String name, String message){
-        super(sign, st, null);
+    public SyncMessage(SyncType st, String name, String message){
+        super(st, null);
         this.message = message;
         this.name = name;
     }

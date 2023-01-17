@@ -29,8 +29,8 @@ public class SyncPermission extends SyncData{
     private final int type;
     private final Boolean value;
 
-    public SyncPermission(String sign, UUID uuid, int type, Boolean value){
-        super(sign, SyncType.PERMISSION, uuid);
+    public SyncPermission(UUID uuid, int type, Boolean value){
+        super(SyncType.PERMISSION, uuid);
         this.type = type;
         this.value = value;
     }

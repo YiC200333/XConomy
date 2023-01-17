@@ -1,7 +1,6 @@
 package me.yic.xconomy.adapter.comp;
 
 
-
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.adapter.iPlayer;
 import net.kyori.adventure.text.Component;
@@ -16,6 +15,14 @@ public class CPlayer implements iPlayer {
     private final ServerPlayer player;
 
     public CPlayer(ServerPlayer player) {
+        this.player = player;
+    }
+
+    public CPlayer(UUID uuid) {
+        ServerPlayer player = null;
+        if (Sponge.server().player(uuid).isPresent()) {
+            player = Sponge.server().player(uuid).get();
+        }
         this.player = player;
     }
 

@@ -25,6 +25,7 @@ import me.yic.xconomy.data.SemiCacheConvert;
 import me.yic.xconomy.data.sql.*;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.info.RecordInfo;
+import me.yic.xconomy.data.redis.RedisThread;
 import me.yic.xconomy.utils.RedisConnection;
 import me.yic.xconomy.utils.UUIDMode;
 import org.bukkit.Bukkit;
@@ -74,8 +75,13 @@ public class DataLink implements iDataLink {
         }
 
 
-        if (!RedisConnection.connectredis()) {
-            return false;
+        if (XConomy.DConfig.CacheType().equalsIgnoreCase("Redis")) {
+            if (RedisConnection.connectredis()) {
+                RedisThread rThread = new RedisThread();
+                rThread.start();
+            } else {
+                return false;
+            }
         }
 
         SemiCacheConvert.start();

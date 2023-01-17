@@ -18,6 +18,7 @@
  */
 package me.yic.xconomy.listeners;
 
+import me.yic.xconomy.AdapterManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -31,7 +32,6 @@ import java.util.List;
 
 public class TabList implements TabCompleter {
 
-    public static List<String> PlayerList = new ArrayList<>();
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String commandName, @NotNull String[] args) {
@@ -62,7 +62,7 @@ public class TabList implements TabCompleter {
                         StringUtil.copyPartialMatches(args[0], COMMANDS_payperm, completions);
                     } else if (args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("remove")) {
                         if (args.length == 2) {
-                            StringUtil.copyPartialMatches(args[1], PlayerList, completions);
+                            StringUtil.copyPartialMatches(args[1], AdapterManager.Tab_PlayerList, completions);
                         } else if (args.length == 3 && args[0].equalsIgnoreCase("set")) {
                             COMMANDS_payperm.add("true");
                             COMMANDS_payperm.add("false");
@@ -76,7 +76,7 @@ public class TabList implements TabCompleter {
             case "paytoggle":{
                 if (commandSender.isOp() || commandSender.hasPermission("xconomy.admin.paytoggle")) {
                     if (args.length == 1) {
-                        StringUtil.copyPartialMatches(args[0], PlayerList, completions);
+                        StringUtil.copyPartialMatches(args[0], AdapterManager.Tab_PlayerList, completions);
                     }
                 }
                 Collections.sort(completions);
@@ -92,7 +92,7 @@ public class TabList implements TabCompleter {
                     }
                     StringUtil.copyPartialMatches(args[0], COMMANDS_baltop, completions);
                 } else if (args.length == 2) {
-                    StringUtil.copyPartialMatches(args[1], PlayerList, completions);
+                    StringUtil.copyPartialMatches(args[1], AdapterManager.Tab_PlayerList, completions);
                 }
                 Collections.sort(completions);
                 break;
@@ -100,7 +100,7 @@ public class TabList implements TabCompleter {
             case "pay": {
                 if (args.length == 1) {
                     if (commandSender.isOp() || commandSender.hasPermission("xconomy.user.pay")) {
-                        StringUtil.copyPartialMatches(args[0], PlayerList, completions);
+                        StringUtil.copyPartialMatches(args[0], AdapterManager.Tab_PlayerList, completions);
                     }
                 }
                 Collections.sort(completions);
@@ -114,7 +114,7 @@ public class TabList implements TabCompleter {
                 if (args.length == 1) {
                     List<String> COMMANDS_balance = new ArrayList<>();
                     if (commandSender.isOp() || commandSender.hasPermission("xconomy.user.balance.other")) {
-                        COMMANDS_balance.addAll(PlayerList);
+                        COMMANDS_balance.addAll(AdapterManager.Tab_PlayerList);
                     }
                     if (commandSender.isOp() || commandSender.hasPermission("xconomy.admin.give")) {
                         COMMANDS_balance.add("give");
@@ -132,7 +132,7 @@ public class TabList implements TabCompleter {
                         if (commandSender.isOp() || commandSender.hasPermission("xconomy.user.balance.other")
                                 || commandSender.hasPermission("xconomy.admin.give") || commandSender.hasPermission("xconomy.admin.take")
                                 || commandSender.hasPermission("xconomy.admin.set")) {
-                            StringUtil.copyPartialMatches(args[1], PlayerList, completions);
+                            StringUtil.copyPartialMatches(args[1], AdapterManager.Tab_PlayerList, completions);
                         }
                     }
                 } else if (args.length == 3) {
