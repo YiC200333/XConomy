@@ -22,8 +22,8 @@ import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CPlayer;
-import me.yic.xconomy.adapter.comp.DataLink;
 import me.yic.xconomy.data.DataCon;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.syncdata.tab.SyncTabJoin;
 import me.yic.xconomy.data.syncdata.tab.SyncTabQuit;
@@ -37,8 +37,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class ConnectionListeners implements Listener {
-
-    private static final DataLink DataLink = AdapterManager.DATALINK;
 
     @SuppressWarnings("unused")
     @EventHandler

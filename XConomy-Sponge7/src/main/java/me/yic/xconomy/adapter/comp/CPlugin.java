@@ -2,16 +2,22 @@ package me.yic.xconomy.adapter.comp;
 
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.iPlugin;
+import me.yic.xconomy.data.syncdata.PlayerData;
+import me.yic.xconomy.utils.UUIDMode;
 import org.spongepowered.api.Platform;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.network.ChannelBinding;
 import org.spongepowered.api.network.RawDataListener;
+import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class CPlugin implements iPlugin {
@@ -20,13 +26,40 @@ public class CPlugin implements iPlugin {
     private final HashMap<String, RawDataListener> channellisteners = new HashMap<>();
 
     @Override
+    public CPlayer getplayer(PlayerData pd) {
+        Optional<Object> p = Optional.empty();
+        if (pd != null) {
+            if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)){
+                p = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(pd.getName()));
+            }else{
+                p = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(pd.getUniqueId()));
+            }
+        }
+        return new CPlayer((User) p.orElse(null));
+    }
+
+    @Override
     public boolean getOnlinePlayersisEmpty(){
         return Sponge.getServer().getOnlinePlayers().isEmpty();
     }
 
     @Override
+    public List<UUID> getOnlinePlayersUUIDs() {
+        List<UUID> ol = new ArrayList<>();
+        for (Player pp : Sponge.getServer().getOnlinePlayers()) {
+            ol.add(pp.getUniqueId());
+        }
+        return ol;
+    }
+
+    @Override
     public void broadcastMessage(String message) {
         Sponge.getServer().getBroadcastChannel().send(Text.of(message));
+    }
+
+    @Override
+    public void runTaskLaterAsynchronously(Runnable ra, long time) {
+
     }
 
     @Override

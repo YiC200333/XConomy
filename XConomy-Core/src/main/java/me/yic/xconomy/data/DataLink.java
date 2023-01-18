@@ -16,34 +16,27 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.adapter.comp;
+package me.yic.xconomy.data;
 
+import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
-import me.yic.xconomy.adapter.iDataLink;
+import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.data.redis.RedisThread;
 import me.yic.xconomy.data.sql.*;
-import me.yic.xconomy.info.RecordInfo;
 import me.yic.xconomy.data.syncdata.PlayerData;
+import me.yic.xconomy.info.RecordInfo;
 import me.yic.xconomy.utils.RedisConnection;
-import me.yic.xconomy.utils.UUIDMode;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.entity.living.player.User;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 @SuppressWarnings("unused")
-public class DataLink implements iDataLink {
+public class DataLink{
 
-    @Override
-    public boolean create() {
+    public static boolean create() {
         switch (XConomyLoad.DConfig.getStorageType()) {
             case 1:
                 XConomy.getInstance().logger("数据保存方式", 0, " - SQLite");
@@ -68,6 +61,7 @@ public class DataLink implements iDataLink {
                 SQL.getwaittimeout();
             }
             SQL.createTable();
+            SQLUpdateTable.updataTable();
             SQLUpdateTable.updataTable_record();
             XConomyLoad.DConfig.loggersysmess("连接正常");
         } else {
@@ -85,60 +79,85 @@ public class DataLink implements iDataLink {
             }
         }
 
+        ImportData.isExitsFile();
+
         XConomy.getInstance().logger("XConomy加载成功", 0, null);
         return true;
     }
 
-    @Override
-    public CPlayer getplayer(PlayerData pd) {
-        Optional<User> p = Optional.empty();
-        if (pd != null) {
-            try {
-                if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-                    p = Sponge.server().userManager().load(pd.getName()).get();
-                } else {
-                    p = Sponge.server().userManager().load(pd.getUniqueId()).get();
-                }
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
-        return new CPlayer(p.orElse(null));
-    }
-
-    @Override
-    public void updatelogininfo(UUID uid) {
+    public static void updatelogininfo(UUID uid) {
         if (XConomyLoad.DConfig.canasync) {
-            Sponge.asyncScheduler().executor(XConomy.getInstance().plugincontainer).execute(() -> SQLLogin.updatelogininfo(uid));
+            XConomyLoad.runTaskAsynchronously(() -> SQLLogin.updatelogininfo(uid));
         } else {
             SQLLogin.updatelogininfo(uid);
         }
     }
 
-    @Override
-    public void selectlogininfo(CPlayer pp) {
+    public static void selectlogininfo(CPlayer pp) {
         if (XConomyLoad.DConfig.canasync) {
-            Sponge.asyncScheduler().executor(XConomy.getInstance().plugincontainer).execute(() -> SQLLogin.getPlayerlogin(pp));
+            AdapterManager.PLUGIN.runTaskLaterAsynchronously(() -> SQLLogin.getPlayerlogin(pp), 20L);
         } else {
             SQLLogin.getPlayerlogin(pp);
         }
     }
 
-
-    @Override
-    public void saveall(String targettype, BigDecimal amount, Boolean isAdd, RecordInfo ri) {
-        Sponge.asyncScheduler().executor(XConomy.getInstance().plugincontainer).execute(() -> {
-                    if (targettype.equalsIgnoreCase("all")) {
-                        SQL.saveall(targettype, null, amount, isAdd, ri);
-                    } else if (targettype.equalsIgnoreCase("online")) {
-                        List<UUID> ol = new ArrayList<>();
-                        for (Player pp : Sponge.server().onlinePlayers()) {
-                            ol.add(pp.profile().uuid());
-                        }
-                        SQL.saveall(targettype, ol, amount, isAdd, ri);
-                    }
-                }
-        );
+    public static void deletePlayerData(UUID u) {
+        SQL.deletePlayerData(u.toString());
     }
 
+    public static void getBalNonPlayer(String u) {
+        SQL.getNonPlayerData(u);
+    }
+
+    public static void getTopBal() {
+        SQL.getBaltop();
+    }
+
+    public static void setTopBalHide(UUID u, int type) {
+        SQL.hidetop(u, type);
+    }
+
+    public static String getBalSum() {
+        if (SQL.sumBal() == null) {
+            return "0.0";
+        }
+        return SQL.sumBal();
+    }
+
+    public static void save(PlayerData pd, Boolean isAdd, BigDecimal amount, RecordInfo ri) {
+        SQL.save(pd, isAdd, amount, ri);
+    }
+
+    public static void newPlayer(CPlayer a) {
+        SQLCreateNewAccount.newPlayer(a);
+    }
+
+    public static boolean newPlayer(UUID uid, String name) {
+        return SQLCreateNewAccount.newPlayer(uid, name, null);
+    }
+
+
+    public static <T> void getPlayerData(T key) {
+        if (key instanceof UUID) {
+            SQL.getPlayerData((UUID) key);
+        } else if (key instanceof String) {
+            SQL.getPlayerData((String) key);
+        }
+    }
+
+    public static void saveall(String targettype, BigDecimal amount, Boolean isAdd, RecordInfo ri) {
+        XConomyLoad.runTaskAsynchronously(() -> {
+            if (targettype.equalsIgnoreCase("all")) {
+                SQL.saveall(targettype, null, amount, isAdd, ri);
+            } else if (targettype.equalsIgnoreCase("online")) {
+                List<UUID> ol = AdapterManager.PLUGIN.getOnlinePlayersUUIDs();
+                SQL.saveall(targettype, ol, amount, isAdd, ri);
+            }
+        });
+    }
+
+    public static void saveNonPlayer(String account, BigDecimal amount,
+                               BigDecimal newbalance, Boolean isAdd, RecordInfo ri){
+        SQL.saveNonPlayer(account, amount, newbalance, isAdd, ri);
+    }
 }

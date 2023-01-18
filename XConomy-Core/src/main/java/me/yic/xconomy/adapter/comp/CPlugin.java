@@ -2,18 +2,36 @@ package me.yic.xconomy.adapter.comp;
 
 
 import me.yic.xconomy.adapter.iPlugin;
+import me.yic.xconomy.data.syncdata.PlayerData;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
+import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class CPlugin implements iPlugin {
+    @Override
+    public CPlayer getplayer(PlayerData pd) {
+        return null;
+    }
+
     @Override
     public boolean getOnlinePlayersisEmpty() {
         return false;
     }
 
     @Override
+    public List<UUID> getOnlinePlayersUUIDs() {
+        return null;
+    }
+
+    @Override
     public void broadcastMessage(String message) {
+
+    }
+
+    @Override
+    public void runTaskLaterAsynchronously(Runnable ra, long time) {
 
     }
 

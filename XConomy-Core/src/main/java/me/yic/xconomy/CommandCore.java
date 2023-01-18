@@ -20,9 +20,9 @@ package me.yic.xconomy;
 
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.adapter.comp.CSender;
-import me.yic.xconomy.adapter.comp.DataLink;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.data.syncdata.SyncMessage;
@@ -40,7 +40,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class CommandCore {
-    private static final DataLink DataLink = AdapterManager.DATALINK;
 
     private static String PREFIX = translateColorCodes("prefix");
 
@@ -168,7 +167,7 @@ public class CommandCore {
                             sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                         } else {
                             UUID targetUUID = pd.getUniqueId();
-                            CPlayer target = DataLink.getplayer(pd);
+                            CPlayer target = AdapterManager.PLUGIN.getplayer(pd);
                             String realname = pd.getName();
                             PermissionINFO.setRPaymentPermission(sender.toPlayer().getUniqueId());
 
@@ -319,7 +318,7 @@ public class CommandCore {
                     return true;
                 }
 
-                CPlayer target = DataLink.getplayer(pd);
+                CPlayer target = AdapterManager.PLUGIN.getplayer(pd);
                 UUID targetUUID = pd.getUniqueId();
                 String realname = pd.getName();
                 if (PermissionINFO.getRPaymentPermission(targetUUID)) {
@@ -470,7 +469,7 @@ public class CommandCore {
                             return true;
                         }
 
-                        CPlayer target = DataLink.getplayer(pd);
+                        CPlayer target = AdapterManager.PLUGIN.getplayer(pd);
                         UUID targetUUID = pd.getUniqueId();
                         String realname = pd.getName();
 

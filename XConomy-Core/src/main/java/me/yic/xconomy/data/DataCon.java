@@ -23,7 +23,6 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.adapter.comp.CallAPI;
-import me.yic.xconomy.adapter.comp.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.data.redis.RedisPublisher;
@@ -39,7 +38,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public class DataCon {
-    private static final DataLink DataLink = AdapterManager.DATALINK;
 
     public static PlayerData getPlayerData(UUID uuid) {
         return getPlayerDatai(uuid);
@@ -85,7 +83,7 @@ public class DataCon {
             SendMessTask(new SyncDelData(pd));
         }
 
-        CPlayer cp = DataLink.getplayer(pd);
+        CPlayer cp = AdapterManager.PLUGIN.getplayer(pd);
         if(cp.isOnline()){
             cp.kickPlayer("[XConomy] " + AdapterManager.translateColorCodes(MessageConfig.DELETE_DATA));
         }

@@ -23,6 +23,9 @@ import java.math.BigDecimal;
 
 public class ImportData{
     @SuppressWarnings("unused")
+    public static void isExitsFile() {
+    }
+    @SuppressWarnings("unused")
     public static BigDecimal getBalance(String player, double inb) {
         return DataFormat.formatdouble(inb);
     }

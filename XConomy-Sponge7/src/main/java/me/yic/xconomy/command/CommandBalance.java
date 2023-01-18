@@ -46,7 +46,7 @@ public class CommandBalance extends CommandCoreP implements CommandExecutor {
                                 String[] cmd = {args.<String>getOne("arg1").get().trim(),
                                         args.<String>getOne("arg2").get().trim(),
                                         amountortype,
-                                        args.<String>getOne("arg4").get().trim() +
+                                        args.<String>getOne("arg4").get().trim() + " " +
                                         args.<String>getOne("arg5").get().trim()};
                                 return getResultonCommand(sender, "balance", cmd);
                             }

@@ -21,6 +21,7 @@ package me.yic.xconomy;
 import com.google.inject.Inject;
 import me.yic.xconomy.adapter.comp.CConfig;
 import me.yic.xconomy.command.*;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.depend.economyapi.XCService;
 import me.yic.xconomy.depend.economyapi.XCurrency;
 import me.yic.xconomy.info.DataBaseConfig;
@@ -119,7 +120,7 @@ public class XConomy {
         //logger("发现 DatabaseDrivers", null);
         //}
 
-        if (!AdapterManager.DATALINK.create()) {
+        if (!DataLink.create()) {
             logger("XConomy已成功卸载", 0, null);
             return;
         }

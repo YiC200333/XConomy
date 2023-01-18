@@ -19,6 +19,7 @@
 package me.yic.xconomy;
 
 import me.yic.xconomy.adapter.comp.CConfig;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.ImportData;
 import me.yic.xconomy.depend.LoadEconomy;
 import me.yic.xconomy.depend.NonPlayerPlugin;
@@ -93,7 +94,7 @@ public class XConomy extends JavaPlugin {
 
         NonPlayerPlugin.load();
 
-        if (!AdapterManager.DATALINK.create()) {
+        if (!DataLink.create()) {
             logger("XConomy已成功卸载", 0, null);
             return;
         }

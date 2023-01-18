@@ -18,12 +18,15 @@
  */
 package me.yic.xconomy.command;
 
-import me.yic.xconomy.XConomy;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandExecutor;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.Parameter;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class CommandBalance extends CommandCoreP implements CommandExecutor {
     public static final Parameter.Value<String> arg1 = Parameter.string().key("arg1").optional().build();
@@ -43,17 +46,16 @@ public class CommandBalance extends CommandCoreP implements CommandExecutor {
                         if (args.hasAny(arg5)) {
                             String amountortype = args.one(arg3).get().trim();
                             if (!isDouble(amountortype)) {
-                                String[] cmd = {args.one(arg1).get().trim(),
-                                        args.one(arg2).get().trim(),
-                                        amountortype,
-                                        args.one(arg4).get().trim(),
-                                        args.one(arg5).get().trim()};
-                                return getResultonCommand(sender, "balance", cmd);
+                                List<String> cmdl = new ArrayList<>();
+                                cmdl.add(args.one(arg1).get().trim());
+                                Collections.addAll(cmdl, args.one(arg5).get().trim().split(" "));
+                                String[] cmd = new String[cmdl.size()];
+                                return getResultonCommand(sender, "balance", cmdl.toArray(cmd));
                             }else{
                                 String[] cmd = {args.one(arg1).get().trim(),
                                         args.one(arg2).get().trim(),
                                         amountortype,
-                                        args.one(arg4).get().trim() +
+                                        args.one(arg4).get().trim() + " " +
                                         args.one(arg5).get().trim()};
                                 return getResultonCommand(sender, "balance", cmd);
                             }

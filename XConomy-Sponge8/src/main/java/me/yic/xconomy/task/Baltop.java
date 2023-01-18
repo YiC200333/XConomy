@@ -18,9 +18,9 @@
  */
 package me.yic.xconomy.task;
 
-import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataCon;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.sql.SQL;
 import org.spongepowered.api.Sponge;
@@ -39,7 +39,7 @@ public class Baltop implements Runnable {
         }else{
             if (XConomyLoad.DConfig.isMySQL() && XConomyLoad.Config.PAY_TIPS) {
                 for (Player pp : Sponge.server().onlinePlayers()) {
-                    AdapterManager.DATALINK.updatelogininfo(pp.profile().uuid());
+                    DataLink.updatelogininfo(pp.profile().uuid());
                 }
             }
         }

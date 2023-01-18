@@ -23,6 +23,7 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.data.syncdata.PlayerData;
@@ -52,7 +53,7 @@ public class XConomyAPI {
     }
 
     public boolean createPlayerData(UUID uid, String name) {
-        return AdapterManager.DATALINK.newPlayer(uid, name);
+        return DataLink.newPlayer(uid, name);
     }
 
     public PlayerData getPlayerData(UUID uid) {

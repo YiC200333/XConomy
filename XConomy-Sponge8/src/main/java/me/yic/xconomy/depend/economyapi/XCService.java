@@ -18,9 +18,9 @@
  */
 package me.yic.xconomy.depend.economyapi;
 
-import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
+import me.yic.xconomy.data.DataLink;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.EconomyService;
@@ -29,7 +29,9 @@ import org.spongepowered.api.service.economy.account.AccountDeletionResultType;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.api.service.economy.account.VirtualAccount;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
@@ -90,7 +92,7 @@ public class XCService implements EconomyService {
     @Override
     public Optional<UniqueAccount> findOrCreateAccount(UUID uuid) {
         if (!hasAccount(uuid)) {
-            if (!AdapterManager.DATALINK.newPlayer(uuid, Sponge.server().player(uuid).get().name())){
+            if (!DataLink.newPlayer(uuid, Sponge.server().player(uuid).get().name())){
                 return Optional.empty();
             }
         }
