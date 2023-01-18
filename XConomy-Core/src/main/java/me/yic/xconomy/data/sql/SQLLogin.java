@@ -20,7 +20,7 @@ package me.yic.xconomy.data.sql;
 
 
 import me.yic.xconomy.AdapterManager;
-import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
@@ -44,7 +44,7 @@ public class SQLLogin extends SQL {
         try {
             String sql = "INSERT INTO " + tableLoginName + " (UUID,last_time) values(?,?) ON DUPLICATE KEY UPDATE last_time = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
-            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+            if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 statement.setString(1, DataCon.getPlayerData(uuid).getUniqueId().toString());
             }else{
                 statement.setString(1, uuid.toString());
@@ -68,7 +68,7 @@ public class SQLLogin extends SQL {
             PreparedStatement statement = connection.prepareStatement("select player, amount from " + tableRecordName +
                     " where operation = 'WITHDRAW' and type = 'PLAYER_COMMAND' and command like('pay " + pp.getName() + "%') and datetime > " +
                     "(select last_time from " + tableLoginName + " where UUID = ?);");
-            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+            if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 statement.setString(1, DataCon.getPlayerData(pp.getUniqueId()).getUniqueId().toString());
             }else{
                 statement.setString(1, pp.getUniqueId().toString());

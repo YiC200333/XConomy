@@ -19,6 +19,7 @@
 package me.yic.xconomy.utils;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.redis.RedisSubscriber;
 import me.yic.xconomy.info.DataBaseConfig;
 import me.yic.xconomy.lang.MessagesManager;
@@ -61,7 +62,7 @@ public class RedisConnection {
             return false;
         }
 
-        if (XConomy.DConfig.CacheType().equalsIgnoreCase("Redis")) {
+        if (XConomyLoad.DConfig.CacheType().equalsIgnoreCase("Redis")) {
             JedisPoolConfig jedisconfig = new JedisPoolConfig();
             jedisconfig.setMaxTotal(maxtotal);
             jedisconfig.setMaxIdle(maxidle);

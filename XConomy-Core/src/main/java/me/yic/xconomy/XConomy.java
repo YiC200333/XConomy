@@ -18,8 +18,6 @@
  */
 package me.yic.xconomy;
 
-import me.yic.xconomy.info.DataBaseConfig;
-import me.yic.xconomy.info.DefaultConfig;
 import me.yic.xconomy.info.SyncInfo;
 
 import java.io.File;
@@ -31,8 +29,6 @@ public class XConomy{
 
     private static XConomy instance;
 
-    public static DataBaseConfig DConfig;
-    public static DefaultConfig Config;
     public static String syncversion = SyncInfo.syncversion;
 
 

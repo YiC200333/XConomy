@@ -20,6 +20,7 @@ package me.yic.xconomy.api;
 
 import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
@@ -39,7 +40,7 @@ public class XConomyAPI {
     }
 
     public boolean isbungeecordmode() {
-        return XConomy.Config.BUNGEECORD_ENABLE;
+        return XConomyLoad.Config.BUNGEECORD_ENABLE;
     }
 
     public BigDecimal formatdouble(String amount) {
@@ -76,7 +77,7 @@ public class XConomyAPI {
     }
 
     public int changePlayerBalance(UUID u, String playername, BigDecimal amount, Boolean isadd, String pluginname) {
-        if (XConomy.Config.BUNGEECORD_ENABLE & AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
+        if (XConomyLoad.Config.BUNGEECORD_ENABLE & AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
             return 1;
         }
         BigDecimal bal = getPlayerData(u).getBalance();

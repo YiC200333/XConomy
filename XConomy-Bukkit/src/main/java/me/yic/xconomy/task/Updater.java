@@ -19,6 +19,7 @@
 package me.yic.xconomy.task;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.BufferedReader;
@@ -56,8 +57,8 @@ public class Updater extends BukkitRunnable {
             XConomy.getInstance().logger("发现新版本 ", 0, newVersion);
             XConomy.getInstance().logger(null, 0, "https://www.spigotmc.org/resources/xconomy.75669/");
 
-            if (XConomy.Config.LANGUAGE.equalsIgnoreCase("Chinese")
-                    | XConomy.Config.LANGUAGE.equalsIgnoreCase("ChineseTW")) {
+            if (XConomyLoad.Config.LANGUAGE.equalsIgnoreCase("Chinese")
+                    | XConomyLoad.Config.LANGUAGE.equalsIgnoreCase("ChineseTW")) {
                 XConomy.getInstance().logger(null, 0, "https://www.mcbbs.net/thread-962904-1-1.html");
             }
 

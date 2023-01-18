@@ -19,6 +19,7 @@
 package me.yic.xconomy.task;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -65,8 +66,8 @@ public class Updater implements Runnable {
             XConomy.getInstance().logger("发现新版本 ", 0, newVersion);
             XConomy.getInstance().logger(null, 0, "https://ore.spongepowered.org/YiC/XConomy");
 
-            if (XConomy.Config.LANGUAGE.equalsIgnoreCase("Chinese")
-                    | XConomy.Config.LANGUAGE.equalsIgnoreCase("ChineseTW")) {
+            if (XConomyLoad.Config.LANGUAGE.equalsIgnoreCase("Chinese")
+                    | XConomyLoad.Config.LANGUAGE.equalsIgnoreCase("ChineseTW")) {
                 XConomy.getInstance().logger(null, 0, "https://www.mcbbs.net/thread-962904-1-1.html");
             }
 

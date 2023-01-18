@@ -19,6 +19,7 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CConfig;
 import me.yic.xconomy.adapter.comp.CPlayer;
 
@@ -59,7 +60,7 @@ public class GetUUID {
 
     public static UUID getUUID(CPlayer pp, String name) {
         UUID u = null;
-        switch (XConomy.Config.UUIDMODE) {
+        switch (XConomyLoad.Config.UUIDMODE) {
             case ONLINE:
                 if (CacheContainsKey(name)) {
                     if (pp.getUniqueId().toString().equalsIgnoreCase(getUUIDFromCache(name).toString())) {
@@ -90,7 +91,7 @@ public class GetUUID {
         }
 
         private static void insertIntoCache ( final String name, final UUID uuid){
-            if (XConomy.Config.USERNAME_IGNORE_CASE) {
+            if (XConomyLoad.Config.USERNAME_IGNORE_CASE) {
                 cache.put(name.toLowerCase(), uuid);
             } else {
                 cache.put(name, uuid);
@@ -98,7 +99,7 @@ public class GetUUID {
         }
 
         private static boolean CacheContainsKey ( final String name){
-            if (XConomy.Config.USERNAME_IGNORE_CASE) {
+            if (XConomyLoad.Config.USERNAME_IGNORE_CASE) {
                 return cache.containsKey(name.toLowerCase());
             }
             return cache.containsKey(name);
@@ -106,7 +107,7 @@ public class GetUUID {
 
 
         private static UUID getUUIDFromCache ( final String name){
-            if (XConomy.Config.USERNAME_IGNORE_CASE) {
+            if (XConomyLoad.Config.USERNAME_IGNORE_CASE) {
                 return cache.get(name.toLowerCase());
             } else {
                 return cache.get(name);
@@ -115,7 +116,7 @@ public class GetUUID {
 
         public static void removeUUIDFromCache(final String name){
             if (CacheContainsKey(name)) {
-                if (XConomy.Config.USERNAME_IGNORE_CASE) {
+                if (XConomyLoad.Config.USERNAME_IGNORE_CASE) {
                     cache.remove(name.toLowerCase());
                 } else {
                     cache.remove(name);

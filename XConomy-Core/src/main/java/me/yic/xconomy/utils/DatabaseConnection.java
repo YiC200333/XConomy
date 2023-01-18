@@ -20,6 +20,7 @@ package me.yic.xconomy.utils;
 
 import com.zaxxer.hikari.HikariDataSource;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.info.DataBaseConfig;
 
 import java.io.File;
@@ -50,8 +51,8 @@ public class DatabaseConnection {
         hikari = new HikariDataSource();
         hikari.setPoolName("[XConomy]");
         hikari.setJdbcUrl(url);
-        hikari.setUsername(XConomy.DConfig.getuser());
-        hikari.setPassword(XConomy.DConfig.getpass());
+        hikari.setUsername(XConomyLoad.DConfig.getuser());
+        hikari.setPassword(XConomyLoad.DConfig.getpass());
         hikari.setMaximumPoolSize(maxPoolSize);
         hikari.setMinimumIdle(minIdle);
         hikari.setMaxLifetime(maxLife);
@@ -59,7 +60,7 @@ public class DatabaseConnection {
         hikari.addDataSourceProperty("prepStmtCacheSize", "250");
         hikari.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         hikari.addDataSourceProperty("userServerPrepStmts", "true");
-        if (XConomy.DConfig.DDrivers || XConomy.version.equals("Sponge8")) {
+        if (XConomyLoad.DConfig.DDrivers || XConomy.version.equals("Sponge8")) {
             hikari.setDriverClassName(driver);
         }
         if (hikari.getMinimumIdle() < hikari.getMaximumPoolSize()) {
@@ -70,7 +71,7 @@ public class DatabaseConnection {
     }
 
     public void setHikariValidationTimeout() {
-        if (XConomy.DConfig.EnableConnectionPool) {
+        if (XConomyLoad.DConfig.EnableConnectionPool) {
             if (hikari.getValidationTimeout() > waittimeout) {
                 hikari.setValidationTimeout(waittimeout);
             }
@@ -79,8 +80,8 @@ public class DatabaseConnection {
 
     private void setDriver() {
         if (XConomy.version.equals("Bukkit") || XConomy.version.equals("Sponge8")) {
-            if (XConomy.DConfig.DDrivers || XConomy.version.equals("Sponge8")) {
-                switch (XConomy.DConfig.getStorageType()) {
+            if (XConomyLoad.DConfig.DDrivers || XConomy.version.equals("Sponge8")) {
+                switch (XConomyLoad.DConfig.getStorageType()) {
                     case 1:
                         driver = ("org.sqlite.JDBC");
                         break;
@@ -89,7 +90,7 @@ public class DatabaseConnection {
                         break;
                 }
             } else {
-                switch (XConomy.DConfig.getStorageType()) {
+                switch (XConomyLoad.DConfig.getStorageType()) {
                     case 1:
                         driver = ("org.sqlite.JDBC");
                         break;
@@ -110,27 +111,27 @@ public class DatabaseConnection {
     }
 
     public boolean setGlobalConnection() {
-        url = XConomy.DConfig.geturl();
+        url = XConomyLoad.DConfig.geturl();
         setDriver();
         try {
-            if (XConomy.DConfig.EnableConnectionPool) {
+            if (XConomyLoad.DConfig.EnableConnectionPool) {
                 createNewHikariConfiguration();
                 Connection connection = getConnection();
                 closeHikariConnection(connection);
             } else {
                 Class.forName(driver);
-                switch (XConomy.DConfig.getStorageType()) {
+                switch (XConomyLoad.DConfig.getStorageType()) {
                     case 1:
                         connection = DriverManager.getConnection("jdbc:sqlite:" + userdata.toString());
                         break;
                     case 2:
-                        connection = DriverManager.getConnection(url, XConomy.DConfig.getuser(), XConomy.DConfig.getpass());
+                        connection = DriverManager.getConnection(url, XConomyLoad.DConfig.getuser(), XConomyLoad.DConfig.getpass());
                         break;
                 }
             }
 
             if (secon) {
-                XConomy.DConfig.loggersysmess("重新连接成功");
+                XConomyLoad.DConfig.loggersysmess("重新连接成功");
             } else {
                 secon = true;
             }
@@ -171,7 +172,7 @@ public class DatabaseConnection {
     }
 
     public Connection getConnection() throws SQLException {
-        if (XConomy.DConfig.EnableConnectionPool) {
+        if (XConomyLoad.DConfig.EnableConnectionPool) {
             return hikari.getConnection();
         } else {
             return connection;
@@ -181,7 +182,7 @@ public class DatabaseConnection {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean canConnect() {
         try {
-            if (XConomy.DConfig.EnableConnectionPool) {
+            if (XConomyLoad.DConfig.EnableConnectionPool) {
                 if (hikari == null) {
                     return setGlobalConnection();
                 }
@@ -199,7 +200,7 @@ public class DatabaseConnection {
                     return setGlobalConnection();
                 }
 
-                if (XConomy.DConfig.getStorageType() == 2) {
+                if (XConomyLoad.DConfig.getStorageType() == 2) {
                     if (!connection.isValid(waittimeout)) {
                         secon = false;
                         return setGlobalConnection();
@@ -214,7 +215,7 @@ public class DatabaseConnection {
     }
 
     public void closeHikariConnection(Connection connection) {
-        if (!XConomy.DConfig.EnableConnectionPool) {
+        if (!XConomyLoad.DConfig.EnableConnectionPool) {
             return;
         }
 
@@ -234,7 +235,7 @@ public class DatabaseConnection {
                 hikari.close();
             }
         } catch (SQLException e) {
-            XConomy.DConfig.loggersysmess("连接断开失败");
+            XConomyLoad.DConfig.loggersysmess("连接断开失败");
             e.printStackTrace();
         }
     }

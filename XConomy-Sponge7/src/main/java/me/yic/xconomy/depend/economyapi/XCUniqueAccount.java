@@ -19,7 +19,7 @@
 package me.yic.xconomy.depend.economyapi;
 
 import me.yic.xconomy.AdapterManager;
-import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import org.spongepowered.api.entity.living.player.User;
@@ -56,7 +56,7 @@ public class XCUniqueAccount implements UniqueAccount {
 
     @Override
     public BigDecimal getDefaultBalance(Currency currency) {
-        return DataFormat.formatdouble(XConomy.Config.INITIAL_BAL);
+        return DataFormat.formatdouble(XConomyLoad.Config.INITIAL_BAL);
     }
 
     @Override

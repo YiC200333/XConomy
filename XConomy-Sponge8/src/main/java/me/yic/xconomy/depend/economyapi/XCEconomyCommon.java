@@ -18,14 +18,14 @@
  */
 package me.yic.xconomy.depend.economyapi;
 
-import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 
 public class XCEconomyCommon {
 
     public static boolean isNonPlayerAccount(String name) {
-        if (!XConomy.Config.NON_PLAYER_ACCOUNT) {
+        if (!XConomyLoad.Config.NON_PLAYER_ACCOUNT) {
             return false;
         }
 
@@ -33,7 +33,7 @@ public class XCEconomyCommon {
             return true;
         }
 
-        if (XConomy.Config.NON_PLAYER_ACCOUNT_SUBSTRING == null) {
+        if (XConomyLoad.Config.NON_PLAYER_ACCOUNT_SUBSTRING == null) {
             if (CacheNonPlayer.bal.containsKey(name)) {
                 return true;
             }

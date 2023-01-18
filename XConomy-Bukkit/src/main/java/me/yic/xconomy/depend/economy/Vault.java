@@ -19,7 +19,7 @@
 package me.yic.xconomy.depend.economy;
 
 import me.yic.xconomy.AdapterManager;
-import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.syncdata.PlayerData;
@@ -96,12 +96,12 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public String currencyNamePlural() {
-        return XConomy.Config.PLURAL_NAME;
+        return XConomyLoad.Config.PLURAL_NAME;
     }
 
     @Override
     public String currencyNameSingular() {
-        return XConomy.Config.SINGULAR_NAME;
+        return XConomyLoad.Config.SINGULAR_NAME;
     }
 
     @Override
@@ -361,7 +361,7 @@ public class Vault extends AbstractEconomy {
             return true;
         }
 
-        if (!XConomy.Config.NON_PLAYER_ACCOUNT) {
+        if (!XConomyLoad.Config.NON_PLAYER_ACCOUNT) {
             return false;
         }
 
@@ -369,7 +369,7 @@ public class Vault extends AbstractEconomy {
             return true;
         }
 
-        if (XConomy.Config.NON_PLAYER_ACCOUNT_SUBSTRING == null) {
+        if (XConomyLoad.Config.NON_PLAYER_ACCOUNT_SUBSTRING == null) {
             if (DataCon.hasaccountdatacache(name)) {
                 return true;
             }

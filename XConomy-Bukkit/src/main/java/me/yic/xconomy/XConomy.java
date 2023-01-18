@@ -19,10 +19,7 @@
 package me.yic.xconomy;
 
 import me.yic.xconomy.adapter.comp.CConfig;
-import me.yic.xconomy.data.DataCon;
-import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.ImportData;
-import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.depend.LoadEconomy;
 import me.yic.xconomy.depend.NonPlayerPlugin;
 import me.yic.xconomy.depend.Placeholder;
@@ -30,7 +27,6 @@ import me.yic.xconomy.depend.economy.VaultHook;
 import me.yic.xconomy.info.*;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.listeners.ConnectionListeners;
-import me.yic.xconomy.listeners.SPsync;
 import me.yic.xconomy.listeners.TabList;
 import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
@@ -53,11 +49,7 @@ public class XConomy extends JavaPlugin {
 
     public final static String version = "Bukkit";
     public static String PVersion;
-
     private static XConomy instance;
-    public static DataBaseConfig DConfig;
-    public static DefaultConfig Config;
-
 
     public static String syncversion = SyncInfo.syncversion;
     private BukkitTask refresherTask = null;
@@ -72,13 +64,10 @@ public class XConomy extends JavaPlugin {
         PVersion = getInstance().getDescription().getVersion();
 
         load();
-        MessagesManager.loadsysmess();
-        MessagesManager.loadlangmess();
 
-        DConfig = new DataBaseConfig();
-        Config.setBungeecord();
+        XConomyLoad.LoadConfig();
 
-        if (Config.IMPORTMODE){
+        if (XConomyLoad.Config.IMPORTMODE){
             itd = new ImportData(this);
             itd.onEnable();
             return;
@@ -99,7 +88,7 @@ public class XConomy extends JavaPlugin {
 
         if (Bukkit.getPluginManager().getPlugin("DatabaseDrivers") != null) {
             logger("发现 DatabaseDrivers", 0, null);
-            DConfig.DDrivers = true;
+            XConomyLoad.DConfig.DDrivers = true;
         }
 
         NonPlayerPlugin.load();
@@ -109,9 +98,7 @@ public class XConomy extends JavaPlugin {
             return;
         }
 
-        DataCon.baltop();
-
-        if (Config.CHECK_UPDATE) {
+        if (XConomyLoad.Config.CHECK_UPDATE) {
             new Updater().runTaskAsynchronously(this);
         }
         // 检查更新
@@ -132,7 +119,7 @@ public class XConomy extends JavaPlugin {
 
 
         metrics = new Metrics(this, 6588);
-        metrics.addCustomChart(new SimplePie("uuid-mode", () -> Config.UUIDMODE.toString().substring(11)));
+        metrics.addCustomChart(new SimplePie("uuid-mode", () -> XConomyLoad.Config.UUIDMODE.toString().substring(11)));
 
         Bukkit.getPluginCommand("money").setExecutor(new Commands());
         Bukkit.getPluginCommand("balance").setExecutor(new Commands());
@@ -151,7 +138,7 @@ public class XConomy extends JavaPlugin {
         this.getCommand("paypermission").setTabCompleter(new TabList());
         this.getCommand("paypermission").setPermission("xconomy.admin.permission");
 
-        if (Config.ECO_COMMAND) {
+        if (XConomyLoad.Config.ECO_COMMAND) {
             try {
                 final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
                 bukkitCommandMap.setAccessible(true);
@@ -162,23 +149,9 @@ public class XConomy extends JavaPlugin {
             }
         }
 
-        if (Config.BUNGEECORD_ENABLE) {
-            if ((DConfig.getStorageType() == 0 || DConfig.getStorageType() == 1)
-                    && (DConfig.gethost().equalsIgnoreCase("Default"))) {
-                logger("SQLite文件路径设置错误", 1, null);
-                logger("BungeeCord同步未开启", 1, null);
-            } else {
-                getServer().getMessenger().registerIncomingPluginChannel(this, "xconomy:aca", new SPsync());
-                getServer().getMessenger().registerOutgoingPluginChannel(this, "xconomy:acb");
-                logger("已开启BungeeCord同步", 0, null);
-            }
-        }
+        XConomyLoad.Initial();
 
-
-        DataFormat.load();
-
-
-        int time = Config.REFRESH_TIME;
+        int time = XConomyLoad.Config.REFRESH_TIME;
         refresherTask = new Baltop().runTaskTimerAsynchronously(this, time * 20L, time * 20L);
         logger(null, 0, "===== YiC =====");
 
@@ -186,7 +159,7 @@ public class XConomy extends JavaPlugin {
 
     public void onDisable() {
 
-        if (Config.IMPORTMODE){
+        if (XConomyLoad.Config.IMPORTMODE){
             itd.onDisable();
             return;
         }
@@ -200,15 +173,8 @@ public class XConomy extends JavaPlugin {
             }
         }
 
-        if (Config.BUNGEECORD_ENABLE) {
-            getServer().getMessenger().unregisterIncomingPluginChannel(this, "xconomy:aca", new SPsync());
-            getServer().getMessenger().unregisterOutgoingPluginChannel(this, "xconomy:acb");
-        }
-
         refresherTask.cancel();
-        AdapterManager.FixedThreadPool.shutdown();
-        SQL.close();
-
+        XConomyLoad.Unload();
         logger("XConomy已成功卸载", 0, null);
     }
 
@@ -253,7 +219,6 @@ public class XConomy extends JavaPlugin {
         reloadConfig();
 
         DefaultConfig.config = new CConfig(getConfig());
-        Config = new DefaultConfig();
 
         File file = new File(XConomy.getInstance().getDataFolder(), "database.yml");
         if (!file.exists()) {

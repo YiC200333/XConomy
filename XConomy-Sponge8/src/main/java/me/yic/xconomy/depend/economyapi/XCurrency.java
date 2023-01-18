@@ -18,7 +18,7 @@
  */
 package me.yic.xconomy.depend.economyapi;
 
-import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataFormat;
 import net.kyori.adventure.text.Component;
 import org.spongepowered.api.service.economy.Currency;
@@ -29,18 +29,18 @@ public class XCurrency implements Currency {
 
     @Override
     public Component displayName() {
-        return Component.text(XConomy.Config.SINGULAR_NAME);
+        return Component.text(XConomyLoad.Config.SINGULAR_NAME);
     }
 
     @Override
     public Component pluralDisplayName() {
-        return Component.text(XConomy.Config.PLURAL_NAME);
+        return Component.text(XConomyLoad.Config.PLURAL_NAME);
     }
 
 
     @Override
     public Component symbol() {
-        return Component.text(XConomy.Config.THOUSANDS_SEPARATOR);
+        return Component.text(XConomyLoad.Config.THOUSANDS_SEPARATOR);
     }
 
     @Override

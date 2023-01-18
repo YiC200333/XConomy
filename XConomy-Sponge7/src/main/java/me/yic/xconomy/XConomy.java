@@ -21,9 +21,6 @@ package me.yic.xconomy;
 import com.google.inject.Inject;
 import me.yic.xconomy.adapter.comp.CConfig;
 import me.yic.xconomy.command.*;
-import me.yic.xconomy.data.DataCon;
-import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.depend.economyapi.XCService;
 import me.yic.xconomy.depend.economyapi.XCurrency;
 import me.yic.xconomy.info.DataBaseConfig;
@@ -32,7 +29,6 @@ import me.yic.xconomy.info.SyncInfo;
 import me.yic.xconomy.info.UpdateConfig;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.listeners.ConnectionListeners;
-import me.yic.xconomy.listeners.SPsync;
 import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
 import me.yic.xconomy.utils.PluginINFO;
@@ -41,7 +37,6 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.bstats.sponge.Metrics;
 import org.slf4j.Logger;
-import org.spongepowered.api.Platform;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
@@ -49,8 +44,6 @@ import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
-import org.spongepowered.api.network.ChannelBinding;
-import org.spongepowered.api.network.RawDataListener;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 import org.spongepowered.api.service.economy.EconomyService;
@@ -76,8 +69,6 @@ public class XConomy {
     private static XConomy instance;
     @SuppressWarnings("unused")
     public static String PVersion = PluginINFO.VERSION.substring(0, PluginINFO.VERSION.length() - 8);
-    public static DataBaseConfig DConfig;
-    public static DefaultConfig Config;
     public PermissionService permissionService;
     public PermissionDescription.Builder permissionDescriptionBuilder;
 
@@ -86,8 +77,6 @@ public class XConomy {
     private SpongeExecutorService refresherTask;
     @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private final Metrics metrics;
-    private ChannelBinding.RawDataChannel channel;
-    private RawDataListener channellistener;
 
     public static final XCurrency xc = new XCurrency();
 
@@ -114,11 +103,7 @@ public class XConomy {
         this.permissionService = Sponge.getServiceManager().provide(PermissionService.class).orElse(null);
         loadconfig();
 
-        MessagesManager.loadsysmess();
-        MessagesManager.loadlangmess();
-
-        DConfig = new DataBaseConfig();
-        Config.setBungeecord();
+        XConomyLoad.LoadConfig();
 
         Sponge.getServiceManager().setProvider(this, EconomyService.class, new XCService());
 
@@ -139,9 +124,7 @@ public class XConomy {
             return;
         }
 
-        DataCon.baltop();
-
-        if (Config.CHECK_UPDATE) {
+        if (XConomyLoad.Config.CHECK_UPDATE) {
             Sponge.getScheduler().createAsyncExecutor(this).execute(new Updater());
         }
         // 检查更新
@@ -250,7 +233,7 @@ public class XConomy {
         }
 
 
-        if (Config.ECO_COMMAND) {
+        if (XConomyLoad.Config.ECO_COMMAND) {
             Sponge.getCommandManager().register(this, balcmd,
                     "balance", "bal", "money", "economy", "eeconomy", "eco");
             Sponge.getCommandManager().register(this, baltopcmd,
@@ -264,24 +247,9 @@ public class XConomy {
         Sponge.getCommandManager().register(this, paypr, "paypermission", "payperm");
         Sponge.getCommandManager().register(this, paytog, "paytoggle");
 
+        XConomyLoad.Initial();
 
-        if (Config.BUNGEECORD_ENABLE) {
-            if ((DConfig.getStorageType() == 0 || DConfig.getStorageType() == 1)
-                    && (DConfig.gethost().equalsIgnoreCase("Default"))) {
-                logger("SQLite文件路径设置错误", 1, null);
-                logger("BungeeCord同步未开启", 1, null);
-            } else {
-                channel = Sponge.getChannelRegistrar().createRawChannel(this, "xconomy:aca");
-                channellistener = new SPsync();
-                channel.addListener(Platform.Type.SERVER, channellistener);
-                Sponge.getChannelRegistrar().createRawChannel(this, "xconomy:acb");
-                logger("已开启BungeeCord同步", 0, null);
-            }
-        }
-
-        DataFormat.load();
-
-        int time = Config.REFRESH_TIME;
+        int time = XConomyLoad.Config.REFRESH_TIME;
 
         refresherTask = Sponge.getScheduler().createAsyncExecutor(this);
         refresherTask.scheduleAtFixedRate(new Baltop(), time, time, TimeUnit.SECONDS);
@@ -297,13 +265,9 @@ public class XConomy {
         Optional<EconomyService> serviceOpt = Sponge.getServiceManager().provide(EconomyService.class);
         serviceOpt.ifPresent(economyService -> economyService.getCurrencies().remove(xc));
 
-        if (Config.BUNGEECORD_ENABLE) {
-            channel.removeListener(channellistener);
-        }
-
         refresherTask.shutdown();
-        AdapterManager.FixedThreadPool.shutdown();
-        SQL.close();
+
+        XConomyLoad.Unload();
         logger("XConomy已成功卸载", 0, null);
     }
 
@@ -322,7 +286,6 @@ public class XConomy {
         }
 
         configload();
-        Config = new DefaultConfig();
 
         DataBaseload();
 

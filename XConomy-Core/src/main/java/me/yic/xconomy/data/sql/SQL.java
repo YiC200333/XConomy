@@ -19,6 +19,7 @@
 package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.GetUUID;
 import me.yic.xconomy.data.ImportData;
@@ -44,7 +45,7 @@ public class SQL {
     public static String tableUUIDName = "xconomyuuid";
     public static String tableLoginName = "xconomylogin";
     public final static DatabaseConnection database = new DatabaseConnection();
-    static final String encoding = XConomy.DConfig.ENCODING;
+    static final String encoding = XConomyLoad.DConfig.ENCODING;
 
     public static boolean hasnonplayerplugin = false;
 
@@ -58,7 +59,7 @@ public class SQL {
     }
 
     public static void getwaittimeout() {
-        if (XConomy.DConfig.isMySQL()) {
+        if (XConomyLoad.DConfig.isMySQL()) {
             try {
                 Connection connection = database.getConnectionAndCheck();
 
@@ -108,7 +109,7 @@ public class SQL {
                     + "(UUID varchar(50) not null, last_time datetime not null, " + "primary key (UUID)) default charset = " + encoding + ";";
 
             String query5;
-            if (XConomy.DConfig.isMySQL()) {
+            if (XConomyLoad.DConfig.isMySQL()) {
                 query1 = "create table if not exists " + tableName
                         + "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, hidden int(5) not null, "
                         + "primary key (UID)) default charset = " + encoding + ";";
@@ -131,15 +132,15 @@ public class SQL {
             }
 
             statement.executeUpdate(query1);
-            if (hasnonplayerplugin || XConomy.Config.NON_PLAYER_ACCOUNT) {
+            if (hasnonplayerplugin || XConomyLoad.Config.NON_PLAYER_ACCOUNT) {
                 statement.executeUpdate(query2);
             }
-            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+            if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 statement.executeUpdate(query5);
             }
-            if (XConomy.DConfig.isMySQL() && XConomy.Config.TRANSACTION_RECORD) {
+            if (XConomyLoad.DConfig.isMySQL() && XConomyLoad.Config.TRANSACTION_RECORD) {
                 statement.executeUpdate(query3);
-                if (XConomy.Config.PAY_TIPS) {
+                if (XConomyLoad.Config.PAY_TIPS) {
                     statement.executeUpdate(query4);
                 }
             }
@@ -155,19 +156,19 @@ public class SQL {
         try {
             Connection connection = database.getConnectionAndCheck();
             String sql = "select * from " + tableName + " where UID = ?";
-            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+            if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 sql = "select * from " + tableName + " where UID = ifnull((select DUUID from " + tableUUIDName + " where UUID = ?), ?)";
             }
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, uuid.toString());
-            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+            if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 statement.setString(2, uuid.toString());
             }
 
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 UUID fuuid = uuid;
-                if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                     fuuid = UUID.fromString(rs.getString(1));
                     Cache.insertIntoMultiUUIDCache(fuuid, uuid);
                 }
@@ -190,14 +191,14 @@ public class SQL {
             Connection connection = database.getConnectionAndCheck();
             String query;
 
-            if (XConomy.Config.USERNAME_IGNORE_CASE) {
-                if (XConomy.DConfig.isMySQL()) {
+            if (XConomyLoad.Config.USERNAME_IGNORE_CASE) {
+                if (XConomyLoad.DConfig.isMySQL()) {
                     query = "select * from " + tableName + " where player = ?";
                 } else {
                     query = "select * from " + tableName + " where player = ? COLLATE NOCASE";
                 }
             } else {
-                if (XConomy.DConfig.isMySQL()) {
+                if (XConomyLoad.DConfig.isMySQL()) {
                     query = "select * from " + tableName + " where binary player = ?";
                 } else {
                     query = "select * from " + tableName + " where player = ?";
@@ -210,10 +211,10 @@ public class SQL {
             while (rs.next()) {
                 UUID uuid = UUID.fromString(rs.getString(1));
                 UUID puuid = null;
-                if (XConomy.Config.UUIDMODE.equals(UUIDMode.OFFLINE) || XConomy.Config.UUIDMODE.equals(UUIDMode.ONLINE)) {
+                if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.OFFLINE) || XConomyLoad.Config.UUIDMODE.equals(UUIDMode.ONLINE)) {
                     puuid = GetUUID.getUUID(null, name);
                 }
-                if (XConomy.Config.UUIDMODE.equals(UUIDMode.DEFAULT) || XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)
+                if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.DEFAULT) || XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)
                         || (puuid != null && uuid.toString().equalsIgnoreCase(puuid.toString()))) {
                     String username = rs.getString(2);
                     BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
@@ -239,7 +240,7 @@ public class SQL {
             Connection connection = database.getConnectionAndCheck();
             String query;
 
-            if (XConomy.DConfig.isMySQL()) {
+            if (XConomyLoad.DConfig.isMySQL()) {
                 query = "select * from " + tableNonPlayerName + " where binary account = ?";
             } else {
                 query = "select * from " + tableNonPlayerName + " where account = ?";
@@ -270,7 +271,7 @@ public class SQL {
         Connection connection = database.getConnectionAndCheck();
         try {
             String query = " set balance = ? where UID = ?";
-            if (XConomy.Config.DISABLE_CACHE) {
+            if (XConomyLoad.Config.DISABLE_CACHE) {
                 if (isAdd != null) {
                     if (isAdd) {
                         query = " set balance = balance + ? where UID = ?";
@@ -280,7 +281,7 @@ public class SQL {
                 }
             }
             PreparedStatement statement = connection.prepareStatement("update " + tableName + query);
-            if (!XConomy.Config.DISABLE_CACHE) {
+            if (!XConomyLoad.Config.DISABLE_CACHE) {
                 statement.setDouble(1, pd.getBalance().doubleValue());
             } else {
                 statement.setDouble(1, amount.doubleValue());
@@ -385,7 +386,7 @@ public class SQL {
         Connection connection = database.getConnectionAndCheck();
         try {
             String query = " set balance = ? where account = ?";
-            if (XConomy.Config.DISABLE_CACHE) {
+            if (XConomyLoad.Config.DISABLE_CACHE) {
                 if (isAdd != null) {
                     if (isAdd) {
                         query = " set balance = balance + ? where account = ?";
@@ -395,7 +396,7 @@ public class SQL {
                 }
             }
             PreparedStatement statement = connection.prepareStatement("update " + tableNonPlayerName + query);
-            if (!XConomy.Config.DISABLE_CACHE) {
+            if (!XConomyLoad.Config.DISABLE_CACHE) {
                 statement.setDouble(1, newbalance.doubleValue());
             } else {
                 statement.setDouble(1, amount.doubleValue());
@@ -419,7 +420,7 @@ public class SQL {
             statement.setString(1, UUID);
             statement.executeUpdate();
             statement.close();
-            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+            if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 query = "delete from " + tableName + " where DUUID = ?";
                 statement = connection.prepareStatement(query);
                 statement.setString(1, UUID);
@@ -437,7 +438,7 @@ public class SQL {
         try {
             Connection connection = database.getConnectionAndCheck();
             PreparedStatement statement = connection.prepareStatement(
-                    "select * from " + tableName + " where hidden != '1' order by balance desc limit " + XConomy.Config.RANKING_SIZE);
+                    "select * from " + tableName + " where hidden != '1' order by balance desc limit " + XConomyLoad.Config.RANKING_SIZE);
 
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
@@ -493,7 +494,7 @@ public class SQL {
 
     public static void record(Connection co, PlayerData pd, Boolean isAdd,
                               BigDecimal amount, BigDecimal newbalance, RecordInfo ri) {
-        if (XConomy.DConfig.isMySQL() && XConomy.Config.TRANSACTION_RECORD) {
+        if (XConomyLoad.DConfig.isMySQL() && XConomyLoad.Config.TRANSACTION_RECORD) {
             String uid = "N/A";
             String name = "N/A";
             String operation;

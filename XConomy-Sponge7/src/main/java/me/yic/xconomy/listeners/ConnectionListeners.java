@@ -20,6 +20,7 @@ package me.yic.xconomy.listeners;
 
 import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.adapter.comp.DataLink;
 import me.yic.xconomy.data.DataCon;
@@ -41,12 +42,12 @@ public class ConnectionListeners {
         if (Sponge.getServer().getOnlinePlayers().size() == 1) {
             Cache.clearCache();
         }
-        if (XConomy.Config.BUNGEECORD_ENABLE) {
+        if (XConomyLoad.Config.BUNGEECORD_ENABLE) {
             DataCon.SendMessTask(new SyncTabQuit(event.getTargetEntity().getName()));
         }
         AdapterManager.Tab_PlayerList.remove(event.getTargetEntity().getName());
 
-        if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
+        if (XConomyLoad.DConfig.isMySQL() && XConomyLoad.Config.PAY_TIPS) {
             DataLink.updatelogininfo(event.getTargetEntity().getUniqueId());
         }
     }
@@ -56,13 +57,13 @@ public class ConnectionListeners {
     public void onJoin(ClientConnectionEvent.Join event) {
         CPlayer a = new CPlayer(event.getTargetEntity());
 
-        if (XConomy.DConfig.canasync) {
+        if (XConomyLoad.DConfig.canasync) {
             Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> DataLink.newPlayer(a));
         } else {
             DataLink.newPlayer(a);
         }
 
-        if (XConomy.Config.BUNGEECORD_ENABLE) {
+        if (XConomyLoad.Config.BUNGEECORD_ENABLE) {
             DataCon.SendMessTask(new SyncTabJoin(event.getTargetEntity().getName()));
         }
         if (!AdapterManager.Tab_PlayerList.contains(a.getName())) {
@@ -70,7 +71,7 @@ public class ConnectionListeners {
         }
 
 
-        if (XConomy.DConfig.isMySQL() && XConomy.Config.PAY_TIPS) {
+        if (XConomyLoad.DConfig.isMySQL() && XConomyLoad.Config.PAY_TIPS) {
             DataLink.selectlogininfo(a);
         }
 
@@ -82,14 +83,14 @@ public class ConnectionListeners {
 
 
     private void notifyUpdate(CPlayer player) {
-        if (!(XConomy.Config.CHECK_UPDATE & Updater.old)) {
+        if (!(XConomyLoad.Config.CHECK_UPDATE & Updater.old)) {
             return;
         }
         player.sendMessage("§f[XConomy]§b" + MessagesManager.systemMessage("发现新版本 ") + Updater.newVersion);
         player.sendMessage("§f[XConomy]§ahttps://ore.spongepowered.org/YiC/XConomy");
 
-        if (XConomy.Config.LANGUAGE.equalsIgnoreCase("Chinese")
-                | XConomy.Config.LANGUAGE.equalsIgnoreCase("ChineseTW")) {
+        if (XConomyLoad.Config.LANGUAGE.equalsIgnoreCase("Chinese")
+                | XConomyLoad.Config.LANGUAGE.equalsIgnoreCase("ChineseTW")) {
             player.sendMessage("§f[XConomy]§ahttps://www.mcbbs.net/thread-962904-1-1.html");
         }
 

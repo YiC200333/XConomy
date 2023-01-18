@@ -21,4 +21,24 @@ public class CPlugin implements iPlugin {
     public void sendPluginMessage(String channel, ByteArrayOutputStream stream) {
 
     }
+
+    @Override
+    public void registerIncomingPluginChannel(String channel, String classname) {
+
+    }
+
+    @Override
+    public void registerOutgoingPluginChannel(String channel) {
+
+    }
+
+    @Override
+    public void unregisterIncomingPluginChannel(String channel, String classname) {
+
+    }
+
+    @Override
+    public void unregisterOutgoingPluginChannel(String channel) {
+
+    }
 }

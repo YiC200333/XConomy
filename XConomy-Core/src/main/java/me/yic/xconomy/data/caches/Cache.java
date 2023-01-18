@@ -18,7 +18,7 @@
  */
 package me.yic.xconomy.data.caches;
 
-import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.GetUUID;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.utils.UUIDMode;
@@ -44,7 +44,7 @@ public class Cache {
         if (pd != null) {
             if (pd.getName() != null && pd.getBalance() != null) {
                 pds.put(uuid, pd);
-                if (XConomy.Config.USERNAME_IGNORE_CASE) {
+                if (XConomyLoad.Config.USERNAME_IGNORE_CASE) {
                     uuids.put(pd.getName().toLowerCase(), uuid);
                 } else {
                     uuids.put(pd.getName(), uuid);
@@ -64,7 +64,7 @@ public class Cache {
             if (pds.containsKey((UUID) key)){
                 return true;
             }
-            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+            if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 UUID luuid = getMultiUUIDCache((UUID) key);
                 if (luuid == null) {
                     return false;
@@ -74,7 +74,7 @@ public class Cache {
             }
             return false;
         }
-        if (XConomy.Config.USERNAME_IGNORE_CASE) {
+        if (XConomyLoad.Config.USERNAME_IGNORE_CASE) {
             return uuids.containsKey(((String) key).toLowerCase());
         }
         return uuids.containsKey((String) key);
@@ -85,13 +85,13 @@ public class Cache {
         UUID u;
         if (key instanceof UUID) {
             u = (UUID) key;
-            if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+            if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 if (!pds.containsKey((UUID) key) && getMultiUUIDCache((UUID) key) != null){
                     u = getMultiUUIDCache((UUID) key);
                 }
             }
         } else {
-            if (XConomy.Config.USERNAME_IGNORE_CASE) {
+            if (XConomyLoad.Config.USERNAME_IGNORE_CASE) {
                 u = uuids.get(((String) key).toLowerCase());
             } else {
                 u = uuids.get(((String) key));

@@ -18,6 +18,7 @@ package me.yic.xconomy.depend.economy;/*
  */
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -39,7 +40,7 @@ public class VaultHook{
         }
         XConomy.getInstance().getServer().getServicesManager().register(Economy.class, econ, XConomy.getInstance(), ServicePriority.Normal);
 
-        if (XConomy.Config.DISABLE_ESSENTIAL) {
+        if (XConomyLoad.Config.DISABLE_ESSENTIAL) {
             Collection<RegisteredServiceProvider<Economy>> econs = Bukkit.getPluginManager().getPlugin("Vault").getServer().getServicesManager().getRegistrations(Economy.class);
             for (RegisteredServiceProvider<Economy> econ : econs) {
                 if (econ.getProvider().getName().equalsIgnoreCase("Essentials Economy")||

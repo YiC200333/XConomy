@@ -26,12 +26,10 @@ import me.yic.xconomy.lang.MessagesManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 public class AdapterManager {
 
     public static List<String> Tab_PlayerList = new ArrayList<>();
-    public static ExecutorService FixedThreadPool;
     public static boolean foundvaultpe = false;
     public static boolean foundvaultOfflinePermManager = false;
 
@@ -47,20 +45,17 @@ public class AdapterManager {
         return CChat.translateAlternateColorCodes('&', MessagesManager.messageFile.getString(message));
     }
 
-    public static void runTaskAsynchronously(Runnable runnable){
-        FixedThreadPool.execute(runnable);
-    }
 
     public static boolean BanModiftyBalance() {
-        if (!XConomy.Config.BUNGEECORD_ENABLE){
+        if (!XConomyLoad.Config.BUNGEECORD_ENABLE){
             return false;
         }
         if (!PLUGIN.getOnlinePlayersisEmpty()){
             return false;
         }
-        if (XConomy.Config.DISABLE_CACHE){
+        if (XConomyLoad.Config.DISABLE_CACHE){
             return false;
         }
-        return !XConomy.DConfig.CacheType().equalsIgnoreCase("Redis");
+        return !XConomyLoad.DConfig.CacheType().equalsIgnoreCase("Redis");
     }
 }

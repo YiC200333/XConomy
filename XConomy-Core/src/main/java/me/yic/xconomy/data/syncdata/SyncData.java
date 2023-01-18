@@ -19,6 +19,7 @@
 package me.yic.xconomy.data.syncdata;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.info.SyncInfo;
 import me.yic.xconomy.info.SyncType;
 
@@ -36,7 +37,7 @@ public abstract class SyncData implements Serializable {
     final UUID uuid;
 
     protected SyncData(SyncType st, UUID uuid) {
-        this.sign = XConomy.Config.BUNGEECORD_SIGN;
+        this.sign = XConomyLoad.Config.BUNGEECORD_SIGN;
         this.server_key = SyncInfo.server_key;
         this.st = st;
         this.uuid = uuid;

@@ -19,6 +19,7 @@
 package me.yic.xconomy.info;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CConfig;
 import me.yic.xconomy.utils.UUIDMode;
 
@@ -119,8 +120,8 @@ public class DefaultConfig {
             return;
         }
 
-        if (XConomy.DConfig.getStorageType() == 0 || XConomy.DConfig.getStorageType() == 1) {
-            BUNGEECORD_ENABLE = !XConomy.DConfig.gethost().equalsIgnoreCase("Default");
+        if (XConomyLoad.DConfig.getStorageType() == 0 || XConomyLoad.DConfig.getStorageType() == 1) {
+            BUNGEECORD_ENABLE = !XConomyLoad.DConfig.gethost().equalsIgnoreCase("Default");
         }
 
         BUNGEECORD_ENABLE = true;

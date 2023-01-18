@@ -19,6 +19,7 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.data.syncdata.SyncData;
 import me.yic.xconomy.data.syncdata.SyncMessage;
@@ -49,7 +50,7 @@ public class ProcessSyncData {
                 return;
             }
 
-            if (!ob.getSign().equals(XConomy.Config.BUNGEECORD_SIGN)) {
+            if (!ob.getSign().equals(XConomyLoad.Config.BUNGEECORD_SIGN)) {
                 return;
             }
 

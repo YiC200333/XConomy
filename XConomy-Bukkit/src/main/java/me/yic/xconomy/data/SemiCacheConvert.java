@@ -19,6 +19,7 @@
 package me.yic.xconomy.data;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.sql.SQLCreateNewAccount;
 import me.yic.xconomy.utils.UUIDMode;
@@ -33,7 +34,7 @@ import java.sql.Connection;
 public class SemiCacheConvert {
 
     public static void start() {
-        if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+        if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
             File dataFolder = new File(XConomy.getInstance().getDataFolder(), "cache");
             if (!dataFolder.exists()) {
                 return;

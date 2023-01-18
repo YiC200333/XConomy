@@ -19,6 +19,7 @@
 package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
@@ -45,7 +46,7 @@ public class SQLCreateNewAccount extends SQL {
             return false;
         }
         Connection connection = database.getConnectionAndCheck();
-        switch (XConomy.Config.UUIDMODE) {
+        switch (XConomyLoad.Config.UUIDMODE) {
             case ONLINE:
             case OFFLINE:
                 UUID oouid = GetUUID.getUUID(player, name);
@@ -120,14 +121,14 @@ public class SQLCreateNewAccount extends SQL {
         boolean doubledata = false;
         try {
             String query;
-            if (XConomy.Config.USERNAME_IGNORE_CASE) {
-                if (XConomy.DConfig.isMySQL()) {
+            if (XConomyLoad.Config.USERNAME_IGNORE_CASE) {
+                if (XConomyLoad.DConfig.isMySQL()) {
                     query = "select * from " + tableName + " where player = ?";
                 } else {
                     query = "select * from " + tableName + " where player = ? COLLATE NOCASE";
                 }
             } else {
-                if (XConomy.DConfig.isMySQL()) {
+                if (XConomyLoad.DConfig.isMySQL()) {
                     query = "select * from " + tableName + " where binary player = ?";
                 } else {
                     query = "select * from " + tableName + " where player = ?";
@@ -142,7 +143,7 @@ public class SQLCreateNewAccount extends SQL {
                 String uid = rs.getString(1);
                 if (!uuid.toString().equals(uid)) {
                     doubledata = true;
-                    if (!XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                    if (!XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                         kickplayer(player, 0, uid);
                     } else {
                         createDUUIDLink(uuid.toString(), uid, connection);
@@ -169,7 +170,7 @@ public class SQLCreateNewAccount extends SQL {
             statement.setString(1, UID);
             statement.setString(2, user);
 
-            statement.setDouble(3, ImportData.getBalance(user, XConomy.Config.INITIAL_BAL).doubleValue());
+            statement.setDouble(3, ImportData.getBalance(user, XConomyLoad.Config.INITIAL_BAL).doubleValue());
 
             statement.setInt(4, 0);
 
@@ -199,7 +200,7 @@ public class SQLCreateNewAccount extends SQL {
     public static void createDUUIDLink(String UUID, String DUUID, Connection co_a) {
         try {
             String query;
-            if (XConomy.DConfig.isMySQL()) {
+            if (XConomyLoad.DConfig.isMySQL()) {
                 query = "INSERT INTO " + tableUUIDName + "(UUID,DUUID) values(?,?) ON DUPLICATE KEY UPDATE DUUID = ?";
             }else{
                 query = "INSERT INTO " + tableUUIDName + "(UUID,DUUID) values(?,?)";
@@ -207,7 +208,7 @@ public class SQLCreateNewAccount extends SQL {
             PreparedStatement statement = co_a.prepareStatement(query);
             statement.setString(1, UUID);
             statement.setString(2, DUUID);
-            if (XConomy.DConfig.isMySQL()) {
+            if (XConomyLoad.DConfig.isMySQL()) {
                 statement.setString(3, DUUID);
             }
 
@@ -244,7 +245,7 @@ public class SQLCreateNewAccount extends SQL {
                 String u = rs.getString(1);
                 user = rs.getString(2);
                 BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
-                if (cacheThisAmt != null && !XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                if (cacheThisAmt != null && !XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                     PlayerData bd = new PlayerData(UUID.fromString(u), user, cacheThisAmt);
                     Cache.insertIntoCache(UID, bd);
                 }
@@ -279,7 +280,7 @@ public class SQLCreateNewAccount extends SQL {
 
     private static void syncOnlineUUID(String oldname, String newname, UUID newUUID) {
         Cache.syncOnlineUUIDCache(oldname, newname, newUUID);
-        if (XConomy.Config.BUNGEECORD_ENABLE) {
+        if (XConomyLoad.Config.BUNGEECORD_ENABLE) {
             SyncUUID su = new SyncUUID(newUUID, newname, oldname);
             SendPluginMessage.SendMessTask("xconomy:acb", su);
         }

@@ -20,6 +20,7 @@ package me.yic.xconomy.data;
 
 import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.adapter.comp.CallAPI;
 import me.yic.xconomy.adapter.comp.DataLink;
@@ -49,7 +50,7 @@ public class DataCon {
     }
 
     public static BigDecimal getAccountBalance(String account) {
-        if (XConomy.Config.DISABLE_CACHE){
+        if (XConomyLoad.Config.DISABLE_CACHE){
             DataLink.getBalNonPlayer(account);
         }
         return CacheNonPlayer.getBalanceFromCacheOrDB(account);
@@ -58,7 +59,7 @@ public class DataCon {
     private static <T> PlayerData getPlayerDatai(T u) {
         PlayerData pd = null;
 
-        if (XConomy.Config.DISABLE_CACHE) {
+        if (XConomyLoad.Config.DISABLE_CACHE) {
             DataLink.getPlayerData(u);
         }
 
@@ -80,7 +81,7 @@ public class DataCon {
         DataLink.deletePlayerData(pd.getUniqueId());
         Cache.removefromCache(pd.getUniqueId());
 
-        if (!(pd instanceof SyncDelData) && XConomy.Config.BUNGEECORD_ENABLE) {
+        if (!(pd instanceof SyncDelData) && XConomyLoad.Config.BUNGEECORD_ENABLE) {
             SendMessTask(new SyncDelData(pd));
         }
 
@@ -96,8 +97,8 @@ public class DataCon {
     }
 
     public static boolean containinfieldslist(String name) {
-        if (XConomy.Config.NON_PLAYER_ACCOUNT_SUBSTRING != null) {
-            for (String field : XConomy.Config.NON_PLAYER_ACCOUNT_SUBSTRING) {
+        if (XConomyLoad.Config.NON_PLAYER_ACCOUNT_SUBSTRING != null) {
+            for (String field : XConomyLoad.Config.NON_PLAYER_ACCOUNT_SUBSTRING) {
                 if (name.contains(field)) {
                     return true;
                 }
@@ -126,13 +127,13 @@ public class DataCon {
 
         Cache.updateIntoCache(u, pd, newvalue);
 
-        if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
-            AdapterManager.runTaskAsynchronously(() -> DataLink.save(pd, isAdd, amount, ri));
+        if (XConomyLoad.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+            XConomyLoad.runTaskAsynchronously(() -> DataLink.save(pd, isAdd, amount, ri));
         } else {
             DataLink.save(pd, isAdd, amount, ri);
         }
 
-        if (XConomy.Config.BUNGEECORD_ENABLE) {
+        if (XConomyLoad.Config.BUNGEECORD_ENABLE) {
             SendMessTask(pd);
         }
     }
@@ -155,9 +156,9 @@ public class DataCon {
         }
         CacheNonPlayer.insertIntoCache(u, newvalue);
 
-        if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+        if (XConomyLoad.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
             final BigDecimal fnewvalue = newvalue;
-            AdapterManager.runTaskAsynchronously(() -> DataLink.saveNonPlayer(u, amount, fnewvalue, isAdd, ri));
+            XConomyLoad.runTaskAsynchronously(() -> DataLink.saveNonPlayer(u, amount, fnewvalue, isAdd, ri));
         } else {
             DataLink.saveNonPlayer(u, amount, newvalue, isAdd, ri);
         }
@@ -168,8 +169,8 @@ public class DataCon {
 
         RecordInfo ri = new RecordInfo(type, command, comment);
 
-        if (XConomy.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
-            AdapterManager.runTaskAsynchronously(() -> DataLink.saveall(targettype, amount, isAdd, ri));
+        if (XConomyLoad.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+            XConomyLoad.runTaskAsynchronously(() -> DataLink.saveall(targettype, amount, isAdd, ri));
         } else {
             DataLink.saveall(targettype, amount, isAdd, ri);
         }
@@ -178,7 +179,7 @@ public class DataCon {
         //if (targettype.equals("all")) {
         //} else
 
-        if (XConomy.Config.BUNGEECORD_ENABLE) {
+        if (XConomyLoad.Config.BUNGEECORD_ENABLE) {
             SendMessTask(new SyncBalanceAll(isallbool, isAdd, amount));
         }
     }
@@ -197,7 +198,7 @@ public class DataCon {
 
 
     public static void SendMessTask(SyncData pd) {
-        if (XConomy.DConfig.CacheType().equalsIgnoreCase("Redis")) {
+        if (XConomyLoad.DConfig.CacheType().equalsIgnoreCase("Redis")) {
             RedisPublisher publisher = new RedisPublisher(pd.toByteArray(XConomy.syncversion).toByteArray());
             publisher.start();
         }else{

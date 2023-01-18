@@ -19,6 +19,7 @@
 package me.yic.xconomy.adapter.comp;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.iDataLink;
 import me.yic.xconomy.data.redis.RedisThread;
 import me.yic.xconomy.data.sql.*;
@@ -43,7 +44,7 @@ public class DataLink implements iDataLink {
 
     @Override
     public boolean create() {
-        switch (XConomy.DConfig.getStorageType()) {
+        switch (XConomyLoad.DConfig.getStorageType()) {
             case 1:
                 XConomy.getInstance().logger("数据保存方式", 0, " - SQLite");
                 SQLSetup.setupSqLiteAddress();
@@ -63,19 +64,19 @@ public class DataLink implements iDataLink {
         }
 
         if (SQL.con()) {
-            if (XConomy.DConfig.getStorageType() == 2) {
+            if (XConomyLoad.DConfig.getStorageType() == 2) {
                 SQL.getwaittimeout();
             }
             SQL.createTable();
             SQLUpdateTable.updataTable_record();
-            XConomy.DConfig.loggersysmess("连接正常");
+            XConomyLoad.DConfig.loggersysmess("连接正常");
         } else {
-            XConomy.DConfig.loggersysmess("连接异常");
+            XConomyLoad.DConfig.loggersysmess("连接异常");
             return false;
         }
 
 
-        if (XConomy.DConfig.CacheType().equalsIgnoreCase("Redis")) {
+        if (XConomyLoad.DConfig.CacheType().equalsIgnoreCase("Redis")) {
             if (RedisConnection.connectredis()) {
                 RedisThread rThread = new RedisThread();
                 rThread.start();
@@ -93,7 +94,7 @@ public class DataLink implements iDataLink {
         Optional<User> p = Optional.empty();
         if (pd != null) {
             try {
-                if (XConomy.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+                if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                     p = Sponge.server().userManager().load(pd.getName()).get();
                 } else {
                     p = Sponge.server().userManager().load(pd.getUniqueId()).get();
@@ -107,7 +108,7 @@ public class DataLink implements iDataLink {
 
     @Override
     public void updatelogininfo(UUID uid) {
-        if (XConomy.DConfig.canasync) {
+        if (XConomyLoad.DConfig.canasync) {
             Sponge.asyncScheduler().executor(XConomy.getInstance().plugincontainer).execute(() -> SQLLogin.updatelogininfo(uid));
         } else {
             SQLLogin.updatelogininfo(uid);
@@ -116,7 +117,7 @@ public class DataLink implements iDataLink {
 
     @Override
     public void selectlogininfo(CPlayer pp) {
-        if (XConomy.DConfig.canasync) {
+        if (XConomyLoad.DConfig.canasync) {
             Sponge.asyncScheduler().executor(XConomy.getInstance().plugincontainer).execute(() -> SQLLogin.getPlayerlogin(pp));
         } else {
             SQLLogin.getPlayerlogin(pp);

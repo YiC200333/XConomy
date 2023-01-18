@@ -18,7 +18,7 @@
  */
 package me.yic.xconomy.depend.economyapi;
 
-import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataFormat;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.text.Text;
@@ -30,18 +30,18 @@ public class XCurrency implements Currency {
 
     @Override
     public Text getDisplayName() {
-        return Text.of(XConomy.Config.SINGULAR_NAME);
+        return Text.of(XConomyLoad.Config.SINGULAR_NAME);
     }
 
     @Override
     public Text getPluralDisplayName() {
-        return Text.of(XConomy.Config.PLURAL_NAME);
+        return Text.of(XConomyLoad.Config.PLURAL_NAME);
     }
 
 
     @Override
     public Text getSymbol() {
-        return Text.of(XConomy.Config.THOUSANDS_SEPARATOR);
+        return Text.of(XConomyLoad.Config.THOUSANDS_SEPARATOR);
     }
 
     @Override

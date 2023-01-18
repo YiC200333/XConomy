@@ -19,27 +19,28 @@
 package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 
 import java.io.File;
 
 public class SQLSetup extends SQL{
 
     public static void setupMySqlTable() {
-        if (XConomy.DConfig.gettablesuffix() != null & !XConomy.DConfig.gettablesuffix().equals("")) {
-            tableName = "xconomy_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
-            tableNonPlayerName = "xconomynon_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
-            tableRecordName = "xconomyrecord_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
-            tableLoginName = "xconomylogin_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
-            tableUUIDName = "xconomyuuid_" + XConomy.DConfig.gettablesuffix().replace("%sign%", XConomy.Config.BUNGEECORD_SIGN);
+        if (XConomyLoad.DConfig.gettablesuffix() != null & !XConomyLoad.DConfig.gettablesuffix().equals("")) {
+            tableName = "xconomy_" + XConomyLoad.DConfig.gettablesuffix().replace("%sign%", XConomyLoad.Config.BUNGEECORD_SIGN);
+            tableNonPlayerName = "xconomynon_" + XConomyLoad.DConfig.gettablesuffix().replace("%sign%", XConomyLoad.Config.BUNGEECORD_SIGN);
+            tableRecordName = "xconomyrecord_" + XConomyLoad.DConfig.gettablesuffix().replace("%sign%", XConomyLoad.Config.BUNGEECORD_SIGN);
+            tableLoginName = "xconomylogin_" + XConomyLoad.DConfig.gettablesuffix().replace("%sign%", XConomyLoad.Config.BUNGEECORD_SIGN);
+            tableUUIDName = "xconomyuuid_" + XConomyLoad.DConfig.gettablesuffix().replace("%sign%", XConomyLoad.Config.BUNGEECORD_SIGN);
         }
     }
 
     public static void setupSqLiteAddress() {
-        if (XConomy.DConfig.gethost().equalsIgnoreCase("Default")) {
+        if (XConomyLoad.DConfig.gethost().equalsIgnoreCase("Default")) {
             return;
         }
 
-        File folder = new File(XConomy.DConfig.gethost());
+        File folder = new File(XConomyLoad.DConfig.gethost());
         if (folder.exists()) {
             database.userdata = new File(folder, "data.db");
         } else {

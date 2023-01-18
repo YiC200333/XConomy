@@ -18,7 +18,7 @@
  */
 package me.yic.xconomy.data;
 
-import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CChat;
 import me.yic.xconomy.info.DefaultConfig;
 import net.md_5.bungee.api.ChatColor;
@@ -34,9 +34,9 @@ public class DataFormat {
     public static DecimalFormat decimalFormat;
     public static DecimalFormat decimalFormatX;
     public static BigDecimal maxNumber;
-    final static String displayformat = XConomy.Config.DISPLAY_FORMAT;
-    final static String pluralname = XConomy.Config.PLURAL_NAME;
-    final static String singularname = XConomy.Config.SINGULAR_NAME;
+    final static String displayformat = XConomyLoad.Config.DISPLAY_FORMAT;
+    final static String pluralname = XConomyLoad.Config.PLURAL_NAME;
+    final static String singularname = XConomyLoad.Config.SINGULAR_NAME;
 
     public static BigDecimal formatString(String am) {
         BigDecimal bigDecimal = new BigDecimal(am);
@@ -101,8 +101,8 @@ public class DataFormat {
 
     public static void load() {
         maxNumber = setmaxnumber();
-        isint = XConomy.Config.INTEGER_BAL;
-        String gpoint = XConomy.Config.THOUSANDS_SEPARATOR;
+        isint = XConomyLoad.Config.INTEGER_BAL;
+        String gpoint = XConomyLoad.Config.THOUSANDS_SEPARATOR;
         decimalFormat = new DecimalFormat();
         decimalFormatX = new DecimalFormat();
 
@@ -117,19 +117,19 @@ public class DataFormat {
             decimalFormat.setMaximumFractionDigits(2);
         }
 
-        if (gpoint != null && !gpoint.equals("") && gpoint.length() == 1) {
+        if (gpoint != null && gpoint.length() == 1) {
             DecimalFormatSymbols spoint = new DecimalFormatSymbols();
             spoint.setGroupingSeparator(gpoint.charAt(0));
             decimalFormat.setDecimalFormatSymbols(spoint);
             decimalFormatX.setDecimalFormatSymbols(spoint);
         }
 
-        XConomy.Config.PAYMENT_TAX = setpaymenttax();
+        XConomyLoad.Config.PAYMENT_TAX = setpaymenttax();
     }
 
 
     private static BigDecimal setmaxnumber() {
-        String maxn = XConomy.Config.MAX_NUMBER;
+        String maxn = XConomyLoad.Config.MAX_NUMBER;
         BigDecimal defaultmaxnumber = new BigDecimal("10000000000000000");
         if (maxn == null) {
             return defaultmaxnumber;
@@ -155,12 +155,12 @@ public class DataFormat {
     }
 
     private static String getformatbalance(BigDecimal bal) {
-        if (XConomy.Config.FORMAT_BALANCE != null) {
-            if (bal.compareTo(XConomy.Config.FORMAT_BALANCE.get(0)) < 0) {
+        if (XConomyLoad.Config.FORMAT_BALANCE != null) {
+            if (bal.compareTo(XConomyLoad.Config.FORMAT_BALANCE.get(0)) < 0) {
                 return decimalFormat.format(bal);
             }
             BigDecimal x = BigDecimal.ZERO;
-            for (BigDecimal b : XConomy.Config.FORMAT_BALANCE) {
+            for (BigDecimal b : XConomyLoad.Config.FORMAT_BALANCE) {
                 if (bal.compareTo(b) >= 0) {
                     x = b;
                 } else {
@@ -168,7 +168,7 @@ public class DataFormat {
                 }
             }
             BigDecimal aa = bal.divide(x, 3, RoundingMode.DOWN);
-            return decimalFormatX.format(aa) + XConomy.Config.FORMAT_BALANCE_C.get(x);
+            return decimalFormatX.format(aa) + XConomyLoad.Config.FORMAT_BALANCE_C.get(x);
         } else {
             return decimalFormat.format(bal);
         }

@@ -21,6 +21,7 @@ package me.yic.xconomy.info;
 import com.zaxxer.hikari.HikariDataSource;
 import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CConfig;
 import me.yic.xconomy.lang.MessagesManager;
 
@@ -30,8 +31,8 @@ public class DataBaseConfig {
 
     public static CConfig config;
 
-    public DataBaseConfig() {
-        if (!XConomy.Config.DISABLE_CACHE) {
+    public void Initialization() {
+        if (!XConomyLoad.Config.DISABLE_CACHE) {
             if (getStorageType() != 1) {
                 canasync = true;
             }
@@ -43,7 +44,7 @@ public class DataBaseConfig {
                 maxthread = 1;
             }
         }
-        AdapterManager.FixedThreadPool = Executors.newFixedThreadPool(maxthread);
+        XConomyLoad.FixedThreadPool = Executors.newFixedThreadPool(maxthread);
     }
 
     public String CacheType(){
@@ -51,7 +52,7 @@ public class DataBaseConfig {
         if (cachetype == null){
             return "Default";
         }
-        if (XConomy.Config.DISABLE_CACHE){
+        if (XConomyLoad.Config.DISABLE_CACHE){
             return "Default";
         }
         if (cachetype.equalsIgnoreCase("Redis")){

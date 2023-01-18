@@ -19,6 +19,7 @@
 package me.yic.xconomy.data.sql;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 
 import java.sql.*;
 
@@ -51,7 +52,7 @@ public class SQLUpdateTable extends SQL {
     }
 
     public static void updataTable_record() {
-        if (XConomy.DConfig.isMySQL() && XConomy.Config.TRANSACTION_RECORD) {
+        if (XConomyLoad.DConfig.isMySQL() && XConomyLoad.Config.TRANSACTION_RECORD) {
             Connection connection = database.getConnectionAndCheck();
             try {
                 //PreparedStatement statementa = connection.prepareStatement("desc " + tableRecordName + " datetime");

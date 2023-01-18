@@ -19,6 +19,7 @@
 package me.yic.xconomy.lang;
 
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CConfig;
 
 import java.io.*;
@@ -31,8 +32,8 @@ public class MessagesManager {
 
 
     public static void loadsysmess() {
-        XConomy.getInstance().logger(null,0, "Language: " + XConomy.Config.LANGUAGE.toUpperCase());
-        langFile = new CConfig("/lang/sys", "/" + XConomy.Config.LANGUAGE.toLowerCase() + ".yml");
+        XConomy.getInstance().logger(null,0, "Language: " + XConomyLoad.Config.LANGUAGE.toUpperCase());
+        langFile = new CConfig("/lang/sys", "/" + XConomyLoad.Config.LANGUAGE.toLowerCase() + ".yml");
     }
 
 
@@ -53,7 +54,7 @@ public class MessagesManager {
         }
 
         messageFile = new CConfig(mfile);
-        LanguagesManager.compare(XConomy.Config.LANGUAGE, mfile);
+        LanguagesManager.compare(XConomyLoad.Config.LANGUAGE, mfile);
         if (translate) {
             LanguagesManager.translatorName(mfile);
         }
@@ -64,8 +65,8 @@ public class MessagesManager {
     }
 
     public static String getAuthor() {
-        if (XConomy.Config.LANGUAGE.equalsIgnoreCase("Chinese")
-                | XConomy.Config.LANGUAGE.equalsIgnoreCase("ChineseTW")) {
+        if (XConomyLoad.Config.LANGUAGE.equalsIgnoreCase("Chinese")
+                | XConomyLoad.Config.LANGUAGE.equalsIgnoreCase("ChineseTW")) {
             return "伊C";
         } else {
             return "YiC";

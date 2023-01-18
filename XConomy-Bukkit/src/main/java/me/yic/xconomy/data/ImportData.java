@@ -20,6 +20,7 @@ package me.yic.xconomy.data;
 
 import me.yic.xconomy.CommandCore;
 import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CSender;
 import me.yic.xconomy.depend.LoadEconomy;
 import me.yic.xconomy.depend.economy.VaultCM;
@@ -74,7 +75,7 @@ public class ImportData implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if (commandSender.isOp() && XConomy.Config.IMPORTMODE) {
+        if (commandSender.isOp() && XConomyLoad.Config.IMPORTMODE) {
             commandSender.sendMessage("Data import start");
             ImportBalance();
             commandSender.sendMessage("Data import completed");
@@ -85,7 +86,7 @@ public class ImportData implements CommandExecutor {
     }
 
     public boolean CreateFile() {
-        if (XConomy.Config.IMPORTMODE) {
+        if (XConomyLoad.Config.IMPORTMODE) {
             File dataFolder = new File(XConomy.getInstance().getDataFolder(), "importdata");
             if (!dataFolder.exists() && !dataFolder.mkdirs()) {
                 XConomy.getInstance().logger("文件夹创建异常", 1, null);
