@@ -29,17 +29,12 @@ public class UpdateConfig {
     public static boolean update(FileConfiguration config, File cc) {
         boolean update = false;
         FileConfiguration ck = YamlConfiguration.loadConfiguration(cc);
-        if (!ck.contains("UUID-mode") || !ck.contains("non-player-account")) {
+        if (!ck.contains("SyncData")) {
             XConomy.getInstance().logger(null, 1, "==================================================");
             XConomy.getInstance().logger(null, 1, "The configuration file is an older version");
             XConomy.getInstance().logger(null, 1, "The plugin may occur configuration problems");
             XConomy.getInstance().logger(null, 1, "It is recommended to regenerate configuration file");
             XConomy.getInstance().logger(null, 1, "==================================================");
-        }
-        if (!ck.contains("Importdata-mode")) {
-            config.createSection("Importdata-mode");
-            config.set("Importdata-mode", false);
-            update = true;
         }
         return update;
     }

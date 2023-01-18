@@ -106,6 +106,14 @@ public class XConomy {
 
         XConomyLoad.LoadConfig();
 
+        if (XConomyLoad.Config.ISOLDCONFIG){
+            logger(null, 1, "==================================================");
+            logger(null, 1, "Please regenerate all configuration files");
+            logger(null, 1, "==================================================");
+            logger("XConomy已成功卸载", 0, null);
+            return;
+        }
+
         Sponge.getServiceManager().setProvider(this, EconomyService.class, new XCService());
 
         Optional<EconomyService> serviceOpt = Sponge.getServiceManager().provide(EconomyService.class);

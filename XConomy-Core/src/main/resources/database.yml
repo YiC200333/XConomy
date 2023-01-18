@@ -7,10 +7,6 @@ Settings:
   usepool: false
   #Set the maximum number of threads (SQLite no such setting)
   max-threads: 5
-  #Default Redis
-  #Redis(Require 'slf4j' dependencies)
-  #Only applicable to player data
-  cache-type: Default
 
 
 #SQLite settings

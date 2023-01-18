@@ -21,6 +21,7 @@ package me.yic.xconomy;
 import me.yic.xconomy.adapter.comp.CChat;
 import me.yic.xconomy.adapter.comp.CPlugin;
 import me.yic.xconomy.info.MessageConfig;
+import me.yic.xconomy.info.SyncChannalType;
 import me.yic.xconomy.lang.MessagesManager;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class AdapterManager {
 
 
     public static boolean BanModiftyBalance() {
-        if (!XConomyLoad.Config.BUNGEECORD_ENABLE){
+        if (!XConomyLoad.Config.SYNCDATA_ENABLE){
             return false;
         }
         if (!PLUGIN.getOnlinePlayersisEmpty()){
@@ -53,6 +54,6 @@ public class AdapterManager {
         if (XConomyLoad.Config.DISABLE_CACHE){
             return false;
         }
-        return !XConomyLoad.DConfig.CacheType().equalsIgnoreCase("Redis");
+        return !XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS);
     }
 }

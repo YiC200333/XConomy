@@ -22,6 +22,7 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.redis.RedisSubscriber;
 import me.yic.xconomy.info.DataBaseConfig;
+import me.yic.xconomy.info.SyncChannalType;
 import me.yic.xconomy.lang.MessagesManager;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -62,7 +63,7 @@ public class RedisConnection {
             return false;
         }
 
-        if (XConomyLoad.DConfig.CacheType().equalsIgnoreCase("Redis")) {
+        if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)) {
             JedisPoolConfig jedisconfig = new JedisPoolConfig();
             jedisconfig.setMaxTotal(maxtotal);
             jedisconfig.setMaxIdle(maxidle);

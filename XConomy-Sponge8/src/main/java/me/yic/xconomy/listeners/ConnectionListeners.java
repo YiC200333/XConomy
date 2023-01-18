@@ -43,7 +43,7 @@ public class ConnectionListeners {
         }
 
         if (event.player().profile().name().isPresent()) {
-            if (XConomyLoad.Config.BUNGEECORD_ENABLE) {
+            if (XConomyLoad.Config.SYNCDATA_ENABLE) {
                 DataCon.SendMessTask(new SyncTabQuit(event.player().profile().name().get()));
             }
             AdapterManager.Tab_PlayerList.remove(event.player().profile().name().get());
@@ -67,7 +67,7 @@ public class ConnectionListeners {
         }
 
         if (event.player().profile().name().isPresent()) {
-            if (XConomyLoad.Config.BUNGEECORD_ENABLE) {
+            if (XConomyLoad.Config.SYNCDATA_ENABLE) {
                 DataCon.SendMessTask(new SyncTabJoin(event.player().profile().name().get()));
             }
             if (!AdapterManager.Tab_PlayerList.contains(event.player().profile().name().get())) {

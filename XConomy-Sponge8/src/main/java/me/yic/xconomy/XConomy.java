@@ -107,6 +107,13 @@ public class XConomy {
         //if (Sponge.getPluginManager().getPlugin("DatabaseDrivers").isPresent()) {
         //logger("发现 DatabaseDrivers", null);
         //}
+        if (XConomyLoad.Config.ISOLDCONFIG){
+            logger(null, 1, "==================================================");
+            logger(null, 1, "Please regenerate all configuration files");
+            logger(null, 1, "==================================================");
+            logger("XConomy已成功卸载", 0, null);
+            return;
+        }
 
         if (!DataLink.create()) {
             logger("XConomy已成功卸载", 0, null);

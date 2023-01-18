@@ -94,11 +94,16 @@ Currency:
 
 
 
-#BungeeCord settings
-BungeeCord:
-  #Whether to enable BungeeCord synchronization
+#SyncData settings
+SyncData:
+  #Whether to enable data synchronization between multiple servers
+  enable: false
+  #BungeeCord Redis
+  #================================================== BungeeCord Channel ==================================================
   #After BungeeCord sync is turned on, the console and other plugins will not be able to modify the balance in the server without player
   #Please Set bungeecord to true in the spigot.yml
-  enable: false
+  #==================================================   Redis  Channel   ==================================================
+  #Require 'slf4j' dependencies
+  channel-type: BungeeCord
   #Server ID, keep the ID and the MySQL settings is the same between the servers requiring synchronization
   sign: aa

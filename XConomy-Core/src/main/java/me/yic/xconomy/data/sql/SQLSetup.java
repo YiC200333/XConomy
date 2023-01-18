@@ -27,11 +27,11 @@ public class SQLSetup extends SQL{
 
     public static void setupMySqlTable() {
         if (XConomyLoad.DConfig.gettablesuffix() != null & !XConomyLoad.DConfig.gettablesuffix().equals("")) {
-            tableName = "xconomy_" + XConomyLoad.DConfig.gettablesuffix().replace("%sign%", XConomyLoad.Config.BUNGEECORD_SIGN);
-            tableNonPlayerName = "xconomynon_" + XConomyLoad.DConfig.gettablesuffix().replace("%sign%", XConomyLoad.Config.BUNGEECORD_SIGN);
-            tableRecordName = "xconomyrecord_" + XConomyLoad.DConfig.gettablesuffix().replace("%sign%", XConomyLoad.Config.BUNGEECORD_SIGN);
-            tableLoginName = "xconomylogin_" + XConomyLoad.DConfig.gettablesuffix().replace("%sign%", XConomyLoad.Config.BUNGEECORD_SIGN);
-            tableUUIDName = "xconomyuuid_" + XConomyLoad.DConfig.gettablesuffix().replace("%sign%", XConomyLoad.Config.BUNGEECORD_SIGN);
+            tableName = "xconomy_" + XConomyLoad.DConfig.gettablesuffix().replace("%sign%", XConomyLoad.Config.SYNCDATA_SIGN);
+            tableNonPlayerName = "xconomynon_" + XConomyLoad.DConfig.gettablesuffix().replace("%sign%", XConomyLoad.Config.SYNCDATA_SIGN);
+            tableRecordName = "xconomyrecord_" + XConomyLoad.DConfig.gettablesuffix().replace("%sign%", XConomyLoad.Config.SYNCDATA_SIGN);
+            tableLoginName = "xconomylogin_" + XConomyLoad.DConfig.gettablesuffix().replace("%sign%", XConomyLoad.Config.SYNCDATA_SIGN);
+            tableUUIDName = "xconomyuuid_" + XConomyLoad.DConfig.gettablesuffix().replace("%sign%", XConomyLoad.Config.SYNCDATA_SIGN);
         }
     }
 

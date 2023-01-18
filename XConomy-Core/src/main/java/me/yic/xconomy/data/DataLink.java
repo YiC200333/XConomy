@@ -26,6 +26,7 @@ import me.yic.xconomy.data.redis.RedisThread;
 import me.yic.xconomy.data.sql.*;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.info.RecordInfo;
+import me.yic.xconomy.info.SyncChannalType;
 import me.yic.xconomy.utils.RedisConnection;
 
 import java.io.File;
@@ -70,7 +71,7 @@ public class DataLink{
         }
 
 
-        if (XConomyLoad.DConfig.CacheType().equalsIgnoreCase("Redis")) {
+        if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)) {
             if (RedisConnection.connectredis()) {
                 RedisThread rThread = new RedisThread();
                 rThread.start();

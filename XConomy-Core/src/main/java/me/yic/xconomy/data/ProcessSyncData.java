@@ -50,7 +50,7 @@ public class ProcessSyncData {
                 return;
             }
 
-            if (!ob.getSign().equals(XConomyLoad.Config.BUNGEECORD_SIGN)) {
+            if (!ob.getSign().equals(XConomyLoad.Config.SYNCDATA_SIGN)) {
                 return;
             }
 

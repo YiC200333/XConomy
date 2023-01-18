@@ -68,6 +68,14 @@ public class XConomy extends JavaPlugin {
 
         XConomyLoad.LoadConfig();
 
+        if (XConomyLoad.Config.ISOLDCONFIG){
+            getLogger().warning("==================================================");
+            getLogger().warning("Please regenerate all configuration files");
+            getLogger().warning("==================================================");
+            logger("XConomy已成功卸载", 0, null);
+            return;
+        }
+
         if (XConomyLoad.Config.IMPORTMODE){
             itd = new ImportData(this);
             itd.onEnable();
@@ -219,7 +227,8 @@ public class XConomy extends JavaPlugin {
         update_config();
         reloadConfig();
 
-        DefaultConfig.config = new CConfig(getConfig());
+        File config = new File(this.getDataFolder(), "config.yml");
+        DefaultConfig.config = new CConfig(config);
 
         File file = new File(XConomy.getInstance().getDataFolder(), "database.yml");
         if (!file.exists()) {

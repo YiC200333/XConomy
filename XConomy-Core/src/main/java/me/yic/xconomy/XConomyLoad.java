@@ -23,6 +23,7 @@ import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.info.DataBaseConfig;
 import me.yic.xconomy.info.DefaultConfig;
+import me.yic.xconomy.info.SyncChannalType;
 import me.yic.xconomy.lang.MessagesManager;
 
 import java.util.concurrent.ExecutorService;
@@ -43,13 +44,13 @@ public class XConomyLoad{
         MessagesManager.loadlangmess();
 
         DConfig.Initialization();
-        Config.setBungeecord();
+        Config.setSyncData();
     }
 
     public static void Initial(){
         DataCon.baltop();
 
-        if (Config.BUNGEECORD_ENABLE) {
+        if (Config.SYNCDATA_TYPE.equals(SyncChannalType.BUNGEECORD)) {
             if ((DConfig.getStorageType() == 0 || DConfig.getStorageType() == 1)
                     && (DConfig.gethost().equalsIgnoreCase("Default"))) {
                 XConomy.getInstance().logger("SQLite文件路径设置错误", 1, null);
@@ -66,7 +67,7 @@ public class XConomyLoad{
 
     public static void Unload() {
 
-        if (XConomyLoad.Config.BUNGEECORD_ENABLE) {
+        if (Config.SYNCDATA_TYPE.equals(SyncChannalType.BUNGEECORD)) {
             AdapterManager.PLUGIN.unregisterIncomingPluginChannel("xconomy:aca", "me.yic.xconomy.listeners.SPsync");
             AdapterManager.PLUGIN.unregisterOutgoingPluginChannel("xconomy:acb");
         }

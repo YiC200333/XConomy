@@ -32,6 +32,7 @@ import me.yic.xconomy.data.syncdata.SyncData;
 import me.yic.xconomy.data.syncdata.SyncDelData;
 import me.yic.xconomy.info.MessageConfig;
 import me.yic.xconomy.info.RecordInfo;
+import me.yic.xconomy.info.SyncChannalType;
 import me.yic.xconomy.utils.SendPluginMessage;
 
 import java.math.BigDecimal;
@@ -79,7 +80,7 @@ public class DataCon {
         DataLink.deletePlayerData(pd.getUniqueId());
         Cache.removefromCache(pd.getUniqueId());
 
-        if (!(pd instanceof SyncDelData) && XConomyLoad.Config.BUNGEECORD_ENABLE) {
+        if (!(pd instanceof SyncDelData) && XConomyLoad.Config.SYNCDATA_ENABLE) {
             SendMessTask(new SyncDelData(pd));
         }
 
@@ -131,7 +132,7 @@ public class DataCon {
             DataLink.save(pd, isAdd, amount, ri);
         }
 
-        if (XConomyLoad.Config.BUNGEECORD_ENABLE) {
+        if (XConomyLoad.Config.SYNCDATA_ENABLE) {
             SendMessTask(pd);
         }
     }
@@ -177,7 +178,7 @@ public class DataCon {
         //if (targettype.equals("all")) {
         //} else
 
-        if (XConomyLoad.Config.BUNGEECORD_ENABLE) {
+        if (XConomyLoad.Config.SYNCDATA_ENABLE) {
             SendMessTask(new SyncBalanceAll(isallbool, isAdd, amount));
         }
     }
@@ -196,10 +197,10 @@ public class DataCon {
 
 
     public static void SendMessTask(SyncData pd) {
-        if (XConomyLoad.DConfig.CacheType().equalsIgnoreCase("Redis")) {
+        if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)) {
             RedisPublisher publisher = new RedisPublisher(pd.toByteArray(XConomy.syncversion).toByteArray());
             publisher.start();
-        }else{
+        }else if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.BUNGEECORD)) {
             SendPluginMessage.SendMessTask("xconomy:acb", pd);
         }
     }

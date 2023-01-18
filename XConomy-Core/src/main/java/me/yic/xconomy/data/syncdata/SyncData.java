@@ -37,7 +37,7 @@ public abstract class SyncData implements Serializable {
     final UUID uuid;
 
     protected SyncData(SyncType st, UUID uuid) {
-        this.sign = XConomyLoad.Config.BUNGEECORD_SIGN;
+        this.sign = XConomyLoad.Config.SYNCDATA_SIGN;
         this.server_key = SyncInfo.server_key;
         this.st = st;
         this.uuid = uuid;

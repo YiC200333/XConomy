@@ -20,13 +20,12 @@ package me.yic.xconomy.info;
 
 import me.yic.xconomy.XConomy;
 import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.serialize.SerializationException;
 
 public class UpdateConfig {
 
     public static boolean update(ConfigurationNode config) {
         boolean update = false;
-        if (config.node("UUID-mode").virtual() || config.node("non-player-account").virtual()) {
+        if (config.node("SyncData").virtual()) {
             XConomy.getInstance().logger(null, 1, "==================================================");
             XConomy.getInstance().logger(null, 1, "The configuration file is an older version");
             XConomy.getInstance().logger(null, 1, "The plugin may occur configuration problems");
@@ -34,14 +33,6 @@ public class UpdateConfig {
             XConomy.getInstance().logger(null, 1, "==================================================");
         }
 
-        try {
-            if (!config.node("Importdata-mode").virtual()) {
-                config.node("Importdata-mode").set(false);
-                update = true;
-            }
-        } catch (SerializationException e) {
-            throw new RuntimeException(e);
-        }
         return update;
     }
 }

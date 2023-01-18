@@ -47,20 +47,6 @@ public class DataBaseConfig {
         XConomyLoad.FixedThreadPool = Executors.newFixedThreadPool(maxthread);
     }
 
-    public String CacheType(){
-        String cachetype = config.getString("Settings.cache-type");
-        if (cachetype == null){
-            return "Default";
-        }
-        if (XConomyLoad.Config.DISABLE_CACHE){
-            return "Default";
-        }
-        if (cachetype.equalsIgnoreCase("Redis")){
-            return "Redis";
-        }
-        return "Default";
-    }
-
     public boolean EnableConnectionPool = false;
     public boolean DDrivers = false;
     public boolean canasync = false;

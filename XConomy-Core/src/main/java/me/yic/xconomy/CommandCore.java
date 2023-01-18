@@ -872,7 +872,7 @@ public class CommandCore {
 
 
     public static void broadcastSendMessage(boolean ispublic, PlayerData pd, String message) {
-        if (!XConomyLoad.Config.BUNGEECORD_ENABLE) {
+        if (!XConomyLoad.Config.SYNCDATA_ENABLE) {
             return;
         }
 
@@ -895,7 +895,7 @@ public class CommandCore {
     }
 
     public static void syncpr(int type, UUID u, Boolean value) {
-        if (!XConomyLoad.Config.BUNGEECORD_ENABLE) {
+        if (!XConomyLoad.Config.SYNCDATA_ENABLE) {
             return;
         }
 

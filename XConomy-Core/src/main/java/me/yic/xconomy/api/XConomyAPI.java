@@ -27,6 +27,7 @@ import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.data.syncdata.PlayerData;
+import me.yic.xconomy.info.SyncChannalType;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -41,7 +42,7 @@ public class XConomyAPI {
     }
 
     public boolean isbungeecordmode() {
-        return XConomyLoad.Config.BUNGEECORD_ENABLE;
+        return XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.BUNGEECORD);
     }
 
     public BigDecimal formatdouble(String amount) {
@@ -78,7 +79,7 @@ public class XConomyAPI {
     }
 
     public int changePlayerBalance(UUID u, String playername, BigDecimal amount, Boolean isadd, String pluginname) {
-        if (XConomyLoad.Config.BUNGEECORD_ENABLE & AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
+        if (XConomyLoad.Config.SYNCDATA_ENABLE & AdapterManager.BanModiftyBalance()) {
             return 1;
         }
         BigDecimal bal = getPlayerData(u).getBalance();

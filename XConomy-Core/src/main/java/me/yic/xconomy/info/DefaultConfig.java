@@ -37,6 +37,7 @@ public class DefaultConfig {
         setformatbalance();
         setpaytips();
     }
+    public boolean ISOLDCONFIG = false;
 
     public UUIDMode UUIDMODE = UUIDMode.DEFAULT;
     public boolean IMPORTMODE = config.getBoolean("Importdata-mode");
@@ -68,8 +69,10 @@ public class DefaultConfig {
     public List<BigDecimal> FORMAT_BALANCE = null;
     public LinkedHashMap<BigDecimal, String> FORMAT_BALANCE_C = null;
 
-    public boolean BUNGEECORD_ENABLE = false;
-    public String BUNGEECORD_SIGN = config.getString("BungeeCord.sign");
+    public SyncChannalType SYNCDATA_TYPE = SyncChannalType.OFF;
+
+    public boolean SYNCDATA_ENABLE = false;
+    public String SYNCDATA_SIGN = config.getString("SyncData.sign");
 
 
     private int getrankingsize() {
@@ -115,17 +118,31 @@ public class DefaultConfig {
         }
     }
 
-    public void setBungeecord() {
-        if (!config.getBoolean("BungeeCord.enable")) {
+    public void setSyncData() {
+        if (!config.contains("SyncData.enable")) {
+            ISOLDCONFIG = true;
+        }
+
+        if (!config.getBoolean("SyncData.enable")) {
             return;
         }
 
         if (XConomyLoad.DConfig.getStorageType() == 0 || XConomyLoad.DConfig.getStorageType() == 1) {
-            BUNGEECORD_ENABLE = !XConomyLoad.DConfig.gethost().equalsIgnoreCase("Default");
+            SYNCDATA_ENABLE = !XConomyLoad.DConfig.gethost().equalsIgnoreCase("Default");
         }
 
-        BUNGEECORD_ENABLE = true;
+        SYNCDATA_ENABLE = true;
 
+        if (!SYNCDATA_ENABLE){
+            return;
+        }
+
+        String channeltype = config.getString("SyncData.channel-type");
+        if (channeltype.equalsIgnoreCase("BungeeCord")) {
+            SYNCDATA_TYPE = SyncChannalType.BUNGEECORD;
+        }else if (channeltype.equalsIgnoreCase("Redis")) {
+            SYNCDATA_TYPE = SyncChannalType.REDIS;
+        }
     }
 
     private void setpaytips() {
