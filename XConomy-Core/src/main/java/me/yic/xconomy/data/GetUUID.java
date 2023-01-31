@@ -63,7 +63,7 @@ public class GetUUID {
         switch (XConomyLoad.Config.UUIDMODE) {
             case ONLINE:
                 if (CacheContainsKey(name)) {
-                    if (pp.getUniqueId().toString().equalsIgnoreCase(getUUIDFromCache(name).toString())) {
+                    if (pp == null || pp.getUniqueId().toString().equalsIgnoreCase(getUUIDFromCache(name).toString())) {
                         return getUUIDFromCache(name);
                     }
                 }
