@@ -1,19 +1,25 @@
 ![img.png](../img.png)
 ## FAQ
-For 2.19 version
+For 2.21 version
 ***
-Q - How to sync data?  
-A - 1 Install XConomy on BungeeCord or Velocity.  
+Q - How to sync data(BungeeCord Channel)?  
+A - 1 Install XConomy on BungeeCord or Velocity (Does not support synchronizing data in modern mode of Velocity).  
 &nbsp; &nbsp; &nbsp; 2 Set bungeecord to true in the spigot.yml.  
-&nbsp; &nbsp; &nbsp; 3 Set bungeecord.enable to true in the config.yml.  
+&nbsp; &nbsp; &nbsp; 3 Set SyncData.enable to true in the config.yml.  
+&nbsp; &nbsp; &nbsp; 4 Set SyncData.channel-type to BungeeCord in the config.yml.  
+&nbsp; &nbsp; &nbsp; 5 keep every configuration of XConomy is the same in your subserver. (It is recommended to copy the configuration file directly)
+
+Q - How to sync data(Redis Channel)?  
+A - 1 Set SyncData.enable to true in the config.yml.  
+&nbsp; &nbsp; &nbsp; 2 Set SyncData.channel-type to Redis in the config.yml.  
+&nbsp; &nbsp; &nbsp; 3 Complete Redis configuration in database.yml.  
 &nbsp; &nbsp; &nbsp; 4 keep every configuration of XConomy is the same in your subserver. (It is recommended to copy the configuration file directly)
 
 Q - What does bungeecord.sign mean in config.yml?  
 A - Group the servers that need to synchronize data. Only servers with the same sign can synchronize data.
 
 Q - I finished the synchronization configuration, but still failed to synchronize data.  
-A - 1 If your server install other Bungeecord sync plugins, please set their Vault function to false.  
-&nbsp; &nbsp; &nbsp; 2 XConomy currently does not support synchronizing data in modern mode of Velocity.
+A - 1 If your server install other Bungeecord sync plugins, please set their Vault function to false.
 
 Q - How to cancel the decimal of the balance?  
 A - Set initial-bal to true in config.yml, but scientific counting still has decimals. (eg: 234561 -> 234.56K)

@@ -1,19 +1,25 @@
 ![img.png](../img.png)
 ## FAQ
-基于版本 2.19
+基于 2.21 版本
 ***
-Q - 怎么同步数据?  
-A - 1 在 BungeeCord 或 Velocity 端安装 XConomy。  
+Q - 怎么同步数据(BungeeCord 通道)?  
+A - 1 在 BungeeCord 或 Velocity 端安装 XConomy (Velocity 的 modern 模式不支持)。  
 &nbsp; &nbsp; &nbsp; 2 在 spigot.yml 中设置 bungeecord 为 true。  
-&nbsp; &nbsp; &nbsp; 3 在 config.yml 中设置 bungeecord.enable 为 true。  
+&nbsp; &nbsp; &nbsp; 3 在 config.yml 中设置 SyncData.enable 为 true。  
+&nbsp; &nbsp; &nbsp; 4 在 config.yml 中设置 SyncData.channel-type 为 BungeeCord。  
+&nbsp; &nbsp; &nbsp; 5 保证需要同步的子服务器中，XConomy的配置文件全部一样。 (推荐直接复制配置文件)
+
+Q - 怎么同步数据(Redis 通道)?  
+A - 1 在 config.yml 中设置 SyncData.enable 为 true。  
+&nbsp; &nbsp; &nbsp; 2 在 config.yml 中设置 SyncData.channel-type 为 Redis。
+&nbsp; &nbsp; &nbsp; 2 在 database.yml 中完成 Redis 的配置。   
 &nbsp; &nbsp; &nbsp; 4 保证需要同步的子服务器中，XConomy的配置文件全部一样。 (推荐直接复制配置文件)
 
 Q - config.yml 中 bungeecord.sign 是什么意思?  
 A - 对需要同步数据的服务器进行分组，只有sign相同的服务器才会同步数据。
 
 Q - 我完成了同步配置，但仍然无法同步数据   
-A - 1 如果你服务器有安装其他 BungeeCord 同步插件，请在安装本插件前，确认他们的 Vault 同步功能已关闭。  
-&nbsp; &nbsp; &nbsp; 2 XConomy 目前不支持在 Velocity 的 modern 模式下同步数据。
+A - 如果你服务器有安装其他 BungeeCord 同步插件，请在安装本插件前，确认他们的 Vault 同步功能已关闭。
 
 Q - 如何移除余额的小数？  
 A - 在 config.yml 中设置 initial-bal 为 true, 但科学计数仍会有小数 (比如: 234561 -> 234.56K)
