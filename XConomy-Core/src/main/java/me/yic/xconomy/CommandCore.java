@@ -876,7 +876,7 @@ public class CommandCore {
             return;
         }
 
-        if (AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
+        if (check() && AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
             return;
         }
 
@@ -899,7 +899,7 @@ public class CommandCore {
             return;
         }
 
-        if (AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
+        if (check() && AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
             return;
         }
 

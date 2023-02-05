@@ -21,16 +21,11 @@ package me.yic.xconomy.data.redis;
 import me.yic.xconomy.utils.RedisConnection;
 import redis.clients.jedis.Jedis;
 
-public class RedisPublisher extends Thread{
+public class RedisPublisher{
 
-    private final byte[] data;
-    public RedisPublisher(byte[] data) {
-        this.data = data;
-    }
-
-    @Override
-    public void run() {
+    public static void publishmessage(byte[] data) {
         Jedis jedis = RedisConnection.getResource();
         jedis.publish(RedisConnection.channelname, data);
     }
+
 }

@@ -198,8 +198,7 @@ public class DataCon {
 
     public static void SendMessTask(SyncData pd) {
         if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)) {
-            RedisPublisher publisher = new RedisPublisher(pd.toByteArray(XConomy.syncversion).toByteArray());
-            publisher.start();
+            RedisPublisher.publishmessage(pd.toByteArray(XConomy.syncversion).toByteArray());
         }else if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.BUNGEECORD)) {
             SendPluginMessage.SendMessTask("xconomy:acb", pd);
         }
