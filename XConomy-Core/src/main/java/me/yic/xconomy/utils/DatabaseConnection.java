@@ -86,7 +86,7 @@ public class DatabaseConnection {
                         driver = ("org.sqlite.JDBC");
                         break;
                     case 2:
-                        driver = ("me.yic.libs.mysql.cj.jdbc.Driver");
+                        driver = ("me.yic.xc_libs.mysql.cj.jdbc.Driver");
                         break;
                 }
             } else {
