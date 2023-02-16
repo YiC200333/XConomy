@@ -11,8 +11,8 @@ A - 1 在 BungeeCord 或 Velocity 端安装 XConomy (Velocity 的 modern 模式�
 
 Q - 怎么同步数据(Redis 通道)?  
 A - 1 在 config.yml 中设置 SyncData.enable 为 true。  
-&nbsp; &nbsp; &nbsp; 2 在 config.yml 中设置 SyncData.channel-type 为 Redis。
-&nbsp; &nbsp; &nbsp; 2 在 database.yml 中完成 Redis 的配置。   
+&nbsp; &nbsp; &nbsp; 2 在 config.yml 中设置 SyncData.channel-type 为 Redis。   
+&nbsp; &nbsp; &nbsp; 3 在 database.yml 中完成 Redis 的配置。   
 &nbsp; &nbsp; &nbsp; 4 保证需要同步的子服务器中，XConomy的配置文件全部一样。 (推荐直接复制配置文件)
 
 Q - config.yml 中 bungeecord.sign 是什么意思?  
