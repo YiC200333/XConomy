@@ -7,7 +7,7 @@ Sponge版使用Sponge内置的经济API
 
 The basic economy plugin, supports other plugins that use the Vault API.  
 The SPONGE version uses the economic API built into SPONGE  
-Supporting MySQL to save player data, and synchronize data between Bungeecord/Velocity servers, or data synchronization through Redis.
+Supporting MySQL to save player data, and synchronize data between Bungeecord/Velocity servers or through Redis.
 
 ## FAQ
 请查看 [FAQ](https://github.com/YiC200333/XConomy/blob/master/FAQ/Chinese.md)  
