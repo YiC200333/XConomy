@@ -30,7 +30,7 @@ public class RedisThread extends Thread {
 
     @Override
     public void run() {
-        XConomy.getInstance().logger(null, 0, "Creating Redis listening thread");
+        XConomy.getInstance().logger("Redis监听线程创建中", 0, null);
 
         try (Jedis jedis = RedisConnection.getResource()) {
             jedis.subscribe(RedisConnection.subscriber, RedisConnection.channelname);
