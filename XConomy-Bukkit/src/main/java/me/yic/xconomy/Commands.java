@@ -19,6 +19,7 @@
 package me.yic.xconomy;
 
 import me.yic.xconomy.adapter.comp.CSender;
+import me.yic.xconomy.command.core.CommandCore;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

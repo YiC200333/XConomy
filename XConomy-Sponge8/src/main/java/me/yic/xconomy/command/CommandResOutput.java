@@ -1,5 +1,5 @@
 /*
- *  This file (CommandCoreP.java) is a part of project XConomy
+ *  This file (CommandResOutput.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -18,15 +18,15 @@
  */
 package me.yic.xconomy.command;
 
-import me.yic.xconomy.CommandCore;
 import me.yic.xconomy.adapter.comp.CSender;
+import me.yic.xconomy.command.core.CommandCore;
 import net.kyori.adventure.text.Component;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandResult;
 
-public class CommandCoreP extends CommandCore {
-    public CommandResult getResultonCommand(CommandCause sender, String commandName, String[] args) {
-        if (onCommand(new CSender(sender), commandName, args)){
+public class CommandResOutput extends CommandCore{
+    public org.spongepowered.api.command.CommandResult getResultonCommand(CommandCause sender, String commandName, String[] args) {
+        if (CommandCore.onCommand(new CSender(sender), commandName, args)){
 
             return CommandResult.success();
         }

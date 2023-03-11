@@ -24,7 +24,7 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.Parameter;
 
-public class CommandPay extends CommandCoreP implements CommandExecutor {
+public class CommandPay extends CommandResOutput implements CommandExecutor {
     public static final Parameter.Value<String> arg1 = Parameter.string().key("player").optional().build();
     public static final Parameter.Value<Double> arg2 = Parameter.doubleNumber().key("amount").optional().build();
 

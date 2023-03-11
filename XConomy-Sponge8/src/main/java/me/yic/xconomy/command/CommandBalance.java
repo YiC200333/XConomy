@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandBalance extends CommandCoreP implements CommandExecutor {
+public class CommandBalance extends CommandResOutput implements CommandExecutor {
     public static final Parameter.Value<String> arg1 = Parameter.string().key("arg1").optional().build();
     public static final Parameter.Value<String> arg2 = Parameter.string().key("arg2").optional().build();
     public static final Parameter.Value<String> arg3 = Parameter.string().key("arg3").optional().build();

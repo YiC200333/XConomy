@@ -24,11 +24,11 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.Parameter;
 
-public class CommandPaytoggle extends CommandCoreP implements CommandExecutor {
+public class CommandPaytoggle extends CommandResOutput implements CommandExecutor {
     public static final Parameter.Value<String> arg1 = Parameter.string().key("arg1").optional().build();
     public static final Parameter.Value<String> arg2 = Parameter.string().key("arg2").optional().build();
 
-    @SuppressWarnings({"OptionalGetWithoutIsPresent", "NullableProblems"})
+    @SuppressWarnings({"OptionalGetWithoutIsPresent"})
     @Override
     public CommandResult execute(CommandContext args) {
         CommandCause sender = args.cause();

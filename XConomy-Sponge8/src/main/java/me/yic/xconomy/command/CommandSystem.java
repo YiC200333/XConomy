@@ -24,7 +24,7 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.Parameter;
 
-public class CommandSystem extends CommandCoreP implements CommandExecutor {
+public class CommandSystem extends CommandResOutput implements CommandExecutor {
     public static final Parameter.Value<String> arg1 = Parameter.string().key("arg1").optional().build();
     public static final Parameter.Value<String> arg2 = Parameter.string().key("arg2").optional().build();
 

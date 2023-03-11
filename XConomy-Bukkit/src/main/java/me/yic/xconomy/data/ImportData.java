@@ -18,7 +18,7 @@
  */
 package me.yic.xconomy.data;
 
-import me.yic.xconomy.CommandCore;
+import me.yic.xconomy.command.core.CommandCore;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CSender;

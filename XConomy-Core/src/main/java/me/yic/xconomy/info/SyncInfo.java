@@ -1,5 +1,5 @@
 package me.yic.xconomy.info;/*
- *  This file (Info.java) is a part of project XConomy
+ *  This file (SyncInfo.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -26,7 +26,7 @@ public class SyncInfo {
     public static String getRandomString(int length) {
         String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {
             int number = random.nextInt(62);
             sb.append(str.charAt(number));
