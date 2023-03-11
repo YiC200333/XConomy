@@ -25,7 +25,7 @@ import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandResult;
 
 public class CommandResOutput extends CommandCore{
-    public org.spongepowered.api.command.CommandResult getResultonCommand(CommandCause sender, String commandName, String[] args) {
+    public CommandResult getResultonCommand(CommandCause sender, String commandName, String[] args) {
         if (CommandCore.onCommand(new CSender(sender), commandName, args)){
 
             return CommandResult.success();
