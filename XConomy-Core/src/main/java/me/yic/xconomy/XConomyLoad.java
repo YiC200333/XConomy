@@ -56,7 +56,6 @@ public class XConomyLoad{
                 XConomy.getInstance().logger("SQLite文件路径设置错误", 1, null);
                 XConomy.getInstance().logger("BungeeCord同步未开启", 1, null);
                 Config.SYNCDATA_TYPE = SyncChannalType.OFF;
-                Config.SYNCDATA_ENABLE = false;
             } else {
                 AdapterManager.PLUGIN.registerIncomingPluginChannel("xconomy:aca", "me.yic.xconomy.listeners.SPsync");
                 AdapterManager.PLUGIN.registerOutgoingPluginChannel("xconomy:acb");
@@ -76,6 +75,10 @@ public class XConomyLoad{
 
         XConomyLoad.FixedThreadPool.shutdown();
         SQL.close();
+    }
+
+    public static boolean getSyncData_Enable(){
+        return !Config.SYNCDATA_TYPE.equals(SyncChannalType.OFF);
     }
 
     public static void runTaskAsynchronously(Runnable runnable){

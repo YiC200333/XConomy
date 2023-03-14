@@ -68,6 +68,7 @@ public class RedisConnection {
             jedisconfig.setMaxTotal(maxtotal);
             jedisconfig.setMaxIdle(maxidle);
             jedisconfig.setMinIdle(minidle);
+            //jedisconfig.setMaxWait(Duration.ofSeconds(5));
             jedis = new JedisPool(jedisconfig, url, port);
             try {
                 getResource();
@@ -81,6 +82,12 @@ public class RedisConnection {
             }
         }
         return true;
+    }
+
+    public static void returnResource(final Jedis jedisc) {
+        if (jedisc != null) {
+            jedis.returnResource(jedisc);
+        }
     }
 
     public static Jedis getResource() {

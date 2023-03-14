@@ -45,7 +45,7 @@ public class AdapterManager {
 
 
     public static boolean BanModiftyBalance() {
-        if (!XConomyLoad.Config.SYNCDATA_ENABLE){
+        if (!XConomyLoad.getSyncData_Enable()){
             return false;
         }
         if (!PLUGIN.getOnlinePlayersisEmpty()){

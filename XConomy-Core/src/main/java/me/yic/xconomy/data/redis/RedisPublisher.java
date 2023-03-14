@@ -26,6 +26,7 @@ public class RedisPublisher{
     public static void publishmessage(byte[] data) {
         Jedis jedis = RedisConnection.getResource();
         jedis.publish(RedisConnection.channelname, data);
+        RedisConnection.returnResource(jedis);
     }
 
 }

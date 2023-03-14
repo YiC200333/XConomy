@@ -37,7 +37,7 @@ public class EnterpriseWallet extends PlayerWallet {
 
     @Override
     public EconomyAction setBalance(BigDecimal amount) {
-        if (XConomyLoad.Config.SYNCDATA_ENABLE & AdapterManager.BanModiftyBalance()) {
+        if (XConomyLoad.getSyncData_Enable() & AdapterManager.BanModiftyBalance()) {
             return new EconomyAction(getHolder(), false,
                     "[BungeeCord] No player in server");
         }
@@ -96,7 +96,7 @@ public class EnterpriseWallet extends PlayerWallet {
     @SuppressWarnings("ConstantConditions")
     @Override
     public EconomyAction withdraw(BigDecimal amount) {
-        if (XConomyLoad.Config.SYNCDATA_ENABLE & AdapterManager.BanModiftyBalance()) {
+        if (XConomyLoad.getSyncData_Enable() & AdapterManager.BanModiftyBalance()) {
             return new EconomyAction(getHolder(), false, "[BungeeCord] No player in server");
         }
 
@@ -119,7 +119,7 @@ public class EnterpriseWallet extends PlayerWallet {
     @SuppressWarnings("ConstantConditions")
     @Override
     public EconomyAction deposit(BigDecimal amount) {
-        if (XConomyLoad.Config.SYNCDATA_ENABLE & AdapterManager.BanModiftyBalance()) {
+        if (XConomyLoad.getSyncData_Enable() & AdapterManager.BanModiftyBalance()) {
             return new EconomyAction(getHolder(), false,
                     "[BungeeCord] No player in server");
         }

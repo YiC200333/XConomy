@@ -80,7 +80,7 @@ public class DataCon {
         DataLink.deletePlayerData(pd.getUniqueId());
         Cache.removefromCache(pd.getUniqueId());
 
-        if (!(pd instanceof SyncDelData) && XConomyLoad.Config.SYNCDATA_ENABLE) {
+        if (!(pd instanceof SyncDelData) && XConomyLoad.getSyncData_Enable()) {
             SendMessTask(new SyncDelData(pd));
         }
 
@@ -127,14 +127,19 @@ public class DataCon {
         Cache.updateIntoCache(u, pd, newvalue);
 
         if (XConomyLoad.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
-            XConomyLoad.runTaskAsynchronously(() -> DataLink.save(pd, isAdd, amount, ri));
+            XConomyLoad.runTaskAsynchronously(() -> {
+                DataLink.save(pd, isAdd, amount, ri);
+                if (XConomyLoad.getSyncData_Enable()) {
+                    SendMessTask(pd);
+                }
+            });
         } else {
             DataLink.save(pd, isAdd, amount, ri);
+            if (XConomyLoad.getSyncData_Enable()) {
+                SendMessTask(pd);
+            }
         }
 
-        if (XConomyLoad.Config.SYNCDATA_ENABLE) {
-            SendMessTask(pd);
-        }
     }
 
 
@@ -178,7 +183,7 @@ public class DataCon {
         //if (targettype.equals("all")) {
         //} else
 
-        if (XConomyLoad.Config.SYNCDATA_ENABLE) {
+        if (XConomyLoad.getSyncData_Enable()) {
             SendMessTask(new SyncBalanceAll(isallbool, isAdd, amount));
         }
     }

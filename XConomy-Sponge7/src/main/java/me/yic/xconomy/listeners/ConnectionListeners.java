@@ -41,7 +41,7 @@ public class ConnectionListeners {
         if (Sponge.getServer().getOnlinePlayers().size() == 1) {
             Cache.clearCache();
         }
-        if (XConomyLoad.Config.SYNCDATA_ENABLE) {
+        if (XConomyLoad.getSyncData_Enable()) {
             DataCon.SendMessTask(new SyncTabQuit(event.getTargetEntity().getName()));
         }
         AdapterManager.Tab_PlayerList.remove(event.getTargetEntity().getName());
@@ -62,7 +62,7 @@ public class ConnectionListeners {
             DataLink.newPlayer(a);
         }
 
-        if (XConomyLoad.Config.SYNCDATA_ENABLE) {
+        if (XConomyLoad.getSyncData_Enable()) {
             DataCon.SendMessTask(new SyncTabJoin(event.getTargetEntity().getName()));
         }
         if (!AdapterManager.Tab_PlayerList.contains(a.getName())) {

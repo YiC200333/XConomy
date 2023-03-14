@@ -280,7 +280,7 @@ public class SQLCreateNewAccount extends SQL {
 
     private static void syncOnlineUUID(String oldname, String newname, UUID newUUID) {
         Cache.syncOnlineUUIDCache(oldname, newname, newUUID);
-        if (XConomyLoad.Config.SYNCDATA_ENABLE) {
+        if (XConomyLoad.getSyncData_Enable()) {
             SyncUUID su = new SyncUUID(newUUID, newname, oldname);
             SendPluginMessage.SendMessTask("xconomy:acb", su);
         }

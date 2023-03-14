@@ -181,8 +181,9 @@ public class XConomy extends JavaPlugin {
             } catch (NoSuchMethodError ignored) {
             }
         }
-
-        refresherTask.cancel();
+        if (refresherTask != null) {
+            refresherTask.cancel();
+        }
         XConomyLoad.Unload();
         logger("XConomy已成功卸载", 0, null);
     }

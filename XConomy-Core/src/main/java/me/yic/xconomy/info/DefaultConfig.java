@@ -19,7 +19,6 @@
 package me.yic.xconomy.info;
 
 import me.yic.xconomy.XConomy;
-import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CConfig;
 import me.yic.xconomy.utils.UUIDMode;
 
@@ -71,7 +70,6 @@ public class DefaultConfig {
 
     public SyncChannalType SYNCDATA_TYPE = SyncChannalType.OFF;
 
-    public boolean SYNCDATA_ENABLE = false;
     public String SYNCDATA_SIGN = config.getString("SyncData.sign");
 
 
@@ -121,27 +119,21 @@ public class DefaultConfig {
     public void setSyncData() {
         if (!config.contains("SyncData.enable")) {
             ISOLDCONFIG = true;
-        }
-
-        if (!config.getBoolean("SyncData.enable")) {
             return;
         }
 
-        if (XConomyLoad.DConfig.getStorageType() == 0 || XConomyLoad.DConfig.getStorageType() == 1) {
-            SYNCDATA_ENABLE = !XConomyLoad.DConfig.gethost().equalsIgnoreCase("Default");
-        }
 
-        SYNCDATA_ENABLE = true;
+//        if (XConomyLoad.DConfig.getStorageType() == 0 || XConomyLoad.DConfig.getStorageType() == 1) {
+//            SYNCDATA_ENABLE = !XConomyLoad.DConfig.gethost().equalsIgnoreCase("Default");
+//        }
 
-        if (!SYNCDATA_ENABLE){
-            return;
-        }
-
-        String channeltype = config.getString("SyncData.channel-type");
-        if (channeltype.equalsIgnoreCase("BungeeCord")) {
-            SYNCDATA_TYPE = SyncChannalType.BUNGEECORD;
-        }else if (channeltype.equalsIgnoreCase("Redis")) {
-            SYNCDATA_TYPE = SyncChannalType.REDIS;
+        if (config.getBoolean("SyncData.enable")) {
+            String channeltype = config.getString("SyncData.channel-type");
+            if (channeltype.equalsIgnoreCase("BungeeCord")) {
+                SYNCDATA_TYPE = SyncChannalType.BUNGEECORD;
+            }else if (channeltype.equalsIgnoreCase("Redis")) {
+                SYNCDATA_TYPE = SyncChannalType.REDIS;
+            }
         }
     }
 

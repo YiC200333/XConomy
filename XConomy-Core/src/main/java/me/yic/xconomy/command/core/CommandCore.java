@@ -274,7 +274,7 @@ public class CommandCore {
 
 
     protected static void broadcastSendMessage(boolean ispublic, PlayerData pd, String message) {
-        if (!XConomyLoad.Config.SYNCDATA_ENABLE) {
+        if (!XConomyLoad.getSyncData_Enable()) {
             return;
         }
 
@@ -297,7 +297,7 @@ public class CommandCore {
     }
 
     protected static void syncpr(int type, UUID u, Boolean value) {
-        if (!XConomyLoad.Config.SYNCDATA_ENABLE) {
+        if (!XConomyLoad.getSyncData_Enable()) {
             return;
         }
 

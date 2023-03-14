@@ -44,7 +44,7 @@ public class ConnectionListeners implements Listener {
         if (Bukkit.getOnlinePlayers().size() == 1) {
             Cache.clearCache();
         }
-        if (XConomyLoad.Config.SYNCDATA_ENABLE) {
+        if (XConomyLoad.getSyncData_Enable()) {
             DataCon.SendMessTask(new SyncTabQuit(event.getPlayer().getName()));
         }
         AdapterManager.Tab_PlayerList.remove(event.getPlayer().getName());
@@ -65,7 +65,7 @@ public class ConnectionListeners implements Listener {
             DataLink.newPlayer(a);
         }
 
-        if (XConomyLoad.Config.SYNCDATA_ENABLE) {
+        if (XConomyLoad.getSyncData_Enable()) {
             DataCon.SendMessTask(new SyncTabJoin(event.getPlayer().getName()));
         }
         if (!AdapterManager.Tab_PlayerList.contains(a.getName())) {
