@@ -31,26 +31,23 @@ import java.util.UUID;
 
 public abstract class SyncData implements Serializable {
 
-    final String server_key;
-    final String sign;
+    String server_key;
+    String sign;
     final SyncType st;
     final UUID uuid;
 
     protected SyncData(SyncType st, UUID uuid) {
-        this.sign = XConomyLoad.Config.SYNCDATA_SIGN;
-        this.server_key = SyncInfo.server_key;
         this.st = st;
         this.uuid = uuid;
-    }
-
-    public boolean isSammServer(String key) {
-        return this.server_key.equals(key);
     }
 
     public String getSign() {
         return sign;
     }
 
+    public String getServerKey() {
+        return server_key;
+    }
     public UUID getUniqueId() {
         return uuid;
     }
@@ -61,6 +58,8 @@ public abstract class SyncData implements Serializable {
 
     @SuppressWarnings("unused")
     public ByteArrayOutputStream toByteArray(String syncversion) {
+        this.sign = XConomyLoad.Config.SYNCDATA_SIGN;
+        this.server_key = SyncInfo.server_key;
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
             ObjectOutputStream oos = new ObjectOutputStream(output);

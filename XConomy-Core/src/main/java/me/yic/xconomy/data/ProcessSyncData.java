@@ -46,7 +46,7 @@ public class ProcessSyncData {
             }
 
             SyncData ob = (SyncData) ios.readObject();
-            if (ob.isSammServer(SyncInfo.server_key)) {
+            if (ob.getServerKey().equals(SyncInfo.server_key)) {
                 return;
             }
 

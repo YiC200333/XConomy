@@ -277,7 +277,6 @@ public class CommandCore {
         if (!XConomyLoad.getSyncData_Enable()) {
             return;
         }
-
         if (check() && AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
             return;
         }

@@ -151,7 +151,7 @@ public class DataFormat {
         if (pt < 0.0) {
             pt = 0.0;
         }
-        return formatdouble(pt).add(BigDecimal.ONE);
+        return BigDecimal.valueOf(pt).add(BigDecimal.ONE);
     }
 
     private static String getformatbalance(BigDecimal bal) {
