@@ -18,6 +18,8 @@
  */
 package me.yic.xconomy.data.syncdata;
 
+import me.yic.xconomy.XConomyLoad;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.info.SyncType;
 
@@ -27,6 +29,7 @@ import java.util.UUID;
 public class PlayerData extends SyncData {
     private final String name;
     private BigDecimal balance;
+    private BigDecimal vbalance;
 
     public PlayerData(UUID uuid, String name, BigDecimal balance) {
         super(SyncType.UPDATEPLAYER, uuid);
@@ -52,9 +55,18 @@ public class PlayerData extends SyncData {
         this.balance = balance;
     }
 
+    public void setVerifyBalance(BigDecimal balance) {
+        this.vbalance = balance;
+    }
 
     @Override
     public void SyncStart() {
+        if (!XConomyLoad.Config.DISABLE_CACHE) {
+            if (Cache.CacheContainsKey(getUniqueId()) && Cache.getDataFromCache(getUniqueId()).balance.compareTo(vbalance) != 0) {
+                DataCon.deletedatafromcache(getUniqueId());
+                return;
+            }
+        }
         Cache.insertIntoCache(getUniqueId(), this);
     }
 }

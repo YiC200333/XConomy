@@ -94,6 +94,9 @@ public class DataCon {
         return CacheNonPlayer.CacheContainsKey(name);
 
     }
+    public static void deletedatafromcache(UUID u) {
+        Cache.deleteDataFromCache(u);
+    }
 
     public static boolean containinfieldslist(String name) {
         if (XConomyLoad.Config.NON_PLAYER_ACCOUNT_SUBSTRING != null) {
@@ -124,7 +127,7 @@ public class DataCon {
             }
         }
 
-        Cache.updateIntoCache(u, pd, newvalue);
+        Cache.updateIntoCache(u, pd, newvalue, bal);
 
         if (XConomyLoad.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
             XConomyLoad.runTaskAsynchronously(() -> {

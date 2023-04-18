@@ -271,21 +271,21 @@ public class SQL {
         Connection connection = database.getConnectionAndCheck();
         try {
             String query = " set balance = ? where UID = ?";
-            if (XConomyLoad.Config.DISABLE_CACHE) {
-                if (isAdd != null) {
-                    if (isAdd) {
-                        query = " set balance = balance + ? where UID = ?";
-                    } else {
-                        query = " set balance = balance - ? where UID = ?";
-                    }
+//            if (XConomyLoad.Config.DISABLE_CACHE) {
+            if (isAdd != null) {
+                if (isAdd) {
+                    query = " set balance = balance + ? where UID = ?";
+                } else {
+                    query = " set balance = balance - ? where UID = ?";
                 }
             }
+//            }
             PreparedStatement statement = connection.prepareStatement("update " + tableName + query);
-            if (!XConomyLoad.Config.DISABLE_CACHE) {
-                statement.setDouble(1, pd.getBalance().doubleValue());
-            } else {
-                statement.setDouble(1, amount.doubleValue());
-            }
+//            if (!XConomyLoad.Config.DISABLE_CACHE) {
+//                statement.setDouble(1, pd.getBalance().doubleValue());
+//            } else {
+            statement.setDouble(1, amount.doubleValue());
+//            }
             statement.setString(2, pd.getUniqueId().toString());
             statement.executeUpdate();
             statement.close();

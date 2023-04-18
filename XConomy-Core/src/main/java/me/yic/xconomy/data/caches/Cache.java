@@ -100,6 +100,11 @@ public class Cache {
         return pds.get(u);
     }
 
+    public static void deleteDataFromCache(final UUID key) {
+        if (CacheContainsKey(key)) {
+            pds.remove(key);
+        }
+    }
 
     public static UUID getMultiUUIDCache(final UUID luuid) {
         if (m_uuids.containsKey(luuid)){
@@ -108,8 +113,9 @@ public class Cache {
         return null;
     }
 
-    public static void updateIntoCache(final UUID uuid, final PlayerData pd, final BigDecimal newbalance) {
+    public static void updateIntoCache(final UUID uuid, final PlayerData pd, final BigDecimal newbalance, final BigDecimal vbalance) {
         pd.setBalance(newbalance);
+        pd.setVerifyBalance(vbalance);
         pds.put(uuid, pd);
     }
 
