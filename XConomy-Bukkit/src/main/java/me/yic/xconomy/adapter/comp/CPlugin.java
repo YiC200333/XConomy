@@ -51,10 +51,10 @@ public class CPlugin implements iPlugin {
         Bukkit.broadcastMessage(message);
     }
 
-    @Override
-    public void runTaskLaterAsynchronously(Runnable ra, long time) {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(XConomy.getInstance(), ra, time);
-    }
+//    @Override
+//    public void runTaskLaterAsynchronously(Runnable ra, long time) {
+//        Bukkit.getScheduler().runTaskLaterAsynchronously(XConomy.getInstance(), ra, time);
+//    }
 
     @Override
     public void sendPluginMessage(String channel, ByteArrayOutputStream stream){

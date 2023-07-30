@@ -44,7 +44,7 @@ public class DataBaseConfig {
                 maxthread = 1;
             }
         }
-        XConomyLoad.FixedThreadPool = Executors.newFixedThreadPool(maxthread);
+        AdapterManager.FixedThreadPool = Executors.newScheduledThreadPool(maxthread);
     }
 
     public boolean EnableConnectionPool = false;

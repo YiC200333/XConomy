@@ -88,7 +88,7 @@ public class DataLink{
 
     public static void updatelogininfo(UUID uid) {
         if (XConomyLoad.DConfig.canasync) {
-            XConomyLoad.runTaskAsynchronously(() -> SQLLogin.updatelogininfo(uid));
+            AdapterManager.runTaskAsynchronously(() -> SQLLogin.updatelogininfo(uid));
         } else {
             SQLLogin.updatelogininfo(uid);
         }
@@ -96,7 +96,7 @@ public class DataLink{
 
     public static void selectlogininfo(CPlayer pp) {
         if (XConomyLoad.DConfig.canasync) {
-            AdapterManager.PLUGIN.runTaskLaterAsynchronously(() -> SQLLogin.getPlayerlogin(pp), 20L);
+            AdapterManager.runTaskLaterAsynchronously(() -> SQLLogin.getPlayerlogin(pp), 1L);
         } else {
             SQLLogin.getPlayerlogin(pp);
         }
@@ -147,7 +147,7 @@ public class DataLink{
     }
 
     public static void saveall(String targettype, BigDecimal amount, Boolean isAdd, RecordInfo ri) {
-        XConomyLoad.runTaskAsynchronously(() -> {
+        AdapterManager.runTaskAsynchronously(() -> {
             if (targettype.equalsIgnoreCase("all")) {
                 SQL.saveall(targettype, null, amount, isAdd, ri);
             } else if (targettype.equalsIgnoreCase("online")) {

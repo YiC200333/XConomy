@@ -30,10 +30,10 @@ public class CPlugin implements iPlugin {
 
     }
 
-    @Override
-    public void runTaskLaterAsynchronously(Runnable ra, long time) {
-
-    }
+//    @Override
+//    public void runTaskLaterAsynchronously(Runnable ra, long time) {
+//
+//    }
 
     @Override
     public void sendPluginMessage(String channel, ByteArrayOutputStream stream) {

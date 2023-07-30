@@ -58,23 +58,7 @@ public class ConnectionListeners implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent event) {
         CPlayer a = new CPlayer(event.getPlayer());
-
-        if (XConomyLoad.DConfig.canasync) {
-            Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), () -> DataLink.newPlayer(a));
-        } else {
-            DataLink.newPlayer(a);
-        }
-
-        if (XConomyLoad.getSyncData_Enable()) {
-            DataCon.SendMessTask(new SyncTabJoin(event.getPlayer().getName()));
-        }
-        if (!AdapterManager.Tab_PlayerList.contains(a.getName())) {
-            AdapterManager.Tab_PlayerList.add(a.getName());
-        }
-
-        if (XConomyLoad.DConfig.isMySQL() && XConomyLoad.Config.PAY_TIPS) {
-            DataLink.selectlogininfo(a);
-        }
+        PlayerConnection.onJoin(a);
 
         if (a.isOp()) {
             notifyUpdate(a);

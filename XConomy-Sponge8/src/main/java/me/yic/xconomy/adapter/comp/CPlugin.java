@@ -62,10 +62,10 @@ public class CPlugin implements iPlugin {
         Sponge.server().broadcastAudience().sendMessage(Component.text(message));
     }
 
-    @Override
-    public void runTaskLaterAsynchronously(Runnable ra, long time) {
-
-    }
+//    @Override
+//    public void runTaskLaterAsynchronously(Runnable ra, long time) {
+//
+//    }
 
     @Override
     public void sendPluginMessage(String channel, ByteArrayOutputStream stream){

@@ -33,8 +33,6 @@ public class XConomyLoad{
     public static DataBaseConfig DConfig;
     public static DefaultConfig Config;
 
-    public static ExecutorService FixedThreadPool;
-
     public static void LoadConfig(){
 
         Config = new DefaultConfig();
@@ -73,7 +71,7 @@ public class XConomyLoad{
             AdapterManager.PLUGIN.unregisterOutgoingPluginChannel("xconomy:acb");
         }
 
-        XConomyLoad.FixedThreadPool.shutdown();
+        AdapterManager.FixedThreadPool.shutdown();
         SQL.close();
     }
 
@@ -81,7 +79,4 @@ public class XConomyLoad{
         return !Config.SYNCDATA_TYPE.equals(SyncChannalType.OFF);
     }
 
-    public static void runTaskAsynchronously(Runnable runnable){
-        FixedThreadPool.execute(runnable);
-    }
 }

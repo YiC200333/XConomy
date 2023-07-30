@@ -26,6 +26,8 @@ import me.yic.xconomy.lang.MessagesManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class AdapterManager {
 
@@ -34,6 +36,8 @@ public class AdapterManager {
     public static boolean foundvaultOfflinePermManager = false;
 
     public final static CPlugin PLUGIN = new CPlugin();
+
+    public static ScheduledExecutorService FixedThreadPool;
 
     public static String translateColorCodes(MessageConfig message) {
         return CChat.translateAlternateColorCodes('&', MessagesManager.messageFile.getString(message.toString()));
@@ -55,5 +59,13 @@ public class AdapterManager {
             return false;
         }
         return !XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS);
+    }
+
+    public static void runTaskAsynchronously(Runnable runnable){
+        FixedThreadPool.execute(runnable);
+    }
+
+    public static void runTaskLaterAsynchronously(Runnable runnable, long seconds){
+        FixedThreadPool.schedule(runnable, seconds, TimeUnit.SECONDS);
     }
 }
