@@ -27,4 +27,4 @@ Spigot: https://www.spigotmc.org/resources/xconomy.75669/
 
 Sponge: https://ore.spongepowered.org/YiC/XConomy
 
-Github https://github.com/YiC200333/XConomy/releases
+Github: https://github.com/YiC200333/XConomy/releases

@@ -184,11 +184,11 @@ public class CommandCore {
     }
 
     public static void showVersion(CSender sender) {
-        sender.sendMessage(PREFIX + "§6 XConomy §f(Version: "
+        sender.sendMessage(PREFIX + "§6XConomy §f(Version: "
                 + XConomy.PVersion + ") §6|§7 Author: §f" + MessagesManager.getAuthor());
         String trs = MessagesManager.getTranslatorS();
         if (trs != null) {
-            sender.sendMessage(PREFIX + "§7 Translator (system): §f" + trs);
+            sender.sendMessage(PREFIX + "§7Translator (system): §f" + trs);
         }
     }
 
