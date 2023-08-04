@@ -5,8 +5,6 @@ Settings:
   #Require 'slf4j' dependencies
   #At least java version 11 is required
   usepool: false
-  #Set the maximum number of threads (SQLite no such setting)
-  max-threads: 5
 
 
 #SQLite settings

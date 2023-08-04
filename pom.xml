@@ -10,6 +10,7 @@
         <module>XConomy-Bukkit</module>
         <module>XConomy-Sponge7</module>
         <module>XConomy-Sponge8</module>
+        <module>XConomy-Folia</module>
         <module>XConomy-Core</module>
     </modules>
     <packaging>pom</packaging>

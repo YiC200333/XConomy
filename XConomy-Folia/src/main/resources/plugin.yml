@@ -1,0 +1,64 @@
+name: XConomy
+version: ${project.version}
+main: me.yic.xconomy.XConomy
+author: YiC
+website: https://www.spigotmc.org/resources/xconomy.75669/
+load: STARTUP
+loadbefore:  [ PlotSquared ]
+softdepend: [ Vault, Enterprise, DatabaseDrivers, MPoints, PlaceholderAPI, Towny ]
+api-version: "1.13"
+
+folia-supported: true
+
+commands:
+  xconomy:
+    usage: /<command>
+    description: XConomy.
+    aliases: [ xc ]
+  money:
+    usage: /<command>
+    description: XConomy.
+  balance:
+    usage: /<command>
+    description: XConomy.
+    aliases: [ bal ]
+  balancetop:
+    usage: /<command>
+    description: XConomy.
+    aliases: [ baltop ]
+  pay:
+    usage: /<command>
+    description: XConomy.
+  paytoggle:
+    usage: /<command>
+    description: XConomy.
+  paypermission:
+    usage: /<command>
+    description: XConomy.
+    aliases: [ payperm ]
+
+permissions:
+  xconomy.user.balance:
+    default: true
+    children:
+      xconomy.user.balance.other: true
+  xconomy.user.pay:
+    default: true
+    children:
+      xconomy.user.pay.receive: true
+  xconomy.user.balancetop:
+    default: true
+  xconomy.user.paytoggle:
+    default: true
+  xconomy.admin.give:
+    default: op
+  xconomy.admin.take:
+    default: op
+  xconomy.admin.set:
+    default: op
+  xconomy.admin.permission:
+    default: op
+  xconomy.admin.balancetop:
+    default: op
+  xconomy.admin.paytoggle:
+    default: op

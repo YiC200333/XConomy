@@ -40,11 +40,11 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Collections;
+import java.util.concurrent.ScheduledFuture;
 
 public class XConomy extends JavaPlugin {
 
@@ -53,7 +53,7 @@ public class XConomy extends JavaPlugin {
     private static XConomy instance;
 
     public static String syncversion = SyncInfo.syncversion;
-    private BukkitTask refresherTask = null;
+    private ScheduledFuture<?> refresherTask = null;
     Metrics metrics = null;
     private Placeholder papiExpansion = null;
 
@@ -108,7 +108,7 @@ public class XConomy extends JavaPlugin {
         }
 
         if (XConomyLoad.Config.CHECK_UPDATE) {
-            new Updater().runTaskAsynchronously(this);
+            AdapterManager.runTaskAsynchronously(new Updater());
         }
         // 检查更新
 
@@ -161,7 +161,7 @@ public class XConomy extends JavaPlugin {
         XConomyLoad.Initial();
 
         int time = XConomyLoad.Config.REFRESH_TIME;
-        refresherTask = Bukkit.getScheduler().runTaskTimerAsynchronously(this, new Baltop(), time * 20L, time * 20L);
+        refresherTask = AdapterManager.runTaskTimerAsynchronously(new Baltop(), time * 20L);
         logger(null, 0, "===== YiC =====");
 
     }
@@ -182,7 +182,7 @@ public class XConomy extends JavaPlugin {
             }
         }
         if (refresherTask != null) {
-            refresherTask.cancel();
+            refresherTask.cancel(true);
         }
         XConomyLoad.Unload();
         logger("XConomy已成功卸载", 0, null);

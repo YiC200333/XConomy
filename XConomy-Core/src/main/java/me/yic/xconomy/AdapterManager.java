@@ -27,6 +27,7 @@ import me.yic.xconomy.lang.MessagesManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class AdapterManager {
@@ -67,5 +68,9 @@ public class AdapterManager {
 
     public static void runTaskLaterAsynchronously(Runnable runnable, long seconds){
         FixedThreadPool.schedule(runnable, seconds, TimeUnit.SECONDS);
+    }
+
+    public static ScheduledFuture<?> runTaskTimerAsynchronously(Runnable runnable, long seconds){
+        return FixedThreadPool.scheduleAtFixedRate(runnable, 1, seconds, TimeUnit.SECONDS);
     }
 }

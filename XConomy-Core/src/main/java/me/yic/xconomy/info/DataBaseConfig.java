@@ -38,21 +38,11 @@ public class DataBaseConfig {
             }
         }
         setHikariConnectionPooling();
-        if (config.contains("Settings.max-threads")) {
-            maxthread = config.getInt("Settings.max-threads");
-            if (maxthread <= 1){
-                maxthread = 1;
-            }
-        }
-        AdapterManager.FixedThreadPool = Executors.newScheduledThreadPool(maxthread);
     }
 
     public boolean EnableConnectionPool = false;
     public boolean DDrivers = false;
     public boolean canasync = false;
-
-    public int maxthread = 10;
-
 
     public final String ENCODING = config.getString("MySQL.property.encoding");
 

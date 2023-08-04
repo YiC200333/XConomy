@@ -21,6 +21,8 @@ Settings:
   check-update: true
   #TOP10 and the Server Total refresh time interval (Seconds)
   refresh-time: 300
+  #Number of core threads in the Thread pool
+  core-PoolSize: 5
   #If set to true, XConomy will register the following commands:
     # - economy
     # - eco

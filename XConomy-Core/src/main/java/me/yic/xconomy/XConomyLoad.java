@@ -64,7 +64,6 @@ public class XConomyLoad{
     }
 
     public static void Unload() {
-
         if (Config.SYNCDATA_TYPE.equals(SyncChannalType.BUNGEECORD)) {
             AdapterManager.PLUGIN.unregisterIncomingPluginChannel("xconomy:aca", "me.yic.xconomy.listeners.SPsync");
             AdapterManager.PLUGIN.unregisterOutgoingPluginChannel("xconomy:acb");
