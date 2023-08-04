@@ -25,8 +25,7 @@ import me.yic.xconomy.info.DataBaseConfig;
 import me.yic.xconomy.info.DefaultConfig;
 import me.yic.xconomy.info.SyncChannalType;
 import me.yic.xconomy.lang.MessagesManager;
-
-import java.util.concurrent.ExecutorService;
+import me.yic.xconomy.utils.RedisConnection;
 
 public class XConomyLoad{
 
@@ -72,6 +71,7 @@ public class XConomyLoad{
         }
 
         AdapterManager.FixedThreadPool.shutdown();
+        RedisConnection.close();
         SQL.close();
     }
 
