@@ -19,9 +19,10 @@ import java.util.List;
 @SuppressWarnings({"unused", "ConfusingArgumentToVarargsMethod"})
 public class CConfig implements iConfig {
     private final ConfigurationNode fc;
-    private YamlConfigurationLoader fcloader;
+    private final YamlConfigurationLoader fcloader;
 
     public CConfig(ConfigurationNode fc){
+        this.fcloader = null;
         this.fc = fc;
     }
 
@@ -38,6 +39,7 @@ public class CConfig implements iConfig {
     }
 
     public CConfig(URL url){
+        this.fcloader = null;
         ConfigurationNode pfc = null;
 
         StringBuilder uuid = new StringBuilder();
@@ -52,6 +54,7 @@ public class CConfig implements iConfig {
 
     @SuppressWarnings("ConstantConditions")
     public CConfig(String path, String subpath){
+        this.fcloader = null;
         ConfigurationNode pfc = null;
 
         try {
@@ -102,11 +105,6 @@ public class CConfig implements iConfig {
     }
 
     @Override
-    public void save(File f) throws IOException {
-        fcloader.save(fc);
-    }
-
-    @Override
     public String getString(String path){
         String[] a = path.split("\\.");
         return fc.node(a).getString();
@@ -134,6 +132,14 @@ public class CConfig implements iConfig {
     public long getLong(String path){
         String[] a = path.split("\\.");
         return fc.node(a).getLong();
+    }
+
+    @Override
+    public void save() throws Exception {
+        if (fcloader == null) {
+            throw new Exception("The file is null");
+        }
+        fcloader.save(fc);
     }
 
     @Override

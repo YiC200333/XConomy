@@ -19,20 +19,32 @@
 package me.yic.xconomy.info;
 
 import me.yic.xconomy.XConomy;
-import org.spongepowered.configurate.ConfigurationNode;
+import me.yic.xconomy.adapter.comp.CConfig;
+
+import java.io.IOException;
 
 public class UpdateConfig {
 
-    public static boolean update(ConfigurationNode config) {
+    public static void update(CConfig config) {
         boolean update = false;
-        if (config.node("SyncData").virtual()) {
+        if (!config.contains("SyncData")) {
             XConomy.getInstance().logger(null, 1, "==================================================");
             XConomy.getInstance().logger(null, 1, "The configuration file is an older version");
             XConomy.getInstance().logger(null, 1, "The plugin may occur configuration problems");
             XConomy.getInstance().logger(null, 1, "It is recommended to regenerate configuration file");
             XConomy.getInstance().logger(null, 1, "==================================================");
         }
-
-        return update;
+        if (!config.contains("Settings.core-poolsize")) {
+            config.createSection("Settings.core-poolsize");
+            config.set("Settings.core-poolsize", 4);
+            update = true;
+        }
+        if (update){
+            try {
+                config.save();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

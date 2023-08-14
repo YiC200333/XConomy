@@ -97,7 +97,7 @@ public class XConomy extends JavaPlugin {
 
         if (Bukkit.getPluginManager().getPlugin("DatabaseDrivers") != null) {
             logger("发现 DatabaseDrivers", 0, null);
-            XConomyLoad.DConfig.DDrivers = true;
+            XConomyLoad.DDrivers = true;
         }
 
         NonPlayerPlugin.load();
@@ -254,10 +254,7 @@ public class XConomy extends JavaPlugin {
 
     private void update_config() {
         File config = new File(this.getDataFolder(), "config.yml");
-        boolean update = UpdateConfig.update(getConfig(), config);
-        if (update) {
-            saveConfig();
-        }
+        UpdateConfig.update(new CConfig(config));
     }
 
     public File getPDataFolder() {

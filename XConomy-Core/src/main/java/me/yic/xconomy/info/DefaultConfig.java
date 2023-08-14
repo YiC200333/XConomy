@@ -112,8 +112,8 @@ public class DefaultConfig {
     }
 
     public void setMaxThread(){
-        if (config.contains("Settings.core-PoolSize")) {
-            MAX_THREAD = config.getInt("Settings.core-PoolSize");
+        if (config.contains("Settings.core-poolsize")) {
+            MAX_THREAD = config.getInt("Settings.core-poolsize");
             if (MAX_THREAD <= 1){
                 MAX_THREAD = 1;
             }

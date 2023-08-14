@@ -43,7 +43,7 @@ public class LanguagesManager {
 
             try {
                 if (renew) {
-                    MessagesManager.messageFile.save(f);
+                    MessagesManager.messageFile.save();
                 }
             } catch (IOException e) {
                 e.printStackTrace();

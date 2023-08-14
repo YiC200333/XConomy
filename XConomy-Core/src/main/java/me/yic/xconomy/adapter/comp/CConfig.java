@@ -43,7 +43,7 @@ public class CConfig implements iConfig {
     }
 
     @Override
-    public void save(File f) throws IOException {
+    public void save() throws IOException {
 
     }
 

@@ -1,7 +1,5 @@
 package me.yic.xconomy.adapter;
 
-import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,7 +15,7 @@ public interface iConfig {
 
     void set(String path, Object value);
 
-    void save(File f) throws IOException;
+    void save() throws Exception;
 
     String getString(String path);
 

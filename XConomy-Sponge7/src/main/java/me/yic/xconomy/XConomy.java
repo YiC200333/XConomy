@@ -33,8 +33,6 @@ import me.yic.xconomy.listeners.ConnectionListeners;
 import me.yic.xconomy.task.Baltop;
 import me.yic.xconomy.task.Updater;
 import me.yic.xconomy.utils.PluginINFO;
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.bstats.sponge.Metrics;
 import org.slf4j.Logger;
@@ -51,7 +49,6 @@ import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.service.permission.PermissionService;
 import org.spongepowered.api.text.Text;
-import org.yaml.snakeyaml.DumperOptions;
 
 import java.io.File;
 import java.io.IOException;
@@ -324,20 +321,8 @@ public class XConomy {
             }
         }
 
-        ConfigurationLoader<ConfigurationNode> loader =
-                YAMLConfigurationLoader.builder().setFlowStyle(DumperOptions.FlowStyle.BLOCK).setIndent(2).setFile(configpath).build();
-        try {
-            DefaultConfig.config = new CConfig(loader.load());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (UpdateConfig.update(DefaultConfig.config.getConfig())) {
-            try {
-                loader.save(DefaultConfig.config.getConfig());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        DefaultConfig.config = new CConfig(configpath);
+        UpdateConfig.update(DefaultConfig.config);
     }
 
     private void DataBaseload() {

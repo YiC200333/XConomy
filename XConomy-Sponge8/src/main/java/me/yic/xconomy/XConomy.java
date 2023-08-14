@@ -50,7 +50,6 @@ import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.service.permission.PermissionService;
-import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.builtin.jvm.Plugin;
@@ -310,20 +309,8 @@ public class XConomy {
             }
         }
 
-        YamlConfigurationLoader loader =
-                YamlConfigurationLoader.builder().nodeStyle(NodeStyle.BLOCK).indent(2).file(configpath).build();
-        try {
-            DefaultConfig.config = new CConfig(loader.load());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (UpdateConfig.update(DefaultConfig.config.getConfig())) {
-            try {
-                loader.save(DefaultConfig.config.getConfig());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        DefaultConfig.config = new CConfig(configpath);
+        UpdateConfig.update(DefaultConfig.config);
     }
 
     @SuppressWarnings("ConstantConditions")

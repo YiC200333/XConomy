@@ -18,15 +18,20 @@ import java.util.List;
 public class CConfig implements iConfig {
     private final FileConfiguration fc;
 
+    private final File ff;
+
     public CConfig(FileConfiguration fc){
+        this.ff = null;
         this.fc = fc;
     }
 
     public CConfig(File f){
+        this.ff = f;
         this.fc = YamlConfiguration.loadConfiguration(f);
     }
 
     public CConfig(URL url){
+        this.ff = null;
         FileConfiguration pfc = null;
         HttpURLConnection conn = null;
         InputStream is = null;
@@ -67,6 +72,7 @@ public class CConfig implements iConfig {
     }
 
     public CConfig(String path, String subpath){
+        this.ff = null;
         FileConfiguration pfc = null;
 
         String jarPath = "jar:file:" + XConomy.getInstance().getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
@@ -122,11 +128,6 @@ public class CConfig implements iConfig {
     }
 
     @Override
-    public void save(File f) throws IOException {
-        fc.save(f);
-    }
-
-    @Override
     public String getString(String path){
         return fc.getString(path);
     }
@@ -149,6 +150,14 @@ public class CConfig implements iConfig {
     @Override
     public long getLong(String path){
         return fc.getLong(path);
+    }
+
+    @Override
+    public void save() throws Exception {
+        if (ff == null){
+            throw new Exception("The file is null");
+        }
+        fc.save(ff);
     }
 
     @Override

@@ -29,6 +29,8 @@ import me.yic.xconomy.utils.RedisConnection;
 
 public class XConomyLoad{
 
+    public static boolean DDrivers = false;
+
     public static DataBaseConfig DConfig;
     public static DefaultConfig Config;
 
@@ -67,10 +69,11 @@ public class XConomyLoad{
         if (Config.SYNCDATA_TYPE.equals(SyncChannalType.BUNGEECORD)) {
             AdapterManager.PLUGIN.unregisterIncomingPluginChannel("xconomy:aca", "me.yic.xconomy.listeners.SPsync");
             AdapterManager.PLUGIN.unregisterOutgoingPluginChannel("xconomy:acb");
+        }else if(Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)) {
+            RedisConnection.close();
         }
 
         AdapterManager.FixedThreadPool.shutdown();
-        RedisConnection.close();
         SQL.close();
     }
 

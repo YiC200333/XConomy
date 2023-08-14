@@ -25,8 +25,6 @@ import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CConfig;
 import me.yic.xconomy.lang.MessagesManager;
 
-import java.util.concurrent.Executors;
-
 public class DataBaseConfig {
 
     public static CConfig config;
@@ -41,7 +39,6 @@ public class DataBaseConfig {
     }
 
     public boolean EnableConnectionPool = false;
-    public boolean DDrivers = false;
     public boolean canasync = false;
 
     public final String ENCODING = config.getString("MySQL.property.encoding");
