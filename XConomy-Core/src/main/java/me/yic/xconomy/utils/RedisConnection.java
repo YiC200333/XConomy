@@ -82,7 +82,9 @@ public class RedisConnection {
                 }
             }
             try {
-                jedis.getResource().ping();
+                Jedis jr = getResource();
+                jr.ping();
+                returnResource(jr);
                 XConomy.getInstance().logger(null, 0,
                         MessagesManager.systemMessage("连接正常").replace("%type%", "Redis"));
             } catch (Exception e) {
