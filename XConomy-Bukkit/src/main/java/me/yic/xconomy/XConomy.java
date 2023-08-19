@@ -163,7 +163,6 @@ public class XConomy extends JavaPlugin {
         int time = XConomyLoad.Config.REFRESH_TIME;
         refresherTask = Bukkit.getScheduler().runTaskTimerAsynchronously(this, new Baltop(), time * 20L, time * 20L);
         logger(null, 0, "===== YiC =====");
-
     }
 
     public void onDisable() {

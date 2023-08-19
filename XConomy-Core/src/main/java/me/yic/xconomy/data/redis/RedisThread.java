@@ -34,6 +34,7 @@ public class RedisThread extends Thread {
 
         try (Jedis jedis = RedisConnection.getResource()) {
             jedis.subscribe(RedisConnection.subscriber, RedisConnection.channelname);
+            RedisConnection.returnResource(jedis);
         } catch (Exception e) {
             XConomy.getInstance().logger(null, 1, "Error during creation");
             e.printStackTrace();

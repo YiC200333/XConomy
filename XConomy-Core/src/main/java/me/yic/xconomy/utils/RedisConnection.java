@@ -49,7 +49,11 @@ public class RedisConnection {
 
     public static void close() {
         subscriber.close();
-        jedis.close();
+        if (jedis != null) {
+            if (!jedis.isClosed()) {
+                jedis.close();
+            }
+        }
     }
 
     public static boolean connectredis() {
@@ -68,10 +72,17 @@ public class RedisConnection {
             jedisconfig.setMaxTotal(maxtotal);
             jedisconfig.setMaxIdle(maxidle);
             jedisconfig.setMinIdle(minidle);
-            //jedisconfig.setMaxWait(Duration.ofSeconds(5));
-            jedis = new JedisPool(jedisconfig, url, port);
+            jedisconfig.setTestOnBorrow(true);
+            jedisconfig.setTestOnReturn(true);
+            if (!user.isEmpty() || !password.isEmpty()) {
+                if (!user.isEmpty()) {
+                    jedis = new JedisPool(jedisconfig, url, port, 0, user, password);
+                }else{
+                    jedis = new JedisPool(jedisconfig, url, port, 0, password);
+                }
+            }
             try {
-                getResource();
+                jedis.getResource().ping();
                 XConomy.getInstance().logger(null, 0,
                         MessagesManager.systemMessage("连接正常").replace("%type%", "Redis"));
             } catch (Exception e) {
@@ -92,13 +103,6 @@ public class RedisConnection {
 
     public static Jedis getResource() {
         Jedis jr = jedis.getResource();
-        if (!user.isEmpty() || !password.isEmpty()){
-            if (!user.isEmpty()){
-                jr.auth(user, password);
-            }else{
-                jr.auth(password);
-            }
-        }
         jr.select(dbindex);
         return jr;
     }
