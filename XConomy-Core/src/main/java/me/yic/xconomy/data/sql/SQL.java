@@ -152,7 +152,8 @@ public class SQL {
         }
     }
 
-    public static void getPlayerData(UUID uuid) {
+    public static PlayerData getPlayerData(UUID uuid) {
+        PlayerData bd = null;
         try {
             Connection connection = database.getConnectionAndCheck();
             String sql = "select * from " + tableName + " where UID = ?";
@@ -173,7 +174,7 @@ public class SQL {
                     Cache.insertIntoMultiUUIDCache(fuuid, uuid);
                 }
                 BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
-                PlayerData bd = new PlayerData(fuuid, rs.getString(2), cacheThisAmt);
+                bd = new PlayerData(fuuid, rs.getString(2), cacheThisAmt);
                 Cache.insertIntoCache(fuuid, bd);
             }
 
@@ -183,10 +184,12 @@ public class SQL {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return bd;
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static void getPlayerData(String name) {
+    public static PlayerData getPlayerData(String name) {
+        PlayerData bd = null;
         try {
             Connection connection = database.getConnectionAndCheck();
             String query;
@@ -219,7 +222,7 @@ public class SQL {
                     String username = rs.getString(2);
                     BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
                     if (cacheThisAmt != null) {
-                        PlayerData bd = new PlayerData(uuid, username, cacheThisAmt);
+                        bd = new PlayerData(uuid, username, cacheThisAmt);
                         Cache.insertIntoCache(uuid, bd);
                     }
                     break;
@@ -232,10 +235,12 @@ public class SQL {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return bd;
     }
 
 
-    public static void getNonPlayerData(String playerName) {
+    public static BigDecimal getNonPlayerData(String playerName) {
+        BigDecimal bal;
         try {
             Connection connection = database.getConnectionAndCheck();
             String query;
@@ -251,9 +256,10 @@ public class SQL {
 
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                CacheNonPlayer.insertIntoCache(playerName, DataFormat.formatString(rs.getString(2)));
+                bal = DataFormat.formatString(rs.getString(2));
+                CacheNonPlayer.insertIntoCache(playerName, bal);
             } else {
-                BigDecimal bal = ImportData.getBalance(playerName, 0.0);
+                bal = ImportData.getBalance(playerName, 0.0);
 
                 SQLCreateNewAccount.createNonPlayerAccount(playerName, bal.doubleValue(), connection);
                 CacheNonPlayer.insertIntoCache(playerName, bal);
@@ -262,8 +268,9 @@ public class SQL {
             rs.close();
             statement.close();
             database.closeHikariConnection(connection);
+            return bal;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

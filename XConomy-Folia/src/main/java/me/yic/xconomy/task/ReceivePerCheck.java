@@ -1,5 +1,5 @@
 /*
- *  This file (CompletableFutureTask.java) is a part of project XConomy
+ *  This file (ReceivePerCheck.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -26,22 +26,22 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-public class CompletableFutureTask {
+public class ReceivePerCheck {
 
     public static boolean hasreceivepermission(CPlayer target, UUID targetUUID) {
-            if (!target.isOnline()) {
-                CompletableFuture<Boolean> future = new CompletableFuture<>();
-                new Thread(() -> future.complete(VaultHook.vaultPerm.playerHas(null,
-                        Bukkit.getOfflinePlayer(targetUUID), "xconomy.user.pay.receive"))).start();
+        try {
+            return CompletableFuture.supplyAsync(() -> exhasreceivepermission(target, targetUUID)).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-                try {
-                    return future.get();
-
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
-
-            } else return target.hasPermission("xconomy.user.pay.receive");
-        return false;
+    public static boolean exhasreceivepermission(CPlayer target, UUID targetUUID) {
+        if (!target.isOnline()) {
+            return VaultHook.vaultPerm.playerHas(null,
+                    Bukkit.getOfflinePlayer(targetUUID), "xconomy.user.pay.receive");
+        } else{
+            return target.hasPermission("xconomy.user.pay.receive");
+        }
     }
 }

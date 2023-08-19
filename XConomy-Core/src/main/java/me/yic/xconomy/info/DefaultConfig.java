@@ -118,7 +118,8 @@ public class DefaultConfig {
                 MAX_THREAD = 1;
             }
         }
-        AdapterManager.FixedThreadPool = Executors.newScheduledThreadPool(MAX_THREAD);
+        AdapterManager.ScheduledThreadPool = Executors.newScheduledThreadPool(MAX_THREAD / 2);
+        //AdapterManager.FixedThreadPool = Executors.newFixedThreadPool(MAX_THREAD / 2);
     }
 
 

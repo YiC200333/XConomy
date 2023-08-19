@@ -50,25 +50,27 @@ public class DataCon {
 
     public static BigDecimal getAccountBalance(String account) {
         if (XConomyLoad.Config.DISABLE_CACHE){
-            DataLink.getBalNonPlayer(account);
+            return DataLink.getBalNonPlayer(account);
         }
-        return CacheNonPlayer.getBalanceFromCacheOrDB(account);
+        BigDecimal bal = CacheNonPlayer.getBalanceFromCacheOrDB(account);
+        if (bal == null){
+            bal =  DataLink.getBalNonPlayer(account);
+        }
+        return bal;
     }
 
     private static <T> PlayerData getPlayerDatai(T u) {
         PlayerData pd = null;
 
         if (XConomyLoad.Config.DISABLE_CACHE) {
-            DataLink.getPlayerData(u);
+            return DataLink.getPlayerData(u);
         }
 
         if (Cache.CacheContainsKey(u)) {
             pd = Cache.getDataFromCache(u);
-        } else {
-            DataLink.getPlayerData(u);
-            if (Cache.CacheContainsKey(u)) {
-                pd = Cache.getDataFromCache(u);
-            }
+        }
+        if (pd == null){
+            pd = DataLink.getPlayerData(u);
         }
         if (AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
             Cache.clearCache();

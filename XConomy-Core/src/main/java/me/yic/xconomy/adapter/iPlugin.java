@@ -17,7 +17,9 @@ public interface iPlugin {
 
     void broadcastMessage(String message);
 
-    //void runTaskLaterAsynchronously(Runnable ra, long time);
+    void runTaskAsynchronously(Runnable ra);
+
+    void runTaskLaterAsynchronously(Runnable ra, long time);
 
     void sendPluginMessage(String channel, ByteArrayOutputStream stream);
 

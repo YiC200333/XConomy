@@ -28,7 +28,6 @@ import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.utils.RedisConnection;
 
 public class XConomyLoad{
-
     public static boolean DDrivers = false;
 
     public static DataBaseConfig DConfig;
@@ -73,7 +72,8 @@ public class XConomyLoad{
             RedisConnection.close();
         }
 
-        AdapterManager.FixedThreadPool.shutdown();
+        AdapterManager.ScheduledThreadPool.shutdown();
+        //AdapterManager.FixedThreadPool.shutdown();
         SQL.close();
     }
 

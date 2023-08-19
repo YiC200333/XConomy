@@ -28,7 +28,7 @@ import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.info.MessageConfig;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.lang.MessagesManager;
-import me.yic.xconomy.task.CompletableFutureTask;
+import me.yic.xconomy.task.ReceivePerCheck;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -104,7 +104,7 @@ public class CommandPay extends CommandCore{
         String realname = pd.getName();
         if (PermissionINFO.getRPaymentPermission(targetUUID)) {
             if (AdapterManager.foundvaultOfflinePermManager) {
-                if (!CompletableFutureTask.hasreceivepermission(target, targetUUID)) {
+                if (!ReceivePerCheck.hasreceivepermission(target, targetUUID)) {
                     sendMessages(sender, PREFIX + translateColorCodes("no_receive_permission"));
                     return true;
                 }

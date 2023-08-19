@@ -21,11 +21,10 @@ package me.yic.xconomy.data.caches;
 import me.yic.xconomy.data.DataLink;
 
 import java.math.BigDecimal;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CacheNonPlayer {
-    public static Map<String, BigDecimal> bal = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<String, BigDecimal> bal = new ConcurrentHashMap<>();
 
     public static void insertIntoCache(final String playerName, final BigDecimal value) {
         if (value != null) {
@@ -39,7 +38,7 @@ public class CacheNonPlayer {
 
     public static BigDecimal getBalanceFromCacheOrDB(final String u) {
         if (!bal.containsKey(u)) {
-            DataLink.getBalNonPlayer(u);
+            return DataLink.getBalNonPlayer(u);
         }
         return bal.get(u);
 

@@ -26,9 +26,7 @@ import me.yic.xconomy.lang.MessagesManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class AdapterManager {
 
@@ -38,7 +36,8 @@ public class AdapterManager {
 
     public final static CPlugin PLUGIN = new CPlugin();
 
-    public static ScheduledExecutorService FixedThreadPool;
+    public static ScheduledExecutorService ScheduledThreadPool;
+    //public static ExecutorService FixedThreadPool;
 
     public static String translateColorCodes(MessageConfig message) {
         return CChat.translateAlternateColorCodes('&', MessagesManager.messageFile.getString(message.toString()));
@@ -63,14 +62,14 @@ public class AdapterManager {
     }
 
     public static void runTaskAsynchronously(Runnable runnable){
-        FixedThreadPool.execute(runnable);
+        PLUGIN.runTaskAsynchronously(runnable);
     }
 
     public static void runTaskLaterAsynchronously(Runnable runnable, long seconds){
-        FixedThreadPool.schedule(runnable, seconds, TimeUnit.SECONDS);
+        PLUGIN.runTaskLaterAsynchronously(runnable, seconds * 20L);
     }
 
     public static ScheduledFuture<?> runTaskTimerAsynchronously(Runnable runnable, long seconds){
-        return FixedThreadPool.scheduleAtFixedRate(runnable, 1, seconds, TimeUnit.SECONDS);
+        return ScheduledThreadPool.scheduleAtFixedRate(runnable, seconds, seconds, TimeUnit.SECONDS);
     }
 }

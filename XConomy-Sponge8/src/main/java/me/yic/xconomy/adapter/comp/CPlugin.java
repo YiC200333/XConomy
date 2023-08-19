@@ -1,6 +1,7 @@
 package me.yic.xconomy.adapter.comp;
 
 
+import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.iPlugin;
 import me.yic.xconomy.data.syncdata.PlayerData;
@@ -19,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
 public class CPlugin implements iPlugin {
@@ -62,10 +64,15 @@ public class CPlugin implements iPlugin {
         Sponge.server().broadcastAudience().sendMessage(Component.text(message));
     }
 
-//    @Override
-//    public void runTaskLaterAsynchronously(Runnable ra, long time) {
-//
-//    }
+    @Override
+    public void runTaskAsynchronously(Runnable runnable) {
+        Sponge.asyncScheduler().executor(XConomy.getInstance().plugincontainer).execute(runnable);
+    }
+
+    @Override
+    public void runTaskLaterAsynchronously(Runnable runnable, long time) {
+        Sponge.asyncScheduler().executor(XConomy.getInstance().plugincontainer).schedule(runnable, time, TimeUnit.MILLISECONDS);
+    }
 
     @Override
     public void sendPluginMessage(String channel, ByteArrayOutputStream stream){
