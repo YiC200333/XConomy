@@ -18,7 +18,6 @@
  */
 package me.yic.xconomy.info;
 
-import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.adapter.comp.CConfig;
 import me.yic.xconomy.utils.UUIDMode;
@@ -27,19 +26,17 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.concurrent.Executors;
 
 public class DefaultConfig {
     public static CConfig config;
 
     public DefaultConfig() {
-        setMaxThread();
+        //setMaxThread();
         setUUIDMode();
         setnonplayeraccount();
         setformatbalance();
         setpaytips();
     }
-    public int MAX_THREAD = 10;
     public boolean ISOLDCONFIG = false;
 
     public UUIDMode UUIDMODE = UUIDMode.DEFAULT;
@@ -111,7 +108,7 @@ public class DefaultConfig {
         }
     }
 
-    public void setMaxThread(){
+/*    public void setMaxThread(){
         if (config.contains("Settings.core-poolsize")) {
             MAX_THREAD = config.getInt("Settings.core-poolsize");
             if (MAX_THREAD <= 1){
@@ -119,8 +116,8 @@ public class DefaultConfig {
             }
         }
         AdapterManager.ScheduledThreadPool = Executors.newScheduledThreadPool(MAX_THREAD / 2);
-        //AdapterManager.FixedThreadPool = Executors.newFixedThreadPool(MAX_THREAD / 2);
-    }
+        AdapterManager.FixedThreadPool = Executors.newFixedThreadPool(MAX_THREAD / 2);
+    }*/
 
 
     private void setnonplayeraccount() {

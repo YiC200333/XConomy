@@ -5,7 +5,7 @@
     <parent>
         <artifactId>XConomy</artifactId>
         <groupId>me.yic</groupId>
-        <version>2.24.3</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -178,6 +178,7 @@
             <version>1.7</version>
             <scope>provided</scope>
         </dependency>
+        <!--Towny-->
         <dependency>
             <groupId>com.palmergames.bukkit.towny</groupId>
             <artifactId>towny</artifactId>
@@ -188,7 +189,7 @@
         <dependency>
             <groupId>me.yic</groupId>
             <artifactId>XConomy-Core</artifactId>
-            <version>[1.0.0,)</version>
+            <version>${revision}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

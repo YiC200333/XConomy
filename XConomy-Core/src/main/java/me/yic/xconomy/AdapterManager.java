@@ -26,7 +26,6 @@ import me.yic.xconomy.lang.MessagesManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
 
 public class AdapterManager {
 
@@ -36,7 +35,7 @@ public class AdapterManager {
 
     public final static CPlugin PLUGIN = new CPlugin();
 
-    public static ScheduledExecutorService ScheduledThreadPool;
+    //public static ScheduledExecutorService ScheduledThreadPool;
     //public static ExecutorService FixedThreadPool;
 
     public static String translateColorCodes(MessageConfig message) {
@@ -69,7 +68,7 @@ public class AdapterManager {
         PLUGIN.runTaskLaterAsynchronously(runnable, seconds * 20L);
     }
 
-    public static ScheduledFuture<?> runTaskTimerAsynchronously(Runnable runnable, long seconds){
+/*    public static ScheduledFuture<?> runTaskTimerAsynchronously(Runnable runnable, long seconds){
         return ScheduledThreadPool.scheduleAtFixedRate(runnable, seconds, seconds, TimeUnit.SECONDS);
-    }
+    }*/
 }

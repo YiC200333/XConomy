@@ -6,9 +6,14 @@ website: https://www.spigotmc.org/resources/xconomy.75669/
 load: STARTUP
 loadbefore:  [ PlotSquared ]
 softdepend: [ Vault, Enterprise, DatabaseDrivers, MPoints, PlaceholderAPI, Towny ]
-api-version: "1.13"
-
+api-version: "1.20"
 folia-supported: true
+
+
+libraries:
+  - com.zaxxer:HikariCP:5.0.1
+  - redis.clients:jedis:4.3.1
+
 
 commands:
   xconomy:

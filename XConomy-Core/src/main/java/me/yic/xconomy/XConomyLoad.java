@@ -72,7 +72,7 @@ public class XConomyLoad{
             RedisConnection.close();
         }
 
-        AdapterManager.ScheduledThreadPool.shutdown();
+        //AdapterManager.ScheduledThreadPool.shutdown();
         //AdapterManager.FixedThreadPool.shutdown();
         SQL.close();
     }

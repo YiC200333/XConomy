@@ -29,7 +29,7 @@ import me.yic.xconomy.info.*;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.listeners.ConnectionListeners;
 import me.yic.xconomy.listeners.TabList;
-import me.yic.xconomy.task.Baltop;
+import me.yic.xconomy.task.RunBaltop;
 import me.yic.xconomy.task.Updater;
 import me.yic.xconomy.utils.EconomyCommand;
 import org.bstats.bukkit.Metrics;
@@ -40,7 +40,6 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -53,7 +52,6 @@ public class XConomy extends JavaPlugin {
     private static XConomy instance;
 
     public static String syncversion = SyncInfo.syncversion;
-    private BukkitTask refresherTask = null;
     Metrics metrics = null;
     private Placeholder papiExpansion = null;
 
@@ -108,7 +106,7 @@ public class XConomy extends JavaPlugin {
         }
 
         if (XConomyLoad.Config.CHECK_UPDATE) {
-            new Updater().runTaskAsynchronously(this);
+            AdapterManager.runTaskAsynchronously(new Updater());
         }
         // 检查更新
 
@@ -160,8 +158,7 @@ public class XConomy extends JavaPlugin {
 
         XConomyLoad.Initial();
 
-        int time = XConomyLoad.Config.REFRESH_TIME;
-        refresherTask = Bukkit.getScheduler().runTaskTimerAsynchronously(this, new Baltop(), time * 20L, time * 20L);
+        RunBaltop.runstart();
         logger(null, 0, "===== YiC =====");
     }
 
@@ -180,9 +177,8 @@ public class XConomy extends JavaPlugin {
             } catch (NoSuchMethodError ignored) {
             }
         }
-        if (refresherTask != null) {
-            refresherTask.cancel();
-        }
+
+        RunBaltop.stop();
         XConomyLoad.Unload();
         logger("XConomy已成功卸载", 0, null);
     }

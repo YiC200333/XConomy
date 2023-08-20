@@ -1,5 +1,5 @@
 /*
- *  This file (SPsync.java) is a part of project XConomy
+ *  This file (RunBaltop.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -16,22 +16,23 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.listeners;
+package me.yic.xconomy.task;
 
-import me.yic.xconomy.data.ProcessSyncData;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.messaging.PluginMessageListener;
-import org.jetbrains.annotations.NotNull;
+import me.yic.xconomy.XConomy;
+import me.yic.xconomy.XConomyLoad;
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitTask;
 
-public class SPsync implements PluginMessageListener {
-
-    @Override
-    public void onPluginMessageReceived(String channel, @NotNull Player arg1, byte[] message) {
-        if (!channel.equals("xconomy:aca")) {
-            return;
-        }
-
-        ProcessSyncData.process(message);
+public class RunBaltop {
+    private static BukkitTask refresherTask = null;
+    public static void runstart() {
+        int time = XConomyLoad.Config.REFRESH_TIME;
+        refresherTask = Bukkit.getScheduler().runTaskTimerAsynchronously(XConomy.getInstance(), new Baltop(), time * 20L, time * 20L);
     }
 
+    public static void stop() {
+        if (refresherTask != null) {
+            refresherTask.cancel();
+        }
+    }
 }
