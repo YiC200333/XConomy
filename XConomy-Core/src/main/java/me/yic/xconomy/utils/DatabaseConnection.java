@@ -88,6 +88,9 @@ public class DatabaseConnection {
                     case 2:
                         driver = ("me.yic.libs.mysql.cj.jdbc.Driver");
                         break;
+                    case 3:
+                        driver = ("me.yic.libs.mariadb.jdbc.Driver");
+                        break;
                 }
             } else {
                 switch (XConomyLoad.DConfig.getStorageType()) {
@@ -102,6 +105,9 @@ public class DatabaseConnection {
                             break;
                         }
                         driver = ("com.mysql.cj.jdbc.Driver");
+                        break;
+                    case 3:
+                        driver = ("org.mariadb.jdbc.Driver");
                         break;
                 }
             }
@@ -125,6 +131,7 @@ public class DatabaseConnection {
                         connection = DriverManager.getConnection("jdbc:sqlite:" + userdata.toString());
                         break;
                     case 2:
+                    case 3:
                         connection = DriverManager.getConnection(url, XConomyLoad.DConfig.getuser(), XConomyLoad.DConfig.getpass());
                         break;
                 }

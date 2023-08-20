@@ -1,5 +1,6 @@
 Settings:
-  #SQLite MySQL
+  #SQLite MySQL MariaDB
+  #MariaDB require DatabaseDrivers
   storage-type: SQLite
   #Use connection pool or not
   #Require 'slf4j' dependencies

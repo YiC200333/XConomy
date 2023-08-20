@@ -11,7 +11,6 @@ folia-supported: true
 
 
 libraries:
-  - com.zaxxer:HikariCP:5.0.1
   - redis.clients:jedis:4.3.1
 
 

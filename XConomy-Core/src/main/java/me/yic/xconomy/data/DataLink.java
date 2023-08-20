@@ -57,10 +57,15 @@ public class DataLink{
                 SQLSetup.setupMySqlTable();
                 break;
 
+            case 3:
+                XConomy.getInstance().logger("数据保存方式", 0, " - MariaDB");
+                SQLSetup.setupMySqlTable();
+                break;
+
         }
 
         if (SQL.con()) {
-            if (XConomyLoad.DConfig.getStorageType() == 2) {
+            if (XConomyLoad.DConfig.getStorageType() == 2 || XConomyLoad.DConfig.getStorageType() == 3) {
                 SQL.getwaittimeout();
             }
             SQL.createTable();
@@ -109,7 +114,7 @@ public class DataLink{
     }
 
     public static BigDecimal getBalNonPlayer(String u) {
-        if (Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+        if (AdapterManager.checkisMainThread()) {
             try {
                 return CompletableFuture.supplyAsync(() -> SQL.getNonPlayerData(u)).get();
             } catch (InterruptedException | ExecutionException e) {
@@ -149,7 +154,7 @@ public class DataLink{
 
 
     public static <T> PlayerData getPlayerData(T key) {
-        if (Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+        if (AdapterManager.checkisMainThread()) {
             try {
                 return CompletableFuture.supplyAsync(() -> exgetPlayerData(key)).get();
             } catch (InterruptedException | ExecutionException e) {

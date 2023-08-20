@@ -131,7 +131,7 @@ public class DataCon {
 
         Cache.updateIntoCache(u, pd, newvalue, bal);
 
-        if (XConomyLoad.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+        if (XConomyLoad.DConfig.canasync && AdapterManager.checkisMainThread()) {
             AdapterManager.runTaskAsynchronously(() -> {
                 DataLink.save(pd, isAdd, amount, ri);
                 if (XConomyLoad.getSyncData_Enable()) {
@@ -165,7 +165,7 @@ public class DataCon {
         }
         CacheNonPlayer.insertIntoCache(u, newvalue);
 
-        if (XConomyLoad.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+        if (XConomyLoad.DConfig.canasync && AdapterManager.checkisMainThread()) {
             final BigDecimal fnewvalue = newvalue;
             AdapterManager.runTaskAsynchronously(() -> DataLink.saveNonPlayer(u, amount, fnewvalue, isAdd, ri));
         } else {
@@ -178,7 +178,7 @@ public class DataCon {
 
         RecordInfo ri = new RecordInfo(type, command, comment);
 
-        if (XConomyLoad.DConfig.canasync && Thread.currentThread().getName().equalsIgnoreCase("Server thread")) {
+        if (XConomyLoad.DConfig.canasync && AdapterManager.checkisMainThread()) {
             AdapterManager.runTaskAsynchronously(() -> DataLink.saveall(targettype, amount, isAdd, ri));
         } else {
             DataLink.saveall(targettype, amount, isAdd, ri);

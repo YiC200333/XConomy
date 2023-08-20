@@ -55,7 +55,7 @@
                                         <exclude>plugin.yml</exclude>
                                         <exclude>me/yic/xconomy/task/RunBaltop.class</exclude>
                                         <exclude>me/yic/xconomy/adapter/comp/CPlugin.class</exclude>
-                                        <exclude>me/yic/xc_libs/zaxxer/**</exclude>
+                                        <exclude>me/yic/xconomy/adapter/comp/CallAPI.class</exclude>
                                         <exclude>me/yic/xc_libs/pool2/**</exclude>
                                         <exclude>me/yic/xc_libs/redis/**</exclude>
                                     </excludes>
@@ -71,10 +71,6 @@
                         </includes>
                     </artifactSet>
                     <relocations>
-                        <relocation>
-                            <pattern>me.yic.xc_libs.zaxxer</pattern>
-                            <shadedPattern>com.zaxxer</shadedPattern>
-                        </relocation>
                         <relocation>
                             <pattern>me.yic.xc_libs.redis</pattern>
                             <shadedPattern>redis.clients</shadedPattern>
