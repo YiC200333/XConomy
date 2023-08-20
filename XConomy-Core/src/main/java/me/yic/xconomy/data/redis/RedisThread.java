@@ -31,13 +31,17 @@ public class RedisThread extends Thread {
     @Override
     public void run() {
         XConomy.getInstance().logger("Redis监听线程创建中", 0, null);
-
-        try (Jedis jedis = RedisConnection.getResource()) {
+        Jedis jedis = null;
+        try {
+            jedis = RedisConnection.getResource();
             jedis.subscribe(RedisConnection.subscriber, RedisConnection.channelname);
-            RedisConnection.returnResource(jedis);
         } catch (Exception e) {
             XConomy.getInstance().logger(null, 1, "Error during creation");
             e.printStackTrace();
+        }finally {
+            if (jedis != null) {
+                RedisConnection.returnResource(jedis);
+            }
         }
     }
 }

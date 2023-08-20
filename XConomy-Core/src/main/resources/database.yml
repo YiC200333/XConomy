@@ -43,8 +43,8 @@ Redis:
   port: 6379
   db-index: 1
   pool-settings:
-    max-total: 10
-    max-idle: 10
+    max-total: 20
+    max-idle: 20
     min-idle: 0
   auth:
     user: ''

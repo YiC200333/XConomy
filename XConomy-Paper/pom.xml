@@ -79,6 +79,10 @@
                             <pattern>me.yic.xc_libs.redis</pattern>
                             <shadedPattern>redis.clients</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>me.yic.xc_libs.pool2</pattern>
+                            <shadedPattern>org.apache.commons</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
             </plugin>

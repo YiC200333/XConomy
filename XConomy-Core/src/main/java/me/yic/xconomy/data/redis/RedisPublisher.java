@@ -24,9 +24,15 @@ import redis.clients.jedis.Jedis;
 public class RedisPublisher{
 
     public static void publishmessage(byte[] data) {
-        Jedis jedis = RedisConnection.getResource();
-        jedis.publish(RedisConnection.channelname, data);
-        RedisConnection.returnResource(jedis);
+        Jedis jedis = null;
+        try {
+            jedis = RedisConnection.getResource();
+            jedis.publish(RedisConnection.channelname, data);
+        }finally {
+            if (jedis != null) {
+                RedisConnection.returnResource(jedis);
+            }
+        }
     }
 
 }
