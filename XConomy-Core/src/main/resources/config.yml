@@ -21,8 +21,6 @@ Settings:
   check-update: true
   #TOP10 and the Server Total refresh time interval (Seconds)
   refresh-time: 300
-  #This option is temporarily abandoned and has no effect
-  core-poolsize: 4
   #If set to true, XConomy will register the following commands:
     # - economy
     # - eco

@@ -22,7 +22,6 @@ import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,7 +29,7 @@ public class RunBaltop {
     private static ScheduledTask refresherTask = null;
     public static void runstart() {
         int time = XConomyLoad.Config.REFRESH_TIME;
-        refresherTask = Bukkit.getAsyncScheduler().runAtFixedRate((Plugin) XConomy.getInstance(), ScheduledTask -> new Baltop().run(), time * 20L, time * 20L, TimeUnit.MILLISECONDS);
+        refresherTask = Bukkit.getAsyncScheduler().runAtFixedRate(XConomy.getInstance(), ScheduledTask -> new Baltop().run(), time * 20L, time * 20L, TimeUnit.MILLISECONDS);
     }
 
     public static void stop() {
