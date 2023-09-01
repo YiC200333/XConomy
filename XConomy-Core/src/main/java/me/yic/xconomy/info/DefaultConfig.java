@@ -73,6 +73,10 @@ public class DefaultConfig {
 
     public String SYNCDATA_SIGN = config.getString("SyncData.sign");
 
+    //==================================================
+    public String RE_WORLD = config.getString("Region-Thread.world");
+    public int RE_X = config.getInt("Region-Thread.range-x");
+    public int RE_Y = config.getInt("Region-Thread.range-y");
 
     private int getrankingsize() {
         return Math.min(config.getInt("Settings.ranking-size"), 100);

@@ -20,7 +20,7 @@ package me.yic.xconomy.info;/*
 import java.util.Random;
 
 public class SyncInfo {
-    public final static String syncversion = "2.24";
+    public final static String syncversion = "2.25";
     public final static String server_key = getRandomString(15);
 
     public static String getRandomString(int length) {

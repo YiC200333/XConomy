@@ -25,6 +25,7 @@ import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.syncdata.tab.SyncTabQuit;
+import me.yic.xconomy.info.SyncChannalType;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.Updater;
 import org.spongepowered.api.Sponge;
@@ -41,7 +42,7 @@ public class ConnectionListeners {
         }
 
         if (event.player().profile().name().isPresent()) {
-            if (XConomyLoad.getSyncData_Enable()) {
+            if (XConomyLoad.getSyncData_Enable() && XConomyLoad.Config.SYNCDATA_TYPE == SyncChannalType.REDIS) {
                 DataCon.SendMessTask(new SyncTabQuit(event.player().profile().name().get()));
             }
             AdapterManager.Tab_PlayerList.remove(event.player().profile().name().get());

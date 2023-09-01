@@ -25,12 +25,17 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import me.yic.xconomy.XConomyVelocity;
 import me.yic.xconomy.data.syncdata.SyncMessage;
+import me.yic.xconomy.data.syncdata.tab.SyncTabJoin;
 import me.yic.xconomy.info.SyncType;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 public class Vsync {
+    public static final HashMap<String, List<String>> allservername = new HashMap<>();
 
     @SuppressWarnings(value = {"unused"})
     @Subscribe
@@ -81,6 +86,20 @@ public class Vsync {
                         sd.setRUniqueId(p.get().getUniqueId());
                     }
                 }
+            }else if (ob instanceof SyncTabJoin) {
+                SyncTabJoin sj = (SyncTabJoin) ob;
+                String sign = sj.getSign();
+                List<String> allname;
+                if (allservername.containsKey(sign)){
+                    allname = allservername.get(sign);
+                }else{
+                    allname = new ArrayList<>();
+                }
+                if (!allname.contains(sj.getName())) {
+                    allname.add(sj.getName());
+                }
+                allservername.put(sign, allname);
+                sj.setallPlayers(allname);
             }
 
             oos.writeObject(ob);

@@ -80,6 +80,8 @@ public class RedisConnection {
                 }else{
                     jedis = new JedisPool(jedisconfig, url, port, 0, password);
                 }
+            }else{
+                jedis = new JedisPool(jedisconfig, url, port, 0);
             }
             try {
                 Jedis jr = getResource();

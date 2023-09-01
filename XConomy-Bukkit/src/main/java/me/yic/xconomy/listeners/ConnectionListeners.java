@@ -19,14 +19,13 @@
 package me.yic.xconomy.listeners;
 
 import me.yic.xconomy.AdapterManager;
-import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.data.syncdata.tab.SyncTabJoin;
 import me.yic.xconomy.data.syncdata.tab.SyncTabQuit;
+import me.yic.xconomy.info.SyncChannalType;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.Updater;
 import org.bukkit.Bukkit;
@@ -44,7 +43,7 @@ public class ConnectionListeners implements Listener {
         if (Bukkit.getOnlinePlayers().size() == 1) {
             Cache.clearCache();
         }
-        if (XConomyLoad.getSyncData_Enable()) {
+        if (XConomyLoad.getSyncData_Enable() && XConomyLoad.Config.SYNCDATA_TYPE == SyncChannalType.REDIS) {
             DataCon.SendMessTask(new SyncTabQuit(event.getPlayer().getName()));
         }
         AdapterManager.Tab_PlayerList.remove(event.getPlayer().getName());

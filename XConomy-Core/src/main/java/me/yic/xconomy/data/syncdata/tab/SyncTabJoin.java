@@ -22,23 +22,36 @@ import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.data.syncdata.SyncData;
 import me.yic.xconomy.info.SyncType;
 
+import java.util.List;
+
 public class SyncTabJoin extends SyncData {
 
     private final String name;
+    List<String> allname;
 
     public SyncTabJoin(String name){
         super(SyncType.TAB_JOIN, null);
         this.name = name;
+        this.allname = null;
     }
 
     public String getName(){
         return name;
     }
 
+    public void setallPlayers(List<String> allname){
+        this.allname = allname;
+    }
+
     @Override
     public void SyncStart() {
-        if (!AdapterManager.Tab_PlayerList.contains(name)) {
-            AdapterManager.Tab_PlayerList.add(name);
+        if (allname == null) {
+            if (!AdapterManager.Tab_PlayerList.contains(name)) {
+                AdapterManager.Tab_PlayerList.add(name);
+            }
+        }else{
+            AdapterManager.Tab_PlayerList.clear();
+            AdapterManager.Tab_PlayerList.addAll(allname);
         }
     }
 }

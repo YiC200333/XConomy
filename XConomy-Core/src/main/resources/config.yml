@@ -93,7 +93,6 @@ Currency:
     1000000: m
 
 
-
 #SyncData settings
 SyncData:
   #Whether to enable data synchronization between multiple servers
@@ -107,3 +106,11 @@ SyncData:
   channel-type: BungeeCord
   #Server ID, keep the ID and the MySQL settings is the same between the servers requiring synchronization
   sign: aa
+
+
+#Region-Thread settings(Only effective for Folia server)
+Region-Thread:
+  #When executing synchronized threads, a coordinate will be randomly selected within the specified range below to perform.
+  world: world
+  range-x: 1024
+  range-y: 1024
