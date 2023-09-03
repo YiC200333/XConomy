@@ -121,10 +121,6 @@
 
     <repositories>
         <repository>
-            <id>glaremasters repo</id>
-            <url>https://repo.glaremasters.me/repository/towny/</url>
-        </repository>
-        <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
@@ -139,6 +135,16 @@
         <repository>
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+        <!--Towny-->
+        <repository>
+            <id>glaremasters repo</id>
+            <url>https://repo.glaremasters.me/repository/towny/</url>
+        </repository>
+        <!--Factions-->
+        <repository>
+            <id>factions repo</id>
+            <url>https://ci.ender.zone/plugin/repository/everything/</url>
         </repository>
     </repositories>
 
@@ -168,7 +174,7 @@
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>3.0.0</version>
+            <version>3.0.2</version>
             <scope>compile</scope>
         </dependency>
         <!--Enterprise-->
@@ -183,6 +189,13 @@
             <groupId>com.palmergames.bukkit.towny</groupId>
             <artifactId>towny</artifactId>
             <version>0.98.2.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <!--Factions-->
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>Factions</artifactId>
+            <version>1.6.9.5-U0.6.30</version>
             <scope>provided</scope>
         </dependency>
         <!--XConomy-Core-->

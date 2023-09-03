@@ -152,6 +152,9 @@ public class DataLink{
         return SQLCreateNewAccount.newPlayer(uid, name, null);
     }
 
+    public static boolean newAccount(String name) {
+        return SQLCreateNewAccount.createNonPlayerAccount(name);
+    }
 
     public static <T> PlayerData getPlayerData(T key) {
         if (AdapterManager.checkisMainThread()) {

@@ -107,7 +107,7 @@ public class SQLCreateNewAccount extends SQL {
                     XConomy.getInstance().logger(" 名称已更改!", 0, "<#>" + name);
                 }
             } else {
-                createAccount(uid, name, connection);
+                createPlayerAccount(uid, name, connection);
             }
 
             rs.close();
@@ -160,10 +160,10 @@ public class SQLCreateNewAccount extends SQL {
     }
 
 
-    private static void createAccount(String UID, String user, Connection co_a) {
+    private static void createPlayerAccount(String UID, String user, Connection co_a) {
         try {
-            String query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?)";
-            //String query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
+            String query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?,?)";
+            //String query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?,?) "
             //        + "ON DUPLICATE KEY UPDATE UID = ?";
 
             PreparedStatement statement = co_a.prepareStatement(query);
@@ -173,6 +173,7 @@ public class SQLCreateNewAccount extends SQL {
             statement.setDouble(3, ImportData.getBalance(user, XConomyLoad.Config.INITIAL_BAL).doubleValue());
 
             statement.setInt(4, 0);
+            statement.setInt(5, 0);
 
             statement.executeUpdate();
             statement.close();
@@ -182,19 +183,23 @@ public class SQLCreateNewAccount extends SQL {
 
     }
 
-    public static void createNonPlayerAccount(String account, double bal, Connection co) {
+    public static boolean createNonPlayerAccount(String account) {
+        Connection co = database.getConnectionAndCheck();
         try {
             String query = "INSERT INTO " + tableNonPlayerName + "(account,balance) values(?,?)";
 
             PreparedStatement statement = co.prepareStatement(query);
             statement.setString(1, account);
-            statement.setDouble(2, bal);
+            statement.setDouble(2, ImportData.getBalance(account, XConomyLoad.Config.INITIAL_BAL).doubleValue());
 
             statement.executeUpdate();
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
+        database.closeHikariConnection(co);
+        return true;
     }
 
     public static void createDUUIDLink(String UUID, String DUUID, Connection co_a) {
@@ -251,7 +256,7 @@ public class SQLCreateNewAccount extends SQL {
                 }
             } else {
                 user = name;
-                createAccount(UID.toString(), user, connection);
+                createPlayerAccount(UID.toString(), user, connection);
             }
             rs.close();
             statement.close();

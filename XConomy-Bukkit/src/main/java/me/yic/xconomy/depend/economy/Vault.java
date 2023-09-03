@@ -67,6 +67,9 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public boolean createPlayerAccount(String name) {
+        if (isNonPlayerAccount(name)){
+            return DataLink.newAccount(name);
+        }
         return true;
     }
 
@@ -188,11 +191,15 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public double getBalance(String name) {
-        if (isNonPlayerAccount(name)) {
-            return DataCon.getAccountBalance(name).doubleValue();
+        if (SimpleCheckNonPlayerAccount(name)) {
+            BigDecimal bal = DataCon.getAccountBalance(name);
+            if (bal != null) {
+                return bal.doubleValue();
+            }
         }
-        if (hasAccount(name)) {
-            return DataCon.getPlayerData(name).getBalance().doubleValue();
+        PlayerData pd = DataCon.getPlayerData(name);
+        if (pd != null) {
+            return pd.getBalance().doubleValue();
         }
         return 0;
     }
@@ -252,7 +259,7 @@ public class Vault extends AbstractEconomy {
     @Override
     public boolean hasAccount(String name) {
         if (isNonPlayerAccount(name)) {
-            return true;
+            return DataCon.getAccountBalance(name) != null;
         }
         return DataCon.getPlayerData(name) != null;
     }
@@ -355,6 +362,12 @@ public class Vault extends AbstractEconomy {
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer pp, String arg1, double amount) {
         return withdrawPlayer(pp, amount);
+    }
+    private boolean SimpleCheckNonPlayerAccount(String name) {
+        if (NonPlayerPlugin.containinfields(name)) {
+            return true;
+        }
+        return XConomyLoad.Config.NON_PLAYER_ACCOUNT;
     }
 
     private boolean isNonPlayerAccount(String name) {

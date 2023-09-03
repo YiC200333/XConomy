@@ -22,12 +22,11 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.GetUUID;
-import me.yic.xconomy.data.ImportData;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
+import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.info.RecordInfo;
 import me.yic.xconomy.utils.DatabaseConnection;
-import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.utils.UUIDMode;
 
 import java.math.BigDecimal;
@@ -240,7 +239,7 @@ public class SQL {
 
 
     public static BigDecimal getNonPlayerData(String playerName) {
-        BigDecimal bal;
+        BigDecimal bal = null;
         try {
             Connection connection = database.getConnectionAndCheck();
             String query;
@@ -257,11 +256,6 @@ public class SQL {
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 bal = DataFormat.formatString(rs.getString(2));
-                CacheNonPlayer.insertIntoCache(playerName, bal);
-            } else {
-                bal = ImportData.getBalance(playerName, 0.0);
-
-                SQLCreateNewAccount.createNonPlayerAccount(playerName, bal.doubleValue(), connection);
                 CacheNonPlayer.insertIntoCache(playerName, bal);
             }
 

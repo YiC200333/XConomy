@@ -130,16 +130,26 @@ public class CommandCore {
         if (s.matches(".*[a-zA-Z].*")) {
             return false;
         }
-        try {
-            Double.parseDouble(s);
-            BigDecimal value = new BigDecimal(s);
 
-            if (value.compareTo(BigDecimal.ONE) >= 0) {
-                return !DataFormat.isMAX(DataFormat.formatString(s));
+        BigDecimal value;
+        if (DataFormat.isint){
+            try {
+                Integer.parseInt(s);
+                value = new BigDecimal(s);
+            } catch (NumberFormatException ignored) {
+                return false;
             }
+        }else {
+            try {
+                Double.parseDouble(s);
+                value = new BigDecimal(s);
+            } catch (NumberFormatException ignored) {
+                return false;
+            }
+        }
 
-        } catch (NumberFormatException ignored) {
-            return false;
+        if (value.compareTo(BigDecimal.ONE) >= 0) {
+            return !DataFormat.isMAX(DataFormat.formatString(s));
         }
 
         return true;

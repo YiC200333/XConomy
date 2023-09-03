@@ -22,7 +22,6 @@ import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.service.context.Context;
@@ -60,16 +59,26 @@ public class XCVirtualAccount implements VirtualAccount {
 
     @Override
     public boolean hasBalance(Currency currency, Set<Context> contexts) {
-        return true;
+        if (XCEconomyCommon.isNonPlayerAccount(account)) {
+            return DataCon.getAccountBalance(account) != null;
+        }
+        return DataCon.getPlayerData(account) != null;
     }
 
     @Override
     public BigDecimal getBalance(Currency currency, Set<Context> contexts) {
-        if (XCEconomyCommon.isNonPlayerAccount(account)) {
-            return CacheNonPlayer.getBalanceFromCacheOrDB(account);
+        if (XCEconomyCommon.SimpleCheckNonPlayerAccount()) {
+            BigDecimal bal = DataCon.getAccountBalance(account);
+            if (bal != null) {
+                return bal;
+            }
+        }
+        PlayerData pd = DataCon.getPlayerData(account);
+        if (pd != null) {
+            return pd.getBalance();
         }
 
-        return DataCon.getPlayerData(account).getBalance();
+        return BigDecimal.ZERO;
     }
 
     @Override

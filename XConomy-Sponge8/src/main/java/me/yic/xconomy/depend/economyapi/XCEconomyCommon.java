@@ -23,6 +23,10 @@ import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 
 public class XCEconomyCommon {
+    public static boolean SimpleCheckNonPlayerAccount() {
+        return XConomyLoad.Config.NON_PLAYER_ACCOUNT;
+    }
+
 
     public static boolean isNonPlayerAccount(String name) {
         if (!XConomyLoad.Config.NON_PLAYER_ACCOUNT) {

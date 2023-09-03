@@ -22,6 +22,7 @@ import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.syncdata.PlayerData;
 import net.kyori.adventure.text.Component;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Cause;
@@ -61,18 +62,19 @@ public class XCUniqueAccount implements UniqueAccount {
 
     @Override
     public boolean hasBalance(Currency currency, Set<Context> contexts) {
-        return true;
+        return DataCon.getPlayerData(uuid) != null;
     }
 
     @Override
     public boolean hasBalance(Currency currency, Cause cause) {
-        return true;
+        return hasBalance(currency, (Set<Context>) null);
     }
 
     @Override
     public BigDecimal balance(Currency currency, Set<Context> contexts) {
-        if (DataCon.getPlayerData(uuid) != null) {
-            return DataCon.getPlayerData(uuid).getBalance();
+        PlayerData pd = DataCon.getPlayerData(uuid);
+        if (pd != null) {
+            return pd.getBalance();
         } else {
             return BigDecimal.ZERO;
         }
