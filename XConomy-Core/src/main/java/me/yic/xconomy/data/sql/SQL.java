@@ -21,6 +21,7 @@ package me.yic.xconomy.data.sql;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.GetUUID;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
@@ -45,9 +46,6 @@ public class SQL {
     public static String tableLoginName = "xconomylogin";
     public final static DatabaseConnection database = new DatabaseConnection();
     static final String encoding = XConomyLoad.DConfig.ENCODING;
-
-    public static boolean hasnonplayerplugin = false;
-
 
     public static boolean con() {
         return database.setGlobalConnection();
@@ -113,7 +111,7 @@ public class SQL {
                         + "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, hidden int(5) not null, "
                         + "primary key (UID)) default charset = " + encoding + ";";
                 query2 = "create table if not exists " + tableNonPlayerName
-                        + "(account varchar(50) not null, balance double(20,2) not null, "
+                        + "(account varchar(50) not null, UUID varchar(50) not null, balance double(20,2) not null, "
                         + "primary key (account)) default charset = " + encoding + ";";
                 query5 = "create table if not exists " + tableUUIDName
                         + "(UUID varchar(50) not null, DUUID varchar(50) not null, " +
@@ -123,7 +121,7 @@ public class SQL {
                         + "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, hidden int(5) not null, "
                         + "primary key (UID));";
                 query2 = "create table if not exists " + tableNonPlayerName
-                        + "(account varchar(50) not null, balance double(20,2) not null, "
+                        + "(account varchar(50) not null, UUID varchar(50) not null, balance double(20,2) not null, "
                         + "primary key (account));";
                 query5 = "create table if not exists " + tableUUIDName
                         + "(UUID varchar(50) not null, DUUID varchar(50) not null, " +
@@ -131,7 +129,7 @@ public class SQL {
             }
 
             statement.executeUpdate(query1);
-            if (hasnonplayerplugin || XConomyLoad.Config.NON_PLAYER_ACCOUNT) {
+            if (DataLink.hasnonplayerplugin || XConomyLoad.Config.NON_PLAYER_ACCOUNT) {
                 statement.executeUpdate(query2);
             }
             if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
@@ -255,7 +253,7 @@ public class SQL {
 
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                bal = DataFormat.formatString(rs.getString(2));
+                bal = DataFormat.formatString(rs.getString("balance"));
                 CacheNonPlayer.insertIntoCache(playerName, bal);
             }
 

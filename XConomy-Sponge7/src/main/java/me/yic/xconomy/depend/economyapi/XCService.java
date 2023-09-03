@@ -22,6 +22,7 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataLink;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.context.ContextCalculator;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.EconomyService;
@@ -57,7 +58,7 @@ public class XCService implements EconomyService {
     @Override
     public boolean hasAccount(String identifier) {
         if (XCEconomyCommon.isNonPlayerAccount(identifier)) {
-            return true;
+            return DataCon.getAccountBalance(identifier) != null;
         }
         return DataCon.getPlayerData(identifier) != null;
     }
@@ -65,21 +66,31 @@ public class XCService implements EconomyService {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
     public Optional<UniqueAccount> getOrCreateAccount(UUID uuid) {
+        User uu = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(uuid)).get();
+        if (XCEconomyCommon.SimpleCheckNonPlayerAccount(uu.getName())){
+            if (!hasAccount(uu.getName())) {
+                if (!DataLink.newAccount(uu.getName(), uuid.toString())){
+                    return Optional.empty();
+                }
+            }
+            return Optional.of(new XCUniqueAccount(uu, false));
+        }
         if (!hasAccount(uuid)) {
-            if (!DataLink.newPlayer(uuid, Sponge.getServer().getPlayer(uuid).get().getName())){
+            if (!DataLink.newPlayer(uuid, uu.getName())){
                 return Optional.empty();
             }
         }
-        return Optional.of(new XCUniqueAccount(
-                Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(uuid)).get()));
+        return Optional.of(new XCUniqueAccount(uu, true));
     }
 
     @Override
     public Optional<Account> getOrCreateAccount(String identifier) {
-        if (hasAccount(identifier)) {
-            return Optional.of(new XCVirtualAccount(identifier));
+        if (!hasAccount(identifier)) {
+            if (!DataLink.newAccount(identifier)){
+                return Optional.empty();
+            }
         }
-        return Optional.empty();
+        return Optional.of(new XCVirtualAccount(identifier));
     }
 
     @Override

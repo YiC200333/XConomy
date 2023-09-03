@@ -22,6 +22,7 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataLink;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.service.economy.account.Account;
@@ -53,7 +54,7 @@ public class XCService implements EconomyService {
     @Override
     public boolean hasAccount(String identifier) {
         if (XCEconomyCommon.isNonPlayerAccount(identifier)) {
-            return true;
+            return DataCon.getAccountBalance(identifier) != null;
         }
         return DataCon.getPlayerData(identifier) != null;
     }
@@ -91,26 +92,36 @@ public class XCService implements EconomyService {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
     public Optional<UniqueAccount> findOrCreateAccount(UUID uuid) {
-        if (!hasAccount(uuid)) {
-            if (!DataLink.newPlayer(uuid, Sponge.server().player(uuid).get().name())){
-                return Optional.empty();
-            }
-        }
         try {
-            return Optional.of(new XCUniqueAccount(
-                    Sponge.server().userManager().load(uuid).get().get()));
+            User uu = Sponge.server().userManager().load(uuid).get().get();
+            if (XCEconomyCommon.SimpleCheckNonPlayerAccount(uu.name())){
+                if (!hasAccount(uu.name())) {
+                    if (!DataLink.newAccount(uu.name(), uuid.toString())){
+                        return Optional.empty();
+                    }
+                }
+                return Optional.of(new XCUniqueAccount(uu, false));
+            }
+            if (!hasAccount(uuid)) {
+                if (!DataLink.newPlayer(uuid, uu.name())){
+                    return Optional.empty();
+                }
+            }
+            return Optional.of(new XCUniqueAccount(uu, true));
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
     @Override
     public Optional<Account> findOrCreateAccount(String identifier) {
-        if (hasAccount(identifier)) {
-            return Optional.of(new XCVirtualAccount(identifier));
+        if (!hasAccount(identifier)) {
+            if (!DataLink.newAccount(identifier)){
+                return Optional.empty();
+            }
         }
-        return Optional.empty();
+        return Optional.of(new XCVirtualAccount(identifier));
     }
 
 }

@@ -67,7 +67,7 @@ public class XCVirtualAccount implements VirtualAccount {
 
     @Override
     public BigDecimal getBalance(Currency currency, Set<Context> contexts) {
-        if (XCEconomyCommon.SimpleCheckNonPlayerAccount()) {
+        if (XCEconomyCommon.CheckNonPlayerAccountEnable()) {
             BigDecimal bal = DataCon.getAccountBalance(account);
             if (bal != null) {
                 return bal;

@@ -23,10 +23,20 @@ import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 
 public class XCEconomyCommon {
-    public static boolean SimpleCheckNonPlayerAccount() {
-        return XConomyLoad.Config.NON_PLAYER_ACCOUNT;
+
+    public static boolean SimpleCheckNonPlayerAccount(String name) {
+        if (!XConomyLoad.Config.NON_PLAYER_ACCOUNT) {
+            return false;
+        }
+        if (XConomyLoad.Config.NON_PLAYER_ACCOUNT_SUBSTRING != null) {
+            return DataCon.containinfieldslist(name);
+        }
+        return false;
     }
 
+    public static boolean CheckNonPlayerAccountEnable() {
+        return XConomyLoad.Config.NON_PLAYER_ACCOUNT;
+    }
 
     public static boolean isNonPlayerAccount(String name) {
         if (!XConomyLoad.Config.NON_PLAYER_ACCOUNT) {

@@ -162,8 +162,8 @@ public class SQLCreateNewAccount extends SQL {
 
     private static void createPlayerAccount(String UID, String user, Connection co_a) {
         try {
-            String query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?,?)";
-            //String query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?,?) "
+            String query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?)";
+            //String query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
             //        + "ON DUPLICATE KEY UPDATE UID = ?";
 
             PreparedStatement statement = co_a.prepareStatement(query);
@@ -173,7 +173,6 @@ public class SQLCreateNewAccount extends SQL {
             statement.setDouble(3, ImportData.getBalance(user, XConomyLoad.Config.INITIAL_BAL).doubleValue());
 
             statement.setInt(4, 0);
-            statement.setInt(5, 0);
 
             statement.executeUpdate();
             statement.close();
@@ -183,14 +182,15 @@ public class SQLCreateNewAccount extends SQL {
 
     }
 
-    public static boolean createNonPlayerAccount(String account) {
+    public static boolean createNonPlayerAccount(String account, String uuid) {
         Connection co = database.getConnectionAndCheck();
         try {
-            String query = "INSERT INTO " + tableNonPlayerName + "(account,balance) values(?,?)";
+            String query = "INSERT INTO " + tableNonPlayerName + "(account,UUID,balance) values(?,?,?)";
 
             PreparedStatement statement = co.prepareStatement(query);
             statement.setString(1, account);
-            statement.setDouble(2, ImportData.getBalance(account, XConomyLoad.Config.INITIAL_BAL).doubleValue());
+            statement.setString(2, uuid);
+            statement.setDouble(3, ImportData.getBalance(account, XConomyLoad.Config.INITIAL_BAL).doubleValue());
 
             statement.executeUpdate();
             statement.close();

@@ -83,11 +83,11 @@ public class Vault extends AbstractEconomy {
         if (pp.getName() == null) {
             return false;
         }
+        if (SimpleCheckNonPlayerAccount(pp.getName())){
+            return DataLink.newAccount(pp.getName(), pp.getUniqueId().toString());
+        }
         try {
-            if (!DataLink.newPlayer(pp.getUniqueId(), pp.getName())){
-                return false;
-            }
-            return DataCon.getPlayerData(pp.getUniqueId()) != null;
+            return DataLink.newPlayer(pp.getUniqueId(), pp.getName());
         } catch (Exception e) {
             return false;
         }
@@ -144,6 +144,9 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer pp, double amount) {
+        if (pp.getName() != null && SimpleCheckNonPlayerAccount(pp.getName())){
+            return depositPlayer(pp.getName(), amount);
+        }
         if (AdapterManager.BanModiftyBalance()) {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
                     "[BungeeCord] No player in server");
@@ -191,7 +194,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public double getBalance(String name) {
-        if (SimpleCheckNonPlayerAccount(name)) {
+        if (CheckNonPlayerAccountEnable(name)) {
             BigDecimal bal = DataCon.getAccountBalance(name);
             if (bal != null) {
                 return bal.doubleValue();
@@ -206,6 +209,9 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public double getBalance(OfflinePlayer aa) {
+        if (aa.getName() != null && SimpleCheckNonPlayerAccount(aa.getName())){
+            return getBalance(aa.getName());
+        }
         UUID uuid = aa.getUniqueId();
         PlayerData pd = DataCon.getPlayerData(uuid);
         if (pd != null) {
@@ -271,6 +277,9 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public boolean hasAccount(OfflinePlayer pp) {
+        if (pp.getName() != null && SimpleCheckNonPlayerAccount(pp.getName())){
+            return hasAccount(pp.getName());
+        }
         return DataCon.getPlayerData(pp.getUniqueId()) != null;
     }
 
@@ -332,6 +341,9 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer pp, double amount) {
+        if (pp.getName() != null && SimpleCheckNonPlayerAccount(pp.getName())){
+            return withdrawPlayer(pp.getName(), amount);
+        }
         if (AdapterManager.BanModiftyBalance()) {
             return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
                     "[BungeeCord] No player in server");
@@ -363,7 +375,20 @@ public class Vault extends AbstractEconomy {
     public EconomyResponse withdrawPlayer(OfflinePlayer pp, String arg1, double amount) {
         return withdrawPlayer(pp, amount);
     }
+
     private boolean SimpleCheckNonPlayerAccount(String name) {
+        if (NonPlayerPlugin.containinfields(name)) {
+            return true;
+        }
+        if (!XConomyLoad.Config.NON_PLAYER_ACCOUNT) {
+            return false;
+        }
+        if (XConomyLoad.Config.NON_PLAYER_ACCOUNT_SUBSTRING != null) {
+            return DataCon.containinfieldslist(name);
+        }
+        return false;
+    }
+    private boolean CheckNonPlayerAccountEnable(String name) {
         if (NonPlayerPlugin.containinfields(name)) {
             return true;
         }

@@ -19,7 +19,7 @@
 
 package me.yic.xconomy.depend;
 
-import me.yic.xconomy.data.sql.SQL;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.depend.nonplayer.Towny;
 import org.bukkit.Bukkit;
 
@@ -29,7 +29,7 @@ public class NonPlayerPlugin {
 
     public static void load() {
         if (Bukkit.getPluginManager().getPlugin("Towny") != null) {
-            SQL.hasnonplayerplugin = true;
+            DataLink.hasnonplayerplugin = true;
             towny = true;
         }
     }
