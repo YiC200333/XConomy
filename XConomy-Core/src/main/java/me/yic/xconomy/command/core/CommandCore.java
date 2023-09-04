@@ -38,6 +38,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CommandCore {
 
@@ -127,6 +129,9 @@ public class CommandCore {
     }
 
     protected static boolean isDouble(String s) {
+        if (s.length() > 20){
+            return false;
+        }
         if (s.matches(".*[a-zA-Z].*")) {
             return false;
         }
@@ -142,13 +147,23 @@ public class CommandCore {
         }else {
             try {
                 Double.parseDouble(s);
+                Pattern pattern = Pattern.compile("\\.\\d+");
+                Matcher matcher = pattern.matcher(s);
+
+                if (matcher.find()) {
+                    String decimalPart = matcher.group();
+                    int decimalPlaces = decimalPart.length() - 1;
+                    if (decimalPlaces > 2){
+                        return false;
+                    }
+                }
                 value = new BigDecimal(s);
             } catch (NumberFormatException ignored) {
                 return false;
             }
         }
 
-        if (value.compareTo(BigDecimal.ONE) >= 0) {
+        if (value.compareTo(BigDecimal.ZERO) > 0) {
             return !DataFormat.isMAX(DataFormat.formatString(s));
         }
 
