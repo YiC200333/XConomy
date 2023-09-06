@@ -184,13 +184,10 @@ public class Placeholder extends PlaceholderExpansion {
     }
 
     private boolean isNumber(String str) {
-        if (str.equals("10")) {
-            return true;
-        }
-        if (str.equals("0")) {
+        if (str.matches("0+")){
             return false;
         }
-        return str.matches("[0-9]");
+        return str.matches("\\d+");
     }
 
     private boolean outindex(String str) {

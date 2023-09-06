@@ -17,7 +17,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>2.25.1</revision>
+        <revision>2.25.2</revision>
     </properties>
 
     <build>
