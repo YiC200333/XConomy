@@ -71,9 +71,6 @@ public class DataLink{
             }
             SQL.createTable();
             SQLUpdateTable.updataTable();
-            if (hasnonplayerplugin || XConomyLoad.Config.NON_PLAYER_ACCOUNT) {
-                SQLUpdateTable.updataTable_non();
-            }
             SQLUpdateTable.updataTable_record();
             XConomyLoad.DConfig.loggersysmess("连接正常");
         } else {
@@ -156,12 +153,8 @@ public class DataLink{
         return SQLCreateNewAccount.newPlayer(uid, name, null);
     }
 
-    public static boolean newAccount(String name, String uuid) {
-        return SQLCreateNewAccount.createNonPlayerAccount(name, uuid);
-    }
-
     public static boolean newAccount(String name) {
-        return SQLCreateNewAccount.createNonPlayerAccount(name, "N/A");
+        return SQLCreateNewAccount.createNonPlayerAccount(name);
     }
 
     public static <T> PlayerData getPlayerData(T key) {

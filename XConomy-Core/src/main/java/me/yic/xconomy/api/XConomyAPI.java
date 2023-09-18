@@ -41,11 +41,6 @@ public class XConomyAPI {
         return XConomy.PVersion;
     }
 
-    @Deprecated
-    public boolean isbungeecordmode() {
-        return XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.BUNGEECORD);
-    }
-
     public SyncChannalType getSyncChannalType() {
         return XConomyLoad.Config.SYNCDATA_TYPE;
     }
@@ -61,7 +56,6 @@ public class XConomyAPI {
     public boolean createPlayerData(UUID uid, String name) {
         return DataLink.newPlayer(uid, name);
     }
-
     public PlayerData getPlayerData(UUID uid) {
         return DataCon.getPlayerData(uid);
     }
@@ -70,6 +64,13 @@ public class XConomyAPI {
         return DataCon.getPlayerData(name);
     }
 
+    public boolean createNonPlayerData(String account) {
+        return DataLink.newAccount(account);
+    }
+    public BigDecimal getNonPlayerBalance(String account) {
+        return DataCon.getAccountBalance(account);
+    }
+    @Deprecated
     public BigDecimal getorcreateAccountBalance(String account) {
         return DataCon.getAccountBalance(account);
     }
@@ -103,12 +104,22 @@ public class XConomyAPI {
         return 0;
     }
 
+    @Deprecated
     public int changeAccountBalance(String account, BigDecimal amount, Boolean isadd) {
-        return changeAccountBalance(account, amount, isadd, null);
+        return changeNonPlayerBalance(account, amount, isadd, null);
     }
 
+    @Deprecated
     public int changeAccountBalance(String account, BigDecimal amount, Boolean isadd, String pluginname) {
-        BigDecimal bal = getorcreateAccountBalance(account);
+        return changeNonPlayerBalance(account, amount, isadd, pluginname);
+    }
+
+    public int changeNonPlayerBalance(String account, BigDecimal amount, Boolean isadd) {
+        return changeNonPlayerBalance(account, amount, isadd, null);
+    }
+
+    public int changeNonPlayerBalance(String account, BigDecimal amount, Boolean isadd, String pluginname) {
+        BigDecimal bal = getNonPlayerBalance(account);
         if (isadd != null) {
             if (isadd) {
                 if (ismaxnumber(bal.add(amount))) {

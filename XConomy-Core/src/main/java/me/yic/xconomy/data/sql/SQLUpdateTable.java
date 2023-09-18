@@ -52,33 +52,6 @@ public class SQLUpdateTable extends SQL {
     }
 
 
-    public static void updataTable_non() {
-        Connection connection = database.getConnectionAndCheck();
-        try {
-            PreparedStatement statementa = connection.prepareStatement("select * from " + tableNonPlayerName + " where UUID = 'N/A'");
-
-            statementa.executeQuery();
-            statementa.close();
-            database.closeHikariConnection(connection);
-        } catch (SQLException e) {
-            try {
-                XConomy.getInstance().logger("升级数据库表格。。。", 0, tableNonPlayerName);
-                String sql = "alter table " + tableNonPlayerName + " add column UUID varchar(50) not null default 'N/A'";
-                if (XConomyLoad.DConfig.isMySQL()){
-                    sql += " after account";
-                }
-                PreparedStatement statementb = connection.prepareStatement(sql);
-
-                statementb.executeUpdate();
-                statementb.close();
-                database.closeHikariConnection(connection);
-
-            } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-            }
-        }
-    }
-
     public static void updataTable_record() {
         if (XConomyLoad.DConfig.isMySQL() && XConomyLoad.Config.TRANSACTION_RECORD) {
             Connection connection = database.getConnectionAndCheck();

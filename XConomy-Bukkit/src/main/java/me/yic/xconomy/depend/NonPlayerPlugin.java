@@ -19,6 +19,8 @@
 
 package me.yic.xconomy.depend;
 
+import me.yic.xconomy.XConomyLoad;
+import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.depend.nonplayer.Towny;
 import org.bukkit.Bukkit;
@@ -37,6 +39,19 @@ public class NonPlayerPlugin {
     public static boolean containinfields(String accountname) {
         if (towny) {
             return accountname.startsWith(Towny.getNationAccountPrefix()) || accountname.startsWith(Towny.getTownAccountPrefix());
+        }
+        return false;
+    }
+
+    public static boolean SimpleCheckNonPlayerAccount(String name) {
+        if (containinfields(name)) {
+            return true;
+        }
+        if (!XConomyLoad.Config.NON_PLAYER_ACCOUNT) {
+            return false;
+        }
+        if (XConomyLoad.Config.NON_PLAYER_ACCOUNT_SUBSTRING != null) {
+            return DataCon.containinfieldslist(name);
         }
         return false;
     }

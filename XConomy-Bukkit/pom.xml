@@ -80,6 +80,7 @@
                                         <exclude>me/yic/xconomy/data/ImportData.class</exclude>
                                         <exclude>me/yic/xconomy/task/ReceivePerCheck.class</exclude>
                                         <exclude>me/yic/xconomy/adapter/comp/*</exclude>
+                                        <exclude>me/yic/xconomy/depend/*</exclude>
                                     </excludes>
                                 </filter>
                             </filters>

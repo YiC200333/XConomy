@@ -25,6 +25,7 @@ import me.yic.xconomy.adapter.comp.CSender;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.syncdata.PlayerData;
+import me.yic.xconomy.depend.NonPlayerPlugin;
 import me.yic.xconomy.info.MessageConfig;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.lang.MessagesManager;
@@ -37,6 +38,11 @@ public class CommandPay extends CommandCore{
     public static boolean onCommand(CSender sender, String commandName, String[] args) {
         if (!sender.isPlayer()) {
             sendMessages(sender, PREFIX + MessagesManager.systemMessage("§6控制台无法使用该指令"));
+            return true;
+        }
+
+        if (NonPlayerPlugin.SimpleCheckNonPlayerAccount(args[0])) {
+            sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
             return true;
         }
 

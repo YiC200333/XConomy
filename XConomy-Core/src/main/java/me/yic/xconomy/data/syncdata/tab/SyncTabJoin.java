@@ -50,8 +50,11 @@ public class SyncTabJoin extends SyncData {
                 AdapterManager.Tab_PlayerList.add(name);
             }
         }else{
-            AdapterManager.Tab_PlayerList.clear();
-            AdapterManager.Tab_PlayerList.addAll(allname);
+            for (String pn : allname){
+                if (!AdapterManager.Tab_PlayerList.contains(pn)) {
+                    AdapterManager.Tab_PlayerList.add(pn);
+                }
+            }
         }
     }
 }

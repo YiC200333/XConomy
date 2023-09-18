@@ -133,8 +133,20 @@ public class CommandBalance extends CommandCore{
                 PlayerData pd = DataCon.getPlayerData(args[1]);
 
                 if (pd == null) {
-                    sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
-                    return true;
+                    if (args[1].length() > 25) {
+                        try {
+                            UUID au = UUID.fromString(args[1]);
+                            pd = DataCon.getPlayerData(au);
+                        } catch (Exception ignored) {
+                        }
+                        if (pd == null){
+                            sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
+                            return true;
+                        }
+                    }else{
+                        sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
+                        return true;
+                    }
                 }
 
                 CPlayer target = AdapterManager.PLUGIN.getplayer(pd);

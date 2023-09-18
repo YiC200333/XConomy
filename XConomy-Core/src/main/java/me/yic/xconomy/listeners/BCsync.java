@@ -95,7 +95,7 @@ public class BCsync implements Listener {
                 }else{
                     allname = new ArrayList<>();
                 }
-                if (!allname.contains(sj.getName())) {
+                if (sj.getName() != null && !allname.contains(sj.getName())) {
                     allname.add(sj.getName());
                 }
                 allservername.put(sign, allname);

@@ -1,5 +1,5 @@
 /*
- *  This file (XCEconomyCommon.java) is a part of project XConomy
+ *  This file (NonPlayerPlugin.java) is a part of project XConomy
  *  Copyright (C) YiC and contributors
  *
  *  This program is free software: you can redistribute it and/or modify it
@@ -16,35 +16,21 @@
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package me.yic.xconomy.depend.economyapi;
+
+package me.yic.xconomy.depend;
 
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataCon;
-import me.yic.xconomy.data.caches.CacheNonPlayer;
 
-public class XCEconomyCommon {
+public class NonPlayerPlugin {
 
-    public static boolean CheckNonPlayerAccountEnable() {
-        return XConomyLoad.Config.NON_PLAYER_ACCOUNT;
-    }
-
-    public static boolean isNonPlayerAccount(String name) {
+    public static boolean SimpleCheckNonPlayerAccount(String name) {
         if (!XConomyLoad.Config.NON_PLAYER_ACCOUNT) {
             return false;
         }
-
-        if (name.length() >= 17) {
-            return true;
-        }
-
-        if (XConomyLoad.Config.NON_PLAYER_ACCOUNT_SUBSTRING == null) {
-            if (CacheNonPlayer.bal.containsKey(name)) {
-                return true;
-            }
-
-            return DataCon.getPlayerData(name) == null;
-        }else{
+        if (XConomyLoad.Config.NON_PLAYER_ACCOUNT_SUBSTRING != null) {
             return DataCon.containinfieldslist(name);
         }
+        return false;
     }
 }

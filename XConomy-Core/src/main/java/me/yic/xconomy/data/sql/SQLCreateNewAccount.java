@@ -28,6 +28,7 @@ import me.yic.xconomy.data.ImportData;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.data.syncdata.SyncUUID;
+import me.yic.xconomy.depend.NonPlayerPlugin;
 import me.yic.xconomy.utils.SendPluginMessage;
 import me.yic.xconomy.utils.UUIDMode;
 
@@ -41,7 +42,7 @@ import java.util.UUID;
 public class SQLCreateNewAccount extends SQL {
 
     public static boolean newPlayer(UUID uid, String name, CPlayer player) {
-        if (DataCon.containinfieldslist(name)) {
+        if (player!=null && DataCon.containinfieldslist(name)) {
             kickplayer(player, 2, "");
             return false;
         }
@@ -172,7 +173,11 @@ public class SQLCreateNewAccount extends SQL {
 
             statement.setDouble(3, ImportData.getBalance(user, XConomyLoad.Config.INITIAL_BAL).doubleValue());
 
-            statement.setInt(4, 0);
+            int hid = 0;
+            if (NonPlayerPlugin.SimpleCheckNonPlayerAccount(user)){
+                hid = 1;
+            }
+            statement.setInt(4, hid);
 
             statement.executeUpdate();
             statement.close();
@@ -182,15 +187,14 @@ public class SQLCreateNewAccount extends SQL {
 
     }
 
-    public static boolean createNonPlayerAccount(String account, String uuid) {
+    public static boolean createNonPlayerAccount(String account) {
         Connection co = database.getConnectionAndCheck();
         try {
-            String query = "INSERT INTO " + tableNonPlayerName + "(account,UUID,balance) values(?,?,?)";
+            String query = "INSERT INTO " + tableNonPlayerName + "(account, balance) values(?,?)";
 
             PreparedStatement statement = co.prepareStatement(query);
             statement.setString(1, account);
-            statement.setString(2, uuid);
-            statement.setDouble(3, ImportData.getBalance(account, XConomyLoad.Config.INITIAL_BAL).doubleValue());
+            statement.setDouble(2, ImportData.getBalance(account, XConomyLoad.Config.INITIAL_BAL).doubleValue());
 
             statement.executeUpdate();
             statement.close();
