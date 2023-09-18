@@ -89,14 +89,9 @@ public class Vsync {
             }else if (ob instanceof SyncTabJoin) {
                 SyncTabJoin sj = (SyncTabJoin) ob;
                 String sign = sj.getSign();
-                List<String> allname;
-                if (allservername.containsKey(sign)){
-                    allname = allservername.get(sign);
-                }else{
-                    allname = new ArrayList<>();
-                }
-                if (!allname.contains(sj.getName())) {
-                    allname.add(sj.getName());
+                List<String> allname = new ArrayList<>();
+                for (Player pn : XConomyVelocity.getInstance().server.getAllPlayers()){
+                    allname.add(pn.getUsername());
                 }
                 allservername.put(sign, allname);
                 sj.setallPlayers(allname);

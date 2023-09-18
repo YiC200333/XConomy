@@ -32,11 +32,9 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class BCsync implements Listener {
-    public static final HashMap<String, List<String>> allservername = new HashMap<>();
 
     @SuppressWarnings(value = {"unused"})
     @EventHandler
@@ -89,16 +87,10 @@ public class BCsync implements Listener {
             }else if (ob instanceof SyncTabJoin) {
                 SyncTabJoin sj = (SyncTabJoin) ob;
                 String sign = sj.getSign();
-                List<String> allname;
-                if (allservername.containsKey(sign)){
-                    allname = allservername.get(sign);
-                }else{
-                    allname = new ArrayList<>();
+                List<String> allname = new ArrayList<>();
+                for (ProxiedPlayer pn : XConomyBungee.getInstance().getProxy().getPlayers()){
+                    allname.add(pn.getName());
                 }
-                if (sj.getName() != null && !allname.contains(sj.getName())) {
-                    allname.add(sj.getName());
-                }
-                allservername.put(sign, allname);
                 sj.setallPlayers(allname);
             }
             oos.writeObject(ob);

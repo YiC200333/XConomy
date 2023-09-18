@@ -32,7 +32,6 @@ public class SyncTabJoin extends SyncData {
     public SyncTabJoin(String name){
         super(SyncType.TAB_JOIN, null);
         this.name = name;
-        this.allname = null;
     }
 
     public String getName(){
@@ -52,7 +51,9 @@ public class SyncTabJoin extends SyncData {
         }else{
             for (String pn : allname){
                 if (!AdapterManager.Tab_PlayerList.contains(pn)) {
-                    AdapterManager.Tab_PlayerList.add(pn);
+                    if (pn != null) {
+                        AdapterManager.Tab_PlayerList.add(pn);
+                    }
                 }
             }
         }

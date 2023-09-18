@@ -26,7 +26,6 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import me.yic.xconomy.info.SyncInfo;
-import me.yic.xconomy.listeners.VPlayerEvent;
 import me.yic.xconomy.listeners.Vsync;
 import org.slf4j.Logger;
 
@@ -61,7 +60,7 @@ public class XConomyVelocity{
     @Subscribe
     public void onInitialize(ProxyInitializeEvent event) {
         server.getEventManager().register(this, new Vsync());
-        server.getEventManager().register(this, new VPlayerEvent());
+        //server.getEventManager().register(this, new VPlayerEvent());
     }
 
 
