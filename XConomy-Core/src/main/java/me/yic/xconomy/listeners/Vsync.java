@@ -30,12 +30,10 @@ import me.yic.xconomy.info.SyncType;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 public class Vsync {
-    public static final HashMap<String, List<String>> allservername = new HashMap<>();
 
     @SuppressWarnings(value = {"unused"})
     @Subscribe
@@ -93,7 +91,6 @@ public class Vsync {
                 for (Player pn : XConomyVelocity.getInstance().server.getAllPlayers()){
                     allname.add(pn.getUsername());
                 }
-                allservername.put(sign, allname);
                 sj.setallPlayers(allname);
             }
 
