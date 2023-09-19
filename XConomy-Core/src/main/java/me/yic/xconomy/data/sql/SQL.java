@@ -111,7 +111,7 @@ public class SQL {
                         + "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, hidden int(5) not null, "
                         + "primary key (UID)) default charset = " + encoding + ";";
                 query2 = "create table if not exists " + tableNonPlayerName
-                        + "(account varchar(50) not null, UUID varchar(50) not null, balance double(20,2) not null, "
+                        + "(account varchar(50) not null, balance double(20,2) not null, "
                         + "primary key (account)) default charset = " + encoding + ";";
                 query5 = "create table if not exists " + tableUUIDName
                         + "(UUID varchar(50) not null, DUUID varchar(50) not null, " +
@@ -121,7 +121,7 @@ public class SQL {
                         + "(UID varchar(50) not null, player varchar(50) not null, balance double(20,2) not null, hidden int(5) not null, "
                         + "primary key (UID));";
                 query2 = "create table if not exists " + tableNonPlayerName
-                        + "(account varchar(50) not null, UUID varchar(50) not null, balance double(20,2) not null, "
+                        + "(account varchar(50) not null, balance double(20,2) not null, "
                         + "primary key (account));";
                 query5 = "create table if not exists " + tableUUIDName
                         + "(UUID varchar(50) not null, DUUID varchar(50) not null, " +
