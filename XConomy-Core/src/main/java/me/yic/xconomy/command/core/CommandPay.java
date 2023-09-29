@@ -41,11 +41,6 @@ public class CommandPay extends CommandCore{
             return true;
         }
 
-        if (NonPlayerPlugin.SimpleCheckNonPlayerAccount(args[0])) {
-            sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
-            return true;
-        }
-
         if (!sender.isOp()) {
             if (!PermissionINFO.getGlobalPayment()) {
                 sendMessages(sender, PREFIX + translateColorCodes("no_permission"));
@@ -65,6 +60,11 @@ public class CommandPay extends CommandCore{
 
         if (args.length != 2) {
             sendHelpMessage(sender, 1);
+            return true;
+        }
+
+        if (NonPlayerPlugin.SimpleCheckNonPlayerAccount(args[0])) {
+            sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
             return true;
         }
 
