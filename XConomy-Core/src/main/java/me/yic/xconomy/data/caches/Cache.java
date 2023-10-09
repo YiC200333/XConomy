@@ -32,6 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Cache {
     public static final ConcurrentHashMap<UUID, PlayerData> pds = new ConcurrentHashMap<>();
+    public static final ConcurrentHashMap<UUID, Integer> phids = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, UUID> uuids = new ConcurrentHashMap<>();
 
     private static final ConcurrentHashMap<UUID, UUID> m_uuids = new ConcurrentHashMap<>();
@@ -56,6 +57,12 @@ public class Cache {
     public static void insertIntoMultiUUIDCache(final UUID uuid, final UUID luuid) {
         if (uuid != null && luuid != null && !uuid.toString().equals(luuid.toString())) {
             m_uuids.put(luuid, uuid);
+        }
+    }
+
+    public static void insertIntoHiddenMap(final UUID uuid, final int hidden) {
+        if (uuid != null) {
+            phids.put(uuid, hidden);
         }
     }
 

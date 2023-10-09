@@ -173,6 +173,7 @@ public class SQL {
                 BigDecimal cacheThisAmt = DataFormat.formatString(rs.getString(3));
                 bd = new PlayerData(fuuid, rs.getString(2), cacheThisAmt);
                 Cache.insertIntoCache(fuuid, bd);
+                Cache.insertIntoHiddenMap(fuuid, rs.getInt(4));
             }
 
             rs.close();
@@ -221,6 +222,7 @@ public class SQL {
                     if (cacheThisAmt != null) {
                         bd = new PlayerData(uuid, username, cacheThisAmt);
                         Cache.insertIntoCache(uuid, bd);
+                        Cache.insertIntoHiddenMap(uuid, rs.getInt(4));
                     }
                     break;
                 }

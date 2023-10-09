@@ -131,6 +131,9 @@ public class Placeholder extends PlaceholderExpansion {
             } else {
                 return "[XConomy]Invalid index";
             }
+        } else if (identifier.contains("top_hidden")) {
+            PlayerData pd = checkplayerdata(player);
+            return Integer.toString(DataCon.getPlayerHiddenState(pd.getUniqueId()));
         } else if (identifier.contains("paypermission")) {
             if (identifier.contains("_global")) {
                 if (PermissionINFO.globalpayment) {

@@ -78,6 +78,19 @@ public class DataCon {
         return pd;
     }
 
+    public static int getPlayerHiddenState(UUID uid) {
+        if (Cache.phids.containsKey(uid)){
+            return Cache.phids.get(uid);
+        }
+        if (DataLink.getPlayerData(uid) != null) {
+            return Cache.phids.get(uid);
+        }
+        return 1;
+    }
+    public static void removePlayerHiddenState(UUID uid) {
+        Cache.phids.remove(uid);
+    }
+
     public static void deletePlayerData(PlayerData pd) {
         DataLink.deletePlayerData(pd.getUniqueId());
         Cache.removefromCache(pd.getUniqueId());
@@ -94,8 +107,8 @@ public class DataCon {
 
     public static boolean hasaccountdatacache(String name) {
         return CacheNonPlayer.CacheContainsKey(name);
-
     }
+
     public static void deletedatafromcache(UUID u) {
         Cache.deleteDataFromCache(u);
     }

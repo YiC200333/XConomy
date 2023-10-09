@@ -51,6 +51,7 @@ public class ConnectionListeners implements Listener {
         if (XConomyLoad.DConfig.isMySQL() && XConomyLoad.Config.PAY_TIPS) {
             DataLink.updatelogininfo(event.getPlayer().getUniqueId());
         }
+        DataCon.removePlayerHiddenState(event.getPlayer().getUniqueId());
     }
 
     @SuppressWarnings("unused")

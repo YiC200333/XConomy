@@ -48,6 +48,7 @@ public class ConnectionListeners {
         if (XConomyLoad.DConfig.isMySQL() && XConomyLoad.Config.PAY_TIPS) {
             DataLink.updatelogininfo(event.getTargetEntity().getUniqueId());
         }
+        DataCon.removePlayerHiddenState(event.getTargetEntity().getUniqueId());
     }
 
     @SuppressWarnings("unused")
