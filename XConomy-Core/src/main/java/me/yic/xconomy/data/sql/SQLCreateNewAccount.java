@@ -163,10 +163,10 @@ public class SQLCreateNewAccount extends SQL {
 
     private static void createPlayerAccount(String UID, String user, Connection co_a) {
         try {
-            String query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?)";
-            //String query = "INSERT INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?) "
-            //        + "ON DUPLICATE KEY UPDATE UID = ?";
-
+            String query = "INSERT OR IGNORE INTO " + tableName + "(UID,player,balance,hidden) values(?,?,?,?)";
+            if (XConomyLoad.DConfig.isMySQL()) {
+                query = query.replace("INSERT OR IGNORE", "INSERT IGNORE");
+            }
             PreparedStatement statement = co_a.prepareStatement(query);
             statement.setString(1, UID);
             statement.setString(2, user);
@@ -190,8 +190,10 @@ public class SQLCreateNewAccount extends SQL {
     public static boolean createNonPlayerAccount(String account) {
         Connection co = database.getConnectionAndCheck();
         try {
-            String query = "INSERT INTO " + tableNonPlayerName + "(account, balance) values(?,?)";
-
+            String query = "INSERT OR IGNORE INTO " + tableNonPlayerName + "(account, balance) values(?,?)";
+            if (XConomyLoad.DConfig.isMySQL()) {
+                query = query.replace("INSERT OR IGNORE", "INSERT IGNORE");
+            }
             PreparedStatement statement = co.prepareStatement(query);
             statement.setString(1, account);
             statement.setDouble(2, ImportData.getBalance(account, XConomyLoad.Config.INITIAL_BAL).doubleValue());
@@ -212,7 +214,7 @@ public class SQLCreateNewAccount extends SQL {
             if (XConomyLoad.DConfig.isMySQL()) {
                 query = "INSERT INTO " + tableUUIDName + "(UUID,DUUID) values(?,?) ON DUPLICATE KEY UPDATE DUUID = ?";
             }else{
-                query = "INSERT INTO " + tableUUIDName + "(UUID,DUUID) values(?,?)";
+                query = "INSERT OR IGNORE INTO " + tableUUIDName + "(UUID,DUUID) values(?,?)";
             }
             PreparedStatement statement = co_a.prepareStatement(query);
             statement.setString(1, UUID);

@@ -18,8 +18,6 @@
  */
 package me.yic.xconomy.data.caches;
 
-import me.yic.xconomy.data.DataLink;
-
 import java.math.BigDecimal;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,11 +35,7 @@ public class CacheNonPlayer {
     }
 
     public static BigDecimal getBalanceFromCacheOrDB(final String u) {
-        if (!bal.containsKey(u)) {
-            return DataLink.getBalNonPlayer(u);
-        }
         return bal.get(u);
-
     }
 
 }

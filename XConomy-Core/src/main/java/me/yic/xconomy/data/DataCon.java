@@ -49,10 +49,13 @@ public class DataCon {
     }
 
     public static BigDecimal getAccountBalance(String account) {
+        BigDecimal bal = null;
         if (XConomyLoad.Config.DISABLE_CACHE){
             return DataLink.getBalNonPlayer(account);
         }
-        BigDecimal bal = CacheNonPlayer.getBalanceFromCacheOrDB(account);
+        if (CacheNonPlayer.CacheContainsKey(account)) {
+            bal = CacheNonPlayer.getBalanceFromCacheOrDB(account);
+        }
         if (bal == null){
             bal =  DataLink.getBalNonPlayer(account);
         }
@@ -164,7 +167,7 @@ public class DataCon {
     @SuppressWarnings("ConstantConditions")
     public static void changeaccountdata(final String type, final String u, final BigDecimal amount, final Boolean isAdd, final String command) {
         BigDecimal newvalue = amount;
-        BigDecimal balance = CacheNonPlayer.getBalanceFromCacheOrDB(u);
+        BigDecimal balance = getAccountBalance(u);
 
         RecordInfo ri = new RecordInfo(type, command, null);
 
