@@ -486,6 +486,7 @@ public class SQL {
             statement.setString(2, u.toString());
             statement.executeUpdate();
             statement.close();
+            Cache.insertIntoHiddenMap(u, type);
 
         } catch (SQLException e) {
             e.printStackTrace();
