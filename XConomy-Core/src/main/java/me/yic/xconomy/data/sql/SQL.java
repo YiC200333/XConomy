@@ -422,7 +422,7 @@ public class SQL {
             statement.executeUpdate();
             statement.close();
             if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-                query = "delete from " + tableName + " where DUUID = ?";
+                query = "delete from " + tableUUIDName + " where DUUID = ?";
                 statement = connection.prepareStatement(query);
                 statement.setString(1, UUID);
                 statement.executeUpdate();
