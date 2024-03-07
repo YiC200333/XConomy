@@ -29,7 +29,10 @@ public class CPlugin implements iPlugin {
     public void broadcastMessage(String message) {
 
     }
-
+    @Override
+    public boolean isSync() {
+        return false;
+    }
     @Override
     public void runTaskAsynchronously(Runnable ra) {
 

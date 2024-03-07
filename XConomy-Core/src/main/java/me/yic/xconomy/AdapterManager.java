@@ -60,8 +60,7 @@ public class AdapterManager {
         return !XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS);
     }
     public static boolean checkisMainThread(){
-        return Thread.currentThread().getName().equalsIgnoreCase("Server thread") ||
-                Thread.currentThread().getName().contains("Region Scheduler Thread #");
+        return PLUGIN.isSync();
     }
 
     public static void runTaskAsynchronously(Runnable runnable){

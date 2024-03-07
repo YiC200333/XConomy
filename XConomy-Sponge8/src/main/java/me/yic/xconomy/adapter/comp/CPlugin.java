@@ -65,6 +65,10 @@ public class CPlugin implements iPlugin {
     }
 
     @Override
+    public boolean isSync() {
+        return Thread.currentThread().getName().equalsIgnoreCase("Server thread");
+    }
+    @Override
     public void runTaskAsynchronously(Runnable runnable) {
         Sponge.asyncScheduler().executor(XConomy.getInstance().plugincontainer).execute(runnable);
     }

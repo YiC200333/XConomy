@@ -52,6 +52,10 @@ public class CPlugin implements iPlugin {
     }
 
     @Override
+    public boolean isSync() {
+        return Bukkit.isPrimaryThread();
+    }
+    @Override
     public void runTaskAsynchronously(Runnable ra) {
         Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), ra);
     }

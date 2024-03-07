@@ -17,6 +17,7 @@ public interface iPlugin {
 
     void broadcastMessage(String message);
 
+    boolean isSync();
     void runTaskAsynchronously(Runnable ra);
 
     void runTaskLaterAsynchronously(Runnable ra, long time);
