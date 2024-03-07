@@ -60,3 +60,5 @@ permissions:
     default: op
   xconomy.admin.paytoggle:
     default: op
+  xconomy.admin.hidden:
+    default: op

@@ -64,6 +64,8 @@ public class LanguagesManager {
         ll.add("top_out");
         ll.add("top_hidden");
         ll.add("top_displayed");
+        ll.add("staff_hidden");
+        ll.add("staff_displayed");
         ll.add("pay");
         ll.add("pay_receive");
         ll.add("pay_fail");

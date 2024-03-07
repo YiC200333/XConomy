@@ -127,7 +127,7 @@ public class DataCon {
         return false;
     }
 
-    public static void changeplayerdata(final String type, final UUID uid, final BigDecimal amount, final Boolean isAdd, final String command, final Object comment) {
+    public static BigDecimal changeplayerdata(final String type, final UUID uid, final BigDecimal amount, final Boolean isAdd, final String command, final Object comment) {
         PlayerData pd = getPlayerData(uid);
         UUID u = pd.getUniqueId();
         BigDecimal newvalue = amount;
@@ -161,6 +161,7 @@ public class DataCon {
             }
         }
 
+        return newvalue;
     }
 
 

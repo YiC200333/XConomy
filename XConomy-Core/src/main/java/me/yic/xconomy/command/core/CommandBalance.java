@@ -180,7 +180,7 @@ public class CommandBalance extends CommandCore{
                             return true;
                         }
 
-                        DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, true, com, reasonmessages);
+                        BigDecimal newbalance = DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, true, com, reasonmessages);
                         sendMessages(sender, PREFIX + translateColorCodes("money_give")
                                 .replace("%player%", realname)
                                 .replace("%amount%", amountFormatted));
@@ -189,7 +189,8 @@ public class CommandBalance extends CommandCore{
 
                             String message = PREFIX + translateColorCodes("money_give_receive")
                                     .replace("%player%", realname)
-                                    .replace("%amount%", amountFormatted);
+                                    .replace("%amount%", amountFormatted)
+                                    .replace("%balance%", DataFormat.shown(newbalance));
 
                             if (commndlength == 4) {
                                 message = PREFIX + reasonmessages;
@@ -227,14 +228,16 @@ public class CommandBalance extends CommandCore{
                             return true;
                         }
 
-                        DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, false, com, reasonmessages);
+                        BigDecimal newbalance = DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, false, com, reasonmessages);
                         sendMessages(sender, PREFIX + translateColorCodes("money_take")
                                 .replace("%player%", realname)
                                 .replace("%amount%", amountFormatted));
 
                         if (checkMessage("money_take_receive") | commndlength == 4) {
                             String mess = PREFIX + translateColorCodes("money_take_receive")
-                                    .replace("%player%", realname).replace("%amount%", amountFormatted);
+                                    .replace("%player%", realname)
+                                    .replace("%amount%", amountFormatted)
+                                    .replace("%balance%", DataFormat.shown(newbalance));
 
                             if (commndlength == 4) {
                                 mess = PREFIX + reasonmessages;
@@ -257,7 +260,7 @@ public class CommandBalance extends CommandCore{
                             return true;
                         }
 
-                        DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, null, com, reasonmessages);
+                        BigDecimal newbalance = DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, null, com, reasonmessages);
                         sendMessages(sender, PREFIX + translateColorCodes("money_set")
                                 .replace("%player%", realname)
                                 .replace("%amount%", amountFormatted));
@@ -265,7 +268,8 @@ public class CommandBalance extends CommandCore{
                         if (checkMessage("money_set_receive") | commndlength == 4) {
                             String mess = PREFIX + translateColorCodes("money_set_receive")
                                     .replace("%player%", realname)
-                                    .replace("%amount%", amountFormatted);
+                                    .replace("%amount%", amountFormatted)
+                                    .replace("%balance%", DataFormat.shown(newbalance));
 
                             if (commndlength == 4) {
                                 mess = PREFIX + reasonmessages;

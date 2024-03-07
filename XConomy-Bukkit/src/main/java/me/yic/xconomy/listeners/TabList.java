@@ -47,6 +47,9 @@ public class TabList implements TabCompleter {
                         COMMANDS_xc.add("reload");
                         COMMANDS_xc.add("deldata");
                     }
+                    if (commandSender.isOp() || commandSender.hasPermission("xconomy.admin.hidden")) {
+                        COMMANDS_xc.add("hidstatus");
+                    }
                     StringUtil.copyPartialMatches(args[0], COMMANDS_xc, completions);
                 }
                 Collections.sort(completions);

@@ -236,6 +236,11 @@ public class XConomy {
                     .description(Text.of("xconomy command"))
                     .assign(PermissionDescription.ROLE_ADMIN, true)
                     .register();
+            this.permissionDescriptionBuilder
+                    .id("xconomy.admin.hidden")
+                    .description(Text.of("xconomy command"))
+                    .assign(PermissionDescription.ROLE_ADMIN, true)
+                    .register();
         }
 
 
