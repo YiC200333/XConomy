@@ -21,7 +21,9 @@ Please check [XConomyAPI](https://github.com/YiC200333/XConomyAPI)
 仅在这些网站上发布过  
 Only published on these websites
 
-MCBBS: https://www.mcbbs.net/thread-962904-1-1.html
+~~MCBBS: https://www.mcbbs.net/thread-962904-1-1.html~~
+
+MineBBS: https://www.minebbs.com/resources/xconomy-bc-spigot-sponge.7410/
 
 Spigot: https://www.spigotmc.org/resources/xconomy.75669/
 
