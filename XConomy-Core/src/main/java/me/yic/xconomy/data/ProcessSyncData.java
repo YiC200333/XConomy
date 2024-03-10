@@ -27,7 +27,6 @@ import me.yic.xconomy.info.SyncInfo;
 import me.yic.xconomy.info.SyncType;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.UUID;
 
@@ -67,7 +66,7 @@ public class ProcessSyncData {
             }else{
                 ob.SyncStart();
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
