@@ -17,6 +17,8 @@ public interface iPlugin {
 
     void broadcastMessage(String message);
 
+    UUID NameToUUID(String name);
+
     boolean isSync();
     void runTaskAsynchronously(Runnable ra);
 

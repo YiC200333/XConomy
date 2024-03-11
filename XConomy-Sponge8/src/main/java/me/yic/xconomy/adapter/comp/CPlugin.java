@@ -11,10 +11,12 @@ import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.network.EngineConnectionSide;
 import org.spongepowered.api.network.ServerSideConnection;
 import org.spongepowered.api.network.channel.raw.RawDataChannel;
 import org.spongepowered.api.network.channel.raw.play.RawPlayDataHandler;
+import org.spongepowered.api.util.Identifiable;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -65,6 +67,20 @@ public class CPlugin implements iPlugin {
     }
 
     @Override
+    public UUID NameToUUID(String name) {
+        try {
+            Optional<User> pu = Sponge.server().userManager().load(name).get();
+            if (!pu.isPresent()) {
+                return null;
+            }
+            Optional<ServerPlayer> player = pu.get().player();
+            return player.map(Identifiable::uniqueId).orElse(null);
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
+        }
+    }
+
+        @Override
     public boolean isSync() {
         return Thread.currentThread().getName().equalsIgnoreCase("Server thread");
     }

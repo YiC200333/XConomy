@@ -18,12 +18,12 @@
  */
 package me.yic.xconomy.data;
 
+import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.data.syncdata.SyncData;
 import me.yic.xconomy.data.syncdata.SyncMessage;
-import me.yic.xconomy.info.SyncInfo;
 import me.yic.xconomy.info.SyncType;
 
 import java.io.ByteArrayInputStream;
@@ -45,9 +45,6 @@ public class ProcessSyncData {
             }
 
             SyncData ob = (SyncData) ios.readObject();
-            if (ob.getServerKey().equals(SyncInfo.server_key)) {
-                return;
-            }
 
             if (!ob.getSign().equals(XConomyLoad.Config.SYNCDATA_SIGN)) {
                 return;
@@ -57,6 +54,13 @@ public class ProcessSyncData {
                 SyncMessage sd = (SyncMessage) ob;
                 UUID muid = sd.getUniqueId();
                 if (ob.getSyncType().equals(SyncType.MESSAGE_SEMI)){
+                    if (sd.getRUniqueId() == null){
+                        UUID lu = AdapterManager.PLUGIN.NameToUUID(sd.getName());
+                        if (lu == null){
+                            return;
+                        }
+                        sd.setRUniqueId(lu);
+                    }
                     muid = sd.getRUniqueId();
                 }
                 CPlayer p = new CPlayer(muid);

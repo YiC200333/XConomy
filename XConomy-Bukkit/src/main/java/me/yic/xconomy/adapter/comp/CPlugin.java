@@ -52,6 +52,15 @@ public class CPlugin implements iPlugin {
     }
 
     @Override
+    public UUID NameToUUID(String name) {
+        Player p = Bukkit.getPlayerExact(name);
+        if (p == null){
+            return null;
+        }
+        return p.getUniqueId();
+    }
+
+    @Override
     public boolean isSync() {
         return Bukkit.isPrimaryThread();
     }

@@ -6,6 +6,7 @@ import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.iPlugin;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.utils.UUIDMode;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -49,7 +50,16 @@ public class CPlugin implements iPlugin {
 
     @Override
     public void broadcastMessage(String message) {
-        Bukkit.broadcastMessage(message);
+        Bukkit.broadcast(Component.text(message));
+    }
+
+    @Override
+    public UUID NameToUUID(String name) {
+        Player p = Bukkit.getPlayerExact(name);
+        if (p == null){
+            return null;
+        }
+        return p.getUniqueId();
     }
 
     @Override

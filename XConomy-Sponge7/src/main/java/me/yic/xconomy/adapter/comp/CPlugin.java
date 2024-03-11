@@ -57,7 +57,18 @@ public class CPlugin implements iPlugin {
     public void broadcastMessage(String message) {
         Sponge.getServer().getBroadcastChannel().send(Text.of(message));
     }
-
+    @Override
+    public UUID NameToUUID(String name) {
+        Optional<User> pu = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(name));
+        if (!pu.isPresent()){
+            return null;
+        }
+        Optional<Player> player = pu.get().getPlayer();
+        if (!player.isPresent()){
+            return null;
+        }
+        return player.get().getUniqueId();
+    }
     @Override
     public boolean isSync() {
         return Thread.currentThread().getName().equalsIgnoreCase("Server thread");
