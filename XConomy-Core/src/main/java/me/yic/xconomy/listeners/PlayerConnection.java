@@ -36,14 +36,14 @@ public class PlayerConnection{
             DataLink.newPlayer(player);
         }
 
-        if (XConomyLoad.getSyncData_Enable()) {
-            DataCon.SendMessTask(new SyncTabJoin(player.getName()));
-        }
-
         if (player.hasPermission("xconomy.admin.hidden")){
             AdapterManager.Tab_PlayerList.remove(player.getName());
             HiddenINFO.addHidden(player.getName());
         }else {
+            if (XConomyLoad.getSyncData_Enable()) {
+                DataCon.SendMessTask(new SyncTabJoin(player.getName()));
+            }
+
             if (!AdapterManager.Tab_PlayerList.contains(player.getName())) {
                 AdapterManager.Tab_PlayerList.add(player.getName());
             }
