@@ -3,7 +3,6 @@ package me.yic.xconomy.adapter.comp;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.adapter.iPlayer;
-import me.yic.xconomy.info.HiddenINFO;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -59,9 +58,6 @@ public class CPlayer implements iPlayer {
     @Override
     public boolean isOnline(){
         if (player == null){
-            return false;
-        }
-        if (player.hasPermission("xconomy.admin.hidden") && HiddenINFO.getHidden(getUniqueId())){
             return false;
         }
         return player.isOnline();

@@ -29,7 +29,6 @@ import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.data.syncdata.SyncMessage;
 import me.yic.xconomy.data.syncdata.SyncPermission;
-import me.yic.xconomy.info.HiddenINFO;
 import me.yic.xconomy.info.MessageConfig;
 import me.yic.xconomy.info.SyncType;
 import me.yic.xconomy.lang.MessagesManager;
@@ -73,18 +72,6 @@ public class CommandCore {
 
                         sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.DELETE_DATA_ADMIN).replace("%player%", pd.getName()));
 
-                        return true;
-                    }
-                }
-                if(sender.isOp() || sender.hasPermission("xconomy.admin.hidden")){
-                    if (sender.isPlayer() && args[0].equalsIgnoreCase("hidstatus")) {
-                        boolean hstatus = HiddenINFO.switichHidden(sender);
-                        PREFIX = translateColorCodes("prefix");
-                        if (hstatus) {
-                            sendMessages(sender, PREFIX + translateColorCodes("staff_hidden"));
-                        }else{
-                            sendMessages(sender, PREFIX + translateColorCodes("staff_displayed"));
-                        }
                         return true;
                     }
                 }

@@ -18,31 +18,18 @@
  */
 package me.yic.xconomy.info;
 
-import me.yic.xconomy.adapter.comp.CSender;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class HiddenINFO {
-    private static final List<UUID> hidstatus = new ArrayList<>();
+    private static final List<String> hidstatus = new ArrayList<>();
 
-    public static boolean switichHidden(CSender cp) {
-        UUID targetUUID = cp.toPlayer().getUniqueId();
-        if (targetUUID != null){
-            if (hidstatus.contains(targetUUID)){
-                hidstatus.remove(targetUUID);
-            }else{
-                hidstatus.add(targetUUID);
-                return true;
-            }
+    public static void addHidden(String name) {
+        if (!hidstatus.contains(name)){
+            hidstatus.add(name);
         }
-        return false;
     }
-    public static boolean getHidden(UUID targetUUID) {
-        if (targetUUID != null){
-            return hidstatus.contains(targetUUID);
-        }
-        return false;
+    public static boolean getHidden(String name) {
+        return hidstatus.contains(name);
     }
 }
