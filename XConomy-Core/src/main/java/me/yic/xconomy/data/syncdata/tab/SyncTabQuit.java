@@ -33,6 +33,6 @@ public class SyncTabQuit extends SyncData {
 
     @Override
     public void SyncStart() {
-        AdapterManager.Tab_PlayerList.remove(name);
+        AdapterManager.remove_Tab_PlayerList(name);
     }
 }

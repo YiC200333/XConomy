@@ -46,7 +46,7 @@ public class ConnectionListeners implements Listener {
         if (XConomyLoad.getSyncData_Enable() && XConomyLoad.Config.SYNCDATA_TYPE == SyncChannalType.REDIS) {
             DataCon.SendMessTask(new SyncTabQuit(event.getPlayer().getName()));
         }
-        AdapterManager.Tab_PlayerList.remove(event.getPlayer().getName());
+        AdapterManager.remove_Tab_PlayerList(event.getPlayer().getName());
 
         if (XConomyLoad.DConfig.isMySQL() && XConomyLoad.Config.PAY_TIPS) {
             DataLink.updatelogininfo(event.getPlayer().getUniqueId());

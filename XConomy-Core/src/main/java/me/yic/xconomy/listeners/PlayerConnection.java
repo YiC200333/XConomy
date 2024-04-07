@@ -37,15 +37,15 @@ public class PlayerConnection{
         }
 
         if (player.hasPermission("xconomy.admin.hidden")){
-            AdapterManager.Tab_PlayerList.remove(player.getName());
+            AdapterManager.remove_Tab_PlayerList(player.getName());
             HiddenINFO.addHidden(player.getName());
         }else {
             if (XConomyLoad.getSyncData_Enable()) {
                 DataCon.SendMessTask(new SyncTabJoin(player.getName()));
             }
 
-            if (!AdapterManager.Tab_PlayerList.contains(player.getName())) {
-                AdapterManager.Tab_PlayerList.add(player.getName());
+            if (!AdapterManager.get_Tab_PlayerList().contains(player.getName())) {
+                AdapterManager.add_Tab_PlayerList(player.getName());
             }
         }
 

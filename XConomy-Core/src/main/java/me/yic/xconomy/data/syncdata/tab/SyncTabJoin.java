@@ -20,7 +20,6 @@ package me.yic.xconomy.data.syncdata.tab;
 
 import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.data.syncdata.SyncData;
-import me.yic.xconomy.info.HiddenINFO;
 import me.yic.xconomy.info.SyncType;
 
 import java.util.List;
@@ -46,16 +45,10 @@ public class SyncTabJoin extends SyncData {
     @Override
     public void SyncStart() {
         if (allname == null) {
-            if (!AdapterManager.Tab_PlayerList.contains(name) && !HiddenINFO.getHidden(name)) {
-                AdapterManager.Tab_PlayerList.add(name);
-            }
+            AdapterManager.add_Tab_PlayerList(name);
         }else{
             for (String pn : allname){
-                if (!AdapterManager.Tab_PlayerList.contains(pn)) {
-                    if (pn != null && !HiddenINFO.getHidden(pn)) {
-                        AdapterManager.Tab_PlayerList.add(pn);
-                    }
-                }
+                AdapterManager.add_Tab_PlayerList(pn);
             }
         }
     }

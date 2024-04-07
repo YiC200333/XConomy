@@ -45,7 +45,7 @@ public class ConnectionListeners {
             if (XConomyLoad.getSyncData_Enable() && XConomyLoad.Config.SYNCDATA_TYPE == SyncChannalType.REDIS) {
                 DataCon.SendMessTask(new SyncTabQuit(event.player().profile().name().get()));
             }
-            AdapterManager.Tab_PlayerList.remove(event.player().profile().name().get());
+            AdapterManager.remove_Tab_PlayerList(event.player().profile().name().get());
 
         }
 

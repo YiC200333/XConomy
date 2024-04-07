@@ -20,16 +20,18 @@ package me.yic.xconomy;
 
 import me.yic.xconomy.adapter.comp.CChat;
 import me.yic.xconomy.adapter.comp.CPlugin;
+import me.yic.xconomy.info.HiddenINFO;
 import me.yic.xconomy.info.MessageConfig;
 import me.yic.xconomy.info.SyncChannalType;
 import me.yic.xconomy.lang.MessagesManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AdapterManager {
 
-    public static List<String> Tab_PlayerList = new ArrayList<>();
+    private static final List<String> Tab_PlayerList = new ArrayList<>();
     public static boolean foundvaultpe = false;
     public static boolean foundvaultOfflinePermManager = false;
 
@@ -37,6 +39,23 @@ public class AdapterManager {
 
     //public static ScheduledExecutorService ScheduledThreadPool;
     //public static ExecutorService FixedThreadPool;
+
+    public static void add_Tab_PlayerList(String name){
+        if (!AdapterManager.Tab_PlayerList.contains(name)) {
+            if (name != null && !HiddenINFO.getHidden(name)) {
+                AdapterManager.Tab_PlayerList.add(name);
+            }
+        }
+    }
+
+    public static List<String> get_Tab_PlayerList(){
+        Tab_PlayerList.removeIf(Objects::isNull);
+        return Tab_PlayerList;
+    }
+
+    public static void remove_Tab_PlayerList(String name){
+        Tab_PlayerList.removeIf(e -> e.equals(name));
+    }
 
     public static String translateColorCodes(MessageConfig message) {
         return CChat.translateAlternateColorCodes('&', MessagesManager.messageFile.getString(message.toString()));
