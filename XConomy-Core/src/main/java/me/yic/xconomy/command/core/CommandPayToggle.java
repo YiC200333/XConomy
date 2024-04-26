@@ -60,10 +60,10 @@ public class CommandPayToggle extends CommandCore{
                     UUID targetUUID = pd.getUniqueId();
                     CPlayer target = AdapterManager.PLUGIN.getplayer(pd);
                     String realname = pd.getName();
-                    PermissionINFO.setRPaymentPermission(sender.toPlayer().getUniqueId());
+                    PermissionINFO.setRPaymentPermission(pd.getUniqueId());
 
                     String mess = translateColorCodes(MessageConfig.PAYTOGGLE_TRUE);
-                    if (PermissionINFO.getRPaymentPermission(sender.toPlayer().getUniqueId())) {
+                    if (PermissionINFO.getRPaymentPermission(pd.getUniqueId())) {
                         syncpr(2, targetUUID, true);
                         sendMessages(sender, translateColorCodes(MessageConfig.PAYTOGGLE_OTHER_TRUE)
                                 .replace("%player%", realname));
