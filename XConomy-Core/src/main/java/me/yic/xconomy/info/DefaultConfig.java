@@ -63,6 +63,7 @@ public class DefaultConfig {
     public String SINGULAR_NAME = config.getString("Currency.singular-name");
     public String PLURAL_NAME = config.getString("Currency.plural-name");
     public boolean INTEGER_BAL = config.getBoolean("Currency.integer-bal");
+    public int ROUNDING_MODE = config.getInt("Currency.rounding-mode");
     public String THOUSANDS_SEPARATOR = config.getString("Currency.thousands-separator");
     public String DISPLAY_FORMAT = config.getString("Currency.display-format");
     public String MAX_NUMBER = config.getString("Currency.max-number");

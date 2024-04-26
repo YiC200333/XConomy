@@ -34,33 +34,36 @@ public class DataFormat {
     public static DecimalFormat decimalFormat;
     public static DecimalFormat decimalFormatX;
     public static BigDecimal maxNumber;
+    public static RoundingMode roundingmode = RoundingMode.DOWN;
     final static String displayformat = XConomyLoad.Config.DISPLAY_FORMAT;
     final static String pluralname = XConomyLoad.Config.PLURAL_NAME;
     final static String singularname = XConomyLoad.Config.SINGULAR_NAME;
 
+
+
     public static BigDecimal formatString(String am) {
         BigDecimal bigDecimal = new BigDecimal(am);
         if (isint) {
-            return bigDecimal.setScale(0, RoundingMode.DOWN);
+            return bigDecimal.setScale(0, roundingmode);
         } else {
-            return bigDecimal.setScale(2, RoundingMode.DOWN);
+            return bigDecimal.setScale(2, roundingmode);
         }
     }
 
     public static BigDecimal formatdouble(double am) {
         BigDecimal bigDecimal = BigDecimal.valueOf(am);
         if (isint) {
-            return bigDecimal.setScale(0, RoundingMode.DOWN);
+            return bigDecimal.setScale(0, roundingmode);
         } else {
-            return bigDecimal.setScale(2, RoundingMode.DOWN);
+            return bigDecimal.setScale(2, roundingmode);
         }
     }
 
     public static BigDecimal formatBigDecimal(BigDecimal am) {
         if (isint) {
-            return am.setScale(0, RoundingMode.DOWN);
+            return am.setScale(0, roundingmode);
         } else {
-            return am.setScale(2, RoundingMode.DOWN);
+            return am.setScale(2, roundingmode);
         }
     }
 
@@ -117,6 +120,10 @@ public class DataFormat {
             decimalFormat.setMaximumFractionDigits(2);
         }
 
+        if (XConomyLoad.Config.ROUNDING_MODE == 1){
+            roundingmode = RoundingMode.UP;
+        }
+
         if (gpoint != null && gpoint.length() == 1) {
             DecimalFormatSymbols spoint = new DecimalFormatSymbols();
             spoint.setGroupingSeparator(gpoint.charAt(0));
@@ -167,7 +174,7 @@ public class DataFormat {
                     break;
                 }
             }
-            BigDecimal aa = bal.divide(x, 3, RoundingMode.DOWN);
+            BigDecimal aa = bal.divide(x, 3, roundingmode);
             return decimalFormatX.format(aa) + XConomyLoad.Config.FORMAT_BALANCE_C.get(x);
         } else {
             return decimalFormat.format(bal);

@@ -83,6 +83,9 @@ Currency:
   plural-name: dollars
   #Is the balance an integer
   integer-bal: false
+  #Method for rounding off excess digits in the amount
+  #0 indicates rounding down, 1 indicates rounding up
+  rounding-mode: 0
   thousands-separator: ','
   #%format_balance% indicate the balance after the format
   display-format: '%balance% %currencyname%'

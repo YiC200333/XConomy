@@ -41,9 +41,9 @@ public class AdapterManager {
     //public static ExecutorService FixedThreadPool;
 
     public static void add_Tab_PlayerList(String name){
-        if (!AdapterManager.Tab_PlayerList.contains(name)) {
+        if (!Tab_PlayerList.contains(name)) {
             if (name != null && !HiddenINFO.getHidden(name)) {
-                AdapterManager.Tab_PlayerList.add(name);
+                Tab_PlayerList.add(name);
             }
         }
     }
@@ -54,7 +54,11 @@ public class AdapterManager {
     }
 
     public static void remove_Tab_PlayerList(String name){
-        Tab_PlayerList.removeIf(e -> e.equals(name));
+        for (int i = 0; i < Tab_PlayerList.size(); i++) {
+            if (Tab_PlayerList.get(i).equals(name)) {
+                Tab_PlayerList.remove(Tab_PlayerList.get(i));
+            }
+        }
     }
 
     public static String translateColorCodes(MessageConfig message) {

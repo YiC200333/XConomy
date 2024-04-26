@@ -34,11 +34,11 @@ public class UpdateConfig {
             XConomy.getInstance().logger(null, 1, "It is recommended to regenerate configuration file");
             XConomy.getInstance().logger(null, 1, "==================================================");
         }
-/*        if (!config.contains("Settings.core-poolsize")) {
-            config.createSection("Settings.core-poolsize");
-            config.set("Settings.core-poolsize", 4);
+        if (!config.contains("Currency.rounding-mode")) {
+            config.createSection("Currency.rounding-mode");
+            config.set("Currency.rounding-mode", 0);
             update = true;
-        }*/
+        }
         if (update){
             try {
                 config.save();
