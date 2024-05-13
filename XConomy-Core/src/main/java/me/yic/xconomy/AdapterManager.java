@@ -26,9 +26,7 @@ import me.yic.xconomy.info.SyncChannalType;
 import me.yic.xconomy.lang.MessagesManager;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 public class AdapterManager {
 
