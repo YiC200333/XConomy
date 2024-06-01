@@ -21,6 +21,11 @@ public class CPlugin implements iPlugin {
     }
 
     @Override
+    public int getOnlinePlayerSize(){
+        return 0;
+    }
+
+    @Override
     public List<UUID> getOnlinePlayersUUIDs() {
         return null;
     }

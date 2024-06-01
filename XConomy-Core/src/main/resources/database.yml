@@ -43,6 +43,7 @@ Redis:
   host: localhost
   port: 6379
   db-index: 1
+  duration: 1000
   pool-settings:
     max-total: 20
     max-idle: 20

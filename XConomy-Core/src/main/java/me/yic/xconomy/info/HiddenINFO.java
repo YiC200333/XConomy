@@ -25,9 +25,12 @@ public class HiddenINFO {
     private static final List<String> hidstatus = new ArrayList<>();
 
     public static void addHidden(String name) {
-        if (!hidstatus.contains(name)){
+        if (name != null && !hidstatus.contains(name)){
             hidstatus.add(name);
         }
+    }
+    public static List<String> getHidList() {
+        return hidstatus;
     }
     public static boolean getHidden(String name) {
         return hidstatus.contains(name);

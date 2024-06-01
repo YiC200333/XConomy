@@ -25,7 +25,7 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import me.yic.xconomy.XConomyVelocity;
 import me.yic.xconomy.data.syncdata.SyncMessage;
-import me.yic.xconomy.data.syncdata.tab.SyncTabJoin;
+import me.yic.xconomy.data.syncdata.tab.SyncTab;
 import me.yic.xconomy.info.SyncType;
 
 import java.io.*;
@@ -84,12 +84,14 @@ public class Vsync {
                         sd.setRUniqueId(p.get().getUniqueId());
                     }
                 }
-            }else if (ob instanceof SyncTabJoin) {
-                SyncTabJoin sj = (SyncTabJoin) ob;
+            }else if (ob instanceof SyncTab) {
+                SyncTab sj = (SyncTab) ob;
                 String sign = sj.getSign();
                 List<String> allname = new ArrayList<>();
                 for (Player pn : XConomyVelocity.getInstance().server.getAllPlayers()){
-                    allname.add(pn.getUsername());
+                    if (!sj.isinHidList(pn.getUsername())) {
+                        allname.add(pn.getUsername());
+                    }
                 }
                 sj.setallPlayers(allname);
             }

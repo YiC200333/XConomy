@@ -18,17 +18,10 @@
  */
 package me.yic.xconomy.listeners;
 
-import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CPlayer;
-import me.yic.xconomy.data.DataCon;
-import me.yic.xconomy.data.DataLink;
-import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.data.syncdata.tab.SyncTabQuit;
-import me.yic.xconomy.info.SyncChannalType;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.Updater;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 
@@ -37,18 +30,8 @@ public class ConnectionListeners {
     @SuppressWarnings("unused")
     @Listener
     public void onQuit(ClientConnectionEvent.Disconnect event) {
-        if (Sponge.getServer().getOnlinePlayers().size() == 1) {
-            Cache.clearCache();
-        }
-        if (XConomyLoad.getSyncData_Enable() && XConomyLoad.Config.SYNCDATA_TYPE == SyncChannalType.REDIS) {
-            DataCon.SendMessTask(new SyncTabQuit(event.getTargetEntity().getName()));
-        }
-        AdapterManager.remove_Tab_PlayerList(event.getTargetEntity().getName());
-
-        if (XConomyLoad.DConfig.isMySQL() && XConomyLoad.Config.PAY_TIPS) {
-            DataLink.updatelogininfo(event.getTargetEntity().getUniqueId());
-        }
-        DataCon.removePlayerHiddenState(event.getTargetEntity().getUniqueId());
+        CPlayer a = new CPlayer(event.getTargetEntity());
+        PlayerConnection.onQuit(a);
     }
 
     @SuppressWarnings("unused")

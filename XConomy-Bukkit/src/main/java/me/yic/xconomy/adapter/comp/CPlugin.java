@@ -38,6 +38,11 @@ public class CPlugin implements iPlugin {
     }
 
     @Override
+    public int getOnlinePlayerSize(){
+        return Bukkit.getOnlinePlayers().size();
+    }
+
+    @Override
     public List<UUID> getOnlinePlayersUUIDs() {
         List<UUID> ol = new ArrayList<>();
         for (Player pp : Bukkit.getOnlinePlayers()) {

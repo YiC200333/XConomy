@@ -24,6 +24,8 @@ import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.data.syncdata.SyncData;
 import me.yic.xconomy.data.syncdata.SyncMessage;
+import me.yic.xconomy.info.SyncChannalType;
+import me.yic.xconomy.info.SyncInfo;
 import me.yic.xconomy.info.SyncType;
 
 import java.io.ByteArrayInputStream;
@@ -47,6 +49,10 @@ public class ProcessSyncData {
             SyncData ob = (SyncData) ios.readObject();
 
             if (!ob.getSign().equals(XConomyLoad.Config.SYNCDATA_SIGN)) {
+                return;
+            }
+
+            if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS) && ob.getServerKey().equals(SyncInfo.server_key)) {
                 return;
             }
 

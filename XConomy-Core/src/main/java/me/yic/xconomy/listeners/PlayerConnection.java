@@ -23,8 +23,12 @@ import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataLink;
-import me.yic.xconomy.data.syncdata.tab.SyncTabJoin;
+import me.yic.xconomy.data.caches.Cache;
+import me.yic.xconomy.data.syncdata.tab.SyncTab;
 import me.yic.xconomy.info.HiddenINFO;
+import me.yic.xconomy.info.SyncChannalType;
+import me.yic.xconomy.utils.RedisConnection;
+import me.yic.xconomy.utils.TabListCon;
 
 public class PlayerConnection{
 
@@ -37,15 +41,17 @@ public class PlayerConnection{
         }
 
         if (player.hasPermission("xconomy.admin.hidden")){
-            AdapterManager.remove_Tab_PlayerList(player.getName());
+            TabListCon.remove_Tab_PlayerList(player.getName());
             HiddenINFO.addHidden(player.getName());
         }else {
-            if (XConomyLoad.getSyncData_Enable()) {
-                DataCon.SendMessTask(new SyncTabJoin(player.getName()));
+            TabListCon.add_Tab_PlayerList(player.getName());
+
+            if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)){
+                RedisConnection.insertdata("Tab_List", TabListCon.get_Tab_PlayerList(), 1000);
             }
 
-            if (!AdapterManager.get_Tab_PlayerList().contains(player.getName())) {
-                AdapterManager.add_Tab_PlayerList(player.getName());
+            if (XConomyLoad.getSyncData_Enable()) {
+                DataCon.SendMessTask(new SyncTab(player.getName(), true));
             }
         }
 
@@ -54,6 +60,26 @@ public class PlayerConnection{
         }
 
     }
+    public static void onQuit(CPlayer player) {
 
+        if (AdapterManager.PLUGIN.getOnlinePlayerSize() == 1) {
+            Cache.clearCache();
+        }
+
+        TabListCon.remove_Tab_PlayerList(player.getName());
+
+        if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)){
+            RedisConnection.insertdata("Tab_List", TabListCon.get_Tab_PlayerList(), 1000);
+        }
+        if (XConomyLoad.getSyncData_Enable()) {
+            DataCon.SendMessTask(new SyncTab(player.getName(), false));
+        }
+
+        if (XConomyLoad.DConfig.isMySQL() && XConomyLoad.Config.PAY_TIPS) {
+            DataLink.updatelogininfo(player.getUniqueId());
+        }
+        DataCon.removePlayerHiddenState(player.getUniqueId());
+
+    }
 
 }

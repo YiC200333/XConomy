@@ -18,17 +18,10 @@
  */
 package me.yic.xconomy.listeners;
 
-import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CPlayer;
-import me.yic.xconomy.data.DataCon;
-import me.yic.xconomy.data.DataLink;
-import me.yic.xconomy.data.caches.Cache;
-import me.yic.xconomy.data.syncdata.tab.SyncTabQuit;
-import me.yic.xconomy.info.SyncChannalType;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.Updater;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -40,18 +33,8 @@ public class ConnectionListeners implements Listener {
     @SuppressWarnings("unused")
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        if (Bukkit.getOnlinePlayers().size() == 1) {
-            Cache.clearCache();
-        }
-        if (XConomyLoad.getSyncData_Enable() && XConomyLoad.Config.SYNCDATA_TYPE == SyncChannalType.REDIS) {
-            DataCon.SendMessTask(new SyncTabQuit(event.getPlayer().getName()));
-        }
-        AdapterManager.remove_Tab_PlayerList(event.getPlayer().getName());
-
-        if (XConomyLoad.DConfig.isMySQL() && XConomyLoad.Config.PAY_TIPS) {
-            DataLink.updatelogininfo(event.getPlayer().getUniqueId());
-        }
-        DataCon.removePlayerHiddenState(event.getPlayer().getUniqueId());
+        CPlayer a = new CPlayer(event.getPlayer());
+        PlayerConnection.onQuit(a);
     }
 
     @SuppressWarnings("unused")

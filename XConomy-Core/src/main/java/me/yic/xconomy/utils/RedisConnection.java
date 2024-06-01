@@ -28,6 +28,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class RedisConnection {
@@ -104,6 +105,44 @@ public class RedisConnection {
             jedis.returnResource(jedisc);
         }
     }
+
+    public static void insertdata(String key, Object ls, int sec) {
+        try (Jedis jr = getResource()) {
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            try {
+                ObjectOutputStream oos = new ObjectOutputStream(output);
+                oos.writeUTF(XConomy.syncversion);
+                oos.writeObject(ls);
+                oos.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String keyname =  "XConomy_" + key + "_" + XConomyLoad.Config.SYNCDATA_SIGN;
+            jr.setex(keyname.getBytes(StandardCharsets.UTF_8), sec, output.toByteArray());
+        }
+    }
+    public static Object getdata(String key) {
+        try (Jedis jr = getResource()) {
+            String keyname =  "XConomy_" + key + "_" + XConomyLoad.Config.SYNCDATA_SIGN;
+            if (!jr.exists(keyname.getBytes(StandardCharsets.UTF_8))){
+                return null;
+            }
+            ByteArrayInputStream input = new ByteArrayInputStream(jr.get(keyname.getBytes(StandardCharsets.UTF_8)));
+            ObjectInputStream ios = new ObjectInputStream(input);
+
+            String sv = ios.readUTF();
+            if (!sv.equals(XConomy.syncversion)) {
+                XConomy.getInstance().logger("收到不同版本插件的数据，无法同步，当前插件版本 ", 1, XConomy.syncversion);
+                return null;
+            }
+
+            return ios.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     public static Jedis getResource() {
         Jedis jr = jedis.getResource();

@@ -15,6 +15,8 @@ public interface iPlugin {
 
     List<UUID> getOnlinePlayersUUIDs();
 
+    int getOnlinePlayerSize();
+
     void broadcastMessage(String message);
 
     UUID NameToUUID(String name);

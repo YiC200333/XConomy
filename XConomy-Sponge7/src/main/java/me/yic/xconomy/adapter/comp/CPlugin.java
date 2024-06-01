@@ -43,6 +43,10 @@ public class CPlugin implements iPlugin {
     public boolean getOnlinePlayersisEmpty(){
         return Sponge.getServer().getOnlinePlayers().isEmpty();
     }
+    @Override
+    public int getOnlinePlayerSize(){
+        return Sponge.getServer().getOnlinePlayers().size();
+    }
 
     @Override
     public List<UUID> getOnlinePlayersUUIDs() {
