@@ -171,7 +171,7 @@ public class SQLCreateNewAccount extends SQL {
             statement.setString(1, UID);
             statement.setString(2, user);
 
-            statement.setDouble(3, ImportData.getBalance(user, XConomyLoad.Config.INITIAL_BAL).doubleValue());
+            statement.setDouble(3, ImportData.getBalance(UID, XConomyLoad.Config.INITIAL_BAL).doubleValue());
 
             int hid = 0;
             if (NonPlayerPlugin.SimpleCheckNonPlayerAccount(user)){

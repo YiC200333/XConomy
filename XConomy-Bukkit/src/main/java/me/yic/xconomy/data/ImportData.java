@@ -110,9 +110,9 @@ public class ImportData implements CommandExecutor {
     @SuppressWarnings("ConstantConditions")
     public void ImportBalance() {
         for (OfflinePlayer op : Bukkit.getServer().getOfflinePlayers()) {
-            if (!importdata.contains(op.getName())) {
-                importdata.createSection(op.getName() + ".balance");
-                importdata.set(op.getName() + ".balance", VaultCM.getBalance(op).toString());
+            if (!importdata.contains(op.getUniqueId().toString())) {
+                importdata.createSection(op.getUniqueId().toString() + ".balance");
+                importdata.set(op.getUniqueId() + ".balance", VaultCM.getBalance(op).toString());
             }
         }
         save();
