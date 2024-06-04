@@ -29,7 +29,6 @@ import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.data.syncdata.SyncUUID;
 import me.yic.xconomy.depend.NonPlayerPlugin;
-import me.yic.xconomy.utils.SendPluginMessage;
 import me.yic.xconomy.utils.UUIDMode;
 
 import java.math.BigDecimal;
@@ -293,7 +292,7 @@ public class SQLCreateNewAccount extends SQL {
         Cache.syncOnlineUUIDCache(oldname, newname, newUUID);
         if (XConomyLoad.getSyncData_Enable()) {
             SyncUUID su = new SyncUUID(newUUID, newname, oldname);
-            SendPluginMessage.SendMessTask("xconomy:acb", su);
+            DataCon.SendMessTask(su);
         }
     }
 }
