@@ -27,6 +27,7 @@ import me.yic.xconomy.data.sql.*;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.info.RecordInfo;
 import me.yic.xconomy.info.SyncChannalType;
+import me.yic.xconomy.utils.CompletableFutureManager;
 import me.yic.xconomy.utils.RedisConnection;
 
 import java.io.File;
@@ -113,7 +114,16 @@ public class DataLink{
     }
 
     public static BigDecimal getBalNonPlayer(String u) {
-        return SQL.getNonPlayerData(u);
+        if (AdapterManager.checkisMainThread()) {
+            BigDecimal bal = CompletableFutureManager.supplyAsync(() -> SQL.getNonPlayerData(u));
+            if (bal == null){
+                return BigDecimal.ZERO;
+            }else{
+                return bal;
+            }
+        }else{
+            return SQL.getNonPlayerData(u);
+        }
     }
 
     public static void getTopBal() {
@@ -148,6 +158,14 @@ public class DataLink{
     }
 
     public static <T> PlayerData getPlayerData(T key) {
+        if (AdapterManager.checkisMainThread()) {
+            return CompletableFutureManager.supplyAsync(() -> exgetPlayerData(key));
+        }else{
+            return exgetPlayerData(key);
+        }
+    }
+
+    private static <T> PlayerData exgetPlayerData(T key) {
         if (key instanceof UUID) {
             return SQL.getPlayerData((UUID) key);
         } else if (key instanceof String) {

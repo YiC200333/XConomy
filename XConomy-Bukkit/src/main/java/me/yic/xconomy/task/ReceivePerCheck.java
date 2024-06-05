@@ -23,17 +23,12 @@ import me.yic.xconomy.depend.economy.VaultHook;
 import org.bukkit.Bukkit;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import me.yic.xconomy.utils.CompletableFutureManager;
 
 public class ReceivePerCheck {
 
     public static boolean hasreceivepermission(CPlayer target, UUID targetUUID) {
-        try {
-            return CompletableFuture.supplyAsync(() -> exhasreceivepermission(target, targetUUID)).get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        return CompletableFutureManager.supplyAsync(() -> exhasreceivepermission(target, targetUUID));
     }
 
     public static boolean exhasreceivepermission(CPlayer target, UUID targetUUID) {

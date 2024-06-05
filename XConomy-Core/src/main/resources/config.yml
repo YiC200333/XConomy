@@ -111,6 +111,13 @@ SyncData:
   sign: aa
 
 
+#Thread settings
+Thread:
+  #Set the timeout period for CompletableFuture
+  #The unit is seconds
+  future-timeout: 3
+
+
 #Region-Thread settings(Only effective for Folia server)
 Region-Thread:
   #When executing synchronized threads, a coordinate will be randomly selected within the specified range below to perform.

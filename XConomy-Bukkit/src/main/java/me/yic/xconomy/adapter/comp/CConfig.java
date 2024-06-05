@@ -40,8 +40,8 @@ public class CConfig implements iConfig {
         try {
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            conn.setConnectTimeout(15000);
-            conn.setReadTimeout(60000);
+            conn.setConnectTimeout(10000);
+            conn.setReadTimeout(30000);
             conn.setRequestProperty("Accept", "application/json");
             conn.connect();
             if (200 == conn.getResponseCode()) {

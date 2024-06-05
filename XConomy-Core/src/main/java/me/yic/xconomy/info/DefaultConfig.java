@@ -75,6 +75,9 @@ public class DefaultConfig {
     public String SYNCDATA_SIGN = config.getString("SyncData.sign");
 
     //==================================================
+    public final int FUTURE_TIMEOUT = Math.max(config.getInt("Thread.future-timeout"), 1);
+
+    //==================================================
     public String RE_WORLD = config.getString("Region-Thread.world");
     public int RE_X = config.getInt("Region-Thread.range-x");
     public int RE_Y = config.getInt("Region-Thread.range-y");

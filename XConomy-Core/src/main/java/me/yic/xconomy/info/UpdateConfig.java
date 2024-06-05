@@ -39,6 +39,11 @@ public class UpdateConfig {
             config.set("Currency.rounding-mode", 0);
             update = true;
         }
+        if (!config.contains("Thread.future-timeout")) {
+            config.createSection("Thread.future-timeout");
+            config.set("Thread.future-timeout", 3);
+            update = true;
+        }
         if (update){
             try {
                 config.save();
