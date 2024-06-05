@@ -20,56 +20,25 @@ package me.yic.xconomy.utils;
 
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 public class CompletableFutureManager {
-    private static final ScheduledThreadPoolExecutor delayer;
-    static {
-        (delayer = new ScheduledThreadPoolExecutor(
-                1, new CompletableFutureManager.DaemonThreadFactory())).
-                setRemoveOnCancelPolicy(true);
-    }
-
-    static final class DaemonThreadFactory implements ThreadFactory {
-        public Thread newThread(@NotNull Runnable r) {
-            Thread t = new Thread(r);
-            t.setDaemon(true);
-            t.setName("CompletableFutureScheduler");
-            return t;
-        }
-    }
-
-    public static <U> U supplyAsync(Supplier<U> supplier){
+    public static <U> U supplyAsync(Supplier<U> supplier, U value){
         try {
             return CompletableFuture.supplyAsync(supplier)
-                    .applyToEither(timeoutAfter(),
-                            data -> data).get();
+                    .get(XConomyLoad.Config.FUTURE_TIMEOUT, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
-            if (e.getMessage().contains("TimeoutException")) {
-                XConomy.getInstance().logger(null, 1, "Future Timeout");
-                e.printStackTrace();
-                return null;
-            }else {
-                throw new RuntimeException(e);
-            }
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            XConomy.getInstance().logger(null, 1, "Future Timeout");
+            e.printStackTrace();
+            return value;
         }
     }
-
-
-    private static <T> CompletableFuture<T> timeoutAfter() {
-        CompletableFuture<T> result = new CompletableFuture<>();
-        delayer.schedule(() -> result.completeExceptionally(new TimeoutException()), XConomyLoad.Config.FUTURE_TIMEOUT, TimeUnit.SECONDS);
-        return result;
-    }
-
-    @SuppressWarnings("unused")
-    private static ScheduledFuture<?> delay(Runnable command, long delay,
-                                            TimeUnit unit) {
-        return delayer.schedule(command, delay, unit);
-    }
-
 
 }

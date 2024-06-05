@@ -115,12 +115,7 @@ public class DataLink{
 
     public static BigDecimal getBalNonPlayer(String u) {
         if (AdapterManager.checkisMainThread()) {
-            BigDecimal bal = CompletableFutureManager.supplyAsync(() -> SQL.getNonPlayerData(u));
-            if (bal == null){
-                return BigDecimal.ZERO;
-            }else{
-                return bal;
-            }
+            return CompletableFutureManager.supplyAsync(() -> SQL.getNonPlayerData(u), BigDecimal.ZERO);
         }else{
             return SQL.getNonPlayerData(u);
         }
@@ -159,7 +154,7 @@ public class DataLink{
 
     public static <T> PlayerData getPlayerData(T key) {
         if (AdapterManager.checkisMainThread()) {
-            return CompletableFutureManager.supplyAsync(() -> exgetPlayerData(key));
+            return CompletableFutureManager.supplyAsync(() -> exgetPlayerData(key), null);
         }else{
             return exgetPlayerData(key);
         }

@@ -28,7 +28,7 @@ import me.yic.xconomy.utils.CompletableFutureManager;
 public class ReceivePerCheck {
 
     public static boolean hasreceivepermission(CPlayer target, UUID targetUUID) {
-        return CompletableFutureManager.supplyAsync(() -> exhasreceivepermission(target, targetUUID));
+        return CompletableFutureManager.supplyAsync(() -> exhasreceivepermission(target, targetUUID), false);
     }
 
     public static boolean exhasreceivepermission(CPlayer target, UUID targetUUID) {
