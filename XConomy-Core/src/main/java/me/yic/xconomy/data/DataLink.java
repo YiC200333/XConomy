@@ -33,8 +33,6 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @SuppressWarnings("unused")
 public class DataLink{
@@ -115,15 +113,7 @@ public class DataLink{
     }
 
     public static BigDecimal getBalNonPlayer(String u) {
-        if (AdapterManager.checkisMainThread()) {
-            try {
-                return CompletableFuture.supplyAsync(() -> SQL.getNonPlayerData(u)).get();
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
-            }
-        }else{
-            return SQL.getNonPlayerData(u);
-        }
+        return SQL.getNonPlayerData(u);
     }
 
     public static void getTopBal() {
@@ -158,18 +148,6 @@ public class DataLink{
     }
 
     public static <T> PlayerData getPlayerData(T key) {
-        if (AdapterManager.checkisMainThread()) {
-            try {
-                return CompletableFuture.supplyAsync(() -> exgetPlayerData(key)).get();
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
-            }
-        }else{
-            return exgetPlayerData(key);
-        }
-    }
-
-    private static <T> PlayerData exgetPlayerData(T key) {
         if (key instanceof UUID) {
             return SQL.getPlayerData((UUID) key);
         } else if (key instanceof String) {
