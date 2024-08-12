@@ -68,7 +68,9 @@ public class SQL {
                 if (rs.next()) {
                     int waittime = rs.getInt(2);
                     if (waittime > 50) {
-                        database.waittimeout = waittime - 30;
+                        int waitTimeout = waittime - 30;
+                        if (waitTimeout > 249)
+                            database.waittimeout = waitTimeout;
                     }
 
                 }
