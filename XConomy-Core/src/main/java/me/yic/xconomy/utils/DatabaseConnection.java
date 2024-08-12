@@ -39,7 +39,7 @@ public class DatabaseConnection {
     private final Long idleTime = DataBaseConfig.config.getLong("Pool-Settings.idle-timeout");
     private boolean secon = false;
     //============================================================================================
-    public int waittimeout = 10;
+    public int waittimeout = 250;
     //============================================================================================
     public File userdata = new File(dataFolder, "data.db");
     //============================================================================================
