@@ -20,17 +20,17 @@ public class CConfig implements iConfig {
 
     private final File ff;
 
-    public CConfig(FileConfiguration fc){
+    public CConfig(FileConfiguration fc) {
         this.ff = null;
         this.fc = fc;
     }
 
-    public CConfig(File f){
+    public CConfig(File f) {
         this.ff = f;
         this.fc = YamlConfiguration.loadConfiguration(f);
     }
 
-    public CConfig(URL url){
+    public CConfig(URL url) {
         this.ff = null;
         FileConfiguration pfc = null;
         HttpURLConnection conn = null;
@@ -71,7 +71,7 @@ public class CConfig implements iConfig {
         fc = pfc;
     }
 
-    public CConfig(String path, String subpath){
+    public CConfig(String path, String subpath) {
         this.ff = null;
         FileConfiguration pfc = null;
 
@@ -113,61 +113,61 @@ public class CConfig implements iConfig {
     }
 
     @Override
-    public boolean contains(String path){
+    public boolean contains(String path) {
         return fc.contains(path);
     }
 
     @Override
-    public void createSection(String path){
+    public void createSection(String path) {
         fc.createSection(path);
     }
 
     @Override
-    public void set(String path, Object value){
+    public void set(String path, Object value) {
         fc.set(path, value);
     }
 
     @Override
-    public String getString(String path){
+    public String getString(String path) {
         return fc.getString(path);
     }
 
     @Override
-    public Integer getInt(String path){
+    public Integer getInt(String path) {
         return fc.getInt(path);
     }
 
     @Override
-    public boolean getBoolean(String path){
+    public boolean getBoolean(String path) {
         return fc.getBoolean(path);
     }
 
     @Override
-    public double getDouble(String path){
+    public double getDouble(String path) {
         return fc.getDouble(path);
     }
 
     @Override
-    public long getLong(String path){
+    public long getLong(String path) {
         return fc.getLong(path);
     }
 
     @Override
     public void save() throws Exception {
-        if (ff == null){
+        if (ff == null) {
             throw new Exception("The file is null");
         }
         fc.save(ff);
     }
 
     @Override
-    public List<String> getStringList(String path){
+    public List<String> getStringList(String path) {
         return fc.getStringList(path);
     }
 
     @Override
     @SuppressWarnings("ConstantConditions")
-    public LinkedHashMap<BigDecimal, String> getConfigurationSectionSort(String path){
+    public LinkedHashMap<BigDecimal, String> getConfigurationSectionSort(String path) {
         LinkedHashMap<BigDecimal, String> ks = new LinkedHashMap<>();
         try {
             ConfigurationSection section = fc.getConfigurationSection(path);

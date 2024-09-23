@@ -35,12 +35,12 @@ public class CSender implements iSender {
     }
 
     @Override
-    public void sendMessage(String message){
+    public void sendMessage(String message) {
         sender.sendMessage(message);
     }
 
     @Override
-    public void sendMessage(String[] message){
+    public void sendMessage(String[] message) {
         sender.sendMessage(message);
     }
 

@@ -8,7 +8,7 @@ public enum UUIDMode {
 
     final String value;
 
-    UUIDMode(String value){
+    UUIDMode(String value) {
         this.value = value;
     }
 
@@ -18,7 +18,7 @@ public enum UUIDMode {
     }
 
 
-    public boolean equals(UUIDMode Other){
+    public boolean equals(UUIDMode Other) {
         return this.value.equals(Other.value);
     }
 }

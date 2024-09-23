@@ -95,7 +95,7 @@ public class XCService implements EconomyService {
         try {
             User uu = Sponge.server().userManager().load(uuid).get().get();
             if (!hasAccount(uuid)) {
-                if (!DataLink.newPlayer(uuid, uu.name())){
+                if (!DataLink.newPlayer(uuid, uu.name())) {
                     return Optional.empty();
                 }
             }
@@ -109,7 +109,7 @@ public class XCService implements EconomyService {
     @Override
     public Optional<Account> findOrCreateAccount(String identifier) {
         if (!hasAccount(identifier)) {
-            if (!DataLink.newAccount(identifier)){
+            if (!DataLink.newAccount(identifier)) {
                 return Optional.empty();
             }
         }

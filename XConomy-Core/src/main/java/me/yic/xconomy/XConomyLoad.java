@@ -27,13 +27,12 @@ import me.yic.xconomy.info.SyncChannalType;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.utils.RedisConnection;
 
-public class XConomyLoad{
-    public static boolean DDrivers = false;
+public class XConomyLoad {
 
     public static DataBaseConfig DConfig;
     public static DefaultConfig Config;
 
-    public static void LoadConfig(){
+    public static void LoadConfig() {
 
         Config = new DefaultConfig();
         DConfig = new DataBaseConfig();
@@ -45,7 +44,7 @@ public class XConomyLoad{
         Config.setSyncData();
     }
 
-    public static void Initial(){
+    public static void Initial() {
         DataCon.baltop();
 
         if (Config.SYNCDATA_TYPE.equals(SyncChannalType.BUNGEECORD)) {
@@ -68,7 +67,7 @@ public class XConomyLoad{
         if (Config.SYNCDATA_TYPE.equals(SyncChannalType.BUNGEECORD)) {
             AdapterManager.PLUGIN.unregisterIncomingPluginChannel("xconomy:aca", "me.yic.xconomy.listeners.SPsync");
             AdapterManager.PLUGIN.unregisterOutgoingPluginChannel("xconomy:acb");
-        }else if(Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)) {
+        } else if (Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)) {
             RedisConnection.close();
         }
 
@@ -77,7 +76,7 @@ public class XConomyLoad{
         SQL.close();
     }
 
-    public static boolean getSyncData_Enable(){
+    public static boolean getSyncData_Enable() {
         return !Config.SYNCDATA_TYPE.equals(SyncChannalType.OFF);
     }
 

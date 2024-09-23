@@ -28,7 +28,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 public class CompletableFutureManager {
-    public static <U> U supplyAsync(Supplier<U> supplier, U value){
+    public static <U> U supplyAsync(Supplier<U> supplier, U value) {
         try {
             return CompletableFuture.supplyAsync(supplier)
                     .get(XConomyLoad.Config.FUTURE_TIMEOUT, TimeUnit.SECONDS);

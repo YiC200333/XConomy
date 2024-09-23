@@ -44,7 +44,7 @@ public class UpdateConfig {
             config.set("Thread.future-timeout", 3);
             update = true;
         }
-        if (update){
+        if (update) {
             try {
                 config.save();
             } catch (IOException e) {

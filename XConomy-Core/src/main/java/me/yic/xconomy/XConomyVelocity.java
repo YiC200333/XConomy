@@ -30,7 +30,7 @@ import me.yic.xconomy.listeners.Vsync;
 import org.slf4j.Logger;
 
 @Plugin(id = "xconomy", name = "XConomy", version = "velocity", authors = {"YiC"})
-public class XConomyVelocity{
+public class XConomyVelocity {
     private static XConomyVelocity instance;
     public static String syncversion = SyncInfo.syncversion;
     public ProxyServer server;

@@ -43,26 +43,27 @@ public class AdapterManager {
 
 
     public static boolean BanModiftyBalance() {
-        if (!XConomyLoad.getSyncData_Enable()){
+        if (!XConomyLoad.getSyncData_Enable()) {
             return false;
         }
-        if (!PLUGIN.getOnlinePlayersisEmpty()){
+        if (!PLUGIN.getOnlinePlayersisEmpty()) {
             return false;
         }
-        if (XConomyLoad.Config.DISABLE_CACHE){
+        if (XConomyLoad.Config.DISABLE_CACHE) {
             return false;
         }
         return !XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS);
     }
-    public static boolean checkisMainThread(){
+
+    public static boolean checkisMainThread() {
         return PLUGIN.isSync();
     }
 
-    public static void runTaskAsynchronously(Runnable runnable){
+    public static void runTaskAsynchronously(Runnable runnable) {
         PLUGIN.runTaskAsynchronously(runnable);
     }
 
-    public static void runTaskLaterAsynchronously(Runnable runnable, long seconds){
+    public static void runTaskLaterAsynchronously(Runnable runnable, long seconds) {
         PLUGIN.runTaskLaterAsynchronously(runnable, seconds * 20L);
     }
 

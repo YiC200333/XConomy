@@ -30,9 +30,9 @@ public class CPlugin implements iPlugin {
     public CPlayer getplayer(PlayerData pd) {
         Optional<Object> p = Optional.empty();
         if (pd != null) {
-            if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)){
+            if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 p = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(pd.getName()));
-            }else{
+            } else {
                 p = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(pd.getUniqueId()));
             }
         }
@@ -40,11 +40,12 @@ public class CPlugin implements iPlugin {
     }
 
     @Override
-    public boolean getOnlinePlayersisEmpty(){
+    public boolean getOnlinePlayersisEmpty() {
         return Sponge.getServer().getOnlinePlayers().isEmpty();
     }
+
     @Override
-    public int getOnlinePlayerSize(){
+    public int getOnlinePlayerSize() {
         return Sponge.getServer().getOnlinePlayers().size();
     }
 
@@ -61,22 +62,25 @@ public class CPlugin implements iPlugin {
     public void broadcastMessage(String message) {
         Sponge.getServer().getBroadcastChannel().send(Text.of(message));
     }
+
     @Override
     public UUID NameToUUID(String name) {
         Optional<User> pu = Sponge.getServiceManager().provide(UserStorageService.class).flatMap(provide -> provide.get(name));
-        if (!pu.isPresent()){
+        if (!pu.isPresent()) {
             return null;
         }
         Optional<Player> player = pu.get().getPlayer();
-        if (!player.isPresent()){
+        if (!player.isPresent()) {
             return null;
         }
         return player.get().getUniqueId();
     }
+
     @Override
     public boolean isSync() {
         return Thread.currentThread().getName().equalsIgnoreCase("Server thread");
     }
+
     @Override
     public void runTaskAsynchronously(Runnable runnable) {
         Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(runnable);
@@ -88,7 +92,7 @@ public class CPlugin implements iPlugin {
     }
 
     @Override
-    public void sendPluginMessage(String channel, ByteArrayOutputStream stream){
+    public void sendPluginMessage(String channel, ByteArrayOutputStream stream) {
         Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), channel).sendTo(
                 Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> buf.writeBytes(stream.toByteArray()));
     }

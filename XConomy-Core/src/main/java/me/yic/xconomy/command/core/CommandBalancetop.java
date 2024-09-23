@@ -27,7 +27,7 @@ import me.yic.xconomy.info.MessageConfig;
 
 import java.util.UUID;
 
-public class CommandBalancetop extends CommandCore{
+public class CommandBalancetop extends CommandCore {
     public static boolean onCommand(CSender sender, String[] args) {
         if (args.length == 0 || args.length == 1) {
 

@@ -40,12 +40,12 @@ public class CSender implements iSender {
     }
 
     @Override
-    public void sendMessage(String message){
+    public void sendMessage(String message) {
         sender.sendMessage(Text.of(message));
     }
 
     @Override
-    public void sendMessage(String[] message){
+    public void sendMessage(String[] message) {
         for (String mess : message) {
             sender.sendMessage(Text.of(mess));
         }

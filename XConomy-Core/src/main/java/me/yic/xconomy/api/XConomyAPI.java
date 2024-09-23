@@ -56,6 +56,7 @@ public class XConomyAPI {
     public boolean createPlayerData(UUID uid, String name) {
         return DataLink.newPlayer(uid, name);
     }
+
     public PlayerData getPlayerData(UUID uid) {
         return DataCon.getPlayerData(uid);
     }
@@ -67,9 +68,11 @@ public class XConomyAPI {
     public boolean createNonPlayerData(String account) {
         return DataLink.newAccount(account);
     }
+
     public BigDecimal getNonPlayerBalance(String account) {
         return DataCon.getAccountBalance(account);
     }
+
     @Deprecated
     public BigDecimal getorcreateAccountBalance(String account) {
         return DataCon.getAccountBalance(account);
@@ -144,7 +147,7 @@ public class XConomyAPI {
     }
 
     public boolean getglobalpermission(String permission) {
-        if(permission.equalsIgnoreCase("pay")){
+        if (permission.equalsIgnoreCase("pay")) {
             return PermissionINFO.getGlobalPayment();
         }
         return true;

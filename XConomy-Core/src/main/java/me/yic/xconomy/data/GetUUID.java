@@ -45,7 +45,7 @@ public class GetUUID {
                     uuid.append("-");
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             kickplayer(pp);
             XConomy.getInstance().logger(null, 1, "Failed to connect to the authentication server");
         }
@@ -83,45 +83,45 @@ public class GetUUID {
                 u = getOfflineUUID(name);
                 break;
         }
-            return u;
-        }
+        return u;
+    }
 
-        private static UUID getOfflineUUID (String name){
-            return UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(StandardCharsets.UTF_8));
-        }
+    private static UUID getOfflineUUID(String name) {
+        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(StandardCharsets.UTF_8));
+    }
 
-        private static void insertIntoCache ( final String name, final UUID uuid){
+    private static void insertIntoCache(final String name, final UUID uuid) {
+        if (XConomyLoad.Config.USERNAME_IGNORE_CASE) {
+            cache.put(name.toLowerCase(), uuid);
+        } else {
+            cache.put(name, uuid);
+        }
+    }
+
+    private static boolean CacheContainsKey(final String name) {
+        if (XConomyLoad.Config.USERNAME_IGNORE_CASE) {
+            return cache.containsKey(name.toLowerCase());
+        }
+        return cache.containsKey(name);
+    }
+
+
+    private static UUID getUUIDFromCache(final String name) {
+        if (XConomyLoad.Config.USERNAME_IGNORE_CASE) {
+            return cache.get(name.toLowerCase());
+        } else {
+            return cache.get(name);
+        }
+    }
+
+    public static void removeUUIDFromCache(final String name) {
+        if (CacheContainsKey(name)) {
             if (XConomyLoad.Config.USERNAME_IGNORE_CASE) {
-                cache.put(name.toLowerCase(), uuid);
+                cache.remove(name.toLowerCase());
             } else {
-                cache.put(name, uuid);
-            }
-        }
-
-        private static boolean CacheContainsKey ( final String name){
-            if (XConomyLoad.Config.USERNAME_IGNORE_CASE) {
-                return cache.containsKey(name.toLowerCase());
-            }
-            return cache.containsKey(name);
-        }
-
-
-        private static UUID getUUIDFromCache ( final String name){
-            if (XConomyLoad.Config.USERNAME_IGNORE_CASE) {
-                return cache.get(name.toLowerCase());
-            } else {
-                return cache.get(name);
-            }
-        }
-
-        public static void removeUUIDFromCache(final String name){
-            if (CacheContainsKey(name)) {
-                if (XConomyLoad.Config.USERNAME_IGNORE_CASE) {
-                    cache.remove(name.toLowerCase());
-                } else {
-                    cache.remove(name);
-                }
+                cache.remove(name);
             }
         }
     }
+}
 

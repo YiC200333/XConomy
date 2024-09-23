@@ -4,7 +4,7 @@ main: me.yic.xconomy.XConomy
 author: YiC
 website: https://www.spigotmc.org/resources/xconomy.75669/
 load: STARTUP
-loadbefore:  [ PlotSquared ]
+loadbefore: [ PlotSquared ]
 softdepend: [ Vault, Enterprise, DatabaseDrivers, MPoints, PlaceholderAPI, Towny ]
 api-version: "1.20"
 folia-supported: true

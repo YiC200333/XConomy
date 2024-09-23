@@ -22,7 +22,8 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CConfig;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 public class MessagesManager {
     private static final XConomy plugin = XConomy.getInstance();
@@ -32,7 +33,7 @@ public class MessagesManager {
 
 
     public static void loadsysmess() {
-        XConomy.getInstance().logger(null,0, "Language: " + XConomyLoad.Config.LANGUAGE.toUpperCase());
+        XConomy.getInstance().logger(null, 0, "Language: " + XConomyLoad.Config.LANGUAGE.toUpperCase());
         langFile = new CConfig("/lang/sys", "/" + XConomyLoad.Config.LANGUAGE.toLowerCase() + ".yml");
     }
 

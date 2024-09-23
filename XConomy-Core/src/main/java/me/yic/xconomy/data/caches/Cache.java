@@ -68,14 +68,14 @@ public class Cache {
 
     public static <T> boolean CacheContainsKey(final T key) {
         if (key instanceof UUID) {
-            if (pds.containsKey((UUID) key)){
+            if (pds.containsKey((UUID) key)) {
                 return true;
             }
             if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 UUID luuid = getMultiUUIDCache((UUID) key);
                 if (luuid == null) {
                     return false;
-                }else {
+                } else {
                     return pds.containsKey(luuid);
                 }
             }
@@ -93,7 +93,7 @@ public class Cache {
         if (key instanceof UUID) {
             u = (UUID) key;
             if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
-                if (!pds.containsKey((UUID) key) && getMultiUUIDCache((UUID) key) != null){
+                if (!pds.containsKey((UUID) key) && getMultiUUIDCache((UUID) key) != null) {
                     u = getMultiUUIDCache((UUID) key);
                 }
             }
@@ -114,7 +114,7 @@ public class Cache {
     }
 
     public static UUID getMultiUUIDCache(final UUID luuid) {
-        if (m_uuids.containsKey(luuid)){
+        if (m_uuids.containsKey(luuid)) {
             return m_uuids.get(luuid);
         }
         return null;

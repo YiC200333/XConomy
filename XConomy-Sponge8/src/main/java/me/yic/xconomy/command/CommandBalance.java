@@ -51,12 +51,12 @@ public class CommandBalance extends CommandResOutput implements CommandExecutor 
                                 Collections.addAll(cmdl, args.one(arg5).get().trim().split(" "));
                                 String[] cmd = new String[cmdl.size()];
                                 return getResultonCommand(sender, "balance", cmdl.toArray(cmd));
-                            }else{
+                            } else {
                                 String[] cmd = {args.one(arg1).get().trim(),
                                         args.one(arg2).get().trim(),
                                         amountortype,
                                         args.one(arg4).get().trim() + " " +
-                                        args.one(arg5).get().trim()};
+                                                args.one(arg5).get().trim()};
                                 return getResultonCommand(sender, "balance", cmd);
                             }
                         } else {

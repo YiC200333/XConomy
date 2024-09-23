@@ -17,10 +17,10 @@ import java.util.UUID;
 public class CallAPI {
     private final static Random random = new Random();
 
-    public static void CallPlayerAccountEvent(UUID u, String name, BigDecimal bal, BigDecimal amount, Boolean isAdd, RecordInfo ri){
+    public static void CallPlayerAccountEvent(UUID u, String name, BigDecimal bal, BigDecimal amount, Boolean isAdd, RecordInfo ri) {
         if (AdapterManager.checkisMainThread()) {
             Bukkit.getPluginManager().callEvent(new PlayerAccountEvent(u, name, bal, amount, isAdd, ri.getCommand(), ri.getType()));
-        }else{
+        } else {
             Bukkit.getRegionScheduler().run(XConomy.getInstance(), getThreadLocation(), scheduledTask -> Bukkit.getPluginManager().callEvent(new PlayerAccountEvent(u, name, bal, amount, isAdd, ri.getCommand(), ri.getType())));
         }
     }
@@ -33,17 +33,17 @@ public class CallAPI {
         }
     }
 
-    private static Location getThreadLocation(){
+    private static Location getThreadLocation() {
         String worldname = "world";
         int rx = XConomyLoad.Config.RE_X;
         int ry = XConomyLoad.Config.RE_Y;
-        if (XConomyLoad.Config.RE_WORLD != null){
+        if (XConomyLoad.Config.RE_WORLD != null) {
             worldname = XConomyLoad.Config.RE_WORLD;
         }
-        if (rx <= 512){
+        if (rx <= 512) {
             rx = 512;
         }
-        if (ry <= 512){
+        if (ry <= 512) {
             ry = 512;
         }
         return new Location(Bukkit.getWorld(worldname), random.nextInt(rx * 2) - rx, random.nextInt(ry * 2) - ry, 0);

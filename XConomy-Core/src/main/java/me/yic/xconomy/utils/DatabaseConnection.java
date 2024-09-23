@@ -60,7 +60,7 @@ public class DatabaseConnection {
         hikari.addDataSourceProperty("prepStmtCacheSize", "250");
         hikari.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         hikari.addDataSourceProperty("userServerPrepStmts", "true");
-        if (XConomyLoad.DDrivers || XConomy.version.equals("Sponge8")) {
+        if (XConomy.version.equals("Bukkit") || XConomy.version.equals("Sponge8")) {
             hikari.setDriverClassName(driver);
         }
         if (hikari.getMinimumIdle() < hikari.getMaximumPoolSize()) {
@@ -80,38 +80,24 @@ public class DatabaseConnection {
 
     private void setDriver() {
         if (XConomy.version.equals("Bukkit") || XConomy.version.equals("Sponge8")) {
-            if (XConomyLoad.DDrivers || XConomy.version.equals("Sponge8")) {
-                switch (XConomyLoad.DConfig.getStorageType()) {
-                    case 1:
-                        driver = ("org.sqlite.JDBC");
+            switch (XConomyLoad.DConfig.getStorageType()) {
+                case 1:
+                    driver = ("org.sqlite.JDBC");
+                    break;
+                case 2:
+                    try {
+                        Class.forName("com.mysql.cj.jdbc.Driver");
+                    } catch (ClassNotFoundException e) {
+                        driver = ("com.mysql.jdbc.Driver");
                         break;
-                    case 2:
-                        driver = ("me.yic.libs.mysql.cj.jdbc.Driver");
-                        break;
-                    case 3:
-                        driver = ("me.yic.libs.mariadb.jdbc.Driver");
-                        break;
-                }
-            } else {
-                switch (XConomyLoad.DConfig.getStorageType()) {
-                    case 1:
-                        driver = ("org.sqlite.JDBC");
-                        break;
-                    case 2:
-                        try {
-                            Class.forName("com.mysql.cj.jdbc.Driver");
-                        } catch (ClassNotFoundException e) {
-                            driver = ("com.mysql.jdbc.Driver");
-                            break;
-                        }
-                        driver = ("com.mysql.cj.jdbc.Driver");
-                        break;
-                    case 3:
-                        driver = ("org.mariadb.jdbc.Driver");
-                        break;
-                }
+                    }
+                    driver = ("com.mysql.cj.jdbc.Driver");
+                    break;
+                case 3:
+                    driver = ("me.yic.libs.mariadb.jdbc.Driver");
+                    break;
             }
-        }else if (XConomy.version.equals("Sponge7")) {
+        } else if (XConomy.version.equals("Sponge7")) {
             driver = ("org.spongepowered.api.service.sql.SqlService");
         }
     }

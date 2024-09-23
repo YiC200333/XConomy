@@ -26,7 +26,7 @@ import me.yic.xconomy.info.PermissionINFO;
 
 import java.util.UUID;
 
-public class CommandPayPermission extends CommandCore{
+public class CommandPayPermission extends CommandCore {
     public static boolean onCommand(CSender sender, String[] args) {
         if (sender.isOp() || sender.hasPermission("xconomy.admin.permission")) {
             if (args.length == 3 && args[0].equalsIgnoreCase("set")) {

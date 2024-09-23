@@ -24,9 +24,9 @@ import net.kyori.adventure.text.Component;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandResult;
 
-public class CommandResOutput extends CommandCore{
+public class CommandResOutput extends CommandCore {
     public CommandResult getResultonCommand(CommandCause sender, String commandName, String[] args) {
-        if (CommandCore.onCommand(new CSender(sender), commandName, args)){
+        if (CommandCore.onCommand(new CSender(sender), commandName, args)) {
 
             return CommandResult.success();
         }

@@ -67,7 +67,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public boolean createPlayerAccount(String name) {
-        if (isNonPlayerAccount(name)){
+        if (isNonPlayerAccount(name)) {
             return DataLink.newAccount(name);
         }
         return true;
@@ -84,7 +84,7 @@ public class Vault extends AbstractEconomy {
             return false;
         }
         try {
-            if (!DataLink.newPlayer(pp.getUniqueId(), pp.getName())){
+            if (!DataLink.newPlayer(pp.getUniqueId(), pp.getName())) {
                 return false;
             }
             return DataCon.getPlayerData(pp.getUniqueId()) != null;

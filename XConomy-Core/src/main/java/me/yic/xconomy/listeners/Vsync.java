@@ -76,19 +76,19 @@ public class Vsync {
                     if (!p.isPresent()) {
                         return;
                     }
-                }else if(sd.getSyncType().equals(SyncType.MESSAGE_SEMI)) {
+                } else if (sd.getSyncType().equals(SyncType.MESSAGE_SEMI)) {
                     Optional<Player> p = XConomyVelocity.getInstance().server.getPlayer(sd.getName());
                     if (!p.isPresent()) {
                         return;
-                    }else{
+                    } else {
                         sd.setRUniqueId(p.get().getUniqueId());
                     }
                 }
-            }else if (ob instanceof SyncTab) {
+            } else if (ob instanceof SyncTab) {
                 SyncTab sj = (SyncTab) ob;
                 String sign = sj.getSign();
                 List<String> allname = new ArrayList<>();
-                for (Player pn : XConomyVelocity.getInstance().server.getAllPlayers()){
+                for (Player pn : XConomyVelocity.getInstance().server.getAllPlayers()) {
                     if (!sj.isinHidList(pn.getUsername())) {
                         allname.add(pn.getUsername());
                     }

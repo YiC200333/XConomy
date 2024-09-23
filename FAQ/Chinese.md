@@ -1,9 +1,13 @@
 ![img.png](../img.png)
-## 中文社区文档  
+
+## 中文社区文档
+
 Itz_Dr_Li 编写/维护   
 https://xc.itzdrli.com/intro/readme
 ***
+
 ## FAQ
+
 基于 2.21 版本
 ***
 Q - 怎么同步数据(BungeeCord 通道)?  
@@ -29,10 +33,11 @@ Q - 如何移除余额的小数？
 A - 在 config.yml 中设置 initial-bal 为 true, 但科学计数仍会有小数 (比如: 234561 -> 234.56K)
 
 Q - 我在 config.yml 中设置了语言。但是不生效。  
-A - 请删除旧的 message.yml 后，重新生成新的语言文件. 
+A - 请删除旧的 message.yml 后，重新生成新的语言文件.
 
 
 ***
+
 ### 不同的UUID模式分别有什么特点?
 
 1 - Default - 支持大部分情况，从数据库中获取玩家的UUID.  

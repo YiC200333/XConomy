@@ -83,6 +83,14 @@
                                         <exclude>me/yic/xconomy/depend/*</exclude>
                                     </excludes>
                                 </filter>
+                                <filter>
+                                    <artifact>org.mariadb.jdbc:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                        <exclude>META-INF/services/java.sql.Driver</exclude>
+                                        <exclude>META-INF/versions/9/module-info.class</exclude>
+                                    </excludes>
+                                </filter>
                             </filters>
                         </configuration>
                     </execution>
@@ -95,6 +103,7 @@
                             <include>redis.clients:jedis</include>
                             <include>org.apache.commons:commons-pool2</include>
                             <include>me.yic:XConomy-Core</include>
+                            <include>org.mariadb.jdbc:*</include>
                         </includes>
                     </artifactSet>
                     <relocations>
@@ -113,6 +122,10 @@
                         <relocation>
                             <pattern>org.apache.commons</pattern>
                             <shadedPattern>me.yic.xc_libs.pool2</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.mariadb</pattern>
+                            <shadedPattern>me.yic.libs.mariadb</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -193,6 +206,12 @@
             <artifactId>XConomy-Core</artifactId>
             <version>${revision}</version>
             <scope>compile</scope>
+        </dependency>
+        <!--MariaDB-->
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>3.1.4</version>
         </dependency>
     </dependencies>
 

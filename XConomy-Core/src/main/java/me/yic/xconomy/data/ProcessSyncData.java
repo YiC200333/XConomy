@@ -34,7 +34,7 @@ import java.util.UUID;
 
 public class ProcessSyncData {
 
-    public static void process(byte[] message){
+    public static void process(byte[] message) {
 
         ByteArrayInputStream input = new ByteArrayInputStream(message);
         try {
@@ -56,13 +56,13 @@ public class ProcessSyncData {
                 return;
             }
 
-            if (ob.getSyncType().equals(SyncType.MESSAGE) || ob.getSyncType().equals(SyncType.MESSAGE_SEMI) ) {
+            if (ob.getSyncType().equals(SyncType.MESSAGE) || ob.getSyncType().equals(SyncType.MESSAGE_SEMI)) {
                 SyncMessage sd = (SyncMessage) ob;
                 UUID muid = sd.getUniqueId();
-                if (ob.getSyncType().equals(SyncType.MESSAGE_SEMI)){
-                    if (sd.getRUniqueId() == null){
+                if (ob.getSyncType().equals(SyncType.MESSAGE_SEMI)) {
+                    if (sd.getRUniqueId() == null) {
                         UUID lu = AdapterManager.PLUGIN.NameToUUID(sd.getName());
-                        if (lu == null){
+                        if (lu == null) {
                             return;
                         }
                         sd.setRUniqueId(lu);
@@ -73,7 +73,7 @@ public class ProcessSyncData {
                 if (p.isOnline()) {
                     p.sendMessage(sd.getMessage());
                 }
-            }else{
+            } else {
                 ob.SyncStart();
             }
         } catch (Exception e) {

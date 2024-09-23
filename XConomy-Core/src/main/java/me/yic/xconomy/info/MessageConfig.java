@@ -34,7 +34,7 @@ public enum MessageConfig {
     final String value;
 
 
-    MessageConfig(String value){
+    MessageConfig(String value) {
         this.value = value;
     }
 

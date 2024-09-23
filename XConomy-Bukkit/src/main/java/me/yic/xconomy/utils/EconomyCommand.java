@@ -18,8 +18,8 @@
  */
 package me.yic.xconomy.utils;
 
-import me.yic.xconomy.command.core.CommandCore;
 import me.yic.xconomy.adapter.comp.CSender;
+import me.yic.xconomy.command.core.CommandCore;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;

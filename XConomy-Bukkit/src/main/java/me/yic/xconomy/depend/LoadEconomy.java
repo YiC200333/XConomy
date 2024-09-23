@@ -21,7 +21,7 @@ import me.yic.xconomy.depend.economy.EnterpriseHook;
 import me.yic.xconomy.depend.economy.VaultHook;
 import org.bukkit.Bukkit;
 
-public class LoadEconomy{
+public class LoadEconomy {
     public static boolean haseco = false;
     public static boolean vault = false;
     public static boolean enterprise = false;

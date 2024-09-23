@@ -28,7 +28,7 @@ public enum SyncChannalType {
     final String value;
 
 
-    SyncChannalType(String value){
+    SyncChannalType(String value) {
         this.value = value;
     }
 
@@ -38,7 +38,7 @@ public enum SyncChannalType {
         return this.value;
     }
 
-    public boolean equals(SyncChannalType Other){
+    public boolean equals(SyncChannalType Other) {
         return this.value.equals(Other.value);
     }
 }

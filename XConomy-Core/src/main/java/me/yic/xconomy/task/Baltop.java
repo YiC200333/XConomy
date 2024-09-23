@@ -37,7 +37,7 @@ public class Baltop implements Runnable {
         DataCon.sumbal();
         if (AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
             Cache.clearCache();
-        }else{
+        } else {
             if (XConomyLoad.DConfig.isMySQL() && XConomyLoad.Config.PAY_TIPS) {
                 for (UUID uu : AdapterManager.PLUGIN.getOnlinePlayersUUIDs()) {
                     DataLink.updatelogininfo(uu);
