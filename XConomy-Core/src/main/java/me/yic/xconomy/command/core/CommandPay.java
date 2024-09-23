@@ -34,7 +34,7 @@ import me.yic.xconomy.task.ReceivePerCheck;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class CommandPay extends CommandCore{
+public class CommandPay extends CommandCore {
     public static boolean onCommand(CSender sender, String commandName, String[] args) {
         if (!sender.isPlayer()) {
             sendMessages(sender, PREFIX + MessagesManager.systemMessage("§6控制台无法使用该指令"));

@@ -21,14 +21,14 @@ package me.yic.xconomy.data.redis;
 import me.yic.xconomy.utils.RedisConnection;
 import redis.clients.jedis.Jedis;
 
-public class RedisPublisher{
+public class RedisPublisher {
 
     public static void publishmessage(byte[] data) {
         Jedis jedis = null;
         try {
             jedis = RedisConnection.getResource();
             jedis.publish(RedisConnection.channelname, data);
-        }finally {
+        } finally {
             if (jedis != null) {
                 RedisConnection.returnResource(jedis);
             }

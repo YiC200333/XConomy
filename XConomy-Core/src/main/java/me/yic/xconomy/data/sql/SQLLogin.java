@@ -46,7 +46,7 @@ public class SQLLogin extends SQL {
             PreparedStatement statement = connection.prepareStatement(sql);
             if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 statement.setString(1, DataCon.getPlayerData(uuid).getUniqueId().toString());
-            }else{
+            } else {
                 statement.setString(1, uuid.toString());
             }
             statement.setString(2, sd);
@@ -70,7 +70,7 @@ public class SQLLogin extends SQL {
                     "(select last_time from " + tableLoginName + " where UUID = ?);");
             if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 statement.setString(1, DataCon.getPlayerData(pp.getUniqueId()).getUniqueId().toString());
-            }else{
+            } else {
                 statement.setString(1, pp.getUniqueId().toString());
             }
 

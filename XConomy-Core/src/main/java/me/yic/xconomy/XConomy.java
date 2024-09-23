@@ -23,7 +23,7 @@ import me.yic.xconomy.info.SyncInfo;
 import java.io.File;
 
 @SuppressWarnings("unused")
-public class XConomy{
+public class XConomy {
     public static String version;
     public static String PVersion;
 
@@ -42,6 +42,7 @@ public class XConomy{
     public File getDataFolder() {
         return new File("");
     }
+
     public File getPDataFolder() {
         return new File("");
     }

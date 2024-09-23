@@ -23,9 +23,9 @@ import me.yic.xconomy.command.core.CommandCore;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 
-public class CommandResOutput extends CommandCore{
+public class CommandResOutput extends CommandCore {
     public CommandResult getResultonCommand(CommandSource sender, String commandName, String[] args) {
-        if (CommandCore.onCommand(new CSender(sender), commandName, args)){
+        if (CommandCore.onCommand(new CSender(sender), commandName, args)) {
             return CommandResult.success();
         }
         return CommandResult.empty();

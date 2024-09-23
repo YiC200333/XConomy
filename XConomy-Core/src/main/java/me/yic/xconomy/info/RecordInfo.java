@@ -32,17 +32,17 @@ public class RecordInfo {
             this.type = type;
             this.command = Thread.currentThread().getStackTrace()[getindex()].getClassName();
             this.comment = "N/A";
-        }else{
+        } else {
             if (comment == null) {
                 this.type = type;
                 this.command = command;
                 this.comment = "N/A";
-            }else{
+            } else {
                 this.type = type;
                 this.command = command;
-                if (comment instanceof StringBuilder){
+                if (comment instanceof StringBuilder) {
                     this.comment = comment.toString();
-                }else {
+                } else {
                     this.comment = (String) comment;
                 }
             }

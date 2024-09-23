@@ -41,7 +41,7 @@ import java.util.UUID;
 public class SQLCreateNewAccount extends SQL {
 
     public static boolean newPlayer(UUID uid, String name, CPlayer player) {
-        if (player!=null && DataCon.containinfieldslist(name)) {
+        if (player != null && DataCon.containinfieldslist(name)) {
             kickplayer(player, 2, "");
             return false;
         }
@@ -50,7 +50,7 @@ public class SQLCreateNewAccount extends SQL {
             case ONLINE:
             case OFFLINE:
                 UUID oouid = GetUUID.getUUID(player, name);
-                if (oouid == null){
+                if (oouid == null) {
                     return false;
                 }
                 String ouid = oouid.toString();
@@ -173,7 +173,7 @@ public class SQLCreateNewAccount extends SQL {
             statement.setDouble(3, ImportData.getBalance(user, XConomyLoad.Config.INITIAL_BAL).doubleValue());
 
             int hid = 0;
-            if (NonPlayerPlugin.SimpleCheckNonPlayerAccount(user)){
+            if (NonPlayerPlugin.SimpleCheckNonPlayerAccount(user)) {
                 hid = 1;
             }
             statement.setInt(4, hid);
@@ -212,7 +212,7 @@ public class SQLCreateNewAccount extends SQL {
             String query;
             if (XConomyLoad.DConfig.isMySQL()) {
                 query = "INSERT INTO " + tableUUIDName + "(UUID,DUUID) values(?,?) ON DUPLICATE KEY UPDATE DUUID = ?";
-            }else{
+            } else {
                 query = "INSERT OR IGNORE INTO " + tableUUIDName + "(UUID,DUUID) values(?,?)";
             }
             PreparedStatement statement = co_a.prepareStatement(query);

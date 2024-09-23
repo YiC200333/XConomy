@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
-public class DataLink{
+public class DataLink {
     public static boolean hasnonplayerplugin = false;
 
     public static boolean create() {
@@ -116,7 +116,7 @@ public class DataLink{
     public static BigDecimal getBalNonPlayer(String u) {
         if (AdapterManager.checkisMainThread()) {
             return CompletableFutureManager.supplyAsync(() -> SQL.getNonPlayerData(u), BigDecimal.ZERO);
-        }else{
+        } else {
             return SQL.getNonPlayerData(u);
         }
     }
@@ -155,7 +155,7 @@ public class DataLink{
     public static <T> PlayerData getPlayerData(T key) {
         if (AdapterManager.checkisMainThread()) {
             return CompletableFutureManager.supplyAsync(() -> exgetPlayerData(key), null);
-        }else{
+        } else {
             return exgetPlayerData(key);
         }
     }
@@ -181,7 +181,7 @@ public class DataLink{
     }
 
     public static void saveNonPlayer(String account, BigDecimal amount,
-                               BigDecimal newbalance, Boolean isAdd, RecordInfo ri){
+                                     BigDecimal newbalance, Boolean isAdd, RecordInfo ri) {
         SQL.saveNonPlayer(account, amount, newbalance, isAdd, ri);
     }
 }

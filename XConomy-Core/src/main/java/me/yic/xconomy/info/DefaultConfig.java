@@ -37,6 +37,7 @@ public class DefaultConfig {
         setformatbalance();
         setpaytips();
     }
+
     public boolean ISOLDCONFIG = false;
 
     public UUIDMode UUIDMODE = UUIDMode.DEFAULT;
@@ -110,7 +111,7 @@ public class DefaultConfig {
             XConomy.getInstance().logger(null, 1, "Error getting balance custom format");
             return;
         }
-        if (FORMAT_BALANCE.isEmpty()){
+        if (FORMAT_BALANCE.isEmpty()) {
             FORMAT_BALANCE = null;
             XConomy.getInstance().logger(null, 1, "Error getting balance custom format");
         }
@@ -151,7 +152,7 @@ public class DefaultConfig {
             String channeltype = config.getString("SyncData.channel-type");
             if (channeltype.equalsIgnoreCase("BungeeCord")) {
                 SYNCDATA_TYPE = SyncChannalType.BUNGEECORD;
-            }else if (channeltype.equalsIgnoreCase("Redis")) {
+            } else if (channeltype.equalsIgnoreCase("Redis")) {
                 SYNCDATA_TYPE = SyncChannalType.REDIS;
             }
         }

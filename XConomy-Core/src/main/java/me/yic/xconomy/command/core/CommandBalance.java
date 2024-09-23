@@ -32,7 +32,7 @@ import me.yic.xconomy.utils.UUIDMode;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class CommandBalance extends CommandCore{
+public class CommandBalance extends CommandCore {
     public static boolean onCommand(CSender sender, String commandName, String[] args) {
         int commndlength = args.length;
         StringBuilder reasonmessages = null;
@@ -139,11 +139,11 @@ public class CommandBalance extends CommandCore{
                             pd = DataCon.getPlayerData(au);
                         } catch (Exception ignored) {
                         }
-                        if (pd == null){
+                        if (pd == null) {
                             sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                             return true;
                         }
-                    }else{
+                    } else {
                         sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
                         return true;
                     }

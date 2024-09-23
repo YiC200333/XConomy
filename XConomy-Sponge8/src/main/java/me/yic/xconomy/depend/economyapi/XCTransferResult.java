@@ -38,6 +38,7 @@ public class XCTransferResult implements TransferResult {
     private final Set<Context> contexts;
     private final ResultType resultType;
     private final TransactionType transactionType;
+
     public XCTransferResult(Account accountto, Account account, Currency currency, BigDecimal amount, Set<Context> contexts,
                             ResultType resultType, DefaultedRegistryReference<TransactionType> transactionType) {
         this.accountto = accountto;

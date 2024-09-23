@@ -13,13 +13,13 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class CConfig implements iConfig {
 
-    public CConfig(File f){
+    public CConfig(File f) {
     }
 
-    public CConfig(URL url){
+    public CConfig(URL url) {
     }
 
-    public CConfig(String path, String subpath){
+    public CConfig(String path, String subpath) {
     }
 
     @Override

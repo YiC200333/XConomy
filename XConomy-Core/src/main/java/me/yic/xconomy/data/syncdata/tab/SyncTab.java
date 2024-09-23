@@ -33,41 +33,42 @@ public class SyncTab extends SyncData {
     private final String name;
     private final boolean isadd;
 
-    public SyncTab(String name, boolean isadd){
+    public SyncTab(String name, boolean isadd) {
         super(SyncType.TAB_JOIN, null);
         this.name = name;
         this.isadd = isadd;
         this.hidename = HiddenINFO.getHidList();
     }
 
-    public void setallPlayers(List<String> allname){
+    public void setallPlayers(List<String> allname) {
         this.allname = allname;
     }
-    public String getName(){
+
+    public String getName() {
         return this.name;
     }
 
-    public boolean getisAdd(){
+    public boolean getisAdd() {
         return this.isadd;
     }
 
-    public boolean isinHidList(String name){
+    public boolean isinHidList(String name) {
         return hidename.contains(name);
     }
 
     @Override
     public void SyncStart() {
-        if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)){
+        if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)) {
             TabListCon.redis_sync_Tab_PlayerList();
             return;
         }
-        for (String hn : hidename){
+        for (String hn : hidename) {
             HiddenINFO.addHidden(hn);
         }
         if (allname != null && allname.size() > 0) {
             TabListCon.renew_Tab_PlayerList(allname);
         }
-        if (getisAdd() && !TabListCon.get_Tab_PlayerList().contains(name)){
+        if (getisAdd() && !TabListCon.get_Tab_PlayerList().contains(name)) {
             TabListCon.add_Tab_PlayerList(name);
         }
     }

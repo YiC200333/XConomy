@@ -11,6 +11,7 @@ import java.util.UUID;
 @SuppressWarnings("unused")
 public interface iPlugin {
     CPlayer getplayer(PlayerData pd);
+
     boolean getOnlinePlayersisEmpty();
 
     List<UUID> getOnlinePlayersUUIDs();
@@ -22,6 +23,7 @@ public interface iPlugin {
     UUID NameToUUID(String name);
 
     boolean isSync();
+
     void runTaskAsynchronously(Runnable ra);
 
     void runTaskLaterAsynchronously(Runnable ra, long time);

@@ -31,9 +31,9 @@ public class CommandPay extends CommandResOutput implements CommandExecutor {
     public CommandResult execute(CommandSource sender, CommandContext args) {
         if (args.hasAny(Text.of("arg1"))) {
             if (args.hasAny(Text.of("arg2"))) {
-                    String[] cmd = {args.<String>getOne("arg1").get().trim(),
-                            args.<String>getOne("arg2").get().trim()};
-                    return getResultonCommand(sender, "pay", cmd);
+                String[] cmd = {args.<String>getOne("arg1").get().trim(),
+                        args.<String>getOne("arg2").get().trim()};
+                return getResultonCommand(sender, "pay", cmd);
             } else {
                 String[] cmd = {args.<String>getOne("arg1").get().trim()};
                 return getResultonCommand(sender, "pay", cmd);

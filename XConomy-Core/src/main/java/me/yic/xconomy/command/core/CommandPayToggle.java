@@ -29,7 +29,7 @@ import me.yic.xconomy.lang.MessagesManager;
 
 import java.util.UUID;
 
-public class CommandPayToggle extends CommandCore{
+public class CommandPayToggle extends CommandCore {
     public static boolean onCommand(CSender sender, String[] args) {
         if (args.length == 0) {
             if (!sender.isPlayer()) {

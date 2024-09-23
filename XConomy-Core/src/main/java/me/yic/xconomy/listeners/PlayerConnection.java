@@ -30,7 +30,7 @@ import me.yic.xconomy.info.SyncChannalType;
 import me.yic.xconomy.utils.RedisConnection;
 import me.yic.xconomy.utils.TabListCon;
 
-public class PlayerConnection{
+public class PlayerConnection {
 
     public static void onJoin(CPlayer player) {
 
@@ -40,13 +40,13 @@ public class PlayerConnection{
             DataLink.newPlayer(player);
         }
 
-        if (player.hasPermission("xconomy.admin.hidden")){
+        if (player.hasPermission("xconomy.admin.hidden")) {
             TabListCon.remove_Tab_PlayerList(player.getName());
             HiddenINFO.addHidden(player.getName());
-        }else {
+        } else {
             TabListCon.add_Tab_PlayerList(player.getName());
 
-            if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)){
+            if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)) {
                 RedisConnection.insertdata("Tab_List", TabListCon.get_Tab_PlayerList(), 1000);
             }
 
@@ -60,6 +60,7 @@ public class PlayerConnection{
         }
 
     }
+
     public static void onQuit(CPlayer player) {
 
         if (AdapterManager.PLUGIN.getOnlinePlayerSize() == 1) {
@@ -68,7 +69,7 @@ public class PlayerConnection{
 
         TabListCon.remove_Tab_PlayerList(player.getName());
 
-        if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)){
+        if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)) {
             RedisConnection.insertdata("Tab_List", TabListCon.get_Tab_PlayerList(), 1000);
         }
         if (XConomyLoad.getSyncData_Enable()) {

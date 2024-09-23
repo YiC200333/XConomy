@@ -28,13 +28,13 @@ public class CPlayer implements iPlayer {
 
     public CPlayer(User player) {
         ServerPlayer pl;
-        if (player != null){
+        if (player != null) {
             if (player.player().isPresent()) {
                 pl = player.player().get();
-            }else{
+            } else {
                 pl = null;
             }
-        }else {
+        } else {
             pl = null;
         }
         this.player = pl;
@@ -46,17 +46,17 @@ public class CPlayer implements iPlayer {
     }
 
     @Override
-    public void kickPlayer(String reason){
+    public void kickPlayer(String reason) {
         Sponge.asyncScheduler().executor(XConomy.getInstance().plugincontainer).execute(() -> player.kick(Component.text(reason)));
     }
 
     @Override
-    public void sendMessage(String message){
+    public void sendMessage(String message) {
         player.sendMessage(Component.text(message));
     }
 
     @Override
-    public void sendMessage(String[] message){
+    public void sendMessage(String[] message) {
         for (String mess : message) {
             player.sendMessage(Component.text(mess));
         }
@@ -68,21 +68,21 @@ public class CPlayer implements iPlayer {
     }
 
     @Override
-    public UUID getUniqueId(){
+    public UUID getUniqueId() {
         return player.profile().uuid();
     }
 
     @Override
-    public String getName(){
-        if (player.profile().name().isPresent()){
+    public String getName() {
+        if (player.profile().name().isPresent()) {
             return player.profile().name().get();
         }
         return "";
     }
 
     @Override
-    public boolean isOnline(){
-        if (player == null){
+    public boolean isOnline() {
+        if (player == null) {
             return false;
         }
         return player.isOnline();
