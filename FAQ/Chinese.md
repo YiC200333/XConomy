@@ -1,7 +1,7 @@
 ![img.png](../img.png)
 ## 中文社区文档  
 Itz_Dr_Li 编写/维护   
-https://xc.itzdrli.com/intro/readme
+https://xc.itzdrli.cc/intro/readme
 ***
 ## FAQ
 基于 2.21 版本
