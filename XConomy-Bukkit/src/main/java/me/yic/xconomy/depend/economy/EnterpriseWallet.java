@@ -46,8 +46,11 @@ public class EnterpriseWallet extends PlayerWallet {
             return new EconomyAction(getHolder(), false,  "Max balance!");
         }
 
-        DataCon.changeplayerdata("PLUGIN", getPlayer().getUniqueId(), amount, null, null ,null);
-        return new EconomyAction(getHolder(), true,  "");
+        if (DataCon.changeplayerdata("PLUGIN", getPlayer().getUniqueId(), amount, null, null ,null) != null) {
+            return new EconomyAction(getHolder(), true, "");
+        } else {
+            return new EconomyAction(getHolder(), false,  "Money not enough!");
+        }
     }
 
     @Override
@@ -107,8 +110,11 @@ public class EnterpriseWallet extends PlayerWallet {
         }
 
         UUID playeruuid = getPlayer().getUniqueId();
-        DataCon.changeplayerdata("PLUGIN", playeruuid, amount, false, null, null);
-        return new EconomyAction(getHolder(), true, "");
+        if (DataCon.changeplayerdata("PLUGIN", playeruuid, amount, false, null, null) != null) {
+            return new EconomyAction(getHolder(), true, "");
+        } else {
+            return new EconomyAction(getHolder(), false,  "Money not enough!");
+        }
     }
 
     @Override
@@ -131,8 +137,11 @@ public class EnterpriseWallet extends PlayerWallet {
         }
 
         UUID playerUUID = getPlayer().getUniqueId();
-        DataCon.changeplayerdata("PLUGIN", playerUUID, amount, true, null, null);
-        return new EconomyAction(getHolder(), true,  "");
+        if (DataCon.changeplayerdata("PLUGIN", playerUUID, amount, true, null, null) != null) {
+            return new EconomyAction(getHolder(), true, "");
+        } else {
+            return new EconomyAction(getHolder(), false, "Money not enough!");
+        }
     }
 
     @Override

@@ -112,9 +112,13 @@ public class XCVirtualAccount implements VirtualAccount {
                     currency, amount, contexts, ResultType.FAILED);
         }
         if (XCEconomyCommon.isNonPlayerAccount(account)) {
-            DataCon.changeaccountdata("PLUGIN",  account, amount, null, null);
-            return new XCTransactionResult(this,
-                    currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS);
+            if (DataCon.changeaccountdata("PLUGIN",  account, amount, null, null)) {
+                return new XCTransactionResult(this,
+                        currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS);
+            } else {
+                return new XCTransactionResult(this,
+                        currency, amount, contexts, ResultType.FAILED);
+            }
         }
         PlayerData pd = DataCon.getPlayerData(account);
         if (pd == null) {
@@ -122,9 +126,13 @@ public class XCVirtualAccount implements VirtualAccount {
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED);
         }
         UUID playeruuid = pd.getUniqueId();
-        DataCon.changeplayerdata("PLUGIN", playeruuid, amount, null, "SETBALANCE", null);
-        return new XCTransactionResult(this,
-                currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS);
+        if (DataCon.changeplayerdata("PLUGIN", playeruuid, amount, null, "SETBALANCE", null) != null) {
+            return new XCTransactionResult(this,
+                    currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS);
+        } else {
+            return new XCTransactionResult(this,
+                    currency, amount, contexts, ResultType.FAILED);
+        }
     }
 
     @Override
@@ -186,9 +194,13 @@ public class XCVirtualAccount implements VirtualAccount {
         }
 
         if (XCEconomyCommon.isNonPlayerAccount(account)) {
-            DataCon.changeaccountdata("PLUGIN", account, amount, true, null);
-            return new XCTransactionResult(this,
-                    currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.DEPOSIT);
+            if (DataCon.changeaccountdata("PLUGIN", account, amount, true, null)) {
+                return new XCTransactionResult(this,
+                        currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.DEPOSIT);
+            } else {
+                return new XCTransactionResult(this,
+                        currency, amount, contexts, ResultType.FAILED, TransactionTypes.DEPOSIT);
+            }
         }
         PlayerData pd = DataCon.getPlayerData(account);
         if (pd == null) {
@@ -196,10 +208,13 @@ public class XCVirtualAccount implements VirtualAccount {
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.DEPOSIT);
         }
         UUID playeruuid = pd.getUniqueId();
-        DataCon.changeplayerdata("PLUGIN", playeruuid, amountFormatted, true, null, null);
-        return new XCTransactionResult(this,
-                currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.DEPOSIT);
-
+        if (DataCon.changeplayerdata("PLUGIN", playeruuid, amountFormatted, true, null, null) != null) {
+            return new XCTransactionResult(this,
+                    currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.DEPOSIT);
+        } else {
+            return new XCTransactionResult(this,
+                    currency, amount, contexts, ResultType.FAILED, TransactionTypes.DEPOSIT);
+        }
     }
 
     @Override
@@ -222,9 +237,13 @@ public class XCVirtualAccount implements VirtualAccount {
                     currency, amount, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
         }
         if (XCEconomyCommon.isNonPlayerAccount(account)) {
-            DataCon.changeaccountdata("PLUGIN", account, amount, false, null);
-            return new XCTransactionResult(this,
-                    currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.WITHDRAW);
+            if (DataCon.changeaccountdata("PLUGIN", account, amount, false, null)) {
+                return new XCTransactionResult(this,
+                        currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.WITHDRAW);
+            } else {
+                return new XCTransactionResult(this,
+                        currency, amount, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
+            }
         }
         PlayerData pd = DataCon.getPlayerData(account);
         if (pd == null) {
@@ -232,9 +251,13 @@ public class XCVirtualAccount implements VirtualAccount {
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
         }
         UUID playeruuid = pd.getUniqueId();
-        DataCon.changeplayerdata("PLUGIN", playeruuid, amountFormatted, false, null, null);
-        return new XCTransactionResult(this,
-                currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.WITHDRAW);
+        if (DataCon.changeplayerdata("PLUGIN", playeruuid, amountFormatted, false, null, null) != null) {
+            return new XCTransactionResult(this,
+                    currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.WITHDRAW);
+        } else {
+            return new XCTransactionResult(this,
+                    currency, amount, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
+        }
     }
 
     @Override

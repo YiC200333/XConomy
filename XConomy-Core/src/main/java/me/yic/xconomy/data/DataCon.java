@@ -26,6 +26,7 @@ import me.yic.xconomy.adapter.comp.CallAPI;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.caches.CacheNonPlayer;
 import me.yic.xconomy.data.redis.RedisPublisher;
+import me.yic.xconomy.data.sql.SQL;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.data.syncdata.SyncBalanceAll;
 import me.yic.xconomy.data.syncdata.SyncData;
@@ -39,6 +40,15 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public class DataCon {
+
+    public static PlayerData refreshPlayerData(UUID uuid) {
+        SQL.getPlayerData(uuid);
+        PlayerData pd = Cache.getDataFromCache(uuid);
+        if (AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
+            Cache.clearCache();
+        }
+        return pd;
+    }
 
     public static PlayerData getPlayerData(UUID uuid) {
         return getPlayerDatai(uuid);
@@ -128,7 +138,7 @@ public class DataCon {
     }
 
     public static BigDecimal changeplayerdata(final String type, final UUID uid, final BigDecimal amount, final Boolean isAdd, final String command, final Object comment) {
-        PlayerData pd = getPlayerData(uid);
+        PlayerData pd = refreshPlayerData(uid);
         UUID u = pd.getUniqueId();
         BigDecimal newvalue = amount;
         BigDecimal bal = pd.getBalance();
@@ -143,6 +153,9 @@ public class DataCon {
             } else {
                 newvalue = bal.subtract(amount);
             }
+        }
+        if (newvalue.doubleValue() < 0) {
+            return null;
         }
 
         Cache.updateIntoCache(u, pd, newvalue, bal);
@@ -166,9 +179,9 @@ public class DataCon {
 
 
     @SuppressWarnings("ConstantConditions")
-    public static void changeaccountdata(final String type, final String u, final BigDecimal amount, final Boolean isAdd, final String command) {
+    public static boolean changeaccountdata(final String type, final String u, final BigDecimal amount, final Boolean isAdd, final String command) {
         BigDecimal newvalue = amount;
-        BigDecimal balance = getAccountBalance(u);
+        BigDecimal balance = DataLink.getBalNonPlayer(u);
 
         RecordInfo ri = new RecordInfo(type, command, null);
 
@@ -180,6 +193,9 @@ public class DataCon {
                 newvalue = balance.subtract(amount);
             }
         }
+        if (newvalue.doubleValue() < 0) {
+            return false;
+        }
         CacheNonPlayer.insertIntoCache(u, newvalue);
 
         if (XConomyLoad.DConfig.canasync && AdapterManager.checkisMainThread()) {
@@ -188,6 +204,7 @@ public class DataCon {
         } else {
             DataLink.saveNonPlayer(u, amount, newvalue, isAdd, ri);
         }
+        return true;
     }
 
     public static void changeallplayerdata(String targettype, String type, BigDecimal amount, Boolean isAdd, String command, StringBuilder comment) {

@@ -129,7 +129,11 @@ public class CommandPay extends CommandCore{
         }
 
         String com = commandName + " " + args[0] + " " + amount;
-        DataCon.changeplayerdata("PLAYER_COMMAND", sender.toPlayer().getUniqueId(), taxamount, false, com, null);
+        if (DataCon.changeplayerdata("PLAYER_COMMAND", sender.toPlayer().getUniqueId(), taxamount, false, com, null) == null) {
+            sendMessages(sender, PREFIX + translateColorCodes("pay_fail")
+                    .replace("%amount%", taxamountFormatted));
+            return true;
+        }
         sendMessages(sender, PREFIX + translateColorCodes("pay")
                 .replace("%player%", realname)
                 .replace("%amount%", amountFormatted));

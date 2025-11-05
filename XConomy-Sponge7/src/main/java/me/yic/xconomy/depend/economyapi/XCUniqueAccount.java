@@ -108,9 +108,17 @@ public class XCUniqueAccount implements UniqueAccount {
                     DummyObjectProvider.createFor(TransactionType.class, "SET"));
         }
         if (isplayer) {
-            DataCon.changeplayerdata("PLUGIN", uuid, amount, null, "SETBALANCE", null);
+            if (DataCon.changeplayerdata("PLUGIN", uuid, amount, null, "SETBALANCE", null) == null) {
+                return new XCTransactionResult(this,
+                        currency, BigDecimal.ZERO, contexts, ResultType.FAILED,
+                        DummyObjectProvider.createFor(TransactionType.class, "SET"));
+            }
         }else{
-            DataCon.changeaccountdata("PLUGIN", name, amount, null, "SETBALANCE");
+            if (!DataCon.changeaccountdata("PLUGIN", name, amount, null, "SETBALANCE")) {
+                return new XCTransactionResult(this,
+                        currency, BigDecimal.ZERO, contexts, ResultType.FAILED,
+                        DummyObjectProvider.createFor(TransactionType.class, "SET"));
+            }
         }
         return new XCTransactionResult(this,
                 currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS,
@@ -155,9 +163,15 @@ public class XCUniqueAccount implements UniqueAccount {
         }
 
         if (isplayer) {
-            DataCon.changeplayerdata("PLUGIN", uuid, amountFormatted, true, null, null);
+            if (DataCon.changeplayerdata("PLUGIN", uuid, amountFormatted, true, null, null) == null) {
+                return new XCTransactionResult(this,
+                        currency, amount, contexts, ResultType.FAILED, TransactionTypes.DEPOSIT);
+            }
         }else{
-            DataCon.changeaccountdata("PLUGIN", name, amountFormatted, true, null);
+            if (!DataCon.changeaccountdata("PLUGIN", name, amountFormatted, true, null)) {
+                return new XCTransactionResult(this,
+                        currency, amount, contexts, ResultType.FAILED, TransactionTypes.DEPOSIT);
+            }
         }
         return new XCTransactionResult(this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.DEPOSIT);
@@ -180,9 +194,15 @@ public class XCUniqueAccount implements UniqueAccount {
         }
 
         if (isplayer) {
-            DataCon.changeplayerdata("PLUGIN", uuid, amountFormatted, false, null, null);
+            if (DataCon.changeplayerdata("PLUGIN", uuid, amountFormatted, false, null, null) == null) {
+                return new XCTransactionResult(this,
+                        currency, amount, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
+            }
         }else{
-            DataCon.changeaccountdata("PLUGIN", name, amountFormatted, false, null);
+            if (!DataCon.changeaccountdata("PLUGIN", name, amountFormatted, false, null)) {
+                return new XCTransactionResult(this,
+                        currency, amount, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
+            }
         }
         return new XCTransactionResult(this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.WITHDRAW);

@@ -181,6 +181,10 @@ public class CommandBalance extends CommandCore{
                         }
 
                         BigDecimal newbalance = DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, true, com, reasonmessages);
+                        if (newbalance == null) {
+                            sendMessages(sender, PREFIX + translateColorCodes("invalid_amount"));
+                            return true;
+                        }
                         sendMessages(sender, PREFIX + translateColorCodes("money_give")
                                 .replace("%player%", realname)
                                 .replace("%amount%", amountFormatted));
@@ -229,6 +233,12 @@ public class CommandBalance extends CommandCore{
                         }
 
                         BigDecimal newbalance = DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, false, com, reasonmessages);
+                        if (newbalance == null) {
+                            sendMessages(sender, PREFIX + translateColorCodes("money_take_fail")
+                                    .replace("%player%", realname)
+                                    .replace("%amount%", amountFormatted));
+                            return true;
+                        }
                         sendMessages(sender, PREFIX + translateColorCodes("money_take")
                                 .replace("%player%", realname)
                                 .replace("%amount%", amountFormatted));
@@ -261,6 +271,10 @@ public class CommandBalance extends CommandCore{
                         }
 
                         BigDecimal newbalance = DataCon.changeplayerdata("ADMIN_COMMAND", targetUUID, amount, null, com, reasonmessages);
+                        if (newbalance == null) {
+                            sendMessages(sender, PREFIX + translateColorCodes("invalid_amount"));
+                            return true;
+                        }
                         sendMessages(sender, PREFIX + translateColorCodes("money_set")
                                 .replace("%player%", realname)
                                 .replace("%amount%", amountFormatted));
