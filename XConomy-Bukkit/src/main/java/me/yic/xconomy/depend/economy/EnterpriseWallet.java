@@ -43,11 +43,11 @@ public class EnterpriseWallet extends PlayerWallet {
         }
 
         if (DataFormat.isMAX(amount)) {
-            return new EconomyAction(getHolder(), false,  "Max balance!");
+            return new EconomyAction(getHolder(), false, "Max balance!");
         }
 
-        DataCon.changeplayerdata("PLUGIN", getPlayer().getUniqueId(), amount, null, null ,null);
-        return new EconomyAction(getHolder(), true,  "");
+        DataCon.changeplayerdata("PLUGIN", getPlayer().getUniqueId(), amount, null, null, null);
+        return new EconomyAction(getHolder(), true, "");
     }
 
     @Override
@@ -82,7 +82,7 @@ public class EnterpriseWallet extends PlayerWallet {
     @Override
     public boolean has(BigDecimal bigDecimal) {
         BigDecimal bal = getBalance();
-        if (bal == null){
+        if (bal == null) {
             return false;
         }
         return getBalance().compareTo(getBalance()) > 0;
@@ -127,12 +127,12 @@ public class EnterpriseWallet extends PlayerWallet {
         BigDecimal bal = getBalance();
 
         if (DataFormat.isMAX(bal.add(amount))) {
-            return new EconomyAction(getHolder(), false,  "Max balance!");
+            return new EconomyAction(getHolder(), false, "Max balance!");
         }
 
         UUID playerUUID = getPlayer().getUniqueId();
         DataCon.changeplayerdata("PLUGIN", playerUUID, amount, true, null, null);
-        return new EconomyAction(getHolder(), true,  "");
+        return new EconomyAction(getHolder(), true, "");
     }
 
     @Override

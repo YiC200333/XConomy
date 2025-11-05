@@ -23,7 +23,7 @@ import me.yic.xconomy.info.SyncType;
 
 public class SyncDelData extends PlayerData {
 
-    public SyncDelData(PlayerData pd){
+    public SyncDelData(PlayerData pd) {
         super(SyncType.DELETEDATA, pd.getUniqueId(), pd.getName(), pd.getBalance());
     }
 

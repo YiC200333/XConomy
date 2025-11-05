@@ -18,11 +18,11 @@
  */
 package me.yic.xconomy.depend;
 
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
-import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.info.MessageConfig;
@@ -187,7 +187,7 @@ public class Placeholder extends PlaceholderExpansion {
     }
 
     private boolean isNumber(String str) {
-        if (str.matches("0+")){
+        if (str.matches("0+")) {
             return false;
         }
         return str.matches("\\d+");

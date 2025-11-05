@@ -27,7 +27,7 @@ import org.bukkit.plugin.ServicePriority;
 
 import java.util.Collection;
 
-public class VaultHook{
+public class VaultHook {
     public static Economy econ = null;
     public static Permission vaultPerm = null;
 
@@ -43,7 +43,7 @@ public class VaultHook{
         if (XConomyLoad.Config.DISABLE_ESSENTIAL) {
             Collection<RegisteredServiceProvider<Economy>> econs = Bukkit.getPluginManager().getPlugin("Vault").getServer().getServicesManager().getRegistrations(Economy.class);
             for (RegisteredServiceProvider<Economy> econ : econs) {
-                if (econ.getProvider().getName().equalsIgnoreCase("Essentials Economy")||
+                if (econ.getProvider().getName().equalsIgnoreCase("Essentials Economy") ||
                         econ.getProvider().getName().equalsIgnoreCase("EssentialsX Economy")) {
                     XConomy.getInstance().getServer().getServicesManager().unregister(econ.getProvider());
                 }

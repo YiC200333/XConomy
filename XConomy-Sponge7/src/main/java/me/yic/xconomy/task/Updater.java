@@ -50,7 +50,7 @@ public class Updater implements Runnable {
             ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder()
                     .setSource(() -> reader).build();
             newVersion = loader.load().getNode("recommended", "name").getString();
-            if (newVersion != null && newVersion.contains("-Sponge")){
+            if (newVersion != null && newVersion.contains("-Sponge")) {
                 newVersion = newVersion.substring(0, newVersion.length() - 8);
             }
             is.close();

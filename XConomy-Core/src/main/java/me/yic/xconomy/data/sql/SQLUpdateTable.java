@@ -21,7 +21,10 @@ package me.yic.xconomy.data.sql;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class SQLUpdateTable extends SQL {
 

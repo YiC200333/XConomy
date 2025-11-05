@@ -23,38 +23,38 @@ import me.yic.xconomy.info.SyncType;
 
 import java.util.UUID;
 
-public class SyncMessage extends SyncData{
+public class SyncMessage extends SyncData {
 
     private final String name;
     private UUID ruuid;
     private final String message;
 
-    public SyncMessage(SyncType st, UUID uuid, String message){
+    public SyncMessage(SyncType st, UUID uuid, String message) {
         super(st, uuid);
         this.message = message;
         this.name = null;
         this.ruuid = null;
     }
 
-    public SyncMessage(SyncType st, String name, String message){
+    public SyncMessage(SyncType st, String name, String message) {
         super(st, null);
         this.message = message;
         this.name = name;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-    public UUID getRUniqueId(){
+    public UUID getRUniqueId() {
         return ruuid;
     }
 
-    public void setRUniqueId(UUID ruuid){
+    public void setRUniqueId(UUID ruuid) {
         this.ruuid = ruuid;
     }
 
-    public String getMessage(){
+    public String getMessage() {
         return message;
     }
 

@@ -23,10 +23,10 @@ import org.bukkit.OfflinePlayer;
 
 import java.math.BigDecimal;
 
-public class VaultCM{
+public class VaultCM {
 
-    public static BigDecimal getBalance(OfflinePlayer o){
-        if (VaultHook.econ.hasAccount(o)){
+    public static BigDecimal getBalance(OfflinePlayer o) {
+        if (VaultHook.econ.hasAccount(o)) {
             return DataFormat.formatdouble(VaultHook.econ.getBalance(o));
         }
         return BigDecimal.ZERO;

@@ -32,7 +32,7 @@ public class CSender implements iSender {
 
     @Override
     public String getName() {
-        if (((ServerPlayer) sender.root()).profile().name().isPresent()){
+        if (((ServerPlayer) sender.root()).profile().name().isPresent()) {
             return ((ServerPlayer) sender.root()).profile().name().get();
         }
         return "";
@@ -44,20 +44,20 @@ public class CSender implements iSender {
     }
 
     @Override
-    public void sendMessage(String message){
-        if (isPlayer()){
+    public void sendMessage(String message) {
+        if (isPlayer()) {
             ((ServerPlayer) sender.root()).sendMessage(Component.text(message));
-        }else{
+        } else {
             sender.sendMessage(Identity.nil(), Component.text(message));
         }
     }
 
     @Override
-    public void sendMessage(String[] message){
+    public void sendMessage(String[] message) {
         for (String mess : message) {
             if (isPlayer()) {
                 ((ServerPlayer) sender.root()).sendMessage(Component.text(mess));
-            }else{
+            } else {
                 sender.sendMessage(Identity.nil(), Component.text(mess));
             }
         }

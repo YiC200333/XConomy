@@ -36,6 +36,7 @@ public class XCTransactionResult implements TransactionResult {
     private final Set<Context> contexts;
     private final ResultType resultType;
     private final TransactionType transactionType;
+
     public XCTransactionResult(Account account, Currency currency, BigDecimal amount, Set<Context> contexts,
                                ResultType resultType, TransactionType transactionType) {
         this.account = account;
@@ -45,6 +46,7 @@ public class XCTransactionResult implements TransactionResult {
         this.resultType = resultType;
         this.transactionType = transactionType;
     }
+
     @Override
     public Account getAccount() {
         return account;

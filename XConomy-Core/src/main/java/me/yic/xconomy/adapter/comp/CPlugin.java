@@ -21,7 +21,7 @@ public class CPlugin implements iPlugin {
     }
 
     @Override
-    public int getOnlinePlayerSize(){
+    public int getOnlinePlayerSize() {
         return 0;
     }
 
@@ -34,14 +34,17 @@ public class CPlugin implements iPlugin {
     public void broadcastMessage(String message) {
 
     }
+
     @Override
     public UUID NameToUUID(String name) {
         return null;
     }
+
     @Override
     public boolean isSync() {
         return false;
     }
+
     @Override
     public void runTaskAsynchronously(Runnable ra) {
 

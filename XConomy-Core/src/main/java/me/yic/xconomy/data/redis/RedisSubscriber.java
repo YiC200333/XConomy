@@ -31,7 +31,7 @@ public class RedisSubscriber extends BinaryJedisPubSub {
 
     @Override
     public void onSubscribe(byte[] channel, int subscribedChannels) {
-        XConomy.getInstance().logger("订阅Redis频道成功, channel ", 0,  new String(channel));
+        XConomy.getInstance().logger("订阅Redis频道成功, channel ", 0, new String(channel));
     }
 
     @Override

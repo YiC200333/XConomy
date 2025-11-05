@@ -23,12 +23,12 @@ public class CConfig implements iConfig {
     private final ConfigurationNode fc;
     private final ConfigurationLoader<ConfigurationNode> fcloader;
 
-    public CConfig(ConfigurationNode fc){
+    public CConfig(ConfigurationNode fc) {
         this.fcloader = null;
         this.fc = fc;
     }
 
-    public CConfig(File f){
+    public CConfig(File f) {
         ConfigurationNode pfc = null;
 
         fcloader = YAMLConfigurationLoader.builder().setFlowStyle(DumperOptions.FlowStyle.BLOCK).setIndent(2).setFile(f).build();
@@ -40,7 +40,7 @@ public class CConfig implements iConfig {
         fc = pfc;
     }
 
-    public CConfig(URL url){
+    public CConfig(URL url) {
         this.fcloader = null;
         ConfigurationNode pfc = null;
 
@@ -54,7 +54,7 @@ public class CConfig implements iConfig {
         fc = pfc;
     }
 
-    public CConfig(String path, String subpath){
+    public CConfig(String path, String subpath) {
         this.fcloader = null;
         ConfigurationNode pfc = null;
 
@@ -80,60 +80,60 @@ public class CConfig implements iConfig {
     }
 
     @Override
-    public ConfigurationNode getConfig(){
+    public ConfigurationNode getConfig() {
         return fc;
     }
 
 
     @Override
-    public boolean contains(String path){
+    public boolean contains(String path) {
         String[] a = path.split("\\.");
         return !fc.getNode(a).isVirtual();
     }
 
     @Override
-    public void createSection(String path){
+    public void createSection(String path) {
     }
 
     @Override
-    public void set(String path, Object value){
+    public void set(String path, Object value) {
         String[] a = path.split("\\.");
         fc.getNode(a).setValue(value);
     }
 
     @Override
-    public String getString(String path){
+    public String getString(String path) {
         String[] a = path.split("\\.");
         return fc.getNode(a).getString();
     }
 
     @Override
-    public Integer getInt(String path){
+    public Integer getInt(String path) {
         String[] a = path.split("\\.");
         return fc.getNode(a).getInt();
     }
 
     @Override
-    public boolean getBoolean(String path){
+    public boolean getBoolean(String path) {
         String[] a = path.split("\\.");
         return fc.getNode(a).getBoolean();
     }
 
     @Override
-    public double getDouble(String path){
+    public double getDouble(String path) {
         String[] a = path.split("\\.");
         return fc.getNode(a).getDouble();
     }
 
     @Override
-    public long getLong(String path){
+    public long getLong(String path) {
         String[] a = path.split("\\.");
         return fc.getNode(a).getLong();
     }
 
     @Override
     public void save() throws Exception {
-        if (fcloader == null){
+        if (fcloader == null) {
             throw new Exception("The file is null");
         }
         fcloader.save(fc);
@@ -141,7 +141,7 @@ public class CConfig implements iConfig {
 
     @Override
     @SuppressWarnings("UnstableApiUsage")
-    public List<String> getStringList(String path){
+    public List<String> getStringList(String path) {
         String[] a = path.split("\\.");
         try {
             return fc.getNode(a).getList(TypeToken.of(String.class));
@@ -152,7 +152,7 @@ public class CConfig implements iConfig {
     }
 
     @Override
-    public LinkedHashMap<BigDecimal, String> getConfigurationSectionSort(String path){
+    public LinkedHashMap<BigDecimal, String> getConfigurationSectionSort(String path) {
         LinkedHashMap<BigDecimal, String> ks = new LinkedHashMap<>();
         String[] a = path.split("\\.");
         try {

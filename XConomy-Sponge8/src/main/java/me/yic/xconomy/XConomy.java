@@ -106,7 +106,7 @@ public class XConomy {
         //if (Sponge.getPluginManager().getPlugin("DatabaseDrivers").isPresent()) {
         //logger("发现 DatabaseDrivers", null);
         //}
-        if (XConomyLoad.Config.ISOLDCONFIG){
+        if (XConomyLoad.Config.ISOLDCONFIG) {
             logger(null, 1, "==================================================");
             logger(null, 1, "Please regenerate all configuration files");
             logger(null, 1, "==================================================");
@@ -195,7 +195,6 @@ public class XConomy {
         }
 
 
-
         XConomyLoad.Initial();
 
         int time = XConomyLoad.Config.REFRESH_TIME;
@@ -221,14 +220,14 @@ public class XConomy {
 
     @SuppressWarnings("unused")
     @Listener
-    public void onRegisterService(final ProvideServiceEvent<EconomyService> event){
+    public void onRegisterService(final ProvideServiceEvent<EconomyService> event) {
         event.suggest(XCService::new);
     }
 
 
     @SuppressWarnings("unused")
     @Listener
-    public void onRegisterCommand(final RegisterCommandEvent<Command.Parameterized> event){
+    public void onRegisterCommand(final RegisterCommandEvent<Command.Parameterized> event) {
         loadconfig();
         XConomyLoad.LoadConfig();
 

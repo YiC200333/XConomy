@@ -50,14 +50,14 @@ public class DataCon {
 
     public static BigDecimal getAccountBalance(String account) {
         BigDecimal bal = null;
-        if (XConomyLoad.Config.DISABLE_CACHE){
+        if (XConomyLoad.Config.DISABLE_CACHE) {
             return DataLink.getBalNonPlayer(account);
         }
         if (CacheNonPlayer.CacheContainsKey(account)) {
             bal = CacheNonPlayer.getBalanceFromCacheOrDB(account);
         }
-        if (bal == null){
-            bal =  DataLink.getBalNonPlayer(account);
+        if (bal == null) {
+            bal = DataLink.getBalNonPlayer(account);
         }
         return bal;
     }
@@ -72,7 +72,7 @@ public class DataCon {
         if (Cache.CacheContainsKey(u)) {
             pd = Cache.getDataFromCache(u);
         }
-        if (pd == null){
+        if (pd == null) {
             pd = DataLink.getPlayerData(u);
         }
         if (AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
@@ -82,7 +82,7 @@ public class DataCon {
     }
 
     public static int getPlayerHiddenState(UUID uid) {
-        if (Cache.phids.containsKey(uid)){
+        if (Cache.phids.containsKey(uid)) {
             return Cache.phids.get(uid);
         }
         if (DataLink.getPlayerData(uid) != null) {
@@ -90,6 +90,7 @@ public class DataCon {
         }
         return 1;
     }
+
     public static void removePlayerHiddenState(UUID uid) {
         Cache.phids.remove(uid);
     }
@@ -103,7 +104,7 @@ public class DataCon {
         }
 
         CPlayer cp = AdapterManager.PLUGIN.getplayer(pd);
-        if(cp.isOnline()){
+        if (cp.isOnline()) {
             cp.kickPlayer("[XConomy] " + AdapterManager.translateColorCodes(MessageConfig.DELETE_DATA));
         }
     }
@@ -226,7 +227,7 @@ public class DataCon {
     public static void SendMessTask(SyncData pd) {
         if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)) {
             RedisPublisher.publishmessage(pd.toByteArray(XConomy.syncversion).toByteArray());
-        }else if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.BUNGEECORD)) {
+        } else if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.BUNGEECORD)) {
             SendPluginMessage.SendMessTask("xconomy:acb", pd);
         }
     }

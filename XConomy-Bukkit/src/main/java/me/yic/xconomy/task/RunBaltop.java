@@ -25,6 +25,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class RunBaltop {
     private static BukkitTask refresherTask = null;
+
     public static void runstart() {
         int time = XConomyLoad.Config.REFRESH_TIME;
         refresherTask = Bukkit.getScheduler().runTaskTimerAsynchronously(XConomy.getInstance(), new Baltop(), time * 20L, time * 20L);

@@ -26,17 +26,17 @@ public class CPlayer implements iPlayer {
     }
 
     @Override
-    public void kickPlayer(String reason){
-        Bukkit.getScheduler().runTask(XConomy.getInstance(), ()->player.kickPlayer(reason));
+    public void kickPlayer(String reason) {
+        Bukkit.getScheduler().runTask(XConomy.getInstance(), () -> player.kickPlayer(reason));
     }
 
     @Override
-    public void sendMessage(String message){
+    public void sendMessage(String message) {
         player.sendMessage(message);
     }
 
     @Override
-    public void sendMessage(String[] message){
+    public void sendMessage(String[] message) {
         player.sendMessage(message);
     }
 
@@ -46,18 +46,18 @@ public class CPlayer implements iPlayer {
     }
 
     @Override
-    public UUID getUniqueId(){
+    public UUID getUniqueId() {
         return player.getUniqueId();
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return player.getName();
     }
 
     @Override
-    public boolean isOnline(){
-        if (player == null){
+    public boolean isOnline() {
+        if (player == null) {
             return false;
         }
         return player.isOnline();

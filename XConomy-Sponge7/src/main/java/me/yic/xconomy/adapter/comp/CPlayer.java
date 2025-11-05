@@ -1,7 +1,6 @@
 package me.yic.xconomy.adapter.comp;
 
 
-
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.adapter.iPlayer;
 import org.spongepowered.api.Sponge;
@@ -29,13 +28,13 @@ public class CPlayer implements iPlayer {
 
     public CPlayer(User player) {
         Player pl;
-        if (player != null){
+        if (player != null) {
             if (player.getPlayer().isPresent()) {
                 pl = player.getPlayer().get();
-            }else{
+            } else {
                 pl = null;
             }
-        }else {
+        } else {
             pl = null;
         }
         this.player = pl;
@@ -47,17 +46,17 @@ public class CPlayer implements iPlayer {
     }
 
     @Override
-    public void kickPlayer(String reason){
+    public void kickPlayer(String reason) {
         Sponge.getScheduler().createAsyncExecutor(XConomy.getInstance()).execute(() -> player.kick(Text.of(reason)));
     }
 
     @Override
-    public void sendMessage(String message){
+    public void sendMessage(String message) {
         player.sendMessage(Text.of(message));
     }
 
     @Override
-    public void sendMessage(String[] message){
+    public void sendMessage(String[] message) {
         for (String mess : message) {
             player.sendMessage(Text.of(mess));
         }
@@ -69,18 +68,18 @@ public class CPlayer implements iPlayer {
     }
 
     @Override
-    public UUID getUniqueId(){
+    public UUID getUniqueId() {
         return player.getUniqueId();
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return player.getName();
     }
 
     @Override
-    public boolean isOnline(){
-        if (player == null){
+    public boolean isOnline() {
+        if (player == null) {
             return false;
         }
         return player.isOnline();

@@ -20,10 +20,10 @@ package me.yic.xconomy.task;
 
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.depend.economy.VaultHook;
+import me.yic.xconomy.utils.CompletableFutureManager;
 import org.bukkit.Bukkit;
 
 import java.util.UUID;
-import me.yic.xconomy.utils.CompletableFutureManager;
 
 public class ReceivePerCheck {
 
@@ -35,7 +35,7 @@ public class ReceivePerCheck {
         if (!target.isOnline()) {
             return VaultHook.vaultPerm.playerHas(null,
                     Bukkit.getOfflinePlayer(targetUUID), "xconomy.user.pay.receive");
-        } else{
+        } else {
             return target.hasPermission("xconomy.user.pay.receive");
         }
     }

@@ -66,7 +66,7 @@ public class XCUniqueAccount implements UniqueAccount {
     public boolean hasBalance(Currency currency, Set<Context> contexts) {
         if (isplayer) {
             return DataCon.getPlayerData(uuid) != null;
-        }else{
+        } else {
             return DataCon.getAccountBalance(name) != null;
         }
     }
@@ -80,7 +80,7 @@ public class XCUniqueAccount implements UniqueAccount {
             } else {
                 return BigDecimal.ZERO;
             }
-        }else{
+        } else {
             BigDecimal bal = DataCon.getAccountBalance(name);
             if (bal != null) {
                 return bal;
@@ -109,7 +109,7 @@ public class XCUniqueAccount implements UniqueAccount {
         }
         if (isplayer) {
             DataCon.changeplayerdata("PLUGIN", uuid, amount, null, "SETBALANCE", null);
-        }else{
+        } else {
             DataCon.changeaccountdata("PLUGIN", name, amount, null, "SETBALANCE");
         }
         return new XCTransactionResult(this,
@@ -156,7 +156,7 @@ public class XCUniqueAccount implements UniqueAccount {
 
         if (isplayer) {
             DataCon.changeplayerdata("PLUGIN", uuid, amountFormatted, true, null, null);
-        }else{
+        } else {
             DataCon.changeaccountdata("PLUGIN", name, amountFormatted, true, null);
         }
         return new XCTransactionResult(this,
@@ -181,7 +181,7 @@ public class XCUniqueAccount implements UniqueAccount {
 
         if (isplayer) {
             DataCon.changeplayerdata("PLUGIN", uuid, amountFormatted, false, null, null);
-        }else{
+        } else {
             DataCon.changeaccountdata("PLUGIN", name, amountFormatted, false, null);
         }
         return new XCTransactionResult(this,

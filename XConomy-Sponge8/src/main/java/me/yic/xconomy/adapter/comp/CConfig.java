@@ -21,12 +21,12 @@ public class CConfig implements iConfig {
     private final ConfigurationNode fc;
     private final YamlConfigurationLoader fcloader;
 
-    public CConfig(ConfigurationNode fc){
+    public CConfig(ConfigurationNode fc) {
         this.fcloader = null;
         this.fc = fc;
     }
 
-    public CConfig(File f){
+    public CConfig(File f) {
         ConfigurationNode pfc = null;
 
         fcloader = YamlConfigurationLoader.builder().nodeStyle(NodeStyle.BLOCK).indent(2).file(f).build();
@@ -38,7 +38,7 @@ public class CConfig implements iConfig {
         fc = pfc;
     }
 
-    public CConfig(URL url){
+    public CConfig(URL url) {
         this.fcloader = null;
         ConfigurationNode pfc = null;
 
@@ -53,7 +53,7 @@ public class CConfig implements iConfig {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public CConfig(String path, String subpath){
+    public CConfig(String path, String subpath) {
         this.fcloader = null;
         ConfigurationNode pfc = null;
 
@@ -79,23 +79,23 @@ public class CConfig implements iConfig {
     }
 
     @Override
-    public ConfigurationNode getConfig(){
+    public ConfigurationNode getConfig() {
         return fc;
     }
 
 
     @Override
-    public boolean contains(String path){
+    public boolean contains(String path) {
         String[] a = path.split("\\.");
         return !fc.node(a).virtual();
     }
 
     @Override
-    public void createSection(String path){
+    public void createSection(String path) {
     }
 
     @Override
-    public void set(String path, Object value){
+    public void set(String path, Object value) {
         String[] a = path.split("\\.");
         try {
             fc.node(a).set(value);
@@ -105,31 +105,31 @@ public class CConfig implements iConfig {
     }
 
     @Override
-    public String getString(String path){
+    public String getString(String path) {
         String[] a = path.split("\\.");
         return fc.node(a).getString();
     }
 
     @Override
-    public Integer getInt(String path){
+    public Integer getInt(String path) {
         String[] a = path.split("\\.");
         return fc.node(a).getInt();
     }
 
     @Override
-    public boolean getBoolean(String path){
+    public boolean getBoolean(String path) {
         String[] a = path.split("\\.");
         return fc.node(a).getBoolean();
     }
 
     @Override
-    public double getDouble(String path){
+    public double getDouble(String path) {
         String[] a = path.split("\\.");
         return fc.node(a).getDouble();
     }
 
     @Override
-    public long getLong(String path){
+    public long getLong(String path) {
         String[] a = path.split("\\.");
         return fc.node(a).getLong();
     }
@@ -143,7 +143,7 @@ public class CConfig implements iConfig {
     }
 
     @Override
-    public List<String> getStringList(String path){
+    public List<String> getStringList(String path) {
         String[] a = path.split("\\.");
         try {
             return fc.node(a).getList(String.class);
@@ -154,7 +154,7 @@ public class CConfig implements iConfig {
     }
 
     @Override
-    public LinkedHashMap<BigDecimal, String> getConfigurationSectionSort(String path){
+    public LinkedHashMap<BigDecimal, String> getConfigurationSectionSort(String path) {
         LinkedHashMap<BigDecimal, String> ks = new LinkedHashMap<>();
         String[] a = path.split("\\.");
         try {

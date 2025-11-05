@@ -48,7 +48,7 @@ public class Updater implements Runnable {
             YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
                     .source(() -> reader).build();
             newVersion = loader.load().node("recommended", "name").getString();
-            if (newVersion != null && newVersion.contains("-Sponge")){
+            if (newVersion != null && newVersion.contains("-Sponge")) {
                 newVersion = newVersion.substring(0, newVersion.length() - 8);
             }
             is.close();

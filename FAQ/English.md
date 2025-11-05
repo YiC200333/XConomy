@@ -1,5 +1,7 @@
 ![img.png](../img.png)
+
 ## FAQ
+
 For 2.21 version
 ***
 Q - How to sync data(BungeeCord Channel)?  
@@ -25,10 +27,11 @@ Q - How to cancel the decimal of the balance?
 A - Set initial-bal to true in config.yml, but scientific counting still has decimals. (eg: 234561 -> 234.56K)
 
 Q - I set the language in config.yml, but it still doesn't work.  
-A - Delete the old message.yml file and regenerate it. 
+A - Delete the old message.yml file and regenerate it.
 
 
 ***
+
 ### What are the advantages of different UUID-Mode?
 
 1 - Default - Support most cases, get the player's UUID through database.  
@@ -41,4 +44,5 @@ A - Delete the old message.yml file and regenerate it.
 ### About GeyserMC
 
 1 - If you do not set auth-type: floodgate in the configuration of Geyser, please use the default UUID-mode of XConomy  
-2 - If you use floodgate and set username-prefix to empty in the configuration of floodgate, please use the SemiOnline UUID-mode of XConomy, Otherwise, use default.
+2 - If you use floodgate and set username-prefix to empty in the configuration of floodgate, please use the SemiOnline UUID-mode of XConomy, Otherwise, use
+default.

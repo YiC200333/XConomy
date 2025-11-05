@@ -76,19 +76,19 @@ public class BCsync implements Listener {
                     if (p == null) {
                         return;
                     }
-                }else if(sd.getSyncType().equals(SyncType.MESSAGE_SEMI)) {
+                } else if (sd.getSyncType().equals(SyncType.MESSAGE_SEMI)) {
                     ProxiedPlayer p = ProxyServer.getInstance().getPlayer(sd.getName());
                     if (p == null) {
                         return;
-                    }else{
+                    } else {
                         sd.setRUniqueId(p.getUniqueId());
                     }
                 }
-            }else if (ob instanceof SyncTab) {
+            } else if (ob instanceof SyncTab) {
                 SyncTab sj = (SyncTab) ob;
                 String sign = sj.getSign();
                 List<String> allname = new ArrayList<>();
-                for (ProxiedPlayer pn : XConomyBungee.getInstance().getProxy().getPlayers()){
+                for (ProxiedPlayer pn : XConomyBungee.getInstance().getProxy().getPlayers()) {
                     if (!sj.isinHidList(pn.getName())) {
                         allname.add(pn.getName());
                     }

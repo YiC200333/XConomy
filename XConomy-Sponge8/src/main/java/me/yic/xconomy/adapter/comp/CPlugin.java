@@ -48,11 +48,12 @@ public class CPlugin implements iPlugin {
     }
 
     @Override
-    public boolean getOnlinePlayersisEmpty(){
+    public boolean getOnlinePlayersisEmpty() {
         return Sponge.server().onlinePlayers().isEmpty();
     }
+
     @Override
-    public int getOnlinePlayerSize(){
+    public int getOnlinePlayerSize() {
         return Sponge.server().onlinePlayers().size();
     }
 
@@ -84,10 +85,11 @@ public class CPlugin implements iPlugin {
         }
     }
 
-        @Override
+    @Override
     public boolean isSync() {
         return Thread.currentThread().getName().equalsIgnoreCase("Server thread");
     }
+
     @Override
     public void runTaskAsynchronously(Runnable runnable) {
         Sponge.asyncScheduler().executor(XConomy.getInstance().plugincontainer).execute(runnable);
@@ -99,9 +101,9 @@ public class CPlugin implements iPlugin {
     }
 
     @Override
-    public void sendPluginMessage(String channel, ByteArrayOutputStream stream){
+    public void sendPluginMessage(String channel, ByteArrayOutputStream stream) {
         //Sponge.getChannelRegistrar().getOrCreateRaw(XConomy.getInstance(), channel).sendTo(
-                //Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> buf.writeBytes(stream.toByteArray()));
+        //Sponge.getServer().getOnlinePlayers().iterator().next(), buf -> buf.writeBytes(stream.toByteArray()));
     }
 
     @Override

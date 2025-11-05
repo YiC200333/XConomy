@@ -40,7 +40,6 @@ public class DataFormat {
     final static String singularname = XConomyLoad.Config.SINGULAR_NAME;
 
 
-
     public static BigDecimal formatString(String am) {
         BigDecimal bigDecimal = new BigDecimal(am);
         if (isint) {
@@ -115,12 +114,12 @@ public class DataFormat {
         if (isint) {
             decimalFormat.setMinimumFractionDigits(0);
             decimalFormat.setMaximumFractionDigits(0);
-        }else{
+        } else {
             decimalFormat.setMinimumFractionDigits(2);
             decimalFormat.setMaximumFractionDigits(2);
         }
 
-        if (XConomyLoad.Config.ROUNDING_MODE == 1){
+        if (XConomyLoad.Config.ROUNDING_MODE == 1) {
             roundingmode = RoundingMode.UP;
         }
 

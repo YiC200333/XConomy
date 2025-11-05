@@ -19,7 +19,6 @@
 package me.yic.xconomy.depend.economyapi;
 
 import org.spongepowered.api.registry.DefaultedRegistryReference;
-import org.spongepowered.api.registry.RegistryKey;
 import org.spongepowered.api.service.context.Context;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.account.Account;

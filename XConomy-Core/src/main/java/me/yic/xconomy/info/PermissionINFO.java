@@ -35,28 +35,29 @@ public class PermissionINFO {
     }
 
     public static void setPaymentPermission(UUID u, Boolean b) {
-        if (b == null){
+        if (b == null) {
             payment.remove(u);
         } else {
             payment.put(u, b);
         }
     }
+
     public static boolean getRPaymentPermission(UUID u) {
         return !rpayment.contains(u);
     }
 
     public static void setRPaymentPermission(UUID u) {
-        if (rpayment.contains(u)){
+        if (rpayment.contains(u)) {
             rpayment.remove(u);
-        }else {
+        } else {
             rpayment.add(u);
         }
     }
 
     public static void setRPaymentPermission(UUID u, boolean value) {
-        if (value){
+        if (value) {
             rpayment.remove(u);
-        }else {
+        } else {
             rpayment.add(u);
         }
     }

@@ -35,9 +35,9 @@ public class CommandBaltop extends CommandResOutput implements CommandExecutor {
         CommandCause sender = args.cause();
         if (args.hasAny(arg1)) {
             if (args.hasAny(arg2)) {
-                    String[] cmd = {args.one(arg1).get().trim(),
-                            args.one(arg2).get().trim()};
-                    return getResultonCommand(sender, "balancetop", cmd);
+                String[] cmd = {args.one(arg1).get().trim(),
+                        args.one(arg2).get().trim()};
+                return getResultonCommand(sender, "balancetop", cmd);
             } else {
                 String[] cmd = {args.one(arg1).get().trim()};
                 return getResultonCommand(sender, "balancetop", cmd);

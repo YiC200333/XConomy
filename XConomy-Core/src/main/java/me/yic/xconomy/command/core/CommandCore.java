@@ -129,7 +129,7 @@ public class CommandCore {
     }
 
     protected static boolean isDouble(String s) {
-        if (s.length() > 20){
+        if (s.length() > 20) {
             return false;
         }
         if (s.matches(".*[a-zA-Z].*")) {
@@ -137,14 +137,14 @@ public class CommandCore {
         }
 
         BigDecimal value;
-        if (DataFormat.isint){
+        if (DataFormat.isint) {
             try {
                 Integer.parseInt(s);
                 value = new BigDecimal(s);
             } catch (NumberFormatException ignored) {
                 return false;
             }
-        }else {
+        } else {
             try {
                 Double.parseDouble(s);
                 Pattern pattern = Pattern.compile("\\.\\d+");
@@ -153,7 +153,7 @@ public class CommandCore {
                 if (matcher.find()) {
                     String decimalPart = matcher.group();
                     int decimalPlaces = decimalPart.length() - 1;
-                    if (decimalPlaces > 2){
+                    if (decimalPlaces > 2) {
                         return false;
                     }
                 }
@@ -317,7 +317,7 @@ public class CommandCore {
             sm = new SyncMessage(SyncType.BROADCAST, "", message);
         }
 
-       DataCon.SendMessTask(sm);
+        DataCon.SendMessTask(sm);
     }
 
     protected static void syncpr(int type, UUID u, Boolean value) {

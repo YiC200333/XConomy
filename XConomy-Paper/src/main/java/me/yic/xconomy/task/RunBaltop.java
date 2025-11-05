@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RunBaltop {
     private static ScheduledTask refresherTask = null;
+
     public static void runstart() {
         int time = XConomyLoad.Config.REFRESH_TIME;
         refresherTask = Bukkit.getAsyncScheduler().runAtFixedRate(XConomy.getInstance(), ScheduledTask -> new Baltop().run(), time * 20L, time * 20L, TimeUnit.MILLISECONDS);

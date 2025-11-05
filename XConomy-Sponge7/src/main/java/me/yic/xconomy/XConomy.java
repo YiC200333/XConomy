@@ -103,7 +103,7 @@ public class XConomy {
 
         XConomyLoad.LoadConfig();
 
-        if (XConomyLoad.Config.ISOLDCONFIG){
+        if (XConomyLoad.Config.ISOLDCONFIG) {
             logger(null, 1, "==================================================");
             logger(null, 1, "Please regenerate all configuration files");
             logger(null, 1, "==================================================");

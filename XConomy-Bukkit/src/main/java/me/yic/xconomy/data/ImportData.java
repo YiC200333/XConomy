@@ -18,10 +18,10 @@
  */
 package me.yic.xconomy.data;
 
-import me.yic.xconomy.command.core.CommandCore;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CSender;
+import me.yic.xconomy.command.core.CommandCore;
 import me.yic.xconomy.depend.LoadEconomy;
 import me.yic.xconomy.depend.economy.VaultCM;
 import org.bukkit.Bukkit;

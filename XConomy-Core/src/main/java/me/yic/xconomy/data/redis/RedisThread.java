@@ -38,7 +38,7 @@ public class RedisThread extends Thread {
         } catch (Exception e) {
             XConomy.getInstance().logger(null, 1, "Error during creation");
             e.printStackTrace();
-        }finally {
+        } finally {
             if (jedis != null) {
                 RedisConnection.returnResource(jedis);
             }

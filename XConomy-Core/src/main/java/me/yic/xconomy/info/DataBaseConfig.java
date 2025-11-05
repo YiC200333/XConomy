@@ -47,7 +47,7 @@ public class DataBaseConfig {
     public int getStorageType() {
         if (config.getString("Settings.storage-type").equalsIgnoreCase("MySQL")) {
             return 2;
-        }else if (config.getString("Settings.storage-type").equalsIgnoreCase("MariaDB")) {
+        } else if (config.getString("Settings.storage-type").equalsIgnoreCase("MariaDB")) {
             return 3;
         }
         return 1;
@@ -59,7 +59,7 @@ public class DataBaseConfig {
                 Class.forName("org.slf4j.Logger");
                 if (getStorageType() == 0 || getStorageType() == 1) {
                     EnableConnectionPool = false;
-                }else {
+                } else {
                     try {
                         new HikariDataSource();
                         EnableConnectionPool = !AdapterManager.foundvaultpe;
@@ -73,7 +73,7 @@ public class DataBaseConfig {
                 EnableConnectionPool = false;
             }
 
-            if (!EnableConnectionPool){
+            if (!EnableConnectionPool) {
                 XConomy.getInstance().logger("连接池未启用", 0, null);
             }
         }
@@ -117,7 +117,7 @@ public class DataBaseConfig {
     public String geturl() {
         if (getStorageType() == 2 || getStorageType() == 3) {
             String url = "jdbc:mysql://";
-            if (getStorageType() == 3){
+            if (getStorageType() == 3) {
                 url = "jdbc:mariadb://";
             }
             url += config.getString("MySQL.host")

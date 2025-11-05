@@ -78,10 +78,10 @@ public class RedisConnection {
             if (!user.isEmpty() || !password.isEmpty()) {
                 if (!user.isEmpty()) {
                     jedis = new JedisPool(jedisconfig, url, port, 0, user, password);
-                }else{
+                } else {
                     jedis = new JedisPool(jedisconfig, url, port, 0, password);
                 }
-            }else{
+            } else {
                 jedis = new JedisPool(jedisconfig, url, port, 0);
             }
             try {
@@ -117,14 +117,15 @@ public class RedisConnection {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            String keyname =  "XConomy_" + key + "_" + XConomyLoad.Config.SYNCDATA_SIGN;
+            String keyname = "XConomy_" + key + "_" + XConomyLoad.Config.SYNCDATA_SIGN;
             jr.setex(keyname.getBytes(StandardCharsets.UTF_8), sec, output.toByteArray());
         }
     }
+
     public static Object getdata(String key) {
         try (Jedis jr = getResource()) {
-            String keyname =  "XConomy_" + key + "_" + XConomyLoad.Config.SYNCDATA_SIGN;
-            if (!jr.exists(keyname.getBytes(StandardCharsets.UTF_8))){
+            String keyname = "XConomy_" + key + "_" + XConomyLoad.Config.SYNCDATA_SIGN;
+            if (!jr.exists(keyname.getBytes(StandardCharsets.UTF_8))) {
                 return null;
             }
             ByteArrayInputStream input = new ByteArrayInputStream(jr.get(keyname.getBytes(StandardCharsets.UTF_8)));

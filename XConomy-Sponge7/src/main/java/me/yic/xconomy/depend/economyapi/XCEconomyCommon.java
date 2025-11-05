@@ -43,7 +43,7 @@ public class XCEconomyCommon {
             }
 
             return DataCon.getPlayerData(name) == null;
-        }else{
+        } else {
             return DataCon.containinfieldslist(name);
         }
     }

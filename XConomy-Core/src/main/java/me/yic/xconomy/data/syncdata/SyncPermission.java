@@ -23,35 +23,35 @@ import me.yic.xconomy.info.SyncType;
 
 import java.util.UUID;
 
-public class SyncPermission extends SyncData{
+public class SyncPermission extends SyncData {
 
     //1 - pay 2 - paytoggle
     private final int type;
     private final Boolean value;
 
-    public SyncPermission(UUID uuid, int type, Boolean value){
+    public SyncPermission(UUID uuid, int type, Boolean value) {
         super(SyncType.PERMISSION, uuid);
         this.type = type;
         this.value = value;
     }
 
-    public int getType(){
+    public int getType() {
         return type;
     }
 
-    public Boolean getValue(){
+    public Boolean getValue() {
         return value;
     }
 
     @Override
     public void SyncStart() {
-        if (getType() == 1){
-            if (getUniqueId() == null){
+        if (getType() == 1) {
+            if (getUniqueId() == null) {
                 PermissionINFO.globalpayment = getValue();
-            }else{
+            } else {
                 PermissionINFO.setPaymentPermission(getUniqueId(), getValue());
             }
-        }else{
+        } else {
             PermissionINFO.setRPaymentPermission(getUniqueId(), getValue());
         }
     }

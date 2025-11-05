@@ -99,7 +99,7 @@ public class XCVirtualAccount implements VirtualAccount {
                     DummyObjectProvider.createFor(TransactionType.class, "SET"));
         }
         if (XCEconomyCommon.isNonPlayerAccount(account)) {
-            DataCon.changeaccountdata("PLUGIN",  account, amount, null, null);
+            DataCon.changeaccountdata("PLUGIN", account, amount, null, null);
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS,
                     DummyObjectProvider.createFor(TransactionType.class, "SET"));
@@ -214,24 +214,24 @@ public class XCVirtualAccount implements VirtualAccount {
     @Override
     public TransferResult transfer(Account to, Currency currency, BigDecimal amount, Cause cause, Set<Context> contexts) {
         if (AdapterManager.BanModiftyBalance()) {
-            return new XCTransferResult(to,this,
+            return new XCTransferResult(to, this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.TRANSFER);
         }
 
         TransactionResult resultto = to.deposit(currency, amount, cause, contexts);
-        if (resultto.getResult() == ResultType.FAILED){
-            return new XCTransferResult(to,this,
+        if (resultto.getResult() == ResultType.FAILED) {
+            return new XCTransferResult(to, this,
                     currency, amount, contexts, ResultType.FAILED, TransactionTypes.TRANSFER);
         }
 
         TransactionResult result = withdraw(currency, amount, cause, contexts);
-        if (result.getResult() == ResultType.FAILED){
+        if (result.getResult() == ResultType.FAILED) {
             to.deposit(currency, amount, cause, contexts);
-            return new XCTransferResult(to,this,
+            return new XCTransferResult(to, this,
                     currency, amount, contexts, ResultType.FAILED, TransactionTypes.TRANSFER);
         }
 
-        return new XCTransferResult(to,this,
+        return new XCTransferResult(to, this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.TRANSFER);
     }
 

@@ -73,7 +73,7 @@ public class TabList implements TabCompleter {
                 Collections.sort(completions);
                 break;
             }
-            case "paytoggle":{
+            case "paytoggle": {
                 if (commandSender.isOp() || commandSender.hasPermission("xconomy.admin.paytoggle")) {
                     if (args.length == 1) {
                         StringUtil.copyPartialMatches(args[0], TabListCon.get_Tab_PlayerList(), completions);

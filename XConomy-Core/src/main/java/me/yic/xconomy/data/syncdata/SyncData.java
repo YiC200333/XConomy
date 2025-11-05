@@ -48,6 +48,7 @@ public abstract class SyncData implements Serializable {
     public String getServerKey() {
         return server_key;
     }
+
     public UUID getUniqueId() {
         return uuid;
     }

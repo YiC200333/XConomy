@@ -23,22 +23,22 @@ import me.yic.xconomy.info.SyncType;
 
 import java.util.UUID;
 
-public class SyncUUID extends SyncData{
+public class SyncUUID extends SyncData {
 
     private final String newname;
     private final String oldname;
 
-    public SyncUUID(UUID newUUID, String newname, String oldname){
+    public SyncUUID(UUID newUUID, String newname, String oldname) {
         super(SyncType.SYNCONLINEUUID, newUUID);
         this.newname = newname;
         this.oldname = oldname;
     }
 
-    public String getNewname(){
+    public String getNewname() {
         return newname;
     }
 
-    public String getOldname(){
+    public String getOldname() {
         return oldname;
     }
 

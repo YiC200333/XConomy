@@ -27,42 +27,43 @@ import java.util.List;
 public class TabListCon {
 
     private static List<String> Tab_PlayerList = new ArrayList<>();
-    public static void add_Tab_PlayerList(String name){
+
+    public static void add_Tab_PlayerList(String name) {
         if (!Tab_PlayerList.contains(name)) {
             if (name != null && !HiddenINFO.getHidden(name)) {
                 if (XConomyLoad.getSyncData_Enable()) {
                     ArrayList<String> copiedList = new ArrayList<>(Tab_PlayerList);
                     copiedList.add(name);
                     renew_Tab_PlayerList(copiedList);
-                }else{
+                } else {
                     Tab_PlayerList.add(name);
                 }
             }
         }
     }
 
-    public static void renew_Tab_PlayerList(List<String> rn){
+    public static void renew_Tab_PlayerList(List<String> rn) {
         if (rn != null) {
             Tab_PlayerList = rn;
         }
     }
 
-    public static List<String> get_Tab_PlayerList(){
+    public static List<String> get_Tab_PlayerList() {
         return Tab_PlayerList;
     }
 
-    public static void remove_Tab_PlayerList(String name){
+    public static void remove_Tab_PlayerList(String name) {
         if (XConomyLoad.getSyncData_Enable()) {
             ArrayList<String> copiedList = new ArrayList<>(Tab_PlayerList);
             copiedList.removeIf(ee -> ee == null || ee.equals(name));
             renew_Tab_PlayerList(copiedList);
-        }else{
+        } else {
             Tab_PlayerList.removeIf(ee -> ee == null || ee.equals(name));
         }
     }
 
     @SuppressWarnings("unchecked")
-    public static void redis_sync_Tab_PlayerList(){
+    public static void redis_sync_Tab_PlayerList() {
         List<String> rsl = (List<String>) RedisConnection.getdata("Tab_List");
         renew_Tab_PlayerList(rsl);
     }

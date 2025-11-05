@@ -36,7 +36,7 @@ public enum SyncType {
     final String value;
 
 
-    SyncType(String value){
+    SyncType(String value) {
         this.value = value;
     }
 
@@ -46,7 +46,7 @@ public enum SyncType {
         return this.value;
     }
 
-    public boolean equals(SyncType Other){
+    public boolean equals(SyncType Other) {
         return this.value.equals(Other.value);
     }
 }

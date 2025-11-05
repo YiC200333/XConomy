@@ -66,7 +66,7 @@ public class XConomy extends JavaPlugin {
 
         XConomyLoad.LoadConfig();
 
-        if (XConomyLoad.Config.ISOLDCONFIG){
+        if (XConomyLoad.Config.ISOLDCONFIG) {
             getLogger().warning("==================================================");
             getLogger().warning("Please regenerate all configuration files");
             getLogger().warning("==================================================");
@@ -74,7 +74,7 @@ public class XConomy extends JavaPlugin {
             return;
         }
 
-        if (XConomyLoad.Config.IMPORTMODE){
+        if (XConomyLoad.Config.IMPORTMODE) {
             itd = new ImportData(this);
             itd.onEnable();
             return;
@@ -92,11 +92,6 @@ public class XConomy extends JavaPlugin {
         }
 
         AdapterManager.foundvaultOfflinePermManager = checkVaultOfflinePermManager();
-
-        if (Bukkit.getPluginManager().getPlugin("DatabaseDrivers") != null) {
-            logger("发现 DatabaseDrivers", 0, null);
-            XConomyLoad.DDrivers = true;
-        }
 
         NonPlayerPlugin.load();
 
@@ -164,7 +159,7 @@ public class XConomy extends JavaPlugin {
 
     public void onDisable() {
 
-        if (XConomyLoad.Config.IMPORTMODE){
+        if (XConomyLoad.Config.IMPORTMODE) {
             itd.onDisable();
             return;
         }

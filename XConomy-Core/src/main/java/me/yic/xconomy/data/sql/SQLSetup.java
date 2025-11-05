@@ -23,7 +23,7 @@ import me.yic.xconomy.XConomyLoad;
 
 import java.io.File;
 
-public class SQLSetup extends SQL{
+public class SQLSetup extends SQL {
 
     public static void setupMySqlTable() {
         if (XConomyLoad.DConfig.gettablesuffix() != null & !XConomyLoad.DConfig.gettablesuffix().equals("")) {

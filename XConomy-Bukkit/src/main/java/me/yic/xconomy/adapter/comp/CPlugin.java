@@ -23,9 +23,9 @@ public class CPlugin implements iPlugin {
     public CPlayer getplayer(PlayerData pd) {
         Player p = null;
         if (pd != null) {
-            if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)){
+            if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 p = Bukkit.getPlayer(pd.getName());
-            }else{
+            } else {
                 p = Bukkit.getPlayer(pd.getUniqueId());
             }
         }
@@ -33,12 +33,12 @@ public class CPlugin implements iPlugin {
     }
 
     @Override
-    public boolean getOnlinePlayersisEmpty(){
+    public boolean getOnlinePlayersisEmpty() {
         return Bukkit.getOnlinePlayers().isEmpty();
     }
 
     @Override
-    public int getOnlinePlayerSize(){
+    public int getOnlinePlayerSize() {
         return Bukkit.getOnlinePlayers().size();
     }
 
@@ -59,7 +59,7 @@ public class CPlugin implements iPlugin {
     @Override
     public UUID NameToUUID(String name) {
         Player p = Bukkit.getPlayerExact(name);
-        if (p == null){
+        if (p == null) {
             return null;
         }
         return p.getUniqueId();
@@ -69,6 +69,7 @@ public class CPlugin implements iPlugin {
     public boolean isSync() {
         return Bukkit.isPrimaryThread();
     }
+
     @Override
     public void runTaskAsynchronously(Runnable ra) {
         Bukkit.getScheduler().runTaskAsynchronously(XConomy.getInstance(), ra);
@@ -80,7 +81,7 @@ public class CPlugin implements iPlugin {
     }
 
     @Override
-    public void sendPluginMessage(String channel, ByteArrayOutputStream stream){
+    public void sendPluginMessage(String channel, ByteArrayOutputStream stream) {
         Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), channel, stream.toByteArray());
     }
 

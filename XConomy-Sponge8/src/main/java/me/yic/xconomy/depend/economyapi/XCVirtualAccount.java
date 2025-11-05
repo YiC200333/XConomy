@@ -103,7 +103,7 @@ public class XCVirtualAccount implements VirtualAccount {
 
     @Override
     public TransactionResult setBalance(Currency currency, BigDecimal amount, Set<Context> contexts) {
-         if (AdapterManager.BanModiftyBalance()) {
+        if (AdapterManager.BanModiftyBalance()) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED);
         }
@@ -112,7 +112,7 @@ public class XCVirtualAccount implements VirtualAccount {
                     currency, amount, contexts, ResultType.FAILED);
         }
         if (XCEconomyCommon.isNonPlayerAccount(account)) {
-            DataCon.changeaccountdata("PLUGIN",  account, amount, null, null);
+            DataCon.changeaccountdata("PLUGIN", account, amount, null, null);
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.SUCCESS);
         }
@@ -144,7 +144,7 @@ public class XCVirtualAccount implements VirtualAccount {
 
     @Override
     public TransactionResult resetBalance(Currency currency, Set<Context> contexts) {
-         if (AdapterManager.BanModiftyBalance()) {
+        if (AdapterManager.BanModiftyBalance()) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED);
         }
@@ -172,7 +172,7 @@ public class XCVirtualAccount implements VirtualAccount {
     @Override
     public TransactionResult deposit(Currency currency, BigDecimal amount, Set<Context> contexts) {
 
-         if (AdapterManager.BanModiftyBalance()) {
+        if (AdapterManager.BanModiftyBalance()) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.DEPOSIT);
         }
@@ -209,7 +209,7 @@ public class XCVirtualAccount implements VirtualAccount {
 
     @Override
     public TransactionResult withdraw(Currency currency, BigDecimal amount, Set<Context> contexts) {
-         if (AdapterManager.BanModiftyBalance()) {
+        if (AdapterManager.BanModiftyBalance()) {
             return new XCTransactionResult(this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.WITHDRAW);
         }
@@ -244,25 +244,25 @@ public class XCVirtualAccount implements VirtualAccount {
 
     @Override
     public TransferResult transfer(Account to, Currency currency, BigDecimal amount, Set<Context> contexts) {
-         if (AdapterManager.BanModiftyBalance()) {
-            return new XCTransferResult(to,this,
+        if (AdapterManager.BanModiftyBalance()) {
+            return new XCTransferResult(to, this,
                     currency, BigDecimal.ZERO, contexts, ResultType.FAILED, TransactionTypes.TRANSFER);
         }
 
         TransactionResult resultto = to.deposit(currency, amount, contexts);
-        if (resultto.result() == ResultType.FAILED){
-            return new XCTransferResult(to,this,
+        if (resultto.result() == ResultType.FAILED) {
+            return new XCTransferResult(to, this,
                     currency, amount, contexts, ResultType.FAILED, TransactionTypes.TRANSFER);
         }
 
-        TransactionResult result = withdraw(currency, amount,  contexts);
-        if (result.result() == ResultType.FAILED){
+        TransactionResult result = withdraw(currency, amount, contexts);
+        if (result.result() == ResultType.FAILED) {
             to.deposit(currency, amount, contexts);
-            return new XCTransferResult(to,this,
+            return new XCTransferResult(to, this,
                     currency, amount, contexts, ResultType.FAILED, TransactionTypes.TRANSFER);
         }
 
-        return new XCTransferResult(to,this,
+        return new XCTransferResult(to, this,
                 currency, amount, contexts, ResultType.SUCCESS, TransactionTypes.TRANSFER);
     }
 

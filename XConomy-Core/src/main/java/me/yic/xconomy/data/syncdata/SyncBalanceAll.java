@@ -24,28 +24,28 @@ import me.yic.xconomy.info.SyncType;
 
 import java.math.BigDecimal;
 
-public class SyncBalanceAll extends SyncData{
+public class SyncBalanceAll extends SyncData {
 
     private final boolean isall;
     private final Boolean c;
     private final BigDecimal amount;
 
-    public SyncBalanceAll(boolean isall, Boolean c, BigDecimal amount){
+    public SyncBalanceAll(boolean isall, Boolean c, BigDecimal amount) {
         super(SyncType.BALANCEALL, null);
         this.isall = isall;
         this.c = c;
         this.amount = amount;
     }
 
-    public boolean getisOnline(){
+    public boolean getisOnline() {
         return !isall;
     }
 
-    public Boolean getC(){
+    public Boolean getC() {
         return c;
     }
 
-    public BigDecimal getAmount(){
+    public BigDecimal getAmount() {
         return amount;
     }
 
