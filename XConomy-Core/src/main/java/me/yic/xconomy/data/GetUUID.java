@@ -22,6 +22,7 @@ import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CConfig;
 import me.yic.xconomy.adapter.comp.CPlayer;
+import me.yic.xconomy.info.DefaultConfig;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -33,7 +34,7 @@ public class GetUUID {
     private static final Map<String, UUID> cache = new ConcurrentHashMap<>();
 
     private static String doGetUUID(CPlayer pp, String name) {
-        String url = "https://api.mojang.com/users/profiles/minecraft/" + name;
+        String url = DefaultConfig.config.getString("Minecraft-API") + name;
         CConfig pro;
         StringBuilder uuid = new StringBuilder();
         try {

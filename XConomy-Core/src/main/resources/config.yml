@@ -4,6 +4,10 @@
 #Offline mode does not support ignoring username case
 #If you use floodgate(GeyserMC) and the option 'username-prefix' is set to empty, Please use SemiOnline mode
 UUID-mode: Default
+# By default, XConomy will use the Minecraft API to get the player's UUID
+# However, for some reason, you may want to use your own server reverse proxy API
+# If you don't know what this means, do NOT modify this.
+Minecraft-API: "https://api.minecraftservices.com/minecraft/profile/lookup/name/"
 #In convertion mode, can use command '/xconomy' import data from other plugins based on Vault
 #Conflicting data will be skipped, The imported data will be saved in XConomy/importdata/data.yml
 #In this mode, XConomy will not start normally
