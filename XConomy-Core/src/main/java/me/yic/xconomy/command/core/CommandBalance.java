@@ -192,6 +192,10 @@ public class CommandBalance extends CommandCore{
                                     .replace("%amount%", amountFormatted)
                                     .replace("%balance%", DataFormat.shown(newbalance));
 
+                            if (reasonmessages != null && reasonmessages.toString().equals("-s")) {
+                                return true;
+                            }
+
                             if (commndlength == 4) {
                                 message = PREFIX + reasonmessages;
                             }
@@ -238,6 +242,10 @@ public class CommandBalance extends CommandCore{
                                     .replace("%player%", realname)
                                     .replace("%amount%", amountFormatted)
                                     .replace("%balance%", DataFormat.shown(newbalance));
+
+                            if (reasonmessages != null && reasonmessages.toString().equals("-s")) {
+                                return true;
+                            }
 
                             if (commndlength == 4) {
                                 mess = PREFIX + reasonmessages;
