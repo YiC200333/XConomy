@@ -39,7 +39,19 @@ public class Cache {
 
     public static LinkedHashMap<String, BigDecimal> baltop = new LinkedHashMap<>();
     public static List<String> baltop_papi = new ArrayList<>();
-    public static BigDecimal sumbalance = BigDecimal.ZERO;
+    public static volatile Ranking ranking = new Ranking(new LinkedHashMap<>());
+
+    public static final class Ranking {
+        public final java.util.Map<String, BigDecimal> balances;
+        public final List<String> names;
+
+        public Ranking(java.util.Map<String, BigDecimal> balances) {
+            this.balances = java.util.Collections.unmodifiableMap(new LinkedHashMap<>(balances));
+            this.names = java.util.Collections.unmodifiableList(new ArrayList<>(balances.keySet()));
+        }
+    }
+
+    public static volatile BigDecimal sumbalance = BigDecimal.ZERO;
 
     public static void insertIntoCache(final UUID uuid, final PlayerData pd) {
         if (pd != null) {

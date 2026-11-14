@@ -6,7 +6,6 @@ import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.iPlugin;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.utils.UUIDMode;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -55,7 +54,10 @@ public class CPlugin implements iPlugin {
 
     @Override
     public void broadcastMessage(String message) {
-        Bukkit.broadcast(Component.text(message));
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            new CPlayer(player).sendMessage(message);
+        }
+        Bukkit.getConsoleSender().sendMessage(message);
     }
 
     @Override
@@ -78,12 +80,18 @@ public class CPlugin implements iPlugin {
 
     @Override
     public void runTaskLaterAsynchronously(Runnable runnable, long time) {
-        Bukkit.getAsyncScheduler().runDelayed(XConomy.getInstance(), scheduledTask -> runnable.run(), time, TimeUnit.MILLISECONDS);
+        // The shared adapter supplies ticks; the async scheduler uses wall-clock time.
+        Bukkit.getAsyncScheduler().runDelayed(XConomy.getInstance(), scheduledTask -> runnable.run(), time * 50L, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public void sendPluginMessage(String channel, ByteArrayOutputStream stream){
-        Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), channel, stream.toByteArray());
+        byte[] data = stream.toByteArray();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.getScheduler().run(XConomy.getInstance(), task ->
+                    player.sendPluginMessage(XConomy.getInstance(), channel, data), null);
+            return;
+        }
     }
 
     @Override

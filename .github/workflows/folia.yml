@@ -1,0 +1,21 @@
+name: Paper and Folia 1.21.11
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - run: mvn -B -pl XConomy-Paper -am verify
+      - uses: actions/upload-artifact@v4
+        with:
+          name: XConomy-Folia-1.21.11
+          path: XConomy-Paper/target/XConomy-Paper-*.jar

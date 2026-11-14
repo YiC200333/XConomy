@@ -70,12 +70,12 @@ public class DataFormat {
     public static String shown(BigDecimal am) {
         if (am.compareTo(BigDecimal.ONE) == 0) {
             return CChat.translateAlternateColorCodes('&', displayformat
-                    .replace("%balance%", decimalFormat.format(am))
+                    .replace("%balance%", ((DecimalFormat) decimalFormat.clone()).format(am))
                     .replace("%format_balance%", getformatbalance(am))
                     .replace("%currencyname%", singularname));
         }
         return CChat.translateAlternateColorCodes('&', displayformat
-                .replace("%balance%", decimalFormat.format(am))
+                .replace("%balance%", ((DecimalFormat) decimalFormat.clone()).format(am))
                 .replace("%format_balance%", getformatbalance(am))
                 .replace("%currencyname%", pluralname));
     }
@@ -164,7 +164,7 @@ public class DataFormat {
     private static String getformatbalance(BigDecimal bal) {
         if (XConomyLoad.Config.FORMAT_BALANCE != null) {
             if (bal.compareTo(XConomyLoad.Config.FORMAT_BALANCE.get(0)) < 0) {
-                return decimalFormat.format(bal);
+                return ((DecimalFormat) decimalFormat.clone()).format(bal);
             }
             BigDecimal x = BigDecimal.ZERO;
             for (BigDecimal b : XConomyLoad.Config.FORMAT_BALANCE) {
@@ -175,9 +175,9 @@ public class DataFormat {
                 }
             }
             BigDecimal aa = bal.divide(x, 3, roundingmode);
-            return decimalFormatX.format(aa) + XConomyLoad.Config.FORMAT_BALANCE_C.get(x);
+            return ((DecimalFormat) decimalFormatX.clone()).format(aa) + XConomyLoad.Config.FORMAT_BALANCE_C.get(x);
         } else {
-            return decimalFormat.format(bal);
+            return ((DecimalFormat) decimalFormat.clone()).format(bal);
         }
     }
 }

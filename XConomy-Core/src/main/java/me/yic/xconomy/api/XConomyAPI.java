@@ -85,23 +85,25 @@ public class XConomyAPI {
     }
 
     public int changePlayerBalance(UUID u, String playername, BigDecimal amount, Boolean isadd, String pluginname) {
-        if (XConomyLoad.getSyncData_Enable() & AdapterManager.BanModiftyBalance()) {
-            return 1;
-        }
-        BigDecimal bal = getPlayerData(u).getBalance();
-        if (isadd != null) {
-            if (isadd) {
-                if (ismaxnumber(bal.add(amount))) {
-                    return 3;
-                }
-            } else {
-                if (bal.compareTo(amount) < 0) {
-                    return 2;
+        synchronized (me.yic.xconomy.data.DataCon.BALANCE_LOCK) {
+            if (XConomyLoad.getSyncData_Enable() & AdapterManager.BanModiftyBalance()) {
+                return 1;
+            }
+            BigDecimal bal = getPlayerData(u).getBalance();
+            if (isadd != null) {
+                if (isadd) {
+                    if (ismaxnumber(bal.add(amount))) {
+                        return 3;
+                    }
+                } else {
+                    if (bal.compareTo(amount) < 0) {
+                        return 2;
+                    }
                 }
             }
+            DataCon.changeplayerdata("PLUGIN_API", u, amount, isadd, pluginname, null);
+            return 0;
         }
-        DataCon.changeplayerdata("PLUGIN_API", u, amount, isadd, pluginname, null);
-        return 0;
     }
 
     @Deprecated
@@ -119,24 +121,26 @@ public class XConomyAPI {
     }
 
     public int changeNonPlayerBalance(String account, BigDecimal amount, Boolean isadd, String pluginname) {
-        BigDecimal bal = getNonPlayerBalance(account);
-        if (isadd != null) {
-            if (isadd) {
-                if (ismaxnumber(bal.add(amount))) {
-                    return 3;
-                }
-            } else {
-                if (bal.compareTo(amount) < 0) {
-                    return 2;
+        synchronized (me.yic.xconomy.data.DataCon.BALANCE_LOCK) {
+            BigDecimal bal = getNonPlayerBalance(account);
+            if (isadd != null) {
+                if (isadd) {
+                    if (ismaxnumber(bal.add(amount))) {
+                        return 3;
+                    }
+                } else {
+                    if (bal.compareTo(amount) < 0) {
+                        return 2;
+                    }
                 }
             }
+            DataCon.changeaccountdata("PLUGIN_API", account, amount, isadd, pluginname);
+            return 0;
         }
-        DataCon.changeaccountdata("PLUGIN_API", account, amount, isadd, pluginname);
-        return 0;
     }
 
     public List<String> getbalancetop() {
-        return Cache.baltop_papi;
+        return new java.util.ArrayList<>(Cache.ranking.names);
     }
 
     public BigDecimal getsumbalance() {

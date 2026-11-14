@@ -37,17 +37,19 @@ public class EnterpriseWallet extends PlayerWallet {
 
     @Override
     public EconomyAction setBalance(BigDecimal amount) {
-        if (XConomyLoad.getSyncData_Enable() & AdapterManager.BanModiftyBalance()) {
-            return new EconomyAction(getHolder(), false,
-                    "[BungeeCord] No player in server");
-        }
+        synchronized (me.yic.xconomy.data.DataCon.BALANCE_LOCK) {
+            if (XConomyLoad.getSyncData_Enable() & AdapterManager.BanModiftyBalance()) {
+                return new EconomyAction(getHolder(), false,
+                        "[BungeeCord] No player in server");
+            }
 
-        if (DataFormat.isMAX(amount)) {
-            return new EconomyAction(getHolder(), false,  "Max balance!");
-        }
+            if (DataFormat.isMAX(amount)) {
+                return new EconomyAction(getHolder(), false,  "Max balance!");
+            }
 
-        DataCon.changeplayerdata("PLUGIN", getPlayer().getUniqueId(), amount, null, null ,null);
-        return new EconomyAction(getHolder(), true,  "");
+            DataCon.changeplayerdata("PLUGIN", getPlayer().getUniqueId(), amount, null, null ,null);
+            return new EconomyAction(getHolder(), true,  "");
+        }
     }
 
     @Override
@@ -96,19 +98,21 @@ public class EnterpriseWallet extends PlayerWallet {
     @SuppressWarnings("ConstantConditions")
     @Override
     public EconomyAction withdraw(BigDecimal amount) {
-        if (XConomyLoad.getSyncData_Enable() & AdapterManager.BanModiftyBalance()) {
-            return new EconomyAction(getHolder(), false, "[BungeeCord] No player in server");
+        synchronized (me.yic.xconomy.data.DataCon.BALANCE_LOCK) {
+            if (XConomyLoad.getSyncData_Enable() & AdapterManager.BanModiftyBalance()) {
+                return new EconomyAction(getHolder(), false, "[BungeeCord] No player in server");
+            }
+
+            BigDecimal bal = getBalance();
+
+            if (bal.compareTo(amount) < 0) {
+                return new EconomyAction(getHolder(), false, "Insufficient balance!");
+            }
+
+            UUID playeruuid = getPlayer().getUniqueId();
+            DataCon.changeplayerdata("PLUGIN", playeruuid, amount, false, null, null);
+            return new EconomyAction(getHolder(), true, "");
         }
-
-        BigDecimal bal = getBalance();
-
-        if (bal.compareTo(amount) < 0) {
-            return new EconomyAction(getHolder(), false, "Insufficient balance!");
-        }
-
-        UUID playeruuid = getPlayer().getUniqueId();
-        DataCon.changeplayerdata("PLUGIN", playeruuid, amount, false, null, null);
-        return new EconomyAction(getHolder(), true, "");
     }
 
     @Override
@@ -119,20 +123,22 @@ public class EnterpriseWallet extends PlayerWallet {
     @SuppressWarnings("ConstantConditions")
     @Override
     public EconomyAction deposit(BigDecimal amount) {
-        if (XConomyLoad.getSyncData_Enable() & AdapterManager.BanModiftyBalance()) {
-            return new EconomyAction(getHolder(), false,
-                    "[BungeeCord] No player in server");
+        synchronized (me.yic.xconomy.data.DataCon.BALANCE_LOCK) {
+            if (XConomyLoad.getSyncData_Enable() & AdapterManager.BanModiftyBalance()) {
+                return new EconomyAction(getHolder(), false,
+                        "[BungeeCord] No player in server");
+            }
+
+            BigDecimal bal = getBalance();
+
+            if (DataFormat.isMAX(bal.add(amount))) {
+                return new EconomyAction(getHolder(), false,  "Max balance!");
+            }
+
+            UUID playerUUID = getPlayer().getUniqueId();
+            DataCon.changeplayerdata("PLUGIN", playerUUID, amount, true, null, null);
+            return new EconomyAction(getHolder(), true,  "");
         }
-
-        BigDecimal bal = getBalance();
-
-        if (DataFormat.isMAX(bal.add(amount))) {
-            return new EconomyAction(getHolder(), false,  "Max balance!");
-        }
-
-        UUID playerUUID = getPlayer().getUniqueId();
-        DataCon.changeplayerdata("PLUGIN", playerUUID, amount, true, null, null);
-        return new EconomyAction(getHolder(), true,  "");
     }
 
     @Override

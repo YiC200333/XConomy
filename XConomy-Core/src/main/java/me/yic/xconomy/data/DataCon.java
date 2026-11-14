@@ -39,6 +39,8 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public class DataCon {
+    // Validation and cache updates must form one transaction across Folia regions.
+    public static final Object BALANCE_LOCK = new Object();
 
     public static PlayerData getPlayerData(UUID uuid) {
         return getPlayerDatai(uuid);
@@ -128,91 +130,99 @@ public class DataCon {
     }
 
     public static BigDecimal changeplayerdata(final String type, final UUID uid, final BigDecimal amount, final Boolean isAdd, final String command, final Object comment) {
-        PlayerData pd = getPlayerData(uid);
-        UUID u = pd.getUniqueId();
-        BigDecimal newvalue = amount;
-        BigDecimal bal = pd.getBalance();
+        synchronized (me.yic.xconomy.data.DataCon.BALANCE_LOCK) {
+            PlayerData pd = getPlayerData(uid);
+            UUID u = pd.getUniqueId();
+            BigDecimal newvalue = amount;
+            BigDecimal bal = pd.getBalance();
 
-        RecordInfo ri = new RecordInfo(type, command, comment);
+            RecordInfo ri = new RecordInfo(type, command, comment);
 
-        CallAPI.CallPlayerAccountEvent(u, pd.getName(), bal, amount, isAdd, ri);
+            CallAPI.CallPlayerAccountEvent(u, pd.getName(), bal, amount, isAdd, ri);
 
-        if (isAdd != null) {
-            if (isAdd) {
-                newvalue = bal.add(amount);
-            } else {
-                newvalue = bal.subtract(amount);
-            }
-        }
-
-        Cache.updateIntoCache(u, pd, newvalue, bal);
-
-        if (XConomyLoad.DConfig.canasync && AdapterManager.checkisMainThread()) {
-            AdapterManager.runTaskAsynchronously(() -> {
-                DataLink.save(pd, isAdd, amount, ri);
-                if (XConomyLoad.getSyncData_Enable()) {
-                    SendMessTask(pd);
+            if (isAdd != null) {
+                if (isAdd) {
+                    newvalue = bal.add(amount);
+                } else {
+                    newvalue = bal.subtract(amount);
                 }
-            });
-        } else {
-            DataLink.save(pd, isAdd, amount, ri);
-            if (XConomyLoad.getSyncData_Enable()) {
-                SendMessTask(pd);
             }
-        }
 
-        return newvalue;
+            Cache.updateIntoCache(u, pd, newvalue, bal);
+            // Async persistence and sync messages must describe this transaction,
+            // even when the cached PlayerData is changed by another region.
+            PlayerData transaction = new PlayerData(u, pd.getName(), newvalue);
+            transaction.setVerifyBalance(bal);
+
+            if (XConomyLoad.DConfig.canasync && AdapterManager.checkisMainThread()) {
+                AdapterManager.runTaskAsynchronously(() -> {
+                    DataLink.save(transaction, isAdd, amount, ri);
+                    if (XConomyLoad.getSyncData_Enable()) {
+                        SendMessTask(transaction);
+                    }
+                });
+            } else {
+                DataLink.save(transaction, isAdd, amount, ri);
+                if (XConomyLoad.getSyncData_Enable()) {
+                    SendMessTask(transaction);
+                }
+            }
+
+            return newvalue;
+        }
     }
 
 
     @SuppressWarnings("ConstantConditions")
     public static void changeaccountdata(final String type, final String u, final BigDecimal amount, final Boolean isAdd, final String command) {
-        BigDecimal newvalue = amount;
-        BigDecimal balance = getAccountBalance(u);
+        synchronized (me.yic.xconomy.data.DataCon.BALANCE_LOCK) {
+            BigDecimal newvalue = amount;
+            BigDecimal balance = getAccountBalance(u);
 
-        RecordInfo ri = new RecordInfo(type, command, null);
+            RecordInfo ri = new RecordInfo(type, command, null);
 
-        CallAPI.CallNonPlayerAccountEvent(u, balance, amount, isAdd, type);
-        if (isAdd != null) {
-            if (isAdd) {
-                newvalue = balance.add(amount);
-            } else {
-                newvalue = balance.subtract(amount);
+            CallAPI.CallNonPlayerAccountEvent(u, balance, amount, isAdd, type);
+            if (isAdd != null) {
+                if (isAdd) {
+                    newvalue = balance.add(amount);
+                } else {
+                    newvalue = balance.subtract(amount);
+                }
             }
-        }
-        CacheNonPlayer.insertIntoCache(u, newvalue);
+            CacheNonPlayer.insertIntoCache(u, newvalue);
 
-        if (XConomyLoad.DConfig.canasync && AdapterManager.checkisMainThread()) {
-            final BigDecimal fnewvalue = newvalue;
-            AdapterManager.runTaskAsynchronously(() -> DataLink.saveNonPlayer(u, amount, fnewvalue, isAdd, ri));
-        } else {
-            DataLink.saveNonPlayer(u, amount, newvalue, isAdd, ri);
+            if (XConomyLoad.DConfig.canasync && AdapterManager.checkisMainThread()) {
+                final BigDecimal fnewvalue = newvalue;
+                AdapterManager.runTaskAsynchronously(() -> DataLink.saveNonPlayer(u, amount, fnewvalue, isAdd, ri));
+            } else {
+                DataLink.saveNonPlayer(u, amount, newvalue, isAdd, ri);
+            }
         }
     }
 
     public static void changeallplayerdata(String targettype, String type, BigDecimal amount, Boolean isAdd, String command, StringBuilder comment) {
-        Cache.clearCache();
+        synchronized (me.yic.xconomy.data.DataCon.BALANCE_LOCK) {
+            Cache.clearCache();
 
-        RecordInfo ri = new RecordInfo(type, command, comment);
+            RecordInfo ri = new RecordInfo(type, command, comment);
 
-        if (XConomyLoad.DConfig.canasync && AdapterManager.checkisMainThread()) {
-            AdapterManager.runTaskAsynchronously(() -> DataLink.saveall(targettype, amount, isAdd, ri));
-        } else {
-            DataLink.saveall(targettype, amount, isAdd, ri);
-        }
+            if (XConomyLoad.DConfig.canasync && AdapterManager.checkisMainThread()) {
+                AdapterManager.runTaskAsynchronously(() -> DataLink.saveall(targettype, amount, isAdd, ri));
+            } else {
+                DataLink.saveall(targettype, amount, isAdd, ri);
+            }
 
-        boolean isallbool = targettype.equals("all");
-        //if (targettype.equals("all")) {
-        //} else
+            boolean isallbool = targettype.equals("all");
+            //if (targettype.equals("all")) {
+            //} else
 
-        if (XConomyLoad.getSyncData_Enable()) {
-            SendMessTask(new SyncBalanceAll(isallbool, isAdd, amount));
+            if (XConomyLoad.getSyncData_Enable()) {
+                SendMessTask(new SyncBalanceAll(isallbool, isAdd, amount));
+            }
         }
     }
 
     public static void baltop() {
-        Cache.baltop.clear();
-        Cache.baltop_papi.clear();
         sumbal();
         DataLink.getTopBal();
     }

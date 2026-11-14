@@ -443,11 +443,15 @@ public class SQL {
             PreparedStatement statement = connection.prepareStatement(
                     "select * from " + tableName + " where hidden != '1' order by balance desc limit " + XConomyLoad.Config.RANKING_SIZE);
 
+            java.util.LinkedHashMap<String, BigDecimal> balances = new java.util.LinkedHashMap<>();
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                Cache.baltop.put(rs.getString(2), DataFormat.formatString(rs.getString(3)));
-                Cache.baltop_papi.add(rs.getString(2));
+                balances.put(rs.getString(2), DataFormat.formatString(rs.getString(3)));
             }
+            Cache.ranking = new Cache.Ranking(balances);
+            // Retain the legacy fields for callers compiled against older versions.
+            Cache.baltop = new java.util.LinkedHashMap<>(balances);
+            Cache.baltop_papi = new java.util.ArrayList<>(balances.keySet());
 
             rs.close();
             statement.close();

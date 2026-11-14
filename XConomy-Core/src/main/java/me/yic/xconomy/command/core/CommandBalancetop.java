@@ -36,7 +36,7 @@ public class CommandBalancetop extends CommandCore{
                 return true;
             }
 
-            if (Cache.baltop.isEmpty()) {
+            if (Cache.ranking.names.isEmpty()) {
                 sendMessages(sender, PREFIX + translateColorCodes("top_nodata"));
                 return true;
             }

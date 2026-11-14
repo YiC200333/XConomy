@@ -29,12 +29,14 @@ public class RunBaltop {
     private static ScheduledTask refresherTask = null;
     public static void runstart() {
         int time = XConomyLoad.Config.REFRESH_TIME;
-        refresherTask = Bukkit.getAsyncScheduler().runAtFixedRate(XConomy.getInstance(), ScheduledTask -> new Baltop().run(), time * 20L, time * 20L, TimeUnit.MILLISECONDS);
+        stop();
+        refresherTask = Bukkit.getAsyncScheduler().runAtFixedRate(XConomy.getInstance(), task -> new Baltop().run(), Math.max(1, time), Math.max(1, time), TimeUnit.SECONDS);
     }
 
     public static void stop() {
         if (refresherTask != null) {
             refresherTask.cancel();
+            refresherTask = null;
         }
     }
 }

@@ -116,54 +116,58 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse depositPlayer(String name, double amount) {
-        if (AdapterManager.BanModiftyBalance()) {
-            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
-                    "[BungeeCord] No player in server");
-        }
+        synchronized (me.yic.xconomy.data.DataCon.BALANCE_LOCK) {
+            if (AdapterManager.BanModiftyBalance()) {
+                return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
+                        "[BungeeCord] No player in server");
+            }
 
-        double bal = getBalance(name);
-        BigDecimal amountFormatted = DataFormat.formatdouble(amount);
+            double bal = getBalance(name);
+            BigDecimal amountFormatted = DataFormat.formatdouble(amount);
 
-        if (DataFormat.isMAX(DataFormat.formatdouble(bal).add(amountFormatted))) {
-            return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Max balance!");
-        }
+            if (DataFormat.isMAX(DataFormat.formatdouble(bal).add(amountFormatted))) {
+                return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Max balance!");
+            }
 
-        if (isNonPlayerAccount(name)) {
-            DataCon.changeaccountdata("PLUGIN", name, amountFormatted, true, null);
+            if (isNonPlayerAccount(name)) {
+                DataCon.changeaccountdata("PLUGIN", name, amountFormatted, true, null);
+                return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
+            }
+
+            PlayerData pd = DataCon.getPlayerData(name);
+            if (pd == null) {
+                return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
+            }
+
+            DataCon.changeplayerdata("PLUGIN", pd.getUniqueId(), amountFormatted, true, null, null);
             return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
         }
-
-        PlayerData pd = DataCon.getPlayerData(name);
-        if (pd == null) {
-            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
-        }
-
-        DataCon.changeplayerdata("PLUGIN", pd.getUniqueId(), amountFormatted, true, null, null);
-        return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
     }
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer pp, double amount) {
-        if (AdapterManager.BanModiftyBalance()) {
-            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
-                    "[BungeeCord] No player in server");
-        }
-
-        if (DataCon.getPlayerData(pp.getUniqueId()) == null) {
-            if (!createPlayerAccount(pp)) {
-                return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
+        synchronized (me.yic.xconomy.data.DataCon.BALANCE_LOCK) {
+            if (AdapterManager.BanModiftyBalance()) {
+                return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
+                        "[BungeeCord] No player in server");
             }
+
+            if (DataCon.getPlayerData(pp.getUniqueId()) == null) {
+                if (!createPlayerAccount(pp)) {
+                    return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
+                }
+            }
+
+            double bal = getBalance(pp);
+            BigDecimal amountFormatted = DataFormat.formatdouble(amount);
+
+            if (DataFormat.isMAX(DataFormat.formatdouble(bal).add(amountFormatted))) {
+                return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Max balance!");
+            }
+
+            DataCon.changeplayerdata("PLUGIN", pp.getUniqueId(), amountFormatted, true, null, null);
+            return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
         }
-
-        double bal = getBalance(pp);
-        BigDecimal amountFormatted = DataFormat.formatdouble(amount);
-
-        if (DataFormat.isMAX(DataFormat.formatdouble(bal).add(amountFormatted))) {
-            return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Max balance!");
-        }
-
-        DataCon.changeplayerdata("PLUGIN", pp.getUniqueId(), amountFormatted, true, null, null);
-        return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
     }
 
     @Override
@@ -304,54 +308,58 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse withdrawPlayer(String name, double amount) {
-        if (AdapterManager.BanModiftyBalance()) {
-            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
-                    "[BungeeCord] No player in server");
-        }
+        synchronized (me.yic.xconomy.data.DataCon.BALANCE_LOCK) {
+            if (AdapterManager.BanModiftyBalance()) {
+                return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
+                        "[BungeeCord] No player in server");
+            }
 
-        double bal = getBalance(name);
-        BigDecimal amountFormatted = DataFormat.formatdouble(amount);
+            double bal = getBalance(name);
+            BigDecimal amountFormatted = DataFormat.formatdouble(amount);
 
-        if (bal < amount) {
-            return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Insufficient balance!");
-        }
+            if (bal < amount) {
+                return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Insufficient balance!");
+            }
 
-        if (isNonPlayerAccount(name)) {
-            DataCon.changeaccountdata("PLUGIN", name, amountFormatted, false, null);
+            if (isNonPlayerAccount(name)) {
+                DataCon.changeaccountdata("PLUGIN", name, amountFormatted, false, null);
+                return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
+            }
+
+            PlayerData pd = DataCon.getPlayerData(name);
+            if (pd == null) {
+                return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
+            }
+
+            DataCon.changeplayerdata("PLUGIN", pd.getUniqueId(), amountFormatted, false, null, null);
             return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
         }
-
-        PlayerData pd = DataCon.getPlayerData(name);
-        if (pd == null) {
-            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
-        }
-
-        DataCon.changeplayerdata("PLUGIN", pd.getUniqueId(), amountFormatted, false, null, null);
-        return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
     }
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer pp, double amount) {
-        if (AdapterManager.BanModiftyBalance()) {
-            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
-                    "[BungeeCord] No player in server");
-        }
-
-        if (DataCon.getPlayerData(pp.getUniqueId()) == null) {
-            if (!createPlayerAccount(pp)) {
-                return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
+        synchronized (me.yic.xconomy.data.DataCon.BALANCE_LOCK) {
+            if (AdapterManager.BanModiftyBalance()) {
+                return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
+                        "[BungeeCord] No player in server");
             }
+
+            if (DataCon.getPlayerData(pp.getUniqueId()) == null) {
+                if (!createPlayerAccount(pp)) {
+                    return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
+                }
+            }
+
+            double bal = getBalance(pp);
+            BigDecimal amountFormatted = DataFormat.formatdouble(amount);
+
+            if (bal < amount) {
+                return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Insufficient balance!");
+            }
+
+            DataCon.changeplayerdata("PLUGIN", pp.getUniqueId(), amountFormatted, false, null, null);
+            return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
         }
-
-        double bal = getBalance(pp);
-        BigDecimal amountFormatted = DataFormat.formatdouble(amount);
-
-        if (bal < amount) {
-            return new EconomyResponse(0.0D, bal, EconomyResponse.ResponseType.FAILURE, "Insufficient balance!");
-        }
-
-        DataCon.changeplayerdata("PLUGIN", pp.getUniqueId(), amountFormatted, false, null, null);
-        return new EconomyResponse(amount, bal, EconomyResponse.ResponseType.SUCCESS, "");
     }
 
     @Override

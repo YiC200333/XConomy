@@ -31,8 +31,6 @@ public class Baltop implements Runnable {
 
     @Override
     public void run() {
-        Cache.baltop_papi.clear();
-        Cache.baltop.clear();
         SQL.getBaltop();
         DataCon.sumbal();
         if (AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {

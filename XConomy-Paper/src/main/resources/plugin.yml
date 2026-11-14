@@ -6,7 +6,7 @@ website: https://www.spigotmc.org/resources/xconomy.75669/
 load: STARTUP
 loadbefore:  [ PlotSquared ]
 softdepend: [ Vault, Enterprise, DatabaseDrivers, MPoints, PlaceholderAPI, Towny ]
-api-version: "1.20"
+api-version: "1.21.11"
 folia-supported: true
 
 

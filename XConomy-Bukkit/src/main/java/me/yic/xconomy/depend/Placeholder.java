@@ -55,6 +55,7 @@ public class Placeholder extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer player, String identifier) {
+        Cache.Ranking ranking = Cache.ranking;
         if (identifier.equals("balance")) {
             PlayerData pd = checkplayerdata(player);
             if (pd == null) {
@@ -81,27 +82,27 @@ public class Placeholder extends PlaceholderExpansion {
         } else if (identifier.contains("top_player_")) {
             String index = identifier.substring(identifier.indexOf("top_player_") + 11);
             if (isNumber(index)) {
-                if (outindex(index)) {
+                if (outindex(index, ranking)) {
                     return AdapterManager.translateColorCodes(MessageConfig.NO_DATA);
                 }
                 int ii = Integer.parseInt(index) - 1;
-                return Cache.baltop_papi.get(ii);
+                return ranking.names.get(ii);
             } else {
                 return "[XConomy]Invalid index";
             }
         } else if (identifier.contains("top_rank")) {
             if (identifier.contains("top_rank_")) {
                 String username = identifier.substring(identifier.indexOf("top_rank_") + 9);
-                if (Cache.baltop_papi.contains(username)) {
-                    int ii = Cache.baltop_papi.indexOf(username) + 1;
+                if (ranking.names.contains(username)) {
+                    int ii = ranking.names.indexOf(username) + 1;
                     return Integer.toString(ii);
                 } else {
                     return ChatColor.translateAlternateColorCodes('&',
                             Objects.requireNonNull(MessagesManager.messageFile.getString("top_out"), "[XConomy] message.yml error"));
                 }
             } else {
-                if (Cache.baltop_papi.contains(player.getName())) {
-                    int ii = Cache.baltop_papi.indexOf(player.getName()) + 1;
+                if (ranking.names.contains(player.getName())) {
+                    int ii = ranking.names.indexOf(player.getName()) + 1;
                     return Integer.toString(ii);
                 } else {
                     return ChatColor.translateAlternateColorCodes('&',
@@ -116,12 +117,12 @@ public class Placeholder extends PlaceholderExpansion {
                 index = identifier.substring(identifier.indexOf("top_balance_formatted_") + 22);
             }
             if (isNumber(index)) {
-                if (outindex(index)) {
+                if (outindex(index, ranking)) {
                     return AdapterManager.translateColorCodes(MessageConfig.NO_DATA);
                 }
                 int indexInt = Integer.parseInt(index) - 1;
-                String name = Cache.baltop_papi.get(indexInt);
-                BigDecimal bal = Cache.baltop.get(name);
+                String name = ranking.names.get(indexInt);
+                BigDecimal bal = ranking.balances.get(name);
                 if (identifier.contains("top_balance_value")) {
                     return bal.toString();
                 } else if (identifier.contains("top_balance_formatted")) {
@@ -193,8 +194,8 @@ public class Placeholder extends PlaceholderExpansion {
         return str.matches("\\d+");
     }
 
-    private boolean outindex(String str) {
-        return Integer.parseInt(str) > Cache.baltop_papi.size();
+    private boolean outindex(String str, Cache.Ranking ranking) {
+        return Integer.parseInt(str) < 1 || Integer.parseInt(str) > ranking.names.size();
     }
 
     private PlayerData checkplayerdata(OfflinePlayer player) {

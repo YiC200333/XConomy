@@ -29,20 +29,12 @@
             <version>${kotlin.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--Bungeecord 1.15-->
+        <!--Published release; the old 1.15 snapshot is no longer available.-->
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.15-SNAPSHOT</version>
+            <version>1.16-R0.4</version>
             <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-        <!--Bungeecord 1.15 Javadocs-->
-        <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.15-SNAPSHOT</version>
-            <type>javadoc</type>
             <scope>provided</scope>
         </dependency>
         <!--velocity 3.0-->

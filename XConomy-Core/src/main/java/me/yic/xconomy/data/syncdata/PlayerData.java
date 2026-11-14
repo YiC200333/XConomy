@@ -28,8 +28,8 @@ import java.util.UUID;
 
 public class PlayerData extends SyncData {
     private final String name;
-    private BigDecimal balance;
-    private BigDecimal vbalance;
+    private volatile BigDecimal balance;
+    private volatile BigDecimal vbalance;
 
     public PlayerData(UUID uuid, String name, BigDecimal balance) {
         super(SyncType.UPDATEPLAYER, uuid);

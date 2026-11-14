@@ -46,86 +46,88 @@ public class CommandCore {
     protected static String PREFIX = translateColorCodes("prefix");
 
     public static boolean onCommand(CSender sender, String commandName, String[] args) {
-        switch (commandName) {
-            case "xconomy": {
-                if (sender.isOp()) {
-                    if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-                        MessagesManager.loadlangmess();
-                        PREFIX = translateColorCodes("prefix");
-                        sendMessages(sender, PREFIX + MessagesManager.systemMessage("§amessage.yml重载成功"));
-                        return true;
-                    }
-                    if (args.length == 2 && args[0].equalsIgnoreCase("deldata")) {
-
-                        if (check()) {
-                            sendMessages(sender, PREFIX + MessagesManager.systemMessage("§cBC模式开启的情况下,无法在无人的服务器中使用OP命令"));
+        synchronized (me.yic.xconomy.data.DataCon.BALANCE_LOCK) {
+            switch (commandName) {
+                case "xconomy": {
+                    if (sender.isOp()) {
+                        if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+                            MessagesManager.loadlangmess();
+                            PREFIX = translateColorCodes("prefix");
+                            sendMessages(sender, PREFIX + MessagesManager.systemMessage("§amessage.yml重载成功"));
                             return true;
                         }
+                        if (args.length == 2 && args[0].equalsIgnoreCase("deldata")) {
 
-                        PlayerData pd = DataCon.getPlayerData(args[1]);
-                        if (pd == null) {
-                            sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
+                            if (check()) {
+                                sendMessages(sender, PREFIX + MessagesManager.systemMessage("§cBC模式开启的情况下,无法在无人的服务器中使用OP命令"));
+                                return true;
+                            }
+
+                            PlayerData pd = DataCon.getPlayerData(args[1]);
+                            if (pd == null) {
+                                sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
+                                return true;
+                            }
+
+                            DataCon.deletePlayerData(pd);
+
+                            sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.DELETE_DATA_ADMIN).replace("%player%", pd.getName()));
+
                             return true;
                         }
-
-                        DataCon.deletePlayerData(pd);
-
-                        sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.DELETE_DATA_ADMIN).replace("%player%", pd.getName()));
-
+                    }
+                    if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
+                        sendHelpMessage(sender, 1);
                         return true;
                     }
-                }
-                if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
-                    sendHelpMessage(sender, 1);
-                    return true;
-                }
-                if (args.length == 2 && args[0].equalsIgnoreCase("help")) {
-                    if (isDouble(args[1])) {
-                        if (Integer.parseInt(args[1]) > 0) {
-                            sendHelpMessage(sender, Integer.valueOf(args[1]));
+                    if (args.length == 2 && args[0].equalsIgnoreCase("help")) {
+                        if (isDouble(args[1])) {
+                            if (Integer.parseInt(args[1]) > 0) {
+                                sendHelpMessage(sender, Integer.valueOf(args[1]));
+                            } else {
+                                sendHelpMessage(sender, 1);
+                            }
                         } else {
                             sendHelpMessage(sender, 1);
                         }
-                    } else {
-                        sendHelpMessage(sender, 1);
+                        return true;
                     }
-                    return true;
+                    showVersion(sender);
+                    break;
                 }
-                showVersion(sender);
-                break;
+
+                case "paypermission": {
+                    return CommandPayPermission.onCommand(sender, args);
+                }
+
+                case "paytoggle": {
+                    return CommandPayToggle.onCommand(sender, args);
+                }
+
+                case "balancetop": {
+                    return CommandBalancetop.onCommand(sender, args);
+                }
+
+                case "pay": {
+                    return CommandPay.onCommand(sender, commandName, args);
+                }
+
+                case "money":
+                case "balance":
+                case "economy":
+                case "eco": {
+                    return CommandBalance.onCommand(sender, commandName, args);
+                }
+
+                default: {
+                    sendHelpMessage(sender, 1);
+                    break;
+                }
+
             }
 
-            case "paypermission": {
-                return CommandPayPermission.onCommand(sender, args);
-            }
-
-            case "paytoggle": {
-                return CommandPayToggle.onCommand(sender, args);
-            }
-
-            case "balancetop": {
-                return CommandBalancetop.onCommand(sender, args);
-            }
-
-            case "pay": {
-                return CommandPay.onCommand(sender, commandName, args);
-            }
-
-            case "money":
-            case "balance":
-            case "economy":
-            case "eco": {
-                return CommandBalance.onCommand(sender, commandName, args);
-            }
-
-            default: {
-                sendHelpMessage(sender, 1);
-                break;
-            }
-
+            return true;
         }
-
-        return true;
     }
 
     protected static boolean isDouble(String s) {
@@ -266,7 +268,9 @@ public class CommandCore {
 
     protected static void sendRankingMessage(CSender sender, Integer num) {
         Integer maxipages;
-        int listsize = Cache.baltop_papi.size();
+        Cache.Ranking ranking = Cache.ranking;
+        int listsize = ranking.names.size();
+        if (listsize == 0) return;
         if (listsize % XConomyLoad.Config.LINES_PER_PAGE == 0) {
             maxipages = listsize / XConomyLoad.Config.LINES_PER_PAGE;
         } else {
@@ -279,7 +283,7 @@ public class CommandCore {
         if (endindex >= listsize) {
             endindex = listsize;
         }
-        List<String> topNames = Cache.baltop_papi.subList(num * XConomyLoad.Config.LINES_PER_PAGE - XConomyLoad.Config.LINES_PER_PAGE, endindex);
+        List<String> topNames = ranking.names.subList(num * XConomyLoad.Config.LINES_PER_PAGE - XConomyLoad.Config.LINES_PER_PAGE, endindex);
 
         sendMessages(sender, translateColorCodes("top_title").replace("%page%", num + "/" + maxipages));
         sendMessages(sender, translateColorCodes("sum_text")
@@ -290,7 +294,7 @@ public class CommandCore {
             sendMessages(sender, translateColorCodes("top_text")
                     .replace("%index%", String.valueOf(num * XConomyLoad.Config.LINES_PER_PAGE - XConomyLoad.Config.LINES_PER_PAGE + placement))
                     .replace("%player%", topName)
-                    .replace("%balance%", DataFormat.shown((Cache.baltop.get(topName)))));
+                    .replace("%balance%", DataFormat.shown((ranking.balances.get(topName)))));
         }
 
         sendMessages(sender, translateColorCodes("top_subtitle"));

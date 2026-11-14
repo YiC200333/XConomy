@@ -21,10 +21,10 @@ package me.yic.xconomy.info;
 import java.util.*;
 
 public class PermissionINFO {
-    public static boolean globalpayment = true;
+    public static volatile boolean globalpayment = true;
 
-    private static final Map<UUID, Boolean> payment = new HashMap<>();
-    private static final List<UUID> rpayment = new ArrayList<>();
+    private static final Map<UUID, Boolean> payment = new java.util.concurrent.ConcurrentHashMap<>();
+    private static final Set<UUID> rpayment = java.util.concurrent.ConcurrentHashMap.newKeySet();
 
     public static boolean getGlobalPayment() {
         return globalpayment;
@@ -45,7 +45,7 @@ public class PermissionINFO {
         return !rpayment.contains(u);
     }
 
-    public static void setRPaymentPermission(UUID u) {
+    public static synchronized void setRPaymentPermission(UUID u) {
         if (rpayment.contains(u)){
             rpayment.remove(u);
         }else {
@@ -53,7 +53,7 @@ public class PermissionINFO {
         }
     }
 
-    public static void setRPaymentPermission(UUID u, boolean value) {
+    public static synchronized void setRPaymentPermission(UUID u, boolean value) {
         if (value){
             rpayment.remove(u);
         }else {
